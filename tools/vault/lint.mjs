@@ -268,12 +268,28 @@ function checkQuotes(graph) {
     }
     return cache.get(rel);
   };
+  const isDirOnDisk = (p) => {
+    try {
+      return fs.statSync(p).isDirectory();
+    } catch {
+      return false;
+    }
+  };
   let checked = 0;
   let failed = 0;
   let unsourced = 0;
   for (const n of graph.nodes) {
     if (!n.quote) {
-      if (n.origin === 'mined') {
+      // A DIRECTORY has no line to quote, and demanding one would be a rule
+      // misapplied rather than a rule enforced. `no quote, no object` exists to
+      // stop a claim ABOUT something being invented; a manifest row for `src/`
+      // makes no such claim — it declares kind and standing, and both are
+      // checkable by walking the tree. So a declaration whose source_path is a
+      // directory on disk is exempt, and only that. A missing FILE still fails
+      // below, and a mined claim with no quote is still fatal.
+      const isDirectoryDeclaration =
+        n.source_path && isDirOnDisk(path.join(REPO, n.source_path));
+      if (n.origin === 'mined' && !isDirectoryDeclaration) {
         unsourced++;
         fatal('quote', `${n.id} carries no quote — no quote, no object`);
       }
@@ -406,6 +422,38 @@ function checkLiterals(graph) {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
+// ─────────────────────────────────────────────────────────────────────────────
+// EVERY TABLE IS RESOLVED. No page may depend on a plugin to have content.
+//
+// The Book is a folder of ordinary markdown, so pointing Obsidian at it works with no
+// build and no install. That is only true while the pages carry ANSWERS. The tempting
+// alternative is to write a Dataview query and let the reader's plugin run it — the
+// generator has already evaluated the same thing to build the index, so a query is
+// strictly less work and strictly worse: it renders as a grey code block for anyone
+// without the plugin, and a vault that is blank until you install something is a vault
+// people abandon. It also breaks the one-source rule, because the HTML view and the
+// folder view would then compute their tables in two different places at two different
+// times.
+//
+// So the rule is: if the generator can answer it, the generator WRITES the answer. This
+// check exists because that property was true by habit and habit is not a guarantee.
+function checkResolvedTables(pages) {
+  // Fenced blocks whose whole purpose is deferred evaluation by a reader's plugin.
+  const DEFERRED = /^```\s*(dataview|dataviewjs|query|tasks|chart|dbfolder)\b/gim;
+  let offenders = 0;
+  for (const p of pages) {
+    DEFERRED.lastIndex = 0;
+    const m = p.src.match(DEFERRED);
+    if (!m) continue;
+    offenders++;
+    fatal(
+      'resolved',
+      `${p.rel} defers ${m.length} table(s) to a plugin (${[...new Set(m.map((s) => s.replace(/^```\s*/, '').trim()))].join(', ')}) — the generator must write the answer instead`,
+    );
+  }
+  return { offenders };
+}
+
 function main() {
   const graph = buildGraph();
   const pages = loadBookPages();
@@ -420,6 +468,7 @@ function main() {
   const quotes = checkQuotes(graph);
   const standing = checkStanding(graph);
   const literals = checkLiterals(graph);
+  const resolved = checkResolvedTables(pages);
 
   for (const b of graph.brokenKnowledge) fatal('knowledge', `unreadable: ${b}`);
   for (const u of graph.unresolvedLinks) {
@@ -435,6 +484,9 @@ function main() {
     `  manifest         ${manifest.undeclared === null ? 'SKIPPED — nothing declared' : `${manifest.undeclared} undeclared on disk, ${manifest.phantom} declared but absent`}`,
   );
   console.log(`  quotes           ${quotes.checked} checked, ${quotes.failed} failed, ${quotes.unsourced} mined objects with no quote at all`);
+  console.log(
+    `  resolved tables  ${resolved.offenders === 0 ? 'every page carries answers, not queries — no plugin needed to read the Book' : `${resolved.offenders} page(s) defer a table to a reader's plugin`}`,
+  );
   console.log(
     `  standing drift   ${standing.claimsDone} proposed-but-claims-done, ${standing.unbacked} built-with-nothing-under-it, ${standing.noSuccessor} retired-with-no-successor`,
   );

@@ -1,0 +1,1129 @@
+[
+  {
+    "id": "entity:pledge-king",
+    "type": "entity",
+    "label": "King",
+    "standing": "canon",
+    "summary": "The sovereign. The kingdom is his — stored as pledge 'king' on a Person.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 54,
+    "quote": "The sovereign. The kingdom is his.",
+    "links": [
+      "module:src/domain/types.ts"
+    ],
+    "tags": [
+      "pledge"
+    ]
+  },
+  {
+    "id": "entity:pledge-regent",
+    "type": "entity",
+    "label": "Regent",
+    "standing": "built",
+    "summary": "Administers the kingdom for the King, and is the catch-basin: every undelegated fief lands on the Regent's desk. Stored as pledge 'steward'.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 55,
+    "quote": "the catch-basin: every undelegated fief lands on the Regent's desk",
+    "links": [
+      "module:src/domain/types.ts",
+      "entity:regents-desk"
+    ],
+    "tags": [
+      "pledge"
+    ]
+  },
+  {
+    "id": "entity:pledge-vassal",
+    "type": "entity",
+    "label": "Vassal",
+    "standing": "canon",
+    "summary": "An internal subject, eligible to hold fiefs and hamlets by grant.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 56,
+    "quote": "An internal subject. Eligible to hold fiefs and hamlets by grant.",
+    "links": [
+      "module:src/domain/types.ts"
+    ],
+    "tags": [
+      "pledge"
+    ]
+  },
+  {
+    "id": "entity:pledge-squire",
+    "type": "entity",
+    "label": "Squire",
+    "standing": "canon",
+    "summary": "Pledged to a person, not a fief — pre-hire, in training, travels with their knight.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 57,
+    "quote": "Pledged to a *person*, not a fief. Pre-hire; in training; travels with their knight.",
+    "links": [
+      "module:src/domain/types.ts"
+    ],
+    "tags": [
+      "pledge"
+    ]
+  },
+  {
+    "id": "entity:pledge-artisan",
+    "type": "entity",
+    "label": "Artisan",
+    "standing": "canon",
+    "summary": "External — contractor, vendor, outside counsel of an outside guild. Can run land (as keeper), can never hold it, and may never head a Crown office. Stored as pledge 'sellsword'.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 58,
+    "quote": "External — contractor, vendor, outside counsel, of an outside GUILD.",
+    "links": [
+      "module:src/domain/types.ts"
+    ],
+    "tags": [
+      "pledge"
+    ]
+  },
+  {
+    "id": "entity:territory-fief",
+    "type": "entity",
+    "label": "Fief (territory kind)",
+    "standing": "built",
+    "summary": "Land, held by a lord, worked by knights — a group's book of doors, holding TerritoryKind 'fief'.",
+    "source_path": "src/domain/types.ts",
+    "source_line": 22,
+    "quote": "a group's book of doors: land, held by a lord, worked by knights.",
+    "links": [
+      "law:territory-fief"
+    ],
+    "tags": [
+      "territory"
+    ]
+  },
+  {
+    "id": "entity:territory-hamlet",
+    "type": "entity",
+    "label": "Hamlet (territory kind)",
+    "standing": "built",
+    "summary": "A lesser holding inside a fief, led on the line of trade by a mayor.",
+    "source_path": "src/domain/types.ts",
+    "source_line": 23,
+    "quote": "a lesser holding inside a fief.",
+    "links": [
+      "law:territory-hamlet"
+    ],
+    "tags": [
+      "territory"
+    ]
+  },
+  {
+    "id": "entity:territory-office",
+    "type": "entity",
+    "label": "Office (territory kind)",
+    "standing": "built",
+    "summary": "A CROWN OFFICE, seated in the palace and never on land — a place in the record only so a Chancellor's seat is a grant like any other, revocable the same way.",
+    "source_path": "src/domain/types.ts",
+    "source_line": 24,
+    "quote": "It is a place in the\n *    record only so a Chancellor's seat is a grant like any other, revocable the\n *    same way",
+    "links": [
+      "law:territory-office-never-land"
+    ],
+    "tags": [
+      "territory"
+    ]
+  },
+  {
+    "id": "entity:territory-guild",
+    "type": "entity",
+    "label": "Guild",
+    "standing": "canon",
+    "summary": "An outside trade the Crown does not staff — roofers, lenders, counsel; its hands are artisans.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 76,
+    "quote": "an OUTSIDE trade (roofers, lenders, counsel)",
+    "links": [
+      "law:territory-guild"
+    ],
+    "tags": [
+      "territory"
+    ]
+  },
+  {
+    "id": "entity:territory-garrison",
+    "type": "entity",
+    "label": "Garrison",
+    "standing": "canon",
+    "summary": "Artisans stationed in a territory — worked land without local leadership.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 78,
+    "quote": "artisans stationed in a territory",
+    "links": [
+      "law:territory-garrison"
+    ],
+    "tags": [
+      "territory"
+    ]
+  },
+  {
+    "id": "entity:fief-state-lorded",
+    "type": "entity",
+    "label": "Lorded (fief state)",
+    "standing": "built",
+    "summary": "An internal vassal holds the fief by explicit grant. Green, healthy.",
+    "source_path": "src/domain/states.ts",
+    "source_line": 1,
+    "quote": "States are always computed from the records, never",
+    "links": [
+      "law:fief-state-lorded"
+    ],
+    "tags": [
+      "fief-state"
+    ]
+  },
+  {
+    "id": "entity:fief-state-stewardship",
+    "type": "entity",
+    "label": "In stewardship (fief state)",
+    "standing": "canon",
+    "summary": "No grant, no appointment, nothing recorded — falls to the Regent, red, the state the system hunts.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 130,
+    "quote": "This is the state the system hunts.",
+    "links": [
+      "law:fief-state-stewardship"
+    ],
+    "tags": [
+      "fief-state"
+    ]
+  },
+  {
+    "id": "entity:fief-state-plurality",
+    "type": "entity",
+    "label": "Held in plurality (fief state)",
+    "standing": "canon",
+    "summary": "One vassal holds several fiefs, each by explicit grant — legitimate and historically normal, watched but not flagged as debt.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 122,
+    "quote": "Legitimate\n   and historically normal. Watched, not flagged.",
+    "links": [
+      "law:fief-state-plurality"
+    ],
+    "tags": [
+      "fief-state"
+    ]
+  },
+  {
+    "id": "entity:fief-state-regency",
+    "type": "entity",
+    "label": "In regency (fief state)",
+    "standing": "canon",
+    "summary": "No vassal lord, but a recorded keeper (an artisan formally appointed) runs the fief day-to-day — the kingdom's work gets done, but by foreign hands. Amber.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 126,
+    "quote": "The kingdom's work gets done, but\n   by foreign hands. Amber.",
+    "links": [
+      "law:fief-state-regency"
+    ],
+    "tags": [
+      "fief-state"
+    ]
+  },
+  {
+    "id": "entity:record-garrison-posting",
+    "type": "entity",
+    "label": "Garrison posting (record)",
+    "standing": "built",
+    "summary": "Stations an artisan in a territory as workforce — not authority.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 149,
+    "quote": "Garrison posting** — stations an artisan in a territory as workforce.",
+    "links": [
+      "law:record-garrison-posting",
+      "entity:territory-garrison",
+      "module:src/domain/types.ts"
+    ],
+    "tags": [
+      "record"
+    ]
+  },
+  {
+    "id": "entity:record-fealty",
+    "type": "entity",
+    "label": "Fealty (record)",
+    "standing": "built",
+    "summary": "Records a vassal serving inside a fief under its lord.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 150,
+    "quote": "Fealty** — records a vassal serving inside a fief under its lord.",
+    "links": [
+      "law:record-fealty",
+      "module:src/domain/types.ts"
+    ],
+    "tags": [
+      "record"
+    ]
+  },
+  {
+    "id": "entity:regents-desk",
+    "type": "entity",
+    "label": "The Regent's desk",
+    "standing": "canon",
+    "summary": "Every fief in stewardship appears here as open delegation debt; regencies appear beneath as watch items. Ideal length is zero.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 138,
+    "quote": "Every fief in stewardship appears on the Regent's desk as an open item of delegation debt.",
+    "links": [
+      "law:regents-desk"
+    ],
+    "tags": [
+      "fief-state"
+    ]
+  },
+  {
+    "id": "entity:record-grant",
+    "type": "entity",
+    "label": "Grant (record)",
+    "standing": "built",
+    "summary": "Places an internal vassal in charge of a territory. Three senses on the same two stored roles: lord on a fief, mayor on a hamlet, lord on an office (a Chancellor's seat).",
+    "source_path": "src/domain/types.ts",
+    "source_line": 40,
+    "quote": "Places an internal vassal in charge of a territory. THREE senses, all\n *  carried by the same two stored roles",
+    "links": [
+      "law:record-grant"
+    ],
+    "tags": [
+      "record"
+    ]
+  },
+  {
+    "id": "entity:record-keeper-appointment",
+    "type": "entity",
+    "label": "Keeper appointment (record)",
+    "standing": "built",
+    "summary": "Formally names an artisan the keeper of a lordless territory — what makes a regency a regency and not stewardship.",
+    "source_path": "src/domain/types.ts",
+    "source_line": 55,
+    "quote": "Formally names an artisan the keeper of a lordless territory",
+    "links": [
+      "law:record-keeper-appointment"
+    ],
+    "tags": [
+      "record"
+    ]
+  },
+  {
+    "id": "entity:record-arrival",
+    "type": "entity",
+    "label": "Arrival (record)",
+    "standing": "built",
+    "summary": "Something new logged at the border — the Marches' entry point, dated.",
+    "source_path": "src/domain/marches.ts",
+    "source_line": 9,
+    "quote": "export interface Arrival {",
+    "links": [
+      "law:marches-arrival",
+      "entity:the-marches"
+    ],
+    "tags": [
+      "record",
+      "marches"
+    ]
+  },
+  {
+    "id": "entity:record-dispatch",
+    "type": "entity",
+    "label": "Dispatch (record)",
+    "standing": "built",
+    "summary": "The deliberate act of assigning an arrival to a territory.",
+    "source_path": "src/domain/marches.ts",
+    "source_line": 16,
+    "quote": "The deliberate act of assigning an arrival to a territory.",
+    "links": [
+      "law:marches-dispatch",
+      "entity:the-marches"
+    ],
+    "tags": [
+      "record",
+      "marches"
+    ]
+  },
+  {
+    "id": "entity:record-turnaway",
+    "type": "entity",
+    "label": "Turnaway (record)",
+    "standing": "built",
+    "summary": "The deliberate act of refusing an arrival at the border.",
+    "source_path": "src/domain/marches.ts",
+    "source_line": 23,
+    "quote": "The deliberate act of refusing an arrival at the border.",
+    "links": [
+      "law:marches-turnaway",
+      "entity:the-marches"
+    ],
+    "tags": [
+      "record",
+      "marches"
+    ]
+  },
+  {
+    "id": "entity:the-marches",
+    "type": "entity",
+    "label": "The Marches",
+    "standing": "built",
+    "summary": "The border lands: work that has arrived in the kingdom but has not yet been assigned to any fief, computed from disposition records like a fief's state.",
+    "source_path": "src/domain/marches.ts",
+    "source_line": 1,
+    "quote": "The Marches: the border lands.",
+    "links": [
+      "law:marches-inbox"
+    ],
+    "tags": [
+      "marches"
+    ]
+  },
+  {
+    "id": "entity:the-border-scribe",
+    "type": "entity",
+    "label": "The border scribe",
+    "standing": "canon",
+    "summary": "Reads raw text logged at the border against the census, recognizes census names, flags unknown name-shaped lists, and pre-fills a destination when it can — deliberately conservative.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 252,
+    "quote": "the scribe reads the raw text against the census — law 2 made mechanism.",
+    "links": [
+      "law:border-scribe-conservative",
+      "module:src/domain/scribe.ts"
+    ],
+    "tags": [
+      "marches"
+    ]
+  },
+  {
+    "id": "entity:the-border-book",
+    "type": "entity",
+    "label": "The border book",
+    "standing": "built",
+    "summary": "The vault's border_arrivals table, the only door an outside producer will ever write through; folded into the doc's arrivals on every read and marked absorbed once written.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 471,
+    "quote": "`border_arrivals`, the **only door an\noutside producer will ever write through**.",
+    "links": [
+      "law:border-book-only-outside-door",
+      "module:src/server/border.ts"
+    ],
+    "tags": [
+      "marches",
+      "vault"
+    ]
+  },
+  {
+    "id": "entity:the-vault",
+    "type": "entity",
+    "label": "The vault",
+    "standing": "built",
+    "summary": "The chronicle's master copy, a Supabase Postgres behind its own locked door — row security enabled with no policies, so only the secret key passes.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 455,
+    "quote": "The chronicle's master copy now rests in a **Supabase\nPostgres**",
+    "links": [
+      "law:vault-no-policies",
+      "module:src/server/vault.ts"
+    ],
+    "tags": [
+      "vault"
+    ]
+  },
+  {
+    "id": "entity:the-chronicle",
+    "type": "entity",
+    "label": "The chronicle",
+    "standing": "built",
+    "summary": "The kingdom's mutable record books bound into one volume — the event log and every act, stored as data/chronicle.json in the repo and mirrored to the vault.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 448,
+    "quote": "The kingdom's mutable record books",
+    "links": [
+      "law:chronicle-binds-two-ledgers",
+      "module:src/domain/chronicle.ts"
+    ],
+    "tags": [
+      "chronicle"
+    ]
+  },
+  {
+    "id": "entity:tenant-setting",
+    "type": "entity",
+    "label": "The tenant (economy) setting",
+    "standing": "built",
+    "summary": "The mechanism by which a deployment overrides the seed tenant's demo fee rates, spend caps and GL chart with its own, without any real figure living in the repository.",
+    "source_path": "src/domain/economySetting.ts",
+    "source_line": 1,
+    "quote": "the mechanism by which a deployment overrides the seed\n// tenant's DEMO figures with its own, without any real figure ever living in\n// this repository",
+    "links": [
+      "decision:configuration-not-constants"
+    ],
+    "tags": [
+      "economy",
+      "factory-setting"
+    ]
+  },
+  {
+    "id": "entity:treasury-upkeep",
+    "type": "entity",
+    "label": "Upkeep",
+    "standing": "built",
+    "summary": "The recurring monthly cost of the kingdom's structure — retainers, salaries, subscriptions, dues; each line may name the territory that bears it and the person who receives it.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 290,
+    "quote": "retainers, salaries, subscriptions, dues",
+    "links": [
+      "law:treasury-founding-upkeep",
+      "module:src/domain/treasury.ts"
+    ],
+    "tags": [
+      "treasury"
+    ]
+  },
+  {
+    "id": "entity:treasury-estates-in-trust",
+    "type": "entity",
+    "label": "The estates in trust (the AppFolio dimension)",
+    "standing": "canon",
+    "summary": "The rents, deposits, work-order costs, and owner draws of the Patrons' estates — the Patrons' coin, not the Crown's; the Crown only holds and moves it, per estate and per door.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 314,
+    "quote": "This is fiduciary money: a\nnew book of **estate ledgers**",
+    "links": [
+      "law:economy-two-treasuries"
+    ],
+    "tags": [
+      "economy"
+    ]
+  },
+  {
+    "id": "entity:treasury-crowns-own-coin",
+    "type": "entity",
+    "label": "The Crown's own coin (the QuickBooks dimension)",
+    "standing": "canon",
+    "summary": "The company's own money — the fees it earns for keeping the estates (tribute), against its upkeep; the money that decides whether the kingdom falls.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 319,
+    "quote": "the money that decides\nwhether **the kingdom falls**",
+    "links": [
+      "law:economy-two-treasuries"
+    ],
+    "tags": [
+      "economy"
+    ]
+  },
+  {
+    "id": "entity:fee-bridge",
+    "type": "entity",
+    "label": "The fee bridge",
+    "standing": "built",
+    "summary": "A management/leasing/markup fee is simultaneously an expense to an owner in trust and revenue to the company, carried across by the mirrored Due-to-Mgmt / Due-from-Trust clearing pair.",
+    "source_path": "src/domain/economy.ts",
+    "source_line": 10,
+    "quote": "The two worlds meet at exactly one hinge — the fee bridge",
+    "links": [
+      "law:economy-bridge-is-tribute",
+      "module:src/domain/economy.ts"
+    ],
+    "tags": [
+      "economy"
+    ]
+  },
+  {
+    "id": "entity:coffers",
+    "type": "entity",
+    "label": "Coffers (reading)",
+    "standing": "built",
+    "summary": "The unified reading of tribute per retained door against upkeep — the fail state (kingdom falls) is a reading, coffers trending below zero, never an invented number.",
+    "source_path": "src/domain/treasury.ts",
+    "source_line": 111,
+    "quote": "export interface Coffers {",
+    "links": [
+      "fact:rent-per-door",
+      "fact:tribute-per-door",
+      "entity:consequence-engine"
+    ],
+    "tags": [
+      "economy",
+      "treasury"
+    ]
+  },
+  {
+    "id": "entity:fee-rule",
+    "type": "entity",
+    "label": "FeeRule",
+    "standing": "built",
+    "summary": "A percentage in basis points or a flat cents amount that feeAmount applies to a basis to compute a fee, then records as a money event.",
+    "source_path": "docs/WRIT-ECONOMY.md",
+    "source_line": 38,
+    "quote": "Fees are computed, then recorded as an amount.",
+    "links": [
+      "fact:mgmt-fee-rate"
+    ],
+    "tags": [
+      "economy"
+    ]
+  },
+  {
+    "id": "entity:budget-line",
+    "type": "entity",
+    "label": "BudgetLine",
+    "standing": "built",
+    "summary": "A working-fluid monthly plan for the Crown's own book, measured against the actuals folded from the money log by readBudgetVsActual.",
+    "source_path": "src/domain/economy.ts",
+    "source_line": 331,
+    "quote": "A working-fluid monthly plan for the Crown's own book",
+    "links": [
+      "fact:budget-mgmt-fee-income"
+    ],
+    "tags": [
+      "economy"
+    ]
+  },
+  {
+    "id": "entity:spend-gate",
+    "type": "entity",
+    "label": "The owner-approval spend gate",
+    "standing": "built",
+    "summary": "True when a repair cost is at or above the economy's threshold and so needs owner approval before the vendor proceeds — the recon's \"$400 cap\" generalized.",
+    "source_path": "src/domain/economy.ts",
+    "source_line": 359,
+    "quote": "the recon's \"$400\ncap\" / the grammars' \"NTE",
+    "links": [
+      "fact:spend-approval-cents-house",
+      "module:src/domain/economy.ts"
+    ],
+    "tags": [
+      "economy"
+    ]
+  },
+  {
+    "id": "entity:money-event",
+    "type": "entity",
+    "label": "MoneyEvent",
+    "standing": "built",
+    "summary": "The money-dimension record — an append-only event recording what happened and to whom; the balanced debit/credit postings are derived from it on every read, never stored.",
+    "source_path": "docs/WRIT-ECONOMY.md",
+    "source_line": 15,
+    "quote": "A money event records *what happened and to whom*",
+    "links": [
+      "entity:economy-book",
+      "module:src/domain/economy.ts"
+    ],
+    "tags": [
+      "economy"
+    ]
+  },
+  {
+    "id": "entity:economy-book",
+    "type": "entity",
+    "label": "EconomyBook",
+    "standing": "built",
+    "summary": "The two-book chart (trust and corporate), fee rules, spend caps and budget — a loadable static book like the catalog, working-fluid at founding.",
+    "source_path": "docs/WRIT-ECONOMY.md",
+    "source_line": 22,
+    "quote": "a loadable static book (working-fluid founding chart",
+    "links": [
+      "fact:mgmt-fee-rate",
+      "module:src/domain/economy.ts"
+    ],
+    "tags": [
+      "economy"
+    ]
+  },
+  {
+    "id": "entity:compliance-check",
+    "type": "entity",
+    "label": "Compliance check (reading)",
+    "standing": "built",
+    "summary": "Five live trust-accounting guardrails folded from the postings: the aggregate-liability identity, no overdrawn trust bank, no overdrawn owner, deposits held whole, earned fees swept in time.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 385,
+    "quote": "the **aggregate-liability identity** (the bank reconciles), **no trust bank overdrawn**, **no\nowner overdrawn**",
+    "links": [
+      "fact:earned-fee-limit-days",
+      "module:src/domain/economy.ts"
+    ],
+    "tags": [
+      "economy",
+      "compliance"
+    ]
+  },
+  {
+    "id": "entity:office-of-works",
+    "type": "entity",
+    "label": "The Office of Works",
+    "standing": "built",
+    "summary": "Maintenance — keeping the buildings sound. Headed by the Chancellor of Works.",
+    "source_path": "docs/WRIT-THE-BROKERAGE.md",
+    "source_line": 42,
+    "quote": "Maintenance — keeping the buildings sound",
+    "links": [
+      "law:territory-office-never-land",
+      "module:src/domain/guilds.ts"
+    ],
+    "tags": [
+      "crown-office"
+    ]
+  },
+  {
+    "id": "entity:office-of-tenancy",
+    "type": "entity",
+    "label": "The Office of Tenancy",
+    "standing": "built",
+    "summary": "Leasing — filling doors and keeping tenants. Headed by the Chancellor of Tenancy.",
+    "source_path": "docs/WRIT-THE-BROKERAGE.md",
+    "source_line": 43,
+    "quote": "Leasing — filling doors and keeping tenants",
+    "links": [
+      "law:territory-office-never-land",
+      "module:src/domain/guilds.ts"
+    ],
+    "tags": [
+      "crown-office"
+    ]
+  },
+  {
+    "id": "entity:the-chancery",
+    "type": "entity",
+    "label": "The Chancery",
+    "standing": "built",
+    "summary": "The administrative layer: the books, records, payments, and law. Legal folds in here; headed by the Chancellor of the Chancery.",
+    "source_path": "docs/WRIT-THE-BROKERAGE.md",
+    "source_line": 44,
+    "quote": "The administrative layer: the books, records, payments, and law",
+    "links": [
+      "law:territory-office-never-land",
+      "module:src/domain/guilds.ts"
+    ],
+    "tags": [
+      "crown-office"
+    ]
+  },
+  {
+    "id": "entity:founding-guilds-naming-drift",
+    "type": "entity",
+    "label": "FOUNDING_GUILDS still names Crown offices, not outside trades",
+    "standing": "contested",
+    "summary": "The code's Guild/GuildReading/FOUNDING_GUILDS types now hold the three Crown offices (Works, Tenancy, Chancery), not outside trades — the header names this a stale, unfinished rename, load-bearing across a pinned map contract.",
+    "source_path": "src/domain/guilds.ts",
+    "source_line": 12,
+    "quote": "the rename is in progress and the names are\n// load-bearing across the pinned map contract",
+    "links": [
+      "law:territory-guild",
+      "entity:office-of-works"
+    ],
+    "tags": [
+      "naming",
+      "known-weakness"
+    ]
+  },
+  {
+    "id": "entity:catalog-tree",
+    "type": "entity",
+    "label": "The catalog tree — domain, system, leaf",
+    "standing": "built",
+    "summary": "A task-type is a word reached by walking domain to system to leaf; the dotted key is the stable identifier an event references.",
+    "source_path": "docs/LIBRARY-PM.md",
+    "source_line": 33,
+    "quote": "A **task-type** is a word in a bounded, compositional language.",
+    "links": [
+      "law:task-language-is-a-word",
+      "module:src/domain/catalog.ts"
+    ],
+    "tags": [
+      "task-language"
+    ]
+  },
+  {
+    "id": "entity:catalog-row",
+    "type": "entity",
+    "label": "CatalogRow",
+    "standing": "built",
+    "summary": "A task-type row: key, title, class, mode, domain/system facets, and an optional completes binding to the FlowTemplate that finishes it.",
+    "source_path": "src/domain/catalog.ts",
+    "source_line": 51,
+    "quote": "export interface CatalogRow {",
+    "links": [
+      "entity:catalog-tree",
+      "entity:flow-template"
+    ],
+    "tags": [
+      "task-language"
+    ]
+  },
+  {
+    "id": "entity:flow-template",
+    "type": "entity",
+    "label": "FlowTemplate",
+    "standing": "built",
+    "summary": "Loaded config: a trigger and a set of steps, each naming a catalog row, a holder, a timing edge, and the board it belongs to; instantiating opens one case.",
+    "source_path": "src/domain/flows.ts",
+    "source_line": 71,
+    "quote": "export interface FlowTemplate {",
+    "links": [
+      "entity:catalog-row"
+    ],
+    "tags": [
+      "task-language",
+      "flow-engine"
+    ]
+  },
+  {
+    "id": "entity:flow-step",
+    "type": "entity",
+    "label": "FlowStep",
+    "standing": "built",
+    "summary": "One step of a flow: a catalog row, a holder, a board, a timing edge, an optional SLA, an optional repeat and condition.",
+    "source_path": "src/domain/flows.ts",
+    "source_line": 55,
+    "quote": "export interface FlowStep {",
+    "links": [
+      "entity:flow-template"
+    ],
+    "tags": [
+      "task-language",
+      "flow-engine"
+    ]
+  },
+  {
+    "id": "entity:event-log",
+    "type": "entity",
+    "label": "The event log",
+    "standing": "canon",
+    "summary": "The sole record of the real work; a work item, a queue, who holds the ball, aging, a KPI are all readings folded from it, never stored state.",
+    "source_path": "src/domain/events.ts",
+    "source_line": 1,
+    "quote": "The event log — the living instrument's spine",
+    "links": [
+      "law:events-only-operating-model"
+    ],
+    "tags": [
+      "events-only"
+    ]
+  },
+  {
+    "id": "entity:human-in-the-loop-arc",
+    "type": "entity",
+    "label": "The human-in-the-loop event arc",
+    "standing": "built",
+    "summary": "proposed → awaiting → approved / overridden — the clerk layer's arc: an agent proposes and waits, a human ratifies or overrides.",
+    "source_path": "src/domain/events.ts",
+    "source_line": 20,
+    "quote": "'proposed' // an agent proposes an act and waits on a human",
+    "links": [
+      "law:no-clerk-self-approves",
+      "entity:the-clerk-fleet"
+    ],
+    "tags": [
+      "events-only",
+      "clerk-fleet"
+    ]
+  },
+  {
+    "id": "entity:the-throne",
+    "type": "entity",
+    "label": "The Throne",
+    "standing": "built",
+    "summary": "The King's seat — a fusion of the org's delegation debt (fiefs with no lord) and the work's delegation debt (cases on no real seat) into one number.",
+    "source_path": "src/domain/throne.ts",
+    "source_line": 1,
+    "quote": "The sovereign's top-down reading over the whole kingdom",
+    "links": [
+      "law:throne-fuses-two-debts"
+    ],
+    "tags": [
+      "throne"
+    ]
+  },
+  {
+    "id": "entity:the-realm-reading",
+    "type": "entity",
+    "label": "RealmReading (a score, not a place)",
+    "standing": "built",
+    "summary": "The Regent's whole-kingdom fusion — pods, guilds, unseated work and coffers into the debt he drives to zero. Deliberately not renamed despite sharing five letters with tenure.ts's Realm.",
+    "source_path": "src/domain/realm.ts",
+    "source_line": 12,
+    "quote": "The `RealmReading` below is a\n// SCORE — the Regent's whole-kingdom fusion, the debt he drives to zero.",
+    "links": [
+      "decision:no-renames-realm-and-marches"
+    ],
+    "tags": [
+      "realm",
+      "naming"
+    ]
+  },
+  {
+    "id": "entity:the-clerk-fleet",
+    "type": "entity",
+    "label": "The clerk fleet",
+    "standing": "built",
+    "summary": "One agent per seat, each a bounded task and a run that works through the real flow engine and stops at a judgment, proposed and awaiting the Regent.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 698,
+    "quote": "an agent on every seat",
+    "links": [
+      "law:clerk-per-seat",
+      "law:no-clerk-self-approves",
+      "module:src/domain/events.ts"
+    ],
+    "tags": [
+      "clerk-fleet"
+    ]
+  },
+  {
+    "id": "entity:consequence-engine",
+    "type": "entity",
+    "label": "The consequence engine",
+    "standing": "built",
+    "summary": "Severity, faith, withdrawal and the coffers trend, all folded from age and inaction against the clock — the fail state is a reading, not stored.",
+    "source_path": "docs/WRIT-ECONOMY.md",
+    "source_line": 1,
+    "quote": "records-in,\nreadings-out",
+    "links": [
+      "fact:fester-days",
+      "fact:crisis-days",
+      "fact:withdraw-floor",
+      "module:src/domain/consequences.ts"
+    ],
+    "tags": [
+      "consequences"
+    ]
+  },
+  {
+    "id": "entity:patron",
+    "type": "entity",
+    "label": "Patron",
+    "standing": "built",
+    "summary": "An owner who has entrusted their estate to the Crown's keeping and pays tribute for it; faith starts at 100, eroded by the severities on their doors.",
+    "source_path": "src/domain/consequences.ts",
+    "source_line": 123,
+    "quote": "export interface PatronReading {",
+    "links": [
+      "fact:withdraw-floor"
+    ],
+    "tags": [
+      "consequences",
+      "pods"
+    ]
+  },
+  {
+    "id": "entity:pod",
+    "type": "entity",
+    "label": "Pod",
+    "standing": "built",
+    "summary": "A knight's book of business — a set of owners (Patrons) and their doors (the land); the top-level holding the metaphor was missing.",
+    "source_path": "src/domain/pods.ts",
+    "source_line": 3,
+    "quote": "a knight's book of business:\n// a set of OWNERS (the Patrons) and their DOORS (the LAND)",
+    "links": [
+      "fact:pod-capacity",
+      "decision:realm-remodeled-pods-knights-land"
+    ],
+    "tags": [
+      "pods"
+    ]
+  },
+  {
+    "id": "entity:war-game",
+    "type": "entity",
+    "label": "War Game",
+    "standing": "built",
+    "summary": "A generated synthetic operation at scale, poured through the operator, with a simulated clock the Regent can advance to watch queues fill and drain.",
+    "source_path": "docs/WAR-GAMES.md",
+    "source_line": 12,
+    "quote": "A full simulation of the operating model",
+    "links": [
+      "decision:war-games-first-game-anonymized",
+      "module:src/domain/wargame.ts"
+    ],
+    "tags": [
+      "war-games"
+    ]
+  },
+  {
+    "id": "entity:scenario",
+    "type": "entity",
+    "label": "Scenario (the muster library's recipe shape)",
+    "standing": "built",
+    "summary": "A recipe — a seed plus a declared shape — re-dealt against whatever the setting is; never a dumped event log, so a rename never butchers it.",
+    "source_path": "src/domain/campaign.ts",
+    "source_line": 1,
+    "quote": "A SCENARIO is a recipe, never a recording.",
+    "links": [
+      "decision:muster-is-a-recipe-not-a-recording"
+    ],
+    "tags": [
+      "campaign",
+      "war-games"
+    ]
+  },
+  {
+    "id": "entity:the-grand-muster",
+    "type": "entity",
+    "label": "The grand muster",
+    "standing": "built",
+    "summary": "The torture-test scenario — a whole operation dealt at once, structurally insolvent from deploy on purpose; the stress test that proved the fleet, the Ledger and the economy.",
+    "source_path": "docs/WRIT-THE-CAMPAIGN.md",
+    "source_line": 79,
+    "quote": "the grand muster stays, unchanged, as the stress test.",
+    "links": [
+      "decision:grand-muster-not-retuned",
+      "module:src/domain/campaign.ts"
+    ],
+    "tags": [
+      "campaign",
+      "war-games"
+    ]
+  },
+  {
+    "id": "entity:the-intro-campaign",
+    "type": "entity",
+    "label": "The Intro Campaign, \"A Small Holding\"",
+    "standing": "built",
+    "summary": "A small, clean, solvent-at-rest scenario of six acts teaching the causal loop: neglect drops faith drops tribute drops solvency, delegation holds it.",
+    "source_path": "docs/WRIT-THE-CAMPAIGN.md",
+    "source_line": 114,
+    "quote": "Shape: small, clean, solvent-at-rest, and staged.",
+    "links": [
+      "decision:campaign-is-default-first-deploy",
+      "fact:campaign-fresh-days",
+      "module:src/domain/campaign.ts"
+    ],
+    "tags": [
+      "campaign",
+      "war-games"
+    ]
+  },
+  {
+    "id": "entity:tenure-realm",
+    "type": "entity",
+    "label": "Realm (a place — tenure.ts)",
+    "standing": "built",
+    "summary": "A sovereign polity — a US state and the body that grants the right to practise within it. Not the same word as RealmReading, deliberately unrenamed.",
+    "source_path": "src/domain/tenure.ts",
+    "source_line": 34,
+    "quote": "A SOVEREIGN POLITY — a US state, and the body that grants the right to\n *  practise within it",
+    "links": [
+      "entity:the-realm-reading"
+    ],
+    "tags": [
+      "tenure",
+      "naming"
+    ]
+  },
+  {
+    "id": "entity:tenure-shire",
+    "type": "entity",
+    "label": "Shire / March (a metro's standing)",
+    "standing": "built",
+    "summary": "A metro's shire-or-march standing is a reading, never a stored field, computed from its doors and household against the promotion thresholds.",
+    "source_path": "src/domain/tenure.ts",
+    "source_line": 15,
+    "quote": "a standing is READ, never stored.",
+    "links": [
+      "fact:shire-min-doors",
+      "decision:shire-promotion-thresholds-picked"
+    ],
+    "tags": [
+      "tenure"
+    ]
+  },
+  {
+    "id": "entity:tenure-fee",
+    "type": "entity",
+    "label": "Fee (an owner group, tenure.ts)",
+    "standing": "built",
+    "summary": "An owner group, explicitly non-geographic — the type carries no bounds, no centroid, no polygon, so a renderer cannot assume contiguity.",
+    "source_path": "src/domain/tenure.ts",
+    "source_line": 17,
+    "quote": "Fee     — an owner group. NOT A PLACE",
+    "links": [],
+    "tags": [
+      "tenure"
+    ]
+  },
+  {
+    "id": "entity:tenure-edict",
+    "type": "entity",
+    "label": "Edict (crown edicts, tenure hierarchy)",
+    "standing": "proposed",
+    "summary": "A realm's own regulatory obligation — licence status, CE hours, disclosure, trust-account rules, filing deadlines. Data model only; no UI built yet.",
+    "source_path": "docs/WRIT-THE-WAR-TABLE.md",
+    "source_line": 397,
+    "quote": "over the real\nobligations: licence\nstatus, CE hours, disclosure, trust-account rules, filing deadlines.",
+    "links": [
+      "entity:tenure-realm"
+    ],
+    "tags": [
+      "tenure"
+    ]
+  },
+  {
+    "id": "entity:the-census",
+    "type": "entity",
+    "label": "The census",
+    "standing": "built",
+    "summary": "The founding document, ratified and dated — adopted into the chronicle once, shelf by shelf, and never consulted again for the present.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 184,
+    "quote": "the census below is the founding\ndocument, adopted into the chronicle once and never consulted again for the present.",
+    "links": [
+      "module:src/domain/census.ts"
+    ],
+    "tags": [
+      "census"
+    ]
+  },
+  {
+    "id": "entity:the-court",
+    "type": "entity",
+    "label": "The court",
+    "standing": "built",
+    "summary": "Where the deliberate acts are made and struck; the living records reside in the chronicle in two adopted books — the acts book and the census book.",
+    "source_path": "src/domain/court.ts",
+    "source_line": 1,
+    "quote": "The court: where the deliberate acts are made and struck.",
+    "links": [
+      "entity:record-grant",
+      "entity:the-census"
+    ],
+    "tags": [
+      "court"
+    ]
+  },
+  {
+    "id": "entity:fief-reading",
+    "type": "entity",
+    "label": "FiefReading",
+    "standing": "built",
+    "summary": "A fief folded to its state, holder, grant, appointment, any stray grants, its hamlets, vassals, and garrison — the reading the board renders.",
+    "source_path": "src/domain/states.ts",
+    "source_line": 14,
+    "quote": "export interface FiefReading {",
+    "links": [
+      "entity:fief-state-lorded"
+    ],
+    "tags": [
+      "fief-state"
+    ]
+  },
+  {
+    "id": "entity:the-worker-keyholder",
+    "type": "entity",
+    "label": "The deployed keyholder (the Worker)",
+    "standing": "built",
+    "summary": "The dev server or the deployed Worker is the sole keyholder to the vault's secret key; the app itself only ever speaks to /api/chronicle.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 459,
+    "quote": "The dev server is the sole keyholder; the app still speaks only to\n`/api/chronicle`",
+    "links": [
+      "entity:the-vault",
+      "module:src/worker.ts"
+    ],
+    "tags": [
+      "vault",
+      "walls"
+    ]
+  }
+]

@@ -316,7 +316,7 @@ from it.** Files were read and written, never merged.
 | `book/artifacts/wrangler-jsonc.md` | BURN | Generated page. Compiled from `knowledge/*.json`, which do not cross; a generated view of contaminated sources is contaminated. The compiler crosses. |
 | `book/decisions/.generated-by-emit` | BURN | Generated page. Compiled from `knowledge/*.json`, which do not cross; a generated view of contaminated sources is contaminated. The compiler crosses. |
 | `book/decisions/a-legibility-pass-is-queued-not-yet-done.md` | BURN | Generated page. Compiled from `knowledge/*.json`, which do not cross; a generated view of contaminated sources is contaminated. The compiler crosses. |
-| `book/decisions/an-alpha-before-the-beta-luke-plays-first.md` | BURN | Generated page. Compiled from `knowledge/*.json`, which do not cross; a generated view of contaminated sources is contaminated. The compiler crosses. |
+| `book/decisions/an-alpha-before-the-beta-<name>-plays-first.md` | BURN | Generated page. Compiled from `knowledge/*.json`, which do not cross; a generated view of contaminated sources is contaminated. The compiler crosses. |
 | `book/decisions/auto-deploy-to-main-on-clear.md` | BURN | Generated page. Compiled from `knowledge/*.json`, which do not cross; a generated view of contaminated sources is contaminated. The compiler crosses. |
 | `book/decisions/batch-do-not-fragment.md` | BURN | Generated page. Compiled from `knowledge/*.json`, which do not cross; a generated view of contaminated sources is contaminated. The compiler crosses. |
 | `book/decisions/commit-on-clear-no-gates.md` | BURN | Generated page. Compiled from `knowledge/*.json`, which do not cross; a generated view of contaminated sources is contaminated. The compiler crosses. |
@@ -374,7 +374,7 @@ from it.** Files were read and written, never merged.
 | `book/entities/the-great-book-the-generated-knowledge-wiki.md` | BURN | Generated page. Compiled from `knowledge/*.json`, which do not cross; a generated view of contaminated sources is contaminated. The compiler crosses. |
 | `book/entities/the-intake-clerk-<name>-s-clerk.md` | BURN | Generated page. Compiled from `knowledge/*.json`, which do not cross; a generated view of contaminated sources is contaminated. The compiler crosses. |
 | `book/entities/the-intro-campaign-the-muster-library.md` | BURN | Generated page. Compiled from `knowledge/*.json`, which do not cross; a generated view of contaminated sources is contaminated. The compiler crosses. |
-| `book/entities/the-leasing-clerk-eric.md` | BURN | Generated page. Compiled from `knowledge/*.json`, which do not cross; a generated view of contaminated sources is contaminated. The compiler crosses. |
+| `book/entities/the-leasing-clerk-<name>.md` | BURN | Generated page. Compiled from `knowledge/*.json`, which do not cross; a generated view of contaminated sources is contaminated. The compiler crosses. |
 | `book/entities/the-matter-holding-court-docket.md` | BURN | Generated page. Compiled from `knowledge/*.json`, which do not cross; a generated view of contaminated sources is contaminated. The compiler crosses. |
 | `book/entities/the-office-of-tenancy.md` | BURN | Generated page. Compiled from `knowledge/*.json`, which do not cross; a generated view of contaminated sources is contaminated. The compiler crosses. |
 | `book/entities/the-office-of-works.md` | BURN | Generated page. Compiled from `knowledge/*.json`, which do not cross; a generated view of contaminated sources is contaminated. The compiler crosses. |

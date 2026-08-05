@@ -1,12 +1,6 @@
 # Writ of the Great Book — the living wiki, and the law that keeps it honest
 
-*Ratified 2026-08-05.*
-
-> **The mined sources are not in this repository.** `knowledge/*.json` — the hand-mined laws,
-> decisions, facts, entities and artifact manifest this compiler reads — were built against a
-> private tree and did not cross. The COMPILER does (`tools/vault/*`, `npm run book`), and so
-> does this design. Until the sources are re-mined from the files that ARE here, `npm run book`
-> has nothing to compile. See `docs/HANDOFF.md` § *Next candidates*.
+*Ratified 2026-08-05. Binds this repository and its sibling game project alike.*
 
 ## Why this exists
 
@@ -84,7 +78,7 @@ of the five-session blocker lie.
 | `proposed` | A writ, a plan, a design not yet built. **May never be cited as evidence that something works.** |
 | `contested` | Two sources disagree and no decision has been made. |
 | `retired` | Superseded. Kept for history, never cited as current. Names its successor. |
-| `settled` | **Decided by Edwin.** Not open, not contested, not a finding. A session may NOT raise a settled item as a question, a contradiction, or a recommendation. Treat it exactly like a closed question. |
+| `settled` | **Decided by the maintainer.** Not open, not contested, not a finding. A session may NOT raise a settled item as a question, a contradiction, or a recommendation. Treat it exactly like a closed question. |
 
 A `proposed` claim rendered next to a `built` one, both in plain prose, is exactly how the
 HANDOFF lie survived. The Book renders standing on the face of every page.
@@ -103,7 +97,7 @@ first-class object in `knowledge/facts.json`, not characters inside an expressio
   "unit": "bps",
   "scope": "per management agreement",
   "standing": "contested",
-  "sources": [{ "doc": "docs/HANDOFF.md", "quote": "Mabel's answer on the late-fee split (splitBps is the only unknown)" }]
+  "sources": [{ "doc": "docs/WRIT-ECONOMY.md", "quote": "the split is set per agreement; splitBps is the only unknown" }]
 }
 ```
 
@@ -129,6 +123,31 @@ false relationship is worse than a sparse one. Every wikilink is validated again
 (pages on disk) and (pages about to be written) before anything is written; what does not resolve
 is downgraded to plain text and **reported**, never left dangling.
 
+## Every table is resolved — no page needs a plugin
+
+The Book is a folder of ordinary markdown with YAML frontmatter and `[[wikilinks]]`. Point
+Obsidian at `book/` and it works immediately — backlinks, graph, search — with no build
+step and no install. That is the point of emitting notes at all rather than only a single
+generated page.
+
+**But that is only true while the pages carry ANSWERS.** The tempting alternative is to
+write a Dataview query and let the reader's plugin run it. The generator has already
+evaluated the same thing in order to build the index, so a query is strictly less work
+and strictly worse:
+
+- It renders as a grey code block for anyone without the plugin, so a vault is **blank
+  until you install something** — and a vault that greets you with nothing is a vault
+  people abandon.
+- It breaks the one-source rule. The HTML view and the folder view would compute their
+  tables in two different places, at two different times, and could disagree.
+
+So: **if the generator can answer it, the generator writes the answer.** `lint` fails on
+any fenced `dataview`, `dataviewjs`, `query`, `tasks`, `chart` or `dbfolder` block found
+in the Book. This was true by habit before it was a rule, and habit is not a guarantee.
+
+The same holds for the Codex in Vassal Vessels. A game manual that requires a plugin to
+show its unit tables is not a manual.
+
 ## The four verbs
 
 | verb | command | what it does |
@@ -147,7 +166,8 @@ covered. Dangling links get caught because they look broken. Orphans never look 
 
 | repo | the Book is called | pages | one-file read |
 |---|---|---|---|
-| `landlord` (LandLord) | **the Great Book** | `book/` | `renders/BOOK.html` |
+| this repository (LandLord) | **the Great Book** | `book/` | `renders/BOOK.html` |
+| the sibling game project | **the Codex** | `codex/` | `renders/CODEX.html` |
 
 Same tooling, different sources. The Codex is the manual that came in the case: a smart
 twelve-year-old should be able to read it cover to cover and understand the whole game before ever
@@ -162,7 +182,7 @@ not the same and must never be conflated:
 - **the chronicle** is the event log — the records from which every reading is computed. Not this.
 - **the library** (`docs/LIBRARY-PM.md`) is the property-management reference. Not this.
 
-The generated wiki is **the Great Book**. A sibling repository may name its own differently — the compiler takes the name as a flag.
+The generated wiki is **the Great Book** in LandLord and **the Codex** in Vassal Vessels.
 
 ## Scale
 

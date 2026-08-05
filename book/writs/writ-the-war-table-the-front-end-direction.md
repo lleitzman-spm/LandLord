@@ -1,0 +1,109 @@
+---
+type: "writ"
+id: "writ:docs/WRIT-THE-WAR-TABLE.md"
+title: "Writ — the War Table (the front-end direction)"
+standing: "built"
+standing_source: "knowledge/artifacts.json"
+source_path: "docs/WRIT-THE-WAR-TABLE.md"
+source_line: 1
+origin: "derived"
+generator: "tools/vault/emit.mjs"
+aliases:
+  - "writ:docs/WRIT-THE-WAR-TABLE.md"
+---
+
+# Writ — the War Table (the front-end direction)
+
+> **STANDING — BUILT**  
+> Implemented in code and checkable against the tree.  
+> *Declared in `knowledge/artifacts.json`.*
+
+*Edwin's direction brief, brought into the repo verbatim 2026-07-28 so the build has one durable spec rather than a chat attachment. Sections 2-7 are SETTLED — do not relitigate. Section 10 is the failure-mode list; read it twice. Claude's answers to the open items in section 12 are appended at the 
+
+## The source, verbatim
+
+> *Edwin's direction brief, brought into the repo verbatim 2026-07-28 so the build has
+> one durable spec rather than a chat attachment. Sections 2-7 are SETTLED — do not
+> relitigate. Section 10 is the failure-mode list; read it twice. Claude's answers to
+> the open items in section 12 are appended at the foot under `ANSWERED`.*
+
+*Verified against `docs/WRIT-THE-WAR-TABLE.md`:1 on every lint — no quote, no object.*
+
+## Outline
+
+- How to use this document
+- 1. Current state
+- 2. Direction: diegetic war table
+- 3. The bar: charming, not AAA
+- 4. Visual tokens
+- 5. Domain model and naming
+- 6. Navigation consolidation
+- 7. Scope for this phase
+- 8. Technique
+- 9. Map modes
+- 10. Failure modes specific to this project
+- 11. Phase 1 acceptance: the proving frame
+- 12. Open items
+- Appendix: adversarial review setup
+- §12.1 — what THRONE, SEAT and COURT actually do
+- §12.2 — the data dependency, which the brief does not name
+- §1 — two details now stale
+- §5 + §12.2 — the naming reconciliation, and the hierarchy's shape
+  - The two axes are orthogonal, which is why they compose cleanly
+  - The shape
+  - §12.2 — the promotion thresholds, picked
+  - Crown edicts — data only (§5)
+
+## Decisions that touched it
+
+- [[A march promotes to a shire when three thresholds all hold]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a writ*
+- [[Realm and marches are not renamed despite the naming collision]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a writ*
+- [[The bar is charming, not AAA]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a writ*
+- [[The interface is a physical war table viewed from a fixed high angle]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a writ; this writ names "The interface is a physical war table viewed from a fixed high angle" literally*
+- [[THRONE folds into SEAT — one surface, a state and its acts]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a writ*
+
+## Entities
+
+- [[Edict (crown edicts, tenure hierarchy)]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a entity rather than a writ*
+- [[The census]] — *this writ names "The census" literally*
+- [[The chronicle]] — *this writ names "The chronicle" literally*
+
+## Modules
+
+- [[src/domain/docket.ts]] — *this writ names the exported symbol `readCourt`*
+- [[src/domain/realm.ts]] — *this writ names the exported symbol `readRealm`; this writ names the exported symbol `RealmReading`*
+- [[src/domain/throne.ts]] — *this writ names the exported symbol `readThrone`*
+- [[src/store/chronicleStore.ts]] — *this writ names the exported symbol `RegentActions`*
+
+## artifact
+
+- [[docs/WRIT-THE-WAR-TABLE.md]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a artifact rather than a writ*
+
+## Backlinks
+
+### Decisions that touched it
+
+- [[A march promotes to a shire when three thresholds all hold]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a writ rather than a decision*
+- [[Realm and marches are not renamed despite the naming collision]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a writ rather than a decision*
+- [[The bar is charming, not AAA]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a writ rather than a decision*
+- [[The interface is a physical war table viewed from a fixed high angle]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a writ rather than a decision*
+- [[THRONE folds into SEAT — one surface, a state and its acts]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a writ rather than a decision*
+
+### Entities
+
+- [[Edict (crown edicts, tenure hierarchy)]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a writ rather than a entity*
+
+### artifact
+
+- [[docs/WRIT-THE-WAR-TABLE.md]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a writ rather than a artifact*
+
+## Sources this page cites
+
+*Files this page names by path. Again: a citation of the file, nothing more.*
+
+- [[src/domain/realm.ts]]
+- [[src/domain/tenure.ts]]
+
+---
+
+*Generated by `tools/vault/emit.mjs` from `docs/WRIT-THE-WAR-TABLE.md`:1. **Never edit this page** — it is a view, not an artifact. Fix the source and re-compile (`npm run book`).*

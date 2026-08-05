@@ -1,0 +1,179 @@
+---
+type: "module"
+id: "module:src/domain/events.ts"
+title: "src/domain/events.ts"
+standing: "built"
+standing_source: "knowledge/artifacts.json"
+source_path: "src/domain/events.ts"
+source_line: 1
+origin: "derived"
+generator: "tools/vault/emit.mjs"
+aliases:
+  - "module:src/domain/events.ts"
+---
+
+# src/domain/events.ts
+
+> **STANDING — BUILT**  
+> Implemented in code and checkable against the tree.  
+> *Declared in `knowledge/artifacts.json`.*
+
+269 lines · 19 exported symbols.
+
+## What the file says of itself
+
+> The event log — the living instrument's spine (see docs/KINGDOM.md, "The
+> living instrument"). Ratified 2026-07-19: **events-only**. This append-only
+> log is the SOLE record of the real work; a work item, a queue, who holds the
+> ball, aging, a KPI are all *readings folded from it*, never stored state —
+> the kingdom's oldest law (records in, readings out) reaching the operating
+> model.
+> 
+> A factory component: general and catalog-agnostic. LandLord provides the
+> mechanism — an event references a catalog row by key, a case by id, a holder
+> by id — and a factory setting loads the specific catalog, cases, a
+
+## Shape
+
+- **Lines:** 269
+- **Exported symbols (19):** `CaseReading`, `CaseStatus`, `CatalogBucket`, `ClerkProposal`, `EMPTY_LOG`, `EventKind`, `EventLog`, `KingdomEvent`, `Outcomes`, `Queue`, `UNHELD`, `ageInDays`, `awaitingHuman`, `casesByCatalogRow`, `clerkProposals`, `outcomes`, `queues`, `readCase`, `readCases`
+
+## Entities
+
+- [[The event log]] — *the same file `src/domain/events.ts`, seen as a entity rather than a module*
+- [[The human-in-the-loop event arc]] — *the same file `src/domain/events.ts`, seen as a entity rather than a module*
+
+## Backlinks
+
+### Entities
+
+- [[The clerk fleet]] — *declared in `knowledge/entities.json`*
+- [[The event log]] — *the same file `src/domain/events.ts`, seen as a module rather than a entity*
+- [[The human-in-the-loop event arc]] — *the same file `src/domain/events.ts`, seen as a module rather than a entity*
+
+### Modules
+
+- [[src/domain/agentIntake.ts]] — *imported by this file*
+- [[src/domain/campaign.ts]] — *imported by this file*
+- [[src/domain/chronicle.ts]] — *imported by this file*
+- [[src/domain/consequences.ts]] — *imported by this file*
+- [[src/domain/docket.ts]] — *imported by this file*
+- [[src/domain/flows.ts]] — *imported by this file*
+- [[src/domain/guilds.ts]] — *imported by this file*
+- [[src/domain/pods.ts]] — *imported by this file*
+- [[src/domain/realm.ts]] — *imported by this file*
+- [[src/domain/realmScene.ts]] — *imported by this file*
+- [[src/domain/throne.ts]] — *imported by this file*
+- [[src/domain/wargame.ts]] — *imported by this file*
+- [[src/LedgerView.tsx]] — *imported by this file*
+- [[src/operator-core.ts]] — *imported by this file*
+- [[src/store/chronicleStore.ts]] — *imported by this file*
+- [[src/WarTableView.tsx]] — *imported by this file*
+
+### Surfaces
+
+- [[LedgerView]] — *imported by this view*
+- [[WarTableView]] — *imported by this view*
+
+### Invariants that enforce it
+
+*These roads come from a shared source FILE, not from a semantic claim: the test file imports the module. Read it as "stands near", never as "proves".*
+
+- [[a base-blind merge is unchanged — it still takes the writing session]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a batch that repeats an id inside itself opens one case, not two]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a case with no estateId folds to null (byte-identical to before)]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a chronicle predating the estates shelf migrates to the empty founding book]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a clean founding brings NOTHING — the household is fully staffed]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a clerk’s proposal is heard ONCE — never also as a bare waiting case]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a craft left headless IS brought before the court]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a CRISIS outranks a fresh matter, and held COIN outranks a bare wait]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a fully-worked vendor-dispatch folds to done and reaches settlement]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a loaded estate roster flips isFoundingChronicle to non-founding]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a MIDDLE step hands on and closes NOTHING]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a muster deployed on the remote side is adopted, not clobbered by a stale local]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a re-observed condition with a NEW id does not open a second case]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a revoked grant struck on the remote side stays struck]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a spend on the higher-cap estate CLEARS; the same spend on an unlisted estate GATES]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a struck money event stays struck through the merge]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[act five is met by holding the watch with no door in crisis]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[act four is met by ANSWERING three of the clerks’ proposals]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[act one is met by SEATING the empty craft — a record, not a flag]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[act six is met by ending a month in the black]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[act three is met by getting the boxes onto real desks]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[act two is met by WALKING a cascade to done]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[an ancient trifle never outranks today’s crisis — age does not compound forever]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[an empty array is valid — the revert-to-founding shape]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[approving the final step records that the case is DONE]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[caps what one court hears, keeping the heaviest and still every kind]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[carries the originating event id onto the opening record]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[deals six cascades, four boxes on the Regent, and two raw tickets]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[deals the scenario’s doors and knights]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[distinct signals on the same subject open distinct cases]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[drops non-string params, which is how a nested record would arrive]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[emits ONLY an opening and the hand to step one — never an approval or a completion]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[estateLabel resolves a slug to its label, falling back to the raw slug]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[every agreed signal names a flow and a reason — no silent entries]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[every catalog row an act names stands in the catalog]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[every flow key an act names stands in the flow book]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[every goal reads UNMET on a fresh deploy]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[every goal reads UNMET when no holding is dealt at all]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[every named box and cascade actually LANDS on the board]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[every office an act leaves headless stands in the census]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[every seat an act names resolves]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[every step of every named flow resolves — row, holder and key]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[founding is empty and reads as founding]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[gathers matters from EVERY department — not one kind of thing]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[instantiateFlow stamps estateId on the opened event; readCase folds it forward]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[is a READING — answering elsewhere simply stops it being brought]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[is idempotent when local and remote are identical (no duplication)]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[is meaningfully SMALLER than the grand muster]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[is ordered heaviest FIRST — the docket never rises]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[is SOLVENT at rest, with a margin, and the Crown’s own coin is not gone]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[KEEPS a setting the other session loaded, when the base carried none]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[no ONE kind starves the rest — the standing debts are always heard]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[no step note leaks a literal {token} when rendered with full params]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[nothing dealt is STALE — the clock starts clean]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[once every step is done, the condition may open a fresh case]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[opens a case on the flow the signal names]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[overruling the final step closes it too]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[reads a well-formed roster, trimming and keeping order]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[reads taken ids straight out of the log, so no side index can drift]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[reconcileById: a strike on one side is not resurrected by the other]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[refuses a missing/empty id or label, and a duplicate id]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[refuses a row whose string params carry an identifier]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[refuses a row whose SUBJECT carries an identifier]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[refuses non-JSON, a non-array, a rowless shape, and unknown fields]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[routes the good rows in a batch and skips only the bad]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[routes the over-limit spend signal a firm asked for]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[routing the same batch twice opens nothing the second time]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[skips a known signal whose flow this chronicle does not carry]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[skips a malformed row rather than opening a case with a hole in it]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[skips a signal it has never agreed on, and says so]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[still lets THIS session’s own load win over a stale remote]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[still routes ordinary rows — the scan must not fire on real work]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[the case READS as done once the last step is ratified]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[the case spine feeds the gate end-to-end: readCase(estateId) → spendGate]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[the fallback (no base) CANNOT honor a strike — it resurrects (documents the limit)]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[the grand muster is UNCHANGED by the campaign’s knobs — a GOLDEN fingerprint]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[the move-out relay also folds clean to done]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[the THE_REGENT role resolves against the census it is dealt into]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[the writing session keeps its own board change when it is the one that moved it]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[threads the estate through so the spend gate reads a per-estate cap]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[two fresh ids for the same condition in ONE batch open exactly one case]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[two proposals answered on ONE case count as two]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[two writers appending disjoint events lose nothing on merge (base-blind fallback)]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[two writers appending disjoint events lose nothing WITH a base (3-way)]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[unionById keeps both sides, remote first, dedupes by id]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[unions money and record books by id too (no owner/grant append lost)]] — *imported by the test FILE (shared source, not a claim about this one test)*
+
+## Documents that cite this source
+
+*These name this FILE by its path. That is a citation of the source, not a claim about any one idea inside it — do not read a path citation as agreement, dependence or implementation.*
+
+- [[Writ — the first War Game (the proving ground)]]
+- [[Writ — the flow engine (the operator's spine)]]
+- [[Writ — the operator's hands (swing two, part one)]]
+
+---
+
+*Generated by `tools/vault/emit.mjs` from `src/domain/events.ts`:1. **Never edit this page** — it is a view, not an artifact. Fix the source and re-compile (`npm run book`).*
