@@ -1,0 +1,1034 @@
+// ⚠ THE FLOW TEMPLATES BELOW ARE DEMO DATA for the seed tenant. The ENGINE is
+// the product — a flow is loaded configuration, and no code here knows the
+// word "move-out". The specific steps, holders and timings encode one
+// worked way of working; a deployment loads its own.
+// The flow engine — the operator's spine (docs/WRIT-FLOW-ENGINE.md, swing one).
+// A flow template is *config*: a trigger and a set of steps, each step naming a
+// catalog row (task-type), a holder, a timing edge, and the board it belongs
+// to. Instantiating a flow on a subject opens one **case** and emits every
+// step as an **event** in the log we already keep — events-only, so the flow
+// instance *is* the case and its state folds from the events; nothing about a
+// flow's progress is stored.
+//
+// A factory component: the engine below knows no factory setting by name. The
+// working-fluid FOUNDING_FLOWS below holds one relay — a move-out → re-list
+// cascade — purely as config, as proof of the line: no branch of code knows
+// the word "move-out"; the template says it all. a firm's real relay loads through
+// the same `flows.load` gate as the catalog's rows when the data gate opens.
+//
+// The seam for swing two (the clerks) is deliberately left open: step *state*
+// folds from the human-in-the-loop event kinds already in the log (`noted`,
+// `proposed`, `awaiting`, `approved`, `overridden`, `done`), so a clerk can
+// grip these steps next without the engine changing shape.
+
+import type { EventKind, KingdomEvent } from './events';
+import { readCase } from './events';
+
+// ── The template — loaded config ────────────────────────────────────────────
+
+/** A timing edge, expressed from config. `after` / `before` are offsets in
+ *  days from the trigger: 0 is the day itself, -7 is T-7d, +30 a month out.
+ *  `onOrAfterDayOfMonth` / `beforeDayOfMonth` bound a step to a calendar
+ *  window ("after the 15th / before the 10th") — a money step that may only
+ *  move inside the circuit's open days. */
+export interface TimingEdge {
+  after?: number;
+  before?: number;
+  onOrAfterDayOfMonth?: number;
+  beforeDayOfMonth?: number;
+}
+
+/** Who gets the ball on a step: a census person id, or a queue name (a role
+ *  nobody holds yet — the queue reads as the holder until a setting maps it). */
+export type HolderRef = string;
+
+export interface FlowStep {
+  key: string;
+  /** The catalog row this step is an instance of — every step references the
+   *  loaded ontology by key (docs/KINGDOM.md, "the catalog is the event
+   *  taxonomy"). */
+  catalogRow: string;
+  holder: HolderRef;
+  /** The board this step renders on — a phase of the cascade ("Move-Out",
+   *  "Leasing"). Boards are config, not code. */
+  board: string;
+  edge: TimingEdge;
+  /** Days the step may sit past its edge before the reading calls it
+   *  breached — the wait / SLA. */
+  slaDays?: number;
+  /** The loop marker: when set, the step repeats on its edge until the
+   *  condition no longer holds (the weekly price-drop until leased). */
+  repeatEveryDays?: number;
+  /** A free-text condition, human-read ("until leased") — swing one records
+   *  it; the clerks will act on it. */
+  condition?: string;
+  note?: string;
+}
+
+export interface FlowTemplate {
+  key: string;
+  title: string;
+  /** The human trigger line ("a tenant gives notice"). Swing one triggers by
+   *  a hand on the Ledger; the trigger is config so the clerks can fire it. */
+  trigger: string;
+  steps: FlowStep[];
+}
+
+export type FlowBook = FlowTemplate[];
+
+// The founding book — working fluid ───────────────────────────────────────
+// The FIVE event-driven workflows, all config — the whole automation surface a
+// property firm runs on, each a trigger and a cascade that stops at the human
+// judgments it must never cross (TARGET-MODEL, "five event-driven workflows",
+// confirmed 1:1 against a firm's own process maps):
+//   1. Notice to vacate  → move-out-relay   (thirteen steps, five hands, three
+//      boards, a timing-boxed money step and a weekly loop).
+//   2. WO submitted      → vendor-dispatch  (the work-order word: report →
+//      identify → assign → dispatch → invoice → confirm → pay → post).
+//   3. HOA/owner/vendor notice → violation-notice (classify → decide → serve →
+//      follow to cure → close; the violation call kept human).
+//   4. Lease expiration (T-90) → lease-renewal (offer → owner window → chase →
+//      countersign → fee → record; the rent call and the signature human).
+//   5. Property won      → owner-onboarding (intake → agreement → setup →
+//      walkthrough → insurance → make-ready → lockbox → report → go-live).
+// All held entirely in config, as proof of the line: no branch of code knows
+// the word "move-out" or "renewal"; the template says it all. These are the
+// leash-safe SHAPES — general and working-fluid, no factory's figures; a firm's
+// real steps, holders, thresholds, and GL codes load through the same
+// `flows.load` gate as the catalog's rows when the data gate opens.
+//
+// vendor-dispatch carries `{trade}` / `{urgency}` tokens in its notes — the
+// leaves of the Maintenance tree (FOUNDING_CATALOG) bind it with per-leaf
+// params, so one grammar renders many words ("no cooling" walks as an
+// emergency HVAC dispatch; "routine service" the same grammar at a routine
+// pace). Holders stay real ids (seats and queues; the vendor is a artisan's
+// queue) — the trade is flavor in the note, never a fake seat.
+
+export const FOUNDING_FLOWS: FlowBook = [
+  {
+    key: 'move-out-relay',
+    title: 'Move-out → re-list relay',
+    trigger: 'A tenant gives notice',
+    steps: [
+      {
+        key: 'log-notice',
+        catalogRow: 'notice-received',
+        holder: 'pm-desk',
+        board: 'Move-Out',
+        edge: { after: 0 },
+        slaDays: 1,
+        note: 'Notice logged and acknowledged; the clock starts.',
+      },
+      {
+        key: 'confirm-date',
+        catalogRow: 'confirm-vacate-date',
+        holder: 'pm-desk',
+        board: 'Move-Out',
+        edge: { after: 1 },
+        slaDays: 2,
+        note: 'Vacate date confirmed in writing with the tenant.',
+      },
+      {
+        key: 'pre-inspection',
+        catalogRow: 'schedule-pre-inspection',
+        holder: 'alys',
+        board: 'Move-Out',
+        edge: { after: -14, before: -7 },
+        note: 'Walk the unit before the tenant leaves; scope the turn.',
+      },
+      {
+        key: 'move-out-inspection',
+        catalogRow: 'move-out-inspection',
+        holder: 'alys',
+        board: 'Move-Out',
+        edge: { after: 0, before: 2 },
+        slaDays: 2,
+        note: 'Document condition against the deposit.',
+      },
+      {
+        key: 'turn-scope',
+        catalogRow: 'scope-the-turn',
+        holder: 'va-desk',
+        board: 'Move-Out',
+        edge: { after: 1, before: 3 },
+        slaDays: 2,
+        note: 'Bids gathered, the turn scoped and priced.',
+      },
+      {
+        key: 'owner-reserve',
+        catalogRow: 'owner-reserve',
+        holder: 'lp-queue',
+        board: 'Deposit Transfer',
+        edge: { after: 3, before: 10, onOrAfterDayOfMonth: 15, beforeDayOfMonth: 10 },
+        slaDays: 5,
+        note: 'A ~$750 owner reserve, requested only inside the open window.',
+      },
+      {
+        key: 'turn-work',
+        catalogRow: 'work-the-turn',
+        holder: 'va-desk',
+        board: 'Move-Out',
+        edge: { after: 3, before: 10 },
+        slaDays: 7,
+        note: 'The turn itself: vendors dispatched, unit made ready.',
+      },
+      {
+        key: 'deposit-accounting',
+        catalogRow: 'deposit-accounting',
+        holder: 'alys',
+        board: 'Deposit Transfer',
+        edge: { after: 2, before: 21 },
+        slaDays: 3,
+        note: 'Deductions itemized and sent inside the statutory window.',
+      },
+      {
+        key: 'deposit-transfer',
+        catalogRow: 'transfer-the-deposit',
+        holder: 'lp-queue',
+        board: 'Deposit Transfer',
+        edge: { after: 21, before: 30 },
+        slaDays: 5,
+        note: 'What is owed moves: refund out, damages to the owner.',
+      },
+      {
+        key: 'final-walk',
+        catalogRow: 'final-walk',
+        holder: 'osric',
+        board: 'Leasing',
+        edge: { after: 10, before: 12 },
+        note: 'Rent-ready verified before the listing goes live.',
+      },
+      {
+        key: 'list-unit',
+        catalogRow: 'list-unit',
+        holder: 'osric',
+        board: 'Leasing',
+        edge: { after: 12 },
+        slaDays: 2,
+        note: 'Photos, price, syndication — the unit is on the market.',
+      },
+      {
+        key: 'show-and-screen',
+        catalogRow: 'show-and-screen',
+        holder: 'osric',
+        board: 'Leasing',
+        edge: { after: 12, before: 40 },
+        note: 'Showings worked, applicants screened.',
+      },
+      {
+        key: 'weekly-price-drop',
+        catalogRow: 'vacancy-price-drop',
+        holder: 'osric',
+        board: 'Leasing',
+        edge: { after: 19 },
+        repeatEveryDays: 7,
+        condition: 'until leased',
+        note: 'The vacancy loop: $25 off the ask each week it sits.',
+      },
+    ],
+  },
+  {
+    key: 'vendor-dispatch',
+    title: 'Vendor dispatch',
+    trigger: 'A work order is reported',
+    steps: [
+      {
+        key: 'report',
+        catalogRow: 'work-order',
+        holder: 'pm-desk',
+        board: 'Intake',
+        edge: { after: 0 },
+        slaDays: 1,
+        note: 'The report logged — what broke, which door, how it reached us.',
+      },
+      {
+        key: 'identify',
+        catalogRow: 'work-order',
+        holder: 'mabel',
+        board: 'Intake',
+        edge: { after: 0 },
+        slaDays: 1,
+        note: 'Walked down the tree to a leaf — a {trade} call, {urgency} priority.',
+      },
+      {
+        key: 'assign-vendor',
+        catalogRow: 'work-order',
+        holder: 'va-desk',
+        board: 'Dispatch',
+        edge: { after: 0, before: 1 },
+        slaDays: 1,
+        note: 'A artisan of the {trade} trade chosen for a {urgency} call.',
+      },
+      {
+        key: 'dispatch',
+        catalogRow: 'work-order',
+        holder: 'va-desk',
+        board: 'Dispatch',
+        edge: { after: 0, before: 1 },
+        slaDays: 1,
+        note: 'The {trade} artisan dispatched — {urgency} window, tenant notified.',
+      },
+      {
+        key: 'invoice-in',
+        catalogRow: 'work-order',
+        holder: 'lp-queue',
+        board: 'Settlement',
+        edge: { after: 1, before: 7 },
+        slaDays: 5,
+        note: "The {trade} artisan's invoice received and matched to the work.",
+      },
+      {
+        key: 'confirm-work',
+        catalogRow: 'work-order',
+        holder: 'mabel',
+        board: 'Dispatch',
+        edge: { after: 1, before: 7 },
+        slaDays: 3,
+        note: 'The fix confirmed with the tenant — the {trade} work holds.',
+      },
+      {
+        key: 'pay-vendor',
+        catalogRow: 'work-order',
+        holder: 'lp-queue',
+        board: 'Settlement',
+        edge: { after: 3, before: 10, onOrAfterDayOfMonth: 15, beforeDayOfMonth: 10 },
+        slaDays: 5,
+        note: 'The artisan paid — only inside the open window of the circuit.',
+      },
+      {
+        key: 'post-to-accounting',
+        catalogRow: 'work-order',
+        holder: 'lp-queue',
+        board: 'Settlement',
+        edge: { after: 3, before: 14 },
+        slaDays: 5,
+        note: 'The cost posted to the door and its owner — the ledger balanced.',
+      },
+    ],
+  },
+  // ── Workflow three: HOA / owner / vendor notice → violation-notice ─────────
+  // Classify → the violation DECISION (human) → draft → serve (the legal gate
+  // kept) → follow the cure window until cured → close. Every step shares the
+  // `violation-notice` trigger row, told apart by holder + order — the
+  // vendor-dispatch pattern. {violation} / {days} render from TOKEN_DEFAULTS.
+  {
+    key: 'violation-notice',
+    title: 'Violation / notice',
+    trigger: 'A violation or notice arrives',
+    steps: [
+      {
+        key: 'receive',
+        catalogRow: 'violation-notice',
+        holder: 'pm-desk',
+        board: 'Intake',
+        edge: { after: 0 },
+        note: 'The notice logged — HOA, owner, or vendor; what, which door, from whom.',
+      },
+      {
+        key: 'classify',
+        catalogRow: 'violation.classify',
+        holder: 'va-desk',
+        board: 'Intake',
+        edge: { after: 0 },
+        note: 'Classified by kind and severity — the {violation} named.',
+      },
+      {
+        key: 'decide',
+        catalogRow: 'violation.decide',
+        holder: 'mabel',
+        board: 'Judgment',
+        edge: { after: 1 },
+        slaDays: 2,
+        note: 'The call a human makes: cure, waive, or send the {violation} up the ladder.',
+      },
+      {
+        key: 'draft-notice',
+        catalogRow: 'violation.draft',
+        holder: 'va-desk',
+        board: 'Notice',
+        edge: { after: 1, before: 3 },
+        slaDays: 2,
+        note: 'The cure notice drafted from the template — the {days}-day window stated.',
+      },
+      {
+        key: 'serve',
+        catalogRow: 'violation.serve',
+        holder: 'pm-desk',
+        board: 'Notice',
+        edge: { after: 2, before: 4 },
+        slaDays: 2,
+        note: 'Served and recorded — the legal gate kept, the clock on record.',
+      },
+      {
+        key: 'cure-window',
+        catalogRow: 'violation.cure',
+        holder: 'mabel',
+        board: 'Follow-up',
+        edge: { after: 3 },
+        repeatEveryDays: 7,
+        condition: 'until cured',
+        note: 'The cure period worked — reminded each week it stands open.',
+      },
+      {
+        key: 'close',
+        catalogRow: 'violation.close',
+        holder: 'pm-desk',
+        board: 'Close',
+        edge: { after: 10 },
+        slaDays: 3,
+        note: 'The outcome recorded and the case closed — cured, or handed up the ladder.',
+      },
+    ],
+  },
+  // ── Workflow four: lease expiration (T-90) → lease-renewal ─────────────────
+  // The T-90 window opens → the rent DECISION (human) → draft & send the offer
+  // → the owner's silence-is-authorization window → chase the tenant until
+  // signed → the broker's countersignature (human) → post the fee in the money
+  // window → record; unsigned rolls to month-to-month with the premium.
+  {
+    key: 'lease-renewal',
+    title: 'Lease renewal',
+    trigger: 'A lease nears its term (T-90)',
+    steps: [
+      {
+        key: 'open-window',
+        catalogRow: 'renewal',
+        holder: 'lp-queue',
+        board: 'Renewal',
+        edge: { after: 0 },
+        note: 'The T-90 window opens — the term in sight, the file pulled.',
+      },
+      {
+        key: 'price',
+        catalogRow: 'renewal.price',
+        holder: 'osric',
+        board: 'Pricing',
+        edge: { after: 1 },
+        slaDays: 3,
+        note: 'The rent call a human makes — hold, raise by {increase}, or let the door go.',
+      },
+      {
+        key: 'draft-offer',
+        catalogRow: 'renewal.draft-offer',
+        holder: 'lp-queue',
+        board: 'Offer',
+        edge: { after: 2, before: 5 },
+        slaDays: 2,
+        note: 'The renewal offer drafted at the set {rent} — the packet staged.',
+      },
+      {
+        key: 'send-offer',
+        catalogRow: 'renewal.send-offer',
+        holder: 'lp-queue',
+        board: 'Offer',
+        edge: { after: 3, before: 6 },
+        slaDays: 1,
+        note: 'The offer sent to the tenant — the term and the {rent} on the table.',
+      },
+      {
+        key: 'owner-window',
+        catalogRow: 'renewal.owner-window',
+        holder: 'lp-queue',
+        board: 'Owner',
+        edge: { after: 3, before: 10 },
+        slaDays: 7,
+        condition: 'silence is authorization',
+        note: "The owner's window — silence past it stands as consent.",
+      },
+      {
+        key: 'tenant-response',
+        catalogRow: 'renewal.tenant-response',
+        holder: 'lp-queue',
+        board: 'Offer',
+        edge: { after: 6 },
+        repeatEveryDays: 7,
+        condition: 'until signed',
+        note: 'The tenant chased each week — signed, or the term runs month-to-month.',
+      },
+      {
+        key: 'countersign',
+        catalogRow: 'renewal.countersign',
+        holder: 'osric',
+        board: 'Execution',
+        edge: { after: 20, before: 30 },
+        slaDays: 2,
+        note: "The broker's signature — the one hand the machine never holds.",
+      },
+      {
+        key: 'post-fee',
+        catalogRow: 'renewal.fee',
+        holder: 'lp-queue',
+        board: 'Settlement',
+        edge: { after: 20, before: 30, onOrAfterDayOfMonth: 15, beforeDayOfMonth: 10 },
+        slaDays: 5,
+        note: 'The renewal fee posted — only inside the open window of the circuit.',
+      },
+      {
+        key: 'record',
+        catalogRow: 'renewal.record',
+        holder: 'lp-queue',
+        board: 'Close',
+        edge: { after: 25 },
+        slaDays: 2,
+        note: 'Filed and notified — unsigned rolls to month-to-month with the premium.',
+      },
+    ],
+  },
+  // ── Workflow five: property won → owner-onboarding ────────────────────────
+  // Intake → the management AGREEMENT (human signature) → set up records → the
+  // property WALKTHROUGH (human, onsite) → verify insurance → make-ready (only
+  // where a door comes vacant) → hang the lockbox (the physical leg) → the
+  // first owner report → go live (list & syndicate a vacant door).
+  {
+    key: 'owner-onboarding',
+    title: 'Owner onboarding',
+    trigger: "A new owner's property is won",
+    steps: [
+      {
+        key: 'intake',
+        catalogRow: 'owner-onboarding',
+        holder: 'pm-desk',
+        board: 'Intake',
+        edge: { after: 0 },
+        note: 'The owner intake logged — the property, the doors, the terms sought.',
+      },
+      {
+        key: 'agreement',
+        catalogRow: 'onboarding.agreement',
+        holder: 'osric',
+        board: 'Agreement',
+        edge: { after: 1 },
+        slaDays: 3,
+        note: "The management agreement — a signature and a judgment, kept human.",
+      },
+      {
+        key: 'set-up-records',
+        catalogRow: 'onboarding.setup',
+        holder: 'va-desk',
+        board: 'Setup',
+        edge: { after: 2, before: 5 },
+        slaDays: 3,
+        note: 'Records opened and defaults set in the system of record.',
+      },
+      {
+        key: 'walkthrough',
+        catalogRow: 'onboarding.walkthrough',
+        holder: 'alys',
+        board: 'Onsite',
+        edge: { after: 2, before: 7 },
+        slaDays: 4,
+        note: "The property walked — the onsite judgment the machine can't make.",
+      },
+      {
+        key: 'verify-insurance',
+        catalogRow: 'onboarding.insurance',
+        holder: 'va-desk',
+        board: 'Compliance',
+        edge: { after: 3, before: 8 },
+        slaDays: 5,
+        note: 'Owner insurance verified and on file — the coverage gate.',
+      },
+      {
+        key: 'make-ready',
+        catalogRow: 'onboarding.make-ready',
+        holder: 'va-desk',
+        board: 'Make-Ready',
+        edge: { after: 5 },
+        condition: 'if the door stands vacant',
+        note: 'The make-ready batched — only where a door comes empty.',
+      },
+      {
+        key: 'lockbox',
+        catalogRow: 'onboarding.lockbox',
+        holder: 'alys',
+        board: 'Onsite',
+        edge: { after: 5, before: 9 },
+        slaDays: 3,
+        note: 'Keys logged and the lockbox hung — the physical leg.',
+      },
+      {
+        key: 'first-report',
+        catalogRow: 'onboarding.report',
+        holder: 'pm-desk',
+        board: 'Report',
+        edge: { after: 7, before: 12 },
+        slaDays: 3,
+        note: 'The first owner report sent — the relationship opened on the books.',
+      },
+      {
+        key: 'go-live',
+        catalogRow: 'onboarding.go-live',
+        holder: 'osric',
+        board: 'Leasing',
+        edge: { after: 10 },
+        condition: 'if the door stands vacant',
+        note: 'Built and syndicated — the vacant door goes to market.',
+      },
+    ],
+  },
+];
+
+// ── The engine: instantiate a flow as events ────────────────────────────────
+// Triggering a flow opens a case and hands its FIRST step — the log records what
+// has happened, never a plan (events-only). The template holds the whole
+// cascade; the log carries only its front, so the ball sits with the step
+// actually in hand, and the cascade advances a step at a time as each is worked
+// (the clerks, swing two). The first step enters `awaiting` when it waits on a
+// judgment (a wait, a money window, a condition), else `handed` to its holder.
+
+/** Steps whose edge or nature parks them on a judgment rather than in a hand:
+ *  anything with a wait (slaDays), a calendar window, a loop, or a condition. */
+function stepWaits(s: FlowStep): boolean {
+  return (
+    s.slaDays != null ||
+    s.edge.onOrAfterDayOfMonth != null ||
+    s.edge.beforeDayOfMonth != null ||
+    s.repeatEveryDays != null ||
+    s.condition != null
+  );
+}
+
+/** Human-legible timing for the emitted note, folded from the edge. */
+export function edgeLine(edge: TimingEdge): string {
+  const parts: string[] = [];
+  const rel = (n: number) =>
+    n === 0 ? 'on notice day' : n < 0 ? `T${n}d` : `T+${n}d`;
+  if (edge.after != null && edge.before != null)
+    parts.push(`${rel(edge.after)} → ${rel(edge.before)}`);
+  else if (edge.after != null) parts.push(rel(edge.after));
+  else if (edge.before != null) parts.push(`by ${rel(edge.before)}`);
+  if (edge.onOrAfterDayOfMonth != null || edge.beforeDayOfMonth != null)
+    parts.push(
+      `in the window: on/after the ${edge.onOrAfterDayOfMonth ?? '?'}th, before the ${edge.beforeDayOfMonth ?? '?'}th`,
+    );
+  return parts.join(' · ');
+}
+
+export interface FlowInstance {
+  caseId: string;
+  events: KingdomEvent[];
+}
+
+/** A leaf's letters — the `{token}`s of a flow shape render from this map
+ *  ("{trade}" → "HVAC"). One grammar, many words. */
+export type FlowParams = Record<string, string>;
+
+/** Substitute `{token}`s in a bit of template text from a params map. Unknown
+ *  tokens are left verbatim ("{trade}" with no trade stays "{trade}"), so a
+ *  shape rendered without its letters still reads as a shape. */
+function substitute(text: string, params?: FlowParams): string {
+  if (!params) return text;
+  return text.replace(/\{(\w+)\}/g, (m, name: string) => params[name] ?? m);
+}
+
+/** The note a step's event carries — its place, its timing, its loop, its
+ *  letters rendered (`{trade}` → the leaf's trade). */
+function stepNote(s: FlowStep, index: number, total: number, params?: FlowParams): string {
+  const bits = [substitute(s.note ?? '', params), edgeLine(s.edge)];
+  if (s.repeatEveryDays != null)
+    bits.push(
+      `repeats every ${s.repeatEveryDays}d ${substitute(s.condition ?? '', params)}`.trim(),
+    );
+  else if (s.condition) bits.push(`when ${substitute(s.condition, params)}`);
+  return `Step ${index + 1}/${total} · ${bits.filter(Boolean).join(' — ')}`;
+}
+
+/** The event that hands one step to its holder — `awaiting` when it waits on a
+ *  judgment, else `handed`. Exported so the clerks (swing two) advance a flow
+ *  by handing the next step the same way the engine hands the first. `params`
+ *  renders `{token}`s in the note and condition text — NEVER in the holder:
+ *  holders stay real ids (a census person or a queue); the leaf's trade is
+ *  flavor in the text, not a fake seat. */
+export function handStep(
+  tpl: FlowTemplate,
+  caseId: string,
+  index: number,
+  opts: { at: string; id: () => string },
+  params?: FlowParams,
+): KingdomEvent {
+  const s = tpl.steps[index];
+  return {
+    id: opts.id(),
+    at: opts.at,
+    caseId,
+    kind: stepWaits(s) ? 'awaiting' : 'handed',
+    catalogRow: s.catalogRow,
+    holder: s.holder,
+    note: stepNote(s, index, tpl.steps.length, params),
+  };
+}
+
+/** Instantiate a flow on a subject ("Willow Creek unit 4"): open the case and
+ *  hand its first step. Pure — ids and the timestamp come from the caller, so
+ *  the store and the tests steer the clock. Nothing is written here; the caller
+ *  appends the returned events to the log. The rest of the cascade lives in the
+ *  template until it is reached — the log carries only what has happened.
+ *  `params` is the leaf's letters: the store passes a triggered task-type's
+ *  `params` in and one shape renders as that word. */
+export function instantiateFlow(
+  tpl: FlowTemplate,
+  subject: string,
+  opts: { at: string; id: () => string; estateId?: string },
+  params?: FlowParams,
+): FlowInstance {
+  const caseId = `${tpl.key}: ${subject.trim()}`;
+  const events: KingdomEvent[] = [
+    {
+      id: opts.id(),
+      at: opts.at,
+      caseId,
+      kind: 'opened',
+      note: `${substitute(tpl.trigger, params)} — the ${tpl.title} begins: ${tpl.steps.length} steps.`,
+      // Carry the leaf's letters on the opening record, so ADVANCING the
+      // cascade can recover them and render every later step (the seam).
+      ...(params && Object.keys(params).length ? { params } : {}),
+      // The real property this case concerns — folded forward by `readCase` so
+      // the spend gate can read its per-estate cap. Absent ⇒ house cap, as before.
+      ...(opts.estateId ? { estateId: opts.estateId } : {}),
+    },
+  ];
+  if (tpl.steps.length) events.push(handStep(tpl, caseId, 0, opts, params));
+  return { caseId, events };
+}
+
+/** The letters a flow instance renders from — the `params` recorded on its
+ *  `opened` event (instantiateFlow), or undefined for an unparameterized
+ *  cascade. The store reads this back to thread the same letters through the
+ *  cascade's advancement, closing the params-advance seam. */
+export function paramsOf(log: KingdomEvent[], caseId: string): FlowParams | undefined {
+  const opened = log.find((e) => e.caseId === caseId && e.kind === 'opened');
+  return opened?.params;
+}
+
+/** Readable defaults for the common flow tokens — so a cascade triggered from
+ *  a catalog leaf renders every step even when the leaf's own params don't name
+ *  every `{token}` a richer grammar uses (a library flow may speak of `{days}`,
+ *  `{amount}`, a `{violation}` the leaf never carried). General, working-fluid;
+ *  a setting tunes them when its real figures load. */
+const TOKEN_DEFAULTS: FlowParams = {
+  trade: 'the trade',
+  urgency: 'routine',
+  days: '30',
+  amount: 'the sum',
+  violation: 'the violation',
+  rent: 'the rent',
+  balance: 'the balance',
+  fee: 'the fee',
+  date: 'the date',
+  unit: 'the unit',
+  name: 'the tenant',
+  increase: 'the increase',
+  notice: 'the notice',
+  term: 'the term',
+  deposit: 'the deposit',
+  reason: 'the reason',
+  count: 'the count',
+};
+
+/** The full letters to render a template with: the leaf's own params first,
+ *  then a readable default for every other `{token}` the steps or the trigger
+ *  reference — so triggering a leaf's completion flow never leaks a literal
+ *  `{token}`, however rich the loaded grammar. (The war-game generator fills
+ *  tokens the same way; this is the store's equivalent for a hand-triggered
+ *  cascade.) */
+export function fullParams(tpl: FlowTemplate, leaf?: FlowParams): FlowParams {
+  const p: FlowParams = { ...(leaf ?? {}) };
+  const sources = [tpl.trigger, ...tpl.steps.flatMap((s) => [s.note, s.condition])];
+  for (const src of sources) {
+    if (!src) continue;
+    for (const m of src.matchAll(/\{(\w+)\}/g)) {
+      if (!(m[1] in p)) p[m[1]] = TOKEN_DEFAULTS[m[1]] ?? m[1];
+    }
+  }
+  return p;
+}
+
+// ── The operator's hands (swing two, part one — docs/WRIT-OPERATOR-HANDS.md) ─
+// The human-in-the-loop arc that walks a cascade forward. Every helper is pure
+// and returns the events to APPEND — nothing is written here, and nothing about
+// a flow's progress is ever stored (events-only). A *human* act carries no
+// actor: the clerk's seam stays clean — when the agents arrive they emit
+// `proposed` with an `agent:<seat>` actor, and the human's `approved` /
+// `overridden` below is the answer to it. The template is the plan and the log
+// is the truth: advancing hands the next TEMPLATE step, never a pre-emitted
+// future one.
+
+/** One appended event answering the step in hand — the shared spine of the
+ *  helpers below. Carries the step's catalog row and holder so the fold reads
+ *  it as progress on that step, and the `Step n/N` note so order survives. */
+function answerStep(
+  tpl: FlowTemplate,
+  caseId: string,
+  index: number,
+  kind: EventKind,
+  opts: { at: string; id: () => string; note?: string },
+): KingdomEvent {
+  const s = tpl.steps[index];
+  const line = opts.note?.trim() ? ` — ${opts.note.trim()}` : '';
+  return {
+    id: opts.id(),
+    at: opts.at,
+    caseId,
+    kind,
+    catalogRow: s.catalogRow,
+    holder: s.holder,
+    note: `Step ${index + 1}/${tpl.steps.length} · ${kind}${line}`,
+  };
+}
+
+/** An operator agent's proposal on the step in hand (swing four): the clerk did
+ *  the work up to a judgment and STOPS for a human — `proposed → awaiting`, the
+ *  human-in-the-loop stop. Unlike the human hands above, it carries an `actor`
+ *  (`agent:<seat>`), which the Ledger renders as "<seat>'s clerk"; and it emits
+ *  ONLY the `proposed` event, handing NOTHING onward — the cascade waits on the
+ *  human's approve/override. The agent never emits `approved`/`overridden`: that
+ *  ratchet is the human's alone (KINGDOM.md, the clerk augments, never replaces).
+ *  Shares `answerStep`, so it folds through `readFlow` exactly as a human act. */
+export function proposeStep(
+  tpl: FlowTemplate,
+  caseId: string,
+  index: number,
+  actor: string,
+  opts: { at: string; id: () => string; note?: string },
+): KingdomEvent | null {
+  if (index < 0 || index >= tpl.steps.length) return null;
+  const ev = answerStep(tpl, caseId, index, 'proposed', opts);
+  ev.actor = actor;
+  return ev;
+}
+
+/** Mark the step in hand done and hand the next template step — the advance.
+ *  Returns both events to append, in order (`done` first, then the next hand).
+ *  With no next step the cascade is finished: only the `done` returns, which
+ *  folds the case closed. Callers pass the index of the step in hand
+ *  (`reading.next`); an out-of-range index is no act at all. */
+export function completeStep(
+  tpl: FlowTemplate,
+  caseId: string,
+  index: number,
+  opts: { at: string; id: () => string; note?: string },
+  params?: FlowParams,
+): KingdomEvent[] {
+  if (index < 0 || index >= tpl.steps.length) return [];
+  const events = [answerStep(tpl, caseId, index, 'done', opts)];
+  if (index + 1 < tpl.steps.length)
+    events.push(handStep(tpl, caseId, index + 1, opts, params));
+  return events;
+}
+
+/** Ratify the step that waits: the human approves, and the cascade moves on —
+ *  `approved`, then the next template step handed. (An approved step has
+ *  proceeded; the flow does not sit twice on one step.) Ratifying the LAST step
+ *  also CLOSES the case — see `closeIfLast`. */
+export function approveStep(
+  tpl: FlowTemplate,
+  caseId: string,
+  index: number,
+  opts: { at: string; id: () => string; note?: string },
+  params?: FlowParams,
+): KingdomEvent[] {
+  if (index < 0 || index >= tpl.steps.length) return [];
+  const events = [answerStep(tpl, caseId, index, 'approved', opts)];
+  if (index + 1 < tpl.steps.length) events.push(handStep(tpl, caseId, index + 1, opts, params));
+  else events.push(...closeIfLast(tpl, caseId, index, opts));
+  return events;
+}
+
+/** The final ratification also has to SAY the case is finished.
+ *
+ *  These two functions long claimed in their own comments that a last-step
+ *  approval or override "closes the case" — and nothing implemented it.
+ *  `statusOf` closes a case on a `done` event and on nothing else, so a cascade
+ *  ratified to its end stayed `open` forever; `readFlow` then reported no next
+ *  step, and the Ledger draws its act row only for the step in hand. The result
+ *  was a cascade showing every step and offering ZERO buttons: work that could
+ *  be walked to completion and never finished, still counted as open, still
+ *  carrying a door that opened onto nothing. There was no way to close it from
+ *  anywhere in the app. (Driven to 8/8 in a browser by an audit, 2026-07-27.)
+ *
+ *  Records in, readings out: `statusOf` reads one case's events and cannot know
+ *  which step was the last, so the closing must be RECORDED here, where the
+ *  template is in hand — not inferred downstream. */
+function closeIfLast(
+  tpl: FlowTemplate,
+  caseId: string,
+  index: number,
+  opts: { at: string; id: () => string; note?: string },
+): KingdomEvent[] {
+  if (index + 1 < tpl.steps.length) return [];
+  return [answerStep(tpl, caseId, index, 'done', { ...opts, note: 'the cascade is run out' })];
+}
+
+/** Overrule the step that waits: the human chose otherwise — `overridden`
+ *  records the divergence and the cascade moves on, the next template step
+ *  handed. Like `approved`, it is a terminal ratification of the wait (canon:
+ *  proposed → approved / overridden); the note carries the choice. Overruling
+ *  the LAST step also closes the case — see `closeIfLast`. */
+export function overrideStep(
+  tpl: FlowTemplate,
+  caseId: string,
+  index: number,
+  opts: { at: string; id: () => string; note?: string },
+  params?: FlowParams,
+): KingdomEvent[] {
+  if (index < 0 || index >= tpl.steps.length) return [];
+  const events = [answerStep(tpl, caseId, index, 'overridden', opts)];
+  if (index + 1 < tpl.steps.length) events.push(handStep(tpl, caseId, index + 1, opts, params));
+  else events.push(...closeIfLast(tpl, caseId, index, opts));
+  return events;
+}
+
+// ── Readings — the cascade folded back from the log ─────────────────────────
+// General: no setting's names below, only template + events. Where the
+// cascade sits, what is next, which timing edges are breached — all folded.
+
+/** Where one step of one live flow stands, folded from the case's events. */
+export interface StepReading {
+  step: FlowStep;
+  index: number; // 1-based, for the "step n of N" line
+  kind: EventKind | null; // the latest event kind the log holds for it
+  /** The latest event's note for this step — the clerk's words on a proposal
+   *  (the spend-gate / reconciliation line), or the human's on an answer. */
+  note?: string;
+  /** Who last acted on this step — a person or an `agent:<seat>` clerk. Lets the
+   *  Ledger render "<seat>'s clerk" beside the step in hand. */
+  actor?: string;
+  /** Days from the trigger until this step's edge opens (its `after`). */
+  dueInDays: number | null;
+  /** True once now is past the edge plus its wait — the breached reading. */
+  breached: boolean;
+}
+
+export interface FlowReading {
+  caseId: string;
+  template: FlowTemplate;
+  subject: string;
+  openedAt: string | null;
+  status: 'open' | 'awaiting' | 'done';
+  steps: StepReading[];
+  /** The next step not yet acted on — the head of the cascade. */
+  next: StepReading | null;
+  breached: StepReading[];
+  /** Boards in first-appearance order, with their steps — the 3-board view. */
+  boards: { board: string; steps: StepReading[] }[];
+  /** How far the cascade has run: steps with any event past the opening. */
+  advanced: number;
+}
+
+const dayMs = 86_400_000;
+
+function daysBetween(fromIso: string, toIso: string): number | null {
+  const ms = Date.parse(toIso) - Date.parse(fromIso);
+  return Number.isFinite(ms) ? Math.floor(ms / dayMs) : null;
+}
+
+/** Match a case's step events to their template step: the events were emitted
+ *  in template order (after the `opened`), so the nth step event is the nth
+ *  step. Extra events a clerk or a hand adds later (a `done`, a `noted`) read
+ *  as progress on the step whose holder and catalog row they carry — or, when
+ *  they carry neither, on the last step touched. */
+export function readFlow(
+  tpl: FlowTemplate,
+  log: KingdomEvent[],
+  caseId: string,
+  now: string,
+): FlowReading | null {
+  const c = readCase(log, caseId);
+  if (!c.events.length) return null;
+  const openedAt = c.openedAt;
+  const stepEvents = c.events.filter((e) => e.kind !== 'opened');
+  // The latest kind recorded against each template step. Seed from the
+  // emitted step events in order; then let any later event carrying a
+  // catalog row + holder advance the step it matches.
+  const kindByStep = new Map<string, EventKind>();
+  const noteByStep = new Map<string, string | undefined>();
+  const actorByStep = new Map<string, string | undefined>();
+  for (const e of stepEvents) {
+    // Every flow step event — hand (awaiting/handed) or answer (done/approved/
+    // overridden/proposed) — is stamped `Step n/N` by `handStep`/`answerStep`,
+    // and that marker is the AUTHORITATIVE step index (all these events belong to
+    // this one case's one template). Place by it directly. The old holder+order
+    // match collapsed consecutive same-holder steps (va-desk's assign-vendor →
+    // dispatch, lp-queue's invoice → pay → post) onto the first of them, stranding
+    // a cascade short of its settlement; the marker disambiguates them cleanly.
+    // A markerless event (legacy / off-catalog) still falls back to holder match.
+    const n = Number(e.note?.match(/^Step (\d+)\//)?.[1]);
+    const step =
+      Number.isFinite(n) && n >= 1 && n <= tpl.steps.length
+        ? tpl.steps[n - 1]
+        : tpl.steps.find((s) => s.catalogRow === e.catalogRow && s.holder === e.holder);
+    if (!step) continue;
+    // The latest kind recorded against the step wins (a step is handed, then
+    // answered; iterating in log order leaves the answer as its state).
+    kindByStep.set(step.key, e.kind);
+    noteByStep.set(step.key, e.note);
+    actorByStep.set(step.key, e.actor);
+  }
+
+  const daysSinceOpen = openedAt ? daysBetween(openedAt, now) : null;
+  const steps: StepReading[] = tpl.steps.map((step, i) => {
+    const after = step.edge.after ?? null;
+    const dueInDays = after == null || daysSinceOpen == null ? null : after - daysSinceOpen;
+    const wait = step.slaDays ?? 0;
+    // Only a step the cascade has actually reached can breach — a future step
+    // not yet handed is not overdue, however far its calendar edge has slipped.
+    const reached = kindByStep.has(step.key);
+    const breached =
+      reached &&
+      daysSinceOpen != null &&
+      after != null &&
+      daysSinceOpen > after + wait &&
+      kindByStep.get(step.key) !== 'done';
+    return {
+      step,
+      index: i + 1,
+      kind: kindByStep.get(step.key) ?? null,
+      note: noteByStep.get(step.key),
+      actor: actorByStep.get(step.key),
+      dueInDays,
+      breached,
+    };
+  });
+
+  const acted = new Set<EventKind>(['done', 'approved', 'overridden']);
+  const next = steps.find((s) => s.kind == null || !acted.has(s.kind)) ?? null;
+  const boards: { board: string; steps: StepReading[] }[] = [];
+  for (const s of steps) {
+    const b = boards.find((x) => x.board === s.step.board);
+    if (b) b.steps.push(s);
+    else boards.push({ board: s.step.board, steps: [s] });
+  }
+
+  return {
+    caseId,
+    template: tpl,
+    subject: caseId.startsWith(`${tpl.key}: `) ? caseId.slice(tpl.key.length + 2) : caseId,
+    openedAt,
+    status: c.status,
+    steps,
+    next,
+    breached: steps.filter((s) => s.breached),
+    boards,
+    advanced: steps.filter((s) => s.kind != null && acted.has(s.kind)).length,
+  };
+}
+
+/** Every live flow instance in the log: cases whose id opens with a known
+ *  template key, folded against that template. */
+export function readFlows(flows: FlowBook, log: KingdomEvent[], now: string): FlowReading[] {
+  const caseIds = [...new Set(log.map((e) => e.caseId))];
+  const readings: FlowReading[] = [];
+  for (const caseId of caseIds) {
+    const tpl = flows.find((f) => caseId.startsWith(`${f.key}: `));
+    if (!tpl) continue;
+    const r = readFlow(tpl, log, caseId, now);
+    if (r) readings.push(r);
+  }
+  return readings.sort((a, b) => (b.openedAt ?? '').localeCompare(a.openedAt ?? ''));
+}
+
+/** True while the flows book still reads exactly as founded — the
+ *  census-migration test for the new shelf (matches catalogAtFounding). */
+export function flowsAtFounding(flows: FlowBook): boolean {
+  return JSON.stringify(flows) === JSON.stringify(FOUNDING_FLOWS);
+}

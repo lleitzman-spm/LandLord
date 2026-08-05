@@ -1,0 +1,54 @@
+# CI — what a contributor needs, and the one gate that must never be skippable.
+#
+# Two jobs, deliberately separate:
+#
+#   leakcheck — runs FIRST and with NO dependencies installed. A credential
+#               scanner that can be defeated by a broken `npm install`, or by a
+#               dependency, is not a gate. It must still answer when the tree
+#               does not build.
+#   build     — install, type-check, test. The ordinary contributor loop.
+#
+# Both run on pull_request as well as push, so a branch is checked before a
+# human reads it.
+
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  leakcheck:
+    name: leak check (no dependencies)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # No `npm ci` on purpose — tools/leakcheck.mjs is dependency-free.
+      - name: Scan tracked text for credential and personal-data shapes
+        run: node tools/leakcheck.mjs
+
+  build:
+    name: type-check and test
+    runs-on: ubuntu-latest
+    needs: leakcheck
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Type-check
+        run: npx tsc --noEmit
+      - name: Test
+        run: npm test
+      - name: Build
+        run: npm run build

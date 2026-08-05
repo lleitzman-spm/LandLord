@@ -1,0 +1,1442 @@
+[
+  {
+    "key": "vendor-dispatch",
+    "title": "Vendor Dispatch (Work Order)",
+    "trigger": "A maintenance issue requires a trade vendor to repair it.",
+    "note": "The workhorse repair flow. Bound by most maintenance leaves, parameterized by {trade}, {urgency}, and NTE {amount}.",
+    "steps": [
+      {
+        "key": "report",
+        "role": "tenant",
+        "board": "Intake",
+        "note": "Tenant or PM reports the {trade} problem with description and photos.",
+        "timing": "same day",
+        "waits": false
+      },
+      {
+        "key": "triage",
+        "role": "maintenance-coordinator",
+        "board": "Triage",
+        "note": "Diagnose, set {urgency}, and confirm landlord (not tenant-caused) responsibility.",
+        "timing": "within 1 day",
+        "waits": true
+      },
+      {
+        "key": "approve-spend",
+        "role": "property-manager",
+        "board": "Approval",
+        "note": "If the estimate exceeds {amount}, route to the owner-approval flow before proceeding.",
+        "timing": "within {days} days",
+        "waits": true
+      },
+      {
+        "key": "assign-vendor",
+        "role": "maintenance-coordinator",
+        "board": "Assignment",
+        "note": "Select a {trade} vendor and issue the work order with scope and NTE {amount}.",
+        "timing": "same day",
+        "waits": false
+      },
+      {
+        "key": "schedule",
+        "role": "vendor",
+        "board": "Scheduling",
+        "note": "Vendor coordinates access with the tenant within the {urgency} window.",
+        "timing": "within 3 days",
+        "waits": false
+      },
+      {
+        "key": "perform-work",
+        "role": "vendor",
+        "board": "In Progress",
+        "note": "Vendor completes the repair and documents it with photos and notes.",
+        "timing": "per {urgency}",
+        "waits": false
+      },
+      {
+        "key": "verify",
+        "role": "maintenance-coordinator",
+        "board": "Verification",
+        "note": "Confirm the work resolved the issue and follow up with the tenant.",
+        "timing": "within 1 day",
+        "waits": true
+      },
+      {
+        "key": "invoice",
+        "role": "vendor",
+        "board": "Billing",
+        "note": "Vendor submits the invoice against the work order.",
+        "timing": "within 5 days",
+        "waits": false
+      },
+      {
+        "key": "pay",
+        "role": "accounting",
+        "board": "Billing",
+        "note": "Approve against NTE {amount} and pay the vendor from the property ledger.",
+        "timing": "net {days}",
+        "waits": false
+      },
+      {
+        "key": "close",
+        "role": "maintenance-coordinator",
+        "board": "Closeout",
+        "note": "Post the cost to the owner ledger and close the work order.",
+        "timing": "same day",
+        "waits": false
+      }
+    ]
+  },
+  {
+    "key": "emergency-response",
+    "title": "Emergency Response",
+    "trigger": "An after-hours or urgent habitability/safety emergency is reported (flood, no heat, gas, security).",
+    "note": "Urgent variant of dispatch: mitigate first, approval waived for safety, permanent repair follows.",
+    "steps": [
+      {
+        "key": "report",
+        "role": "tenant",
+        "board": "Intake",
+        "note": "Emergency {trade} issue reported to the after-hours line; capture nature and safety risk.",
+        "timing": "immediately",
+        "waits": false
+      },
+      {
+        "key": "assess",
+        "role": "maintenance-coordinator",
+        "board": "Triage",
+        "note": "On-call coordinator assesses life-safety; escalate to 911/utility if warranted.",
+        "timing": "within 15 min",
+        "waits": true
+      },
+      {
+        "key": "dispatch",
+        "role": "maintenance-coordinator",
+        "board": "Assignment",
+        "note": "Dispatch the nearest on-call {trade} vendor with emergency NTE {amount}.",
+        "timing": "immediately",
+        "waits": false
+      },
+      {
+        "key": "mitigate",
+        "role": "vendor",
+        "board": "In Progress",
+        "note": "Vendor stabilizes to stop damage and restore safety (may be temporary).",
+        "timing": "within {urgency}",
+        "waits": false
+      },
+      {
+        "key": "notify-owner",
+        "role": "owner",
+        "board": "Notification",
+        "note": "Inform the owner of the emergency and action taken (approval waived for safety).",
+        "timing": "within 1 day",
+        "waits": false
+      },
+      {
+        "key": "follow-up-repair",
+        "role": "maintenance-coordinator",
+        "board": "Verification",
+        "note": "Schedule any permanent repair as a standard work order.",
+        "timing": "within 3 days",
+        "waits": false
+      },
+      {
+        "key": "invoice-pay",
+        "role": "accounting",
+        "board": "Billing",
+        "note": "Process the emergency invoice and post to the owner ledger.",
+        "timing": "net {days}",
+        "waits": false
+      },
+      {
+        "key": "close",
+        "role": "maintenance-coordinator",
+        "board": "Closeout",
+        "note": "Document the incident and close.",
+        "timing": "same day",
+        "waits": false
+      }
+    ]
+  },
+  {
+    "key": "preventive-maintenance",
+    "title": "Preventive / Recurring Service",
+    "trigger": "A scheduled recurring service is due (HVAC seasonal, filters, gutters, detectors).",
+    "note": "Cadence-driven upkeep; parameterized by {trade} and {days} cadence. Spins off work orders for deficiencies found.",
+    "steps": [
+      {
+        "key": "generate",
+        "role": "maintenance-coordinator",
+        "board": "Scheduling",
+        "note": "The recurring schedule generates the {trade} PM task on its {days}-day cadence.",
+        "timing": "on cadence",
+        "waits": false
+      },
+      {
+        "key": "assign",
+        "role": "maintenance-coordinator",
+        "board": "Assignment",
+        "note": "Assign to the PM vendor with the service checklist.",
+        "timing": "within 3 days",
+        "waits": false
+      },
+      {
+        "key": "schedule-access",
+        "role": "vendor",
+        "board": "Scheduling",
+        "note": "Vendor coordinates tenant access.",
+        "timing": "within 5 days",
+        "waits": false
+      },
+      {
+        "key": "perform",
+        "role": "vendor",
+        "board": "In Progress",
+        "note": "Complete the checklist and note any deficiencies found.",
+        "timing": "per cadence",
+        "waits": false
+      },
+      {
+        "key": "review-findings",
+        "role": "maintenance-coordinator",
+        "board": "Verification",
+        "note": "Review findings and spin off work orders for any repairs needed.",
+        "timing": "within 2 days",
+        "waits": true
+      },
+      {
+        "key": "invoice-pay",
+        "role": "accounting",
+        "board": "Billing",
+        "note": "Pay the flat {amount} and post to the owner ledger.",
+        "timing": "net {days}",
+        "waits": false
+      },
+      {
+        "key": "close",
+        "role": "maintenance-coordinator",
+        "board": "Closeout",
+        "note": "Close and reset the next cycle.",
+        "timing": "same day",
+        "waits": false
+      }
+    ]
+  },
+  {
+    "key": "service-request-triage",
+    "title": "Service-Request Triage",
+    "trigger": "A tenant submits a service/maintenance request.",
+    "note": "The intake router that fans requests into emergency-response, vendor-dispatch, or a tenant reply. Reusable as the front door to all maintenance.",
+    "steps": [
+      {
+        "key": "receive",
+        "role": "tenant",
+        "board": "Intake",
+        "note": "Tenant submits the request with description, {urgency}, and photos.",
+        "timing": "same day",
+        "waits": false
+      },
+      {
+        "key": "classify",
+        "role": "maintenance-coordinator",
+        "board": "Triage",
+        "note": "Classify as emergency, standard repair, tenant-responsibility, or non-issue.",
+        "timing": "within {days} days",
+        "waits": true
+      },
+      {
+        "key": "responsibility-check",
+        "role": "maintenance-coordinator",
+        "board": "Triage",
+        "note": "Determine landlord vs tenant responsibility and check any warranty/home-warranty coverage.",
+        "timing": "within 1 day",
+        "waits": true
+      },
+      {
+        "key": "route",
+        "role": "maintenance-coordinator",
+        "board": "Routing",
+        "note": "Route to emergency-response, vendor-dispatch, or reply to the tenant.",
+        "timing": "same day",
+        "waits": false
+      },
+      {
+        "key": "acknowledge",
+        "role": "property-manager",
+        "board": "Communication",
+        "note": "Acknowledge to the tenant with the expected timeline.",
+        "timing": "within 1 day",
+        "waits": false
+      }
+    ]
+  },
+  {
+    "key": "owner-approval-for-spend",
+    "title": "Owner Approval for Spend",
+    "trigger": "A repair or expense estimate exceeds the management agreement's approval threshold {amount}.",
+    "note": "A reusable approval gate embedded by dispatch, turns, and capital-project flows.",
+    "steps": [
+      {
+        "key": "prepare-request",
+        "role": "maintenance-coordinator",
+        "board": "Preparation",
+        "note": "Assemble scope, estimate {amount}, photos, and a recommendation.",
+        "timing": "same day",
+        "waits": false
+      },
+      {
+        "key": "send-request",
+        "role": "property-manager",
+        "board": "Sent",
+        "note": "Send the owner the approval request with the estimate and options.",
+        "timing": "within 1 day",
+        "waits": false
+      },
+      {
+        "key": "owner-decides",
+        "role": "owner",
+        "board": "Awaiting Owner",
+        "note": "Owner approves, declines, or requests changes / more bids.",
+        "timing": "within {days} days",
+        "waits": true
+      },
+      {
+        "key": "record-decision",
+        "role": "property-manager",
+        "board": "Recorded",
+        "note": "Record the decision; if approved, release the work to proceed.",
+        "timing": "same day",
+        "waits": false
+      },
+      {
+        "key": "handoff",
+        "role": "maintenance-coordinator",
+        "board": "Closeout",
+        "note": "Hand back to the originating flow, or close if declined.",
+        "timing": "same day",
+        "waits": false
+      }
+    ]
+  },
+  {
+    "key": "capital-project-bidding",
+    "title": "Capital Project Bidding",
+    "trigger": "A larger repair or improvement (roof, unit reno, sewer) warrants competitive bids.",
+    "note": "Multi-bid procurement for high-dollar work; owner selects among bids before award.",
+    "steps": [
+      {
+        "key": "scope",
+        "role": "property-manager",
+        "board": "Scoping",
+        "note": "Define the {trade} project scope and requirements.",
+        "timing": "within 3 days",
+        "waits": false
+      },
+      {
+        "key": "solicit-bids",
+        "role": "maintenance-coordinator",
+        "board": "Bidding",
+        "note": "Request three bids from qualified {trade} vendors.",
+        "timing": "within {days} days",
+        "waits": false
+      },
+      {
+        "key": "collect-bids",
+        "role": "vendor",
+        "board": "Bidding",
+        "note": "Vendors submit itemized bids.",
+        "timing": "within {days} days",
+        "waits": false
+      },
+      {
+        "key": "prepare-recommendation",
+        "role": "property-manager",
+        "board": "Analysis",
+        "note": "Compare bids and prepare a recommendation for the owner.",
+        "timing": "within 2 days",
+        "waits": false
+      },
+      {
+        "key": "owner-selects",
+        "role": "owner",
+        "board": "Awaiting Owner",
+        "note": "Owner selects a bid and authorizes the {amount} spend.",
+        "timing": "within {days} days",
+        "waits": true
+      },
+      {
+        "key": "award",
+        "role": "maintenance-coordinator",
+        "board": "Assignment",
+        "note": "Award the job and issue the contract / work order.",
+        "timing": "within 2 days",
+        "waits": false
+      },
+      {
+        "key": "manage-work",
+        "role": "maintenance-coordinator",
+        "board": "In Progress",
+        "note": "Oversee the project through milestones to completion.",
+        "timing": "per schedule",
+        "waits": false
+      },
+      {
+        "key": "final-inspection",
+        "role": "property-manager",
+        "board": "Verification",
+        "note": "Inspect the completed work before final payment.",
+        "timing": "on completion",
+        "waits": true
+      },
+      {
+        "key": "pay-close",
+        "role": "accounting",
+        "board": "Billing",
+        "note": "Release payment (less any retainage), post to the owner ledger, and close.",
+        "timing": "net {days}",
+        "waits": false
+      }
+    ]
+  },
+  {
+    "key": "rent-billing-cycle",
+    "title": "Monthly Rent Cycle",
+    "trigger": "The monthly rent cycle turns (charges due on the 1st).",
+    "note": "The recurring bill-and-receive loop; hands unpaid balances to the collections ladder.",
+    "steps": [
+      {
+        "key": "post-charges",
+        "role": "accounting",
+        "board": "Billing",
+        "note": "Post rent and recurring charges to each tenant ledger.",
+        "timing": "day -25",
+        "waits": false
+      },
+      {
+        "key": "send-reminder",
+        "role": "property-manager",
+        "board": "Notification",
+        "note": "Send the upcoming-rent reminder to tenants.",
+        "timing": "day -3",
+        "waits": false
+      },
+      {
+        "key": "receive-payment",
+        "role": "tenant",
+        "board": "Collection",
+        "note": "Tenant pays rent through the portal.",
+        "timing": "day 1",
+        "waits": false
+      },
+      {
+        "key": "apply-payments",
+        "role": "accounting",
+        "board": "Collection",
+        "note": "Apply received payments and reconcile the ledger.",
+        "timing": "day 1-5",
+        "waits": false
+      },
+      {
+        "key": "flag-delinquent",
+        "role": "accounting",
+        "board": "Triage",
+        "note": "Flag balances still unpaid after the grace period for collections.",
+        "timing": "day {days}",
+        "waits": false
+      }
+    ]
+  },
+  {
+    "key": "collections-ladder",
+    "title": "Collections Ladder",
+    "trigger": "Rent is unpaid past the grace period.",
+    "note": "Staged delinquency escalation ending in a pay-or-quit and an eviction decision. Parameterized by late-fee {amount} and statutory {days}.",
+    "steps": [
+      {
+        "key": "assess-late",
+        "role": "accounting",
+        "board": "Triage",
+        "note": "Confirm the balance and apply the late fee of {amount}.",
+        "timing": "day 5",
+        "waits": false
+      },
+      {
+        "key": "first-notice",
+        "role": "property-manager",
+        "board": "Outreach",
+        "note": "Send a reminder with payment options.",
+        "timing": "day 6",
+        "waits": false
+      },
+      {
+        "key": "second-notice",
+        "role": "property-manager",
+        "board": "Outreach",
+        "note": "Send a formal past-due notice and offer a payment plan.",
+        "timing": "day 10",
+        "waits": false
+      },
+      {
+        "key": "pay-or-quit",
+        "role": "property-manager",
+        "board": "Legal Prep",
+        "note": "Serve the statutory {days}-day pay-or-quit notice.",
+        "timing": "day 15",
+        "waits": true
+      },
+      {
+        "key": "evaluate",
+        "role": "property-manager",
+        "board": "Decision",
+        "note": "If still unpaid, decide with the owner whether to file eviction.",
+        "timing": "day 20",
+        "waits": true
+      },
+      {
+        "key": "handoff",
+        "role": "property-manager",
+        "board": "Handoff",
+        "note": "Refer to the eviction flow, or record the payment/plan and close.",
+        "timing": "day 20",
+        "waits": false
+      }
+    ]
+  },
+  {
+    "key": "lease-violation",
+    "title": "Lease Violation / Notice to Comply",
+    "trigger": "A tenant breaches a non-payment lease term (pet, occupancy, noise, unauthorized alteration).",
+    "note": "Cure-or-quit enforcement for curable breaches; escalates to eviction if uncured. Parameterized by {violation} and cure window {days}.",
+    "steps": [
+      {
+        "key": "document",
+        "role": "property-manager",
+        "board": "Intake",
+        "note": "Document the {violation} with evidence (photos, reports, inspection).",
+        "timing": "same day",
+        "waits": false
+      },
+      {
+        "key": "verify",
+        "role": "property-manager",
+        "board": "Triage",
+        "note": "Confirm it is a genuine lease/rule breach and identify the cure available.",
+        "timing": "within 1 day",
+        "waits": true
+      },
+      {
+        "key": "notice-to-comply",
+        "role": "property-manager",
+        "board": "Notice",
+        "note": "Serve a comply-or-quit notice giving {days} days to correct.",
+        "timing": "within 2 days",
+        "waits": false
+      },
+      {
+        "key": "monitor-cure",
+        "role": "property-manager",
+        "board": "Monitoring",
+        "note": "Track whether the tenant cures within the window.",
+        "timing": "day {days}",
+        "waits": true
+      },
+      {
+        "key": "reinspect",
+        "role": "property-manager",
+        "board": "Verification",
+        "note": "Reinspect to confirm the cure.",
+        "timing": "after {days} days",
+        "waits": false
+      },
+      {
+        "key": "escalate-or-close",
+        "role": "property-manager",
+        "board": "Closeout",
+        "note": "Close if cured; escalate to eviction/legal if not.",
+        "timing": "same day",
+        "waits": false
+      }
+    ]
+  },
+  {
+    "key": "eviction-legal",
+    "title": "Eviction (Unlawful Detainer)",
+    "trigger": "A tenancy must be terminated through the courts (non-payment or incurable breach).",
+    "note": "Court-driven possession recovery, handed to outside counsel and closing into a turn.",
+    "steps": [
+      {
+        "key": "owner-authorize",
+        "role": "owner",
+        "board": "Authorization",
+        "note": "Confirm owner approval to file and fund legal costs {amount}.",
+        "timing": "within {days} days",
+        "waits": true
+      },
+      {
+        "key": "engage-attorney",
+        "role": "property-manager",
+        "board": "Legal",
+        "note": "Refer the file to the eviction attorney with ledger and served notices.",
+        "timing": "within 2 days",
+        "waits": false
+      },
+      {
+        "key": "file-complaint",
+        "role": "attorney",
+        "board": "Filing",
+        "note": "Attorney files the unlawful-detainer complaint.",
+        "timing": "within 5 days",
+        "waits": false
+      },
+      {
+        "key": "serve-and-hearing",
+        "role": "attorney",
+        "board": "Court",
+        "note": "Tenant is served and the court hearing is attended.",
+        "timing": "per court",
+        "waits": true
+      },
+      {
+        "key": "judgment",
+        "role": "attorney",
+        "board": "Court",
+        "note": "Obtain the judgment for possession (and money if sought).",
+        "timing": "per court",
+        "waits": false
+      },
+      {
+        "key": "writ-lockout",
+        "role": "property-manager",
+        "board": "Enforcement",
+        "note": "Coordinate the sheriff lockout and secure the unit.",
+        "timing": "per court",
+        "waits": false
+      },
+      {
+        "key": "handoff-turn",
+        "role": "property-manager",
+        "board": "Handoff",
+        "note": "Hand the unit to the make-ready turn flow and pursue any balance.",
+        "timing": "same day",
+        "waits": false
+      }
+    ]
+  },
+  {
+    "key": "lease-renewal",
+    "title": "Lease Renewal",
+    "trigger": "A lease is approaching expiration (about 90 days out).",
+    "note": "Renewal with owner-approved increase and negotiation; falls through to non-renewal if declined. Day offsets are relative to lease end.",
+    "steps": [
+      {
+        "key": "flag-expiring",
+        "role": "property-manager",
+        "board": "Intake",
+        "note": "The renewal task generates {days} days before the lease ends.",
+        "timing": "day -90",
+        "waits": false
+      },
+      {
+        "key": "market-analysis",
+        "role": "property-manager",
+        "board": "Analysis",
+        "note": "Pull comps and recommend a renewal rent (increase of {amount}).",
+        "timing": "day -85",
+        "waits": false
+      },
+      {
+        "key": "owner-approval",
+        "role": "owner",
+        "board": "Awaiting Owner",
+        "note": "Owner approves the renewal terms or elects non-renewal.",
+        "timing": "day -80",
+        "waits": true
+      },
+      {
+        "key": "offer-to-tenant",
+        "role": "leasing-agent",
+        "board": "Offer",
+        "note": "Send the renewal offer with the new rent and term to the tenant.",
+        "timing": "day -75",
+        "waits": false
+      },
+      {
+        "key": "negotiate",
+        "role": "leasing-agent",
+        "board": "Negotiation",
+        "note": "Field counteroffers within the owner-approved bounds.",
+        "timing": "day -60",
+        "waits": true
+      },
+      {
+        "key": "execute-renewal",
+        "role": "leasing-agent",
+        "board": "Execution",
+        "note": "Prepare and e-sign the renewal / amendment.",
+        "timing": "day -30",
+        "waits": false
+      },
+      {
+        "key": "update-records",
+        "role": "accounting",
+        "board": "Closeout",
+        "note": "Update rent, dates, and recurring charges, then close.",
+        "timing": "on signing",
+        "waits": false
+      }
+    ]
+  },
+  {
+    "key": "non-renewal-notice",
+    "title": "Non-Renewal / Notice to Vacate",
+    "trigger": "Owner or PM elects not to renew an expiring tenancy.",
+    "note": "Compliant wind-down of a tenancy into a scheduled move-out.",
+    "steps": [
+      {
+        "key": "decide",
+        "role": "owner",
+        "board": "Decision",
+        "note": "Owner confirms non-renewal and the reason (sale, owner move-in, turn).",
+        "timing": "day -75",
+        "waits": true
+      },
+      {
+        "key": "verify-compliance",
+        "role": "property-manager",
+        "board": "Compliance",
+        "note": "Confirm the required {days}-day notice and no retaliatory or fair-housing issue.",
+        "timing": "day -70",
+        "waits": true
+      },
+      {
+        "key": "serve-notice",
+        "role": "property-manager",
+        "board": "Notice",
+        "note": "Serve the non-renewal / notice to vacate with the move-out date.",
+        "timing": "day -65",
+        "waits": false
+      },
+      {
+        "key": "confirm-plan",
+        "role": "property-manager",
+        "board": "Coordination",
+        "note": "Confirm the tenant's move-out date and schedule the move-out.",
+        "timing": "day -30",
+        "waits": false
+      },
+      {
+        "key": "handoff",
+        "role": "property-manager",
+        "board": "Handoff",
+        "note": "Hand to the move-out / turn flow.",
+        "timing": "at move-out",
+        "waits": false
+      }
+    ]
+  },
+  {
+    "key": "vacancy-marketing",
+    "title": "Vacancy Marketing",
+    "trigger": "A unit is (or soon will be) vacant and rent-ready to market.",
+    "note": "Fills a vacancy through listing, showings, and lead handling; loops on weekly price review until leased.",
+    "steps": [
+      {
+        "key": "set-price",
+        "role": "property-manager",
+        "board": "Pricing",
+        "note": "Set list rent from comps and confirm {amount} with the owner.",
+        "timing": "same day",
+        "waits": true
+      },
+      {
+        "key": "prepare-listing",
+        "role": "leasing-agent",
+        "board": "Preparation",
+        "note": "Photograph and write the listing; confirm the unit is rent-ready.",
+        "timing": "within 2 days",
+        "waits": false
+      },
+      {
+        "key": "publish",
+        "role": "leasing-agent",
+        "board": "Live",
+        "note": "Syndicate the listing to portals and set up self-show / lockbox.",
+        "timing": "within 1 day",
+        "waits": false
+      },
+      {
+        "key": "handle-inquiries",
+        "role": "leasing-agent",
+        "board": "Leads",
+        "note": "Respond to leads and pre-qualify prospects.",
+        "timing": "within 1 day",
+        "waits": false
+      },
+      {
+        "key": "showings",
+        "role": "leasing-agent",
+        "board": "Showings",
+        "note": "Conduct showings and track traffic and feedback.",
+        "timing": "ongoing",
+        "waits": false
+      },
+      {
+        "key": "report-activity",
+        "role": "property-manager",
+        "board": "Reporting",
+        "note": "Report weekly traffic and recommend a price drop after {days} days without an application.",
+        "timing": "weekly",
+        "waits": true
+      },
+      {
+        "key": "receive-application",
+        "role": "leasing-agent",
+        "board": "Handoff",
+        "note": "On interest, hand to the application-screening flow.",
+        "timing": "on application",
+        "waits": false
+      }
+    ]
+  },
+  {
+    "key": "application-screening",
+    "title": "Application Screening",
+    "trigger": "A prospect submits a rental application.",
+    "note": "Fair-housing-safe qualification against written criteria, ending in an approve/decline decision.",
+    "steps": [
+      {
+        "key": "collect-application",
+        "role": "leasing-agent",
+        "board": "Intake",
+        "note": "Collect the completed application and {amount} screening fee from all adults.",
+        "timing": "same day",
+        "waits": false
+      },
+      {
+        "key": "run-screening",
+        "role": "leasing-agent",
+        "board": "Screening",
+        "note": "Run credit, criminal, eviction, and income/employment checks.",
+        "timing": "within 1 day",
+        "waits": false
+      },
+      {
+        "key": "verify-references",
+        "role": "leasing-agent",
+        "board": "Verification",
+        "note": "Verify prior-landlord references and income documentation.",
+        "timing": "within 2 days",
+        "waits": false
+      },
+      {
+        "key": "apply-criteria",
+        "role": "property-manager",
+        "board": "Decision",
+        "note": "Apply the written rental criteria consistently (fair-housing safe).",
+        "timing": "within 1 day",
+        "waits": true
+      },
+      {
+        "key": "owner-notify",
+        "role": "owner",
+        "board": "Notification",
+        "note": "Notify or obtain owner concurrence where the agreement requires it.",
+        "timing": "within {days} days",
+        "waits": false
+      },
+      {
+        "key": "decision",
+        "role": "leasing-agent",
+        "board": "Decision",
+        "note": "Approve, approve-with-conditions, or issue a written adverse-action decline.",
+        "timing": "within 3 days",
+        "waits": true
+      },
+      {
+        "key": "handoff",
+        "role": "leasing-agent",
+        "board": "Handoff",
+        "note": "On approval, hand to the lease-execution flow.",
+        "timing": "same day",
+        "waits": false
+      }
+    ]
+  },
+  {
+    "key": "lease-execution",
+    "title": "Lease Execution",
+    "trigger": "An approved applicant is ready to sign a lease.",
+    "note": "Turns an approval into a signed, funded lease ready for move-in.",
+    "steps": [
+      {
+        "key": "prepare-lease",
+        "role": "leasing-agent",
+        "board": "Preparation",
+        "note": "Generate the lease with agreed terms, rent, deposit {amount}, and addenda.",
+        "timing": "same day",
+        "waits": false
+      },
+      {
+        "key": "send-for-signature",
+        "role": "leasing-agent",
+        "board": "Signing",
+        "note": "Send the lease for e-signature to all leaseholders.",
+        "timing": "within 1 day",
+        "waits": false
+      },
+      {
+        "key": "tenant-signs",
+        "role": "tenant",
+        "board": "Signing",
+        "note": "Tenants review and e-sign the lease.",
+        "timing": "within {days} days",
+        "waits": true
+      },
+      {
+        "key": "collect-deposit",
+        "role": "accounting",
+        "board": "Funds",
+        "note": "Collect the security deposit and first month's funds (certified).",
+        "timing": "before move-in",
+        "waits": true
+      },
+      {
+        "key": "countersign",
+        "role": "property-manager",
+        "board": "Signing",
+        "note": "Countersign on behalf of the owner and distribute copies.",
+        "timing": "within 1 day",
+        "waits": false
+      },
+      {
+        "key": "handoff-movein",
+        "role": "leasing-agent",
+        "board": "Handoff",
+        "note": "Hand to the move-in flow with the confirmed start date.",
+        "timing": "same day",
+        "waits": false
+      }
+    ]
+  },
+  {
+    "key": "move-in",
+    "title": "Move-In",
+    "trigger": "A signed lease has a confirmed start date and cleared funds.",
+    "note": "Onboards the tenant into the unit with a documented condition baseline.",
+    "steps": [
+      {
+        "key": "confirm-funds",
+        "role": "accounting",
+        "board": "Funds",
+        "note": "Confirm the deposit and first rent have cleared before keys release.",
+        "timing": "before move-in",
+        "waits": true
+      },
+      {
+        "key": "move-in-inspection",
+        "role": "property-manager",
+        "board": "Inspection",
+        "note": "Complete a documented move-in condition report with photos.",
+        "timing": "on/before start",
+        "waits": false
+      },
+      {
+        "key": "tenant-acknowledge",
+        "role": "tenant",
+        "board": "Inspection",
+        "note": "Tenant reviews and signs the condition report.",
+        "timing": "within {days} days",
+        "waits": true
+      },
+      {
+        "key": "utilities-confirm",
+        "role": "property-manager",
+        "board": "Utilities",
+        "note": "Confirm the tenant has transferred utilities into their name.",
+        "timing": "by start date",
+        "waits": true
+      },
+      {
+        "key": "deliver-keys",
+        "role": "leasing-agent",
+        "board": "Handover",
+        "note": "Release keys/codes and the welcome packet.",
+        "timing": "on start date",
+        "waits": false
+      },
+      {
+        "key": "setup-ledger",
+        "role": "accounting",
+        "board": "Setup",
+        "note": "Activate the tenant ledger and recurring charges, then close.",
+        "timing": "on start date",
+        "waits": false
+      }
+    ]
+  },
+  {
+    "key": "make-ready-turn",
+    "title": "Make-Ready Turn",
+    "trigger": "A unit is vacated and must be restored to rent-ready.",
+    "note": "Scopes and executes the turn between tenancies; hands the finished unit to marketing. Parameterized by {trade} mix and reserve threshold {amount}.",
+    "steps": [
+      {
+        "key": "move-out-inspection",
+        "role": "property-manager",
+        "board": "Inspection",
+        "note": "Inspect the vacated unit and scope the turn work.",
+        "timing": "within 1 day",
+        "waits": false
+      },
+      {
+        "key": "scope-and-bid",
+        "role": "maintenance-coordinator",
+        "board": "Scoping",
+        "note": "Itemize the make-ready scope (clean, paint, {trade} repairs) and cost {amount}.",
+        "timing": "within 2 days",
+        "waits": false
+      },
+      {
+        "key": "owner-approve",
+        "role": "owner",
+        "board": "Awaiting Owner",
+        "note": "Approve any turn costs above the reserve threshold {amount}.",
+        "timing": "within {days} days",
+        "waits": true
+      },
+      {
+        "key": "assign-work",
+        "role": "maintenance-coordinator",
+        "board": "Assignment",
+        "note": "Assign the turn trades and sequence the work.",
+        "timing": "within 2 days",
+        "waits": false
+      },
+      {
+        "key": "perform-turn",
+        "role": "vendor",
+        "board": "In Progress",
+        "note": "Complete clean, paint, repairs, and re-key.",
+        "timing": "within {days} days",
+        "waits": false
+      },
+      {
+        "key": "quality-check",
+        "role": "property-manager",
+        "board": "Verification",
+        "note": "Walk the unit to confirm it is rent-ready.",
+        "timing": "on completion",
+        "waits": true
+      },
+      {
+        "key": "handoff-market",
+        "role": "property-manager",
+        "board": "Handoff",
+        "note": "Hand to vacancy-marketing and post turn costs to the owner ledger.",
+        "timing": "same day",
+        "waits": false
+      }
+    ]
+  },
+  {
+    "key": "move-out-reconcile",
+    "title": "Move-Out Deposit Reconciliation",
+    "trigger": "A tenant has vacated and the security deposit must be reconciled.",
+    "note": "Statutory deposit disposition, run in parallel with the turn. {days} tokens map to the state's disposition deadline.",
+    "steps": [
+      {
+        "key": "final-inspection",
+        "role": "property-manager",
+        "board": "Inspection",
+        "note": "Compare move-out to move-in condition and document damage beyond normal wear.",
+        "timing": "within {days} days",
+        "waits": false
+      },
+      {
+        "key": "itemize",
+        "role": "accounting",
+        "board": "Itemization",
+        "note": "Itemize deductions with vendor costs and prorated charges.",
+        "timing": "within {days} days",
+        "waits": true
+      },
+      {
+        "key": "prepare-disposition",
+        "role": "property-manager",
+        "board": "Disposition",
+        "note": "Prepare the statutory deposit disposition statement.",
+        "timing": "within statutory {days} days",
+        "waits": true
+      },
+      {
+        "key": "send-and-refund",
+        "role": "accounting",
+        "board": "Refund",
+        "note": "Send the disposition and refund the balance (or bill) to the tenant.",
+        "timing": "within statutory {days} days",
+        "waits": false
+      },
+      {
+        "key": "collect-balance",
+        "role": "accounting",
+        "board": "Collection",
+        "note": "If owed beyond the deposit, pursue the balance or send to collections.",
+        "timing": "after {days} days",
+        "waits": false
+      },
+      {
+        "key": "close-ledger",
+        "role": "accounting",
+        "board": "Closeout",
+        "note": "Zero and close the tenant ledger.",
+        "timing": "on completion",
+        "waits": false
+      }
+    ]
+  },
+  {
+    "key": "routine-inspection",
+    "title": "Routine Inspection",
+    "trigger": "A periodic inspection is due (drive-by, mid-lease interior, annual).",
+    "note": "Condition inspection with statutory entry notice; feeds work orders and lease-discipline flows. Parameterized by {inspection-type} and notice {days}.",
+    "steps": [
+      {
+        "key": "schedule",
+        "role": "property-manager",
+        "board": "Scheduling",
+        "note": "Schedule the {inspection-type} inspection and plan tenant notice {days} days ahead.",
+        "timing": "day -{days}",
+        "waits": false
+      },
+      {
+        "key": "notify-tenant",
+        "role": "property-manager",
+        "board": "Notification",
+        "note": "Serve the statutory entry notice.",
+        "timing": "day -{days}",
+        "waits": false
+      },
+      {
+        "key": "perform",
+        "role": "property-manager",
+        "board": "Inspection",
+        "note": "Conduct the inspection with photos against a checklist.",
+        "timing": "on date",
+        "waits": false
+      },
+      {
+        "key": "report",
+        "role": "property-manager",
+        "board": "Reporting",
+        "note": "Produce the inspection report with findings and ratings.",
+        "timing": "within 1 day",
+        "waits": false
+      },
+      {
+        "key": "action-items",
+        "role": "maintenance-coordinator",
+        "board": "Triage",
+        "note": "Spin off work orders for repairs and flag any lease issues.",
+        "timing": "within 2 days",
+        "waits": true
+      },
+      {
+        "key": "owner-summary",
+        "role": "property-manager",
+        "board": "Reporting",
+        "note": "Send the owner a condition summary.",
+        "timing": "within 3 days",
+        "waits": false
+      }
+    ]
+  },
+  {
+    "key": "insurance-claim",
+    "title": "Insurance Claim",
+    "trigger": "Property damage or a liability event may be covered by insurance.",
+    "note": "Runs a covered loss from incident through repair and proceeds reconciliation; leans on emergency-response for mitigation.",
+    "steps": [
+      {
+        "key": "report-incident",
+        "role": "property-manager",
+        "board": "Intake",
+        "note": "Document the loss (cause, date, photos, injuries).",
+        "timing": "same day",
+        "waits": false
+      },
+      {
+        "key": "notify-owner-carrier",
+        "role": "owner",
+        "board": "Notification",
+        "note": "Notify the owner and file the claim with the carrier.",
+        "timing": "within {days} days",
+        "waits": true
+      },
+      {
+        "key": "mitigate",
+        "role": "maintenance-coordinator",
+        "board": "Mitigation",
+        "note": "Dispatch emergency mitigation to prevent further loss.",
+        "timing": "immediately",
+        "waits": false
+      },
+      {
+        "key": "adjuster",
+        "role": "vendor",
+        "board": "Assessment",
+        "note": "Meet the adjuster and provide access and documentation.",
+        "timing": "within {days} days",
+        "waits": false
+      },
+      {
+        "key": "estimate-repairs",
+        "role": "vendor",
+        "board": "Estimation",
+        "note": "Obtain repair estimates for the claim.",
+        "timing": "within {days} days",
+        "waits": false
+      },
+      {
+        "key": "coordinate-repairs",
+        "role": "maintenance-coordinator",
+        "board": "In Progress",
+        "note": "Manage covered repairs once the claim is approved.",
+        "timing": "per approval",
+        "waits": false
+      },
+      {
+        "key": "reconcile-proceeds",
+        "role": "accounting",
+        "board": "Closeout",
+        "note": "Reconcile claim proceeds, deductible, and repair costs on the owner ledger.",
+        "timing": "on settlement",
+        "waits": false
+      }
+    ]
+  },
+  {
+    "key": "utility-transfer",
+    "title": "Utility Transfer",
+    "trigger": "Utilities must move between tenant, owner, and PM at turnover.",
+    "note": "Prevents shutoff during vacancy and confirms tenant transfer at move-in; charges back vacancy utilities to the owner.",
+    "steps": [
+      {
+        "key": "identify-accounts",
+        "role": "property-manager",
+        "board": "Intake",
+        "note": "Identify all utility accounts and the currently responsible party.",
+        "timing": "same day",
+        "waits": false
+      },
+      {
+        "key": "vacancy-transfer",
+        "role": "property-manager",
+        "board": "Transfer",
+        "note": "Put utilities in the owner/PM name during vacancy to avoid shutoff.",
+        "timing": "at vacancy",
+        "waits": false
+      },
+      {
+        "key": "new-tenant-transfer",
+        "role": "tenant",
+        "board": "Transfer",
+        "note": "New tenant transfers utilities into their name by move-in.",
+        "timing": "by start date",
+        "waits": true
+      },
+      {
+        "key": "verify",
+        "role": "property-manager",
+        "board": "Verification",
+        "note": "Confirm the transfer and the final/opening meter reads.",
+        "timing": "within {days} days",
+        "waits": false
+      },
+      {
+        "key": "reconcile-charges",
+        "role": "accounting",
+        "board": "Closeout",
+        "note": "Bill any vacancy utility charges back to the owner ledger and close.",
+        "timing": "monthly",
+        "waits": false
+      }
+    ]
+  },
+  {
+    "key": "owner-onboarding",
+    "title": "Owner & Property Onboarding",
+    "trigger": "A new owner/property is signing on for management.",
+    "note": "Brings a new account live: agreement, setup, baseline, and assumption of any existing tenancies.",
+    "steps": [
+      {
+        "key": "sign-agreement",
+        "role": "owner",
+        "board": "Agreement",
+        "note": "Execute the management agreement and collect owner and property documents.",
+        "timing": "within {days} days",
+        "waits": true
+      },
+      {
+        "key": "collect-docs",
+        "role": "property-manager",
+        "board": "Setup",
+        "note": "Gather deed, insurance, keys, warranties, HOA info, and existing leases.",
+        "timing": "within {days} days",
+        "waits": false
+      },
+      {
+        "key": "setup-property",
+        "role": "accounting",
+        "board": "Setup",
+        "note": "Create the property/owner in the system with reserve {amount} and banking.",
+        "timing": "within 2 days",
+        "waits": false
+      },
+      {
+        "key": "onboarding-inspection",
+        "role": "property-manager",
+        "board": "Inspection",
+        "note": "Inspect and document the property's baseline condition.",
+        "timing": "within {days} days",
+        "waits": false
+      },
+      {
+        "key": "assume-tenancies",
+        "role": "property-manager",
+        "board": "Transition",
+        "note": "Notify existing tenants, transfer deposits, and assume active leases.",
+        "timing": "within {days} days",
+        "waits": true
+      },
+      {
+        "key": "market-if-vacant",
+        "role": "property-manager",
+        "board": "Handoff",
+        "note": "Hand any vacant units to marketing and schedule needed make-ready.",
+        "timing": "as needed",
+        "waits": false
+      },
+      {
+        "key": "go-live",
+        "role": "property-manager",
+        "board": "Closeout",
+        "note": "Confirm go-live and send the first owner communication.",
+        "timing": "on completion",
+        "waits": false
+      }
+    ]
+  },
+  {
+    "key": "monthly-owner-close",
+    "title": "Monthly Owner Close",
+    "trigger": "The accounting month closes and owners must be paid and reported.",
+    "note": "The recurring owner-payout and reporting cycle over the trust ledger; day offsets are day-of-month.",
+    "steps": [
+      {
+        "key": "reconcile-bank",
+        "role": "accounting",
+        "board": "Reconciliation",
+        "note": "Reconcile the trust and operating bank accounts.",
+        "timing": "day 1-3",
+        "waits": false
+      },
+      {
+        "key": "review-ledgers",
+        "role": "accounting",
+        "board": "Review",
+        "note": "Review each owner ledger for correct income and expenses.",
+        "timing": "day 2-4",
+        "waits": true
+      },
+      {
+        "key": "pay-bills",
+        "role": "accounting",
+        "board": "Bill Pay",
+        "note": "Pay outstanding property bills within reserve limits {amount}.",
+        "timing": "day 3-5",
+        "waits": false
+      },
+      {
+        "key": "calculate-disbursement",
+        "role": "accounting",
+        "board": "Disbursement",
+        "note": "Calculate the owner draw, retaining reserve {amount}.",
+        "timing": "day 5",
+        "waits": false
+      },
+      {
+        "key": "disburse",
+        "role": "accounting",
+        "board": "Disbursement",
+        "note": "Send owner payments (ACH) and the management fee.",
+        "timing": "day {days}",
+        "waits": false
+      },
+      {
+        "key": "generate-statements",
+        "role": "accounting",
+        "board": "Reporting",
+        "note": "Generate and publish owner statements with backup.",
+        "timing": "day {days}",
+        "waits": false
+      },
+      {
+        "key": "handle-questions",
+        "role": "property-manager",
+        "board": "Support",
+        "note": "Field owner questions on the statement.",
+        "timing": "ongoing",
+        "waits": true
+      }
+    ]
+  },
+  {
+    "key": "owner-offboarding",
+    "title": "Owner Offboarding",
+    "trigger": "A management agreement is terminated (by owner or PM).",
+    "note": "Clean wind-down and handover of an account, closing all ledgers.",
+    "steps": [
+      {
+        "key": "receive-notice",
+        "role": "property-manager",
+        "board": "Intake",
+        "note": "Log the termination notice and confirm the {days}-day notice period.",
+        "timing": "same day",
+        "waits": true
+      },
+      {
+        "key": "notify-parties",
+        "role": "property-manager",
+        "board": "Notification",
+        "note": "Notify tenants of the management change and the new remittance details.",
+        "timing": "within {days} days",
+        "waits": false
+      },
+      {
+        "key": "final-accounting",
+        "role": "accounting",
+        "board": "Closeout",
+        "note": "Complete the final owner statement, disburse the balance, and transfer deposits.",
+        "timing": "within {days} days",
+        "waits": true
+      },
+      {
+        "key": "transfer-records",
+        "role": "property-manager",
+        "board": "Handover",
+        "note": "Transfer leases, keys, records, and warranties to the owner or new manager.",
+        "timing": "within {days} days",
+        "waits": false
+      },
+      {
+        "key": "close-property",
+        "role": "accounting",
+        "board": "Closeout",
+        "note": "Deactivate the property and close all ledgers.",
+        "timing": "on completion",
+        "waits": false
+      }
+    ]
+  }
+]

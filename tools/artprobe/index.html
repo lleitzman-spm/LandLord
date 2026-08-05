@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>LandLord — art probe</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #1e1108; overflow: hidden; }
+      #stage { width: 100vw; height: 100vh; display: block; overflow: auto; }
+      #label {
+        position: fixed; left: 14px; top: 12px; z-index: 5;
+        font: 600 12px/1.4 ui-sans-serif, system-ui, sans-serif;
+        color: #eadfc6; letter-spacing: .08em; text-transform: uppercase;
+        background: #0008; padding: 6px 10px; border-radius: 6px;
+      }
+      canvas { display: block; }
+    </style>
+  </head>
+  <body>
+    <div id="label">…</div>
+    <div id="stage"></div>
+    <script type="module">
+      // One page, three probes: ?mode=3d | sprite (the pipeline comparison),
+      // and ?mode=parts (the kit's own pieces, measured).
+      const m = new URLSearchParams(location.search).get('mode');
+      const routes = { parts: './parts.js', medieval: './medieval.js', kaykit: './kaykit.js' };
+      import(routes[m] ?? './probe.js');
+    </script>
+  </body>
+</html>

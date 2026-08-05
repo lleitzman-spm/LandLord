@@ -1,0 +1,41 @@
+{
+  "name": "landlord",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "build:operator": "vite build -c vite.operator.config.ts",
+    "test": "vitest run",
+    "preview": "vite preview",
+    "leakcheck": "node tools/leakcheck.mjs",
+    "deploy": "npm run build && npx wrangler deploy",
+    "guard:watchtower": "node tools/check-watchtower.mjs",
+    "build:wargame": "vite build -c vite.wargame.config.ts",
+    "book": "node tools/vault/emit.mjs",
+    "book:lint": "node tools/vault/lint.mjs",
+    "book:trace": "node tools/vault/trace.mjs",
+    "book:html": "node tools/vault/html.mjs",
+    "book:check": "node tools/vault/html-check.mjs"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@types/three": "^0.185.1",
+    "@vitejs/plugin-react": "^6.0.3",
+    "playwright-core": "^1.62.0",
+    "typescript": "~6.0.2",
+    "vite": "^8.1.1",
+    "vitest": "^4.1.10"
+  },
+  "dependencies": {
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
+    "@sentry/react": "^10.68.0",
+    "jose": "6.2.3",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "three": "^0.185.1"
+  }
+}

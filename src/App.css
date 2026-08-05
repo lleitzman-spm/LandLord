@@ -1,0 +1,3532 @@
+:root {
+  --bg: #0f0e0c;
+  --panel: #1a1815;
+  --panel-2: #232019;
+  --border: #3a352c;
+  --ink: #e8e2d5;
+  --ink-dim: #a89f8c;
+  --green: #4caf6d;
+  --amber: #d9a13b;
+  --red: #e05d44;
+  --crown: #b39b5e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* ── State dots and counts ─────────────────────────────────────────── */
+
+.dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-lorded,
+.dot-plurality,
+.dot-mayored {
+  background: var(--green);
+}
+
+.dot-regency,
+.dot-garrisoned {
+  background: var(--amber);
+}
+
+.dot-stewardship {
+  background: var(--red);
+  box-shadow: 0 0 6px var(--red);
+}
+
+.count {
+  display: inline-block;
+  min-width: 1.4em;
+  text-align: center;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  margin-left: 0.5rem;
+}
+
+.count-red {
+  background: var(--red);
+  color: #fff;
+}
+
+.count-amber {
+  background: var(--amber);
+  color: #241d0d;
+}
+
+/* ── The stage ─────────────────────────────────────────────────────── */
+
+.stage {
+  flex: 1;
+  padding: 2rem 2.5rem;
+  max-width: 860px;
+}
+
+.banner {
+  border-left: 4px solid var(--border);
+  padding: 0.4rem 0 0.4rem 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.banner h2 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.7rem;
+  margin: 0 0 0.3rem;
+}
+
+.banner-lorded,
+.banner-plurality {
+  border-color: var(--green);
+}
+
+.banner-regency {
+  border-color: var(--amber);
+}
+
+.banner-stewardship {
+  border-color: var(--red);
+}
+
+.banner-crown {
+  border-color: var(--crown);
+}
+
+.state-line {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  margin: 0 0 0.4rem;
+}
+
+.explain {
+  color: var(--ink-dim);
+  margin: 0;
+  max-width: 60ch;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.card h3 {
+  margin: 0 0 0.7rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-dim);
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.7rem;
+}
+
+.card-head h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.card-head .rowbtn {
+  margin-left: auto;
+}
+
+.state-label {
+  color: var(--ink-dim);
+  font-weight: 400;
+}
+
+.hamlet-card {
+  margin-left: 1.5rem;
+  border-left: 3px solid var(--border);
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  display: inline-flex;
+  flex-direction: column;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.4rem 0.7rem;
+  line-height: 1.3;
+  font: inherit;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.chip:hover {
+  border-color: var(--crown);
+}
+
+.chip strong {
+  font-size: 0.95rem;
+}
+
+.chip em {
+  font-style: normal;
+  font-size: 0.75rem;
+  color: var(--ink-dim);
+}
+
+.chip-king {
+  border-color: var(--crown);
+}
+
+.chip-regent {
+  border-color: var(--crown);
+  border-style: dashed;
+}
+
+.chip-sellsword {
+  border-style: dotted;
+}
+
+.fine {
+  color: var(--ink-dim);
+  font-size: 0.85rem;
+  margin: 0.6rem 0 0;
+}
+
+.debt-note {
+  color: var(--red);
+}
+
+.desk-list {
+  margin: 0;
+  padding-left: 0.2rem;
+  list-style: none;
+}
+
+.desk-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+}
+
+/* ── The Marches ───────────────────────────────────────────────────── */
+
+.arrival-form {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.arrival-form input,
+.arrival-form select,
+.border-item-actions select {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--ink);
+  font-size: 0.9rem;
+  padding: 0.5rem 0.7rem;
+}
+
+.arrival-form input:first-child {
+  flex: 2 1 220px;
+}
+
+.arrival-form input:nth-child(2) {
+  flex: 1 1 160px;
+}
+
+.arrival-form button,
+.border-item-actions button {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--ink);
+  font-size: 0.9rem;
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+}
+
+.arrival-form button:hover:not(:disabled),
+.border-item-actions button:hover:not(:disabled) {
+  border-color: var(--ink-dim);
+}
+
+.arrival-form button:disabled,
+.border-item-actions button:disabled {
+  color: var(--ink-dim);
+  cursor: default;
+}
+
+.border-item-actions button.danger:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.border-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.border-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.border-item:last-child {
+  border-bottom: none;
+}
+
+.border-item-actions {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.arrived {
+  margin-left: 0.4rem;
+}
+
+.ledger-mark {
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.ledger-body {
+  flex: 1;
+}
+
+/* Design law 6: anything that names a thing is a road to that thing. */
+.link {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--border);
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.link:hover {
+  color: var(--crown);
+  text-decoration-color: var(--crown);
+}
+
+.rowbtn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--ink-dim);
+  font-size: 0.78rem;
+  padding: 0.2rem 0.6rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.rowbtn:hover {
+  color: var(--ink);
+  border-color: var(--ink-dim);
+}
+
+.rowbtn.danger:hover {
+  color: var(--red);
+  border-color: var(--red);
+}
+
+.banner-person {
+  border-color: var(--crown);
+}
+
+/* ── The Treasury ──────────────────────────────────────────────────── */
+
+.coin-total {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.5rem;
+  color: var(--crown);
+  margin: 0 0 0.7rem;
+}
+
+.ledger-out {
+  color: var(--green);
+}
+
+.ledger-away {
+  color: var(--ink-dim);
+}
+
+/* ── The court's acts (design law 6: acts stand beside their records) ── */
+
+.act-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding-top: 0.35rem;
+}
+
+.act-form {
+  margin-top: 0.6rem;
+}
+
+/* ── The court on a phone (≤720px) ─────────────────────────────────── */
+
+/* The Regent rides with the court. On a narrow screen the switcher folds
+   into a compact top bar — one row, scrollable sideways; only the bar
+   itself scrolls, never the page — and the stage takes the full width
+   below it. Everything on the bar stays big enough for a thumb. */
+
+@media (max-width: 720px) {
+  .court {
+    flex-direction: column;
+  }
+
+  .switcher {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 0.4rem;
+    overflow-x: auto;
+    padding: 0.5rem 0.75rem;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .switcher h1 {
+    font-size: 1rem;
+    margin: 0 0.4rem 0 0;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* The section headings step aside in the bar — visually hidden, but
+     left in the book for screen readers. */
+  .switcher-heading {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .switcher button {
+    width: auto;
+    flex-shrink: 0;
+    white-space: nowrap;
+    min-height: 40px;
+    border-color: var(--border);
+  }
+
+  .switcher .who {
+    margin-left: 0;
+  }
+
+  .stage {
+    width: 100%;
+    max-width: 100%;
+    padding: 1rem;
+  }
+
+  /* Thumb-sized acts, and no field wider than the land it stands on. */
+  .rowbtn,
+  .arrival-form button,
+  .arrival-form input,
+  .arrival-form select,
+  .border-item-actions button,
+  .border-item-actions select {
+    min-height: 40px;
+  }
+
+  .arrival-form input,
+  .arrival-form select,
+  .border-item-actions select {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .hamlet-card {
+    margin-left: 0.75rem;
+  }
+}
+
+/* ── The Ledger (the event log) ─────────────────────────────────────── */
+.banner-ledger {
+  border-color: var(--crown);
+}
+.tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+  color: var(--ink-dim);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.02rem 0.34rem;
+  margin-right: 0.35rem;
+}
+.kind {
+  font-variant: small-caps;
+  letter-spacing: 0.03em;
+  color: var(--ink-dim);
+  margin-right: 0.35rem;
+}
+.tag-mode {
+  color: var(--crown);
+}
+.cat-group h4 {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-dim);
+  margin: 0.7rem 0 0.2rem;
+}
+/* The catalog's group-by toggle — fold by class or by work-order Type. */
+.cat-groupby {
+  display: inline-flex;
+  gap: 0.2rem;
+  margin-left: 0.6rem;
+  vertical-align: middle;
+}
+.cat-groupby button {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-dim);
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--ink-dim) 30%, transparent);
+  border-radius: 999px;
+  padding: 2px 9px;
+  cursor: pointer;
+}
+.cat-groupby button:hover {
+  border-color: color-mix(in srgb, var(--ink-dim) 55%, transparent);
+}
+.cat-groupby button.on {
+  color: var(--crown);
+  border-color: color-mix(in srgb, var(--crown) 55%, transparent);
+  background: color-mix(in srgb, var(--crown) 12%, transparent);
+}
+/* The Priority pill sitting inline in a catalog row needs a breath of space. */
+.ledger-body .cn-pri {
+  margin-left: 0.4rem;
+}
+.age {
+  color: var(--ink-dim);
+  font-size: 0.82rem;
+}
+.age-old {
+  color: var(--amber);
+}
+.case-row {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 2px;
+}
+.case-drill {
+  margin: 0.2rem 0 0.6rem 1.4rem;
+  padding-left: 0.7rem;
+  border-left: 2px solid var(--border);
+}
+.flow-acts {
+  display: inline-flex;
+  gap: 0.4rem;
+  align-self: center;
+  flex-shrink: 0;
+}
+.await-card {
+  border-left: 3px solid var(--amber);
+}
+.kpis {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1.4rem;
+}
+.kpi {
+  flex: 1 1 8rem;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.7rem 0.9rem;
+}
+.kpi .num {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.75rem;
+  line-height: 1;
+}
+.kpi .lbl {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-dim);
+  margin-top: 0.4rem;
+}
+.kpi-amber .num {
+  color: var(--amber);
+}
+.kpi-red .num {
+  color: var(--red);
+}
+.kpi-green .num {
+  color: var(--green);
+}
+
+
+/* ── The War Games ──────────────────────────────────────────────────── */
+.flow-focused {
+  outline: 2px solid var(--crown);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+button.grand {
+  background: var(--crown);
+  color: #241d0d;
+  border-color: var(--crown);
+  font-weight: 700;
+}
+button.grand:disabled {
+  opacity: 0.6;
+}
+
+/* ── The Regent's Seat ─────────────────────────────────────────────── */
+.rowbtn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* ═══ The War Table — the realm board (the app's landing view) ═══════════════
+   The published mockup's palette and chrome, folded in as scoped custom
+   properties: one lit war-table — dark iron frame, vellum board. Every token
+   wears the wt- prefix so the app's own --ink/--green/… stay untouched. */
+
+.wt {
+  --wt-iron: #16150f;
+  --wt-iron-2: #201d14;
+  --wt-iron-3: #2b271b;
+  --wt-edge: #46422c;
+  --wt-edge-soft: #363323;
+  /* The board's own surface. Edwin, 2026-07-27, on the leather that replaced the
+     pale page: "I absolutely loathe this vellum/AI beige thing we have going
+     on" — it read as desert. Both were the same sandy family and both are now
+     retired for an AUTUMNAL KINGDOM: deep moss and loam, the warmth coming
+     from foliage and rooftops rather than from the ground being sand.
+
+     The token NAMES stay (they are used in eighty places and name a ROLE — the
+     board's surface — not a hue), so a repaint remains these few lines plus the
+     ink that rides on them. That is the third time that has paid for itself. */
+  --wt-vellum: #46523c;
+  --wt-vellum-2: #3c4733;
+  --wt-vellum-3: #313b2a;
+  --wt-vellum-ln: #5f7049;
+  /* The ink stays light — the ground is dark, as it has been since the leather.
+     Warmed slightly off cream toward old paper so it sits in the autumn family
+     rather than glaring white against the moss. */
+  --wt-sepia: #eee7d4;
+  --wt-sepia-dim: #bcbfa2;
+  --wt-gold: #c7a44e;
+  --wt-gold-br: #e6ca7d;
+  --wt-ink: #ece3cf;
+  --wt-ink-dim: #a89d83;
+  --wt-green: #5aa168;
+  --wt-amber: #d19a33;
+  --wt-red: #d9634a;
+  --wt-wax: #d2694a;
+  --wt-wax-br: #ef9068;
+  --wt-disp: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+  --wt-util: 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  min-height: 100dvh;
+  background: radial-gradient(120% 90% at 50% -10%, #241d13 0%, var(--wt-iron) 60%) fixed;
+  color: var(--wt-ink);
+  font-family: var(--wt-util);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+.wt button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.wt :focus-visible {
+  outline: 2px solid var(--wt-gold);
+  outline-offset: 2px;
+}
+.wt-num {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--wt-disp);
+}
+/* Counting-house compliance marks — a clean check, a raised flag. */
+.wt-ok {
+  color: var(--wt-green);
+  font-weight: 600;
+}
+.wt-flag {
+  color: var(--wt-red);
+  font-weight: 600;
+}
+/* The Counting-house: the two books side by side, stacking on narrow widths. */
+.wt-twobooks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem 1.25rem;
+}
+.wt-twobooks h4 {
+  margin: 0 0 0.25rem;
+  font-family: var(--wt-util);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.66rem;
+  color: var(--wt-ink-dim);
+}
+@media (max-width: 560px) {
+  .wt-twobooks {
+    grid-template-columns: 1fr;
+  }
+}
+.wt-lbl {
+  font-family: var(--wt-util);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.62rem;
+  color: var(--wt-ink-dim);
+}
+
+/* ── The table: full-viewport HUD frame ─────────────────────────────── */
+.wt-table {
+  min-height: 100dvh;
+  /* A DEFINITE height, not only a floor — and this is the other half of the
+     minmax(0, …) fix below. `minmax(0, 1fr)` can only shrink a row against a
+     definite size; with min-height alone the grid has none, so every row sized
+     itself to its CONTENT and then the container grew past the window. What
+     actually drove it was the Council aside: its cards came to 733px at
+     1280x800, that set the middle row, the board stretched to match, and the
+     table reached 964px in an 800px window. The aside was already built to
+     scroll inside itself (min-height: 0, overflow-y: auto) — it simply never
+     got the chance, because nothing was constraining the row. Stacked layouts
+     below 900px reset this to auto, where scrolling the page IS the design. */
+  height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(248px, 322px);
+  /* minmax(0, …), NOT a bare 1fr. `1fr` is shorthand for `minmax(auto, 1fr)`,
+     and an `auto` minimum is the CONTENT's size — so this row could never
+     shrink below the map's intrinsic height. Measured at 1366x768, the most
+     common laptop screen: the board row took 735px where 548px was going, the
+     table came to 955px, and the whole war table scrolled the window by 187px.
+     A HUD that scrolls is not a HUD. The columns beside this line already say
+     minmax(0, 1fr) — the lesson was learned horizontally and never applied
+     vertically (Edwin's "we may have a ton of space we can reclaim",
+     2026-07-29). .wt-board keeps its own min-height: 420px, so the board still
+     has a floor; below that the window may scroll, which is correct. */
+  /* Two rows, not three. The war-clock footer that held the third is gone —
+     it took 12% of a 1440x900 screen, and more of a smaller one. */
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-areas:
+    'ribbon ribbon'
+    'board  advisor';
+  gap: 10px;
+  padding: 12px;
+  /* 2560, not 1500 and not unbounded. At 1500 a 1920 monitor threw away 420px
+     and the board was capped at 70% of the screen while a 1440 one reached 88% —
+     the app refused the room (Edwin, 2026-07-29: "we have a ton of space we can
+     reclaim").
+     Unbounded was checked and is worse on a true ultrawide: at 3440 the board
+     goes to 2.3:1, which the map cannot usefully fill — the drawn ground runs
+     out and leaves dead wood down the left — and the ribbon's two clusters end
+     up ~2600px apart, so the gauges are lost at one edge while the clock and the
+     Council sit at the other. 2560 was driven and holds: the map reads at 1.64:1
+     and the ribbon still scans as one strip. Beyond that the table centres and
+     letterboxes, which is deliberate, not a shortfall. */
+  max-width: 2560px;
+  margin: 0 auto;
+}
+.wt-chrome {
+  background: linear-gradient(180deg, var(--wt-iron-2), var(--wt-iron));
+  border: 1px solid var(--wt-edge);
+  border-radius: 12px;
+  box-shadow: inset 0 1px 0 #ffffff0d, 0 8px 24px #0009;
+}
+
+/* ── The ribbon ─────────────────────────────────────────────────────── */
+.wt-ribbon {
+  grid-area: ribbon;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 10px 16px;
+  flex-wrap: wrap;
+}
+.wt-crest {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.wt-seal {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 35% 30%, #c24634 0, var(--wt-wax) 45%, #6e1f16 100%);
+  color: #f3d9b8;
+  font-family: var(--wt-disp);
+  font-size: 1.2rem;
+  font-weight: 700;
+  box-shadow: inset 0 2px 3px #ffffff3d, 0 2px 5px #0008;
+  border: 1px solid #00000055;
+}
+.wt-realm-name {
+  font-family: var(--wt-disp);
+  font-size: 1.35rem;
+  letter-spacing: 0.02em;
+  color: var(--wt-gold-br);
+  line-height: 1;
+}
+.wt-gauge {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 132px;
+}
+.wt-gauge-slim {
+  min-width: 104px;
+}
+/* The coffers gauge is a road into the Coin panel — a hover the rest of the
+   ribbon lacks, so it reads as clickable. */
+.wt-gauge-btn {
+  background: none;
+  border: none;
+  padding: 4px;
+  margin: -4px;
+  border-radius: 8px;
+  text-align: left;
+  cursor: pointer;
+}
+.wt-gauge-btn:hover {
+  background: var(--wt-iron-2);
+}
+.wt-gauge-btn:focus-visible {
+  outline: 2px solid var(--wt-gold);
+  outline-offset: 1px;
+}
+.wt-gauge-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.wt-val {
+  font-family: var(--wt-disp);
+  font-size: 1.1rem;
+}
+.wt-val.good {
+  color: var(--wt-green);
+}
+.wt-val.warn {
+  color: var(--wt-amber);
+}
+.wt-val.bad {
+  color: var(--wt-red);
+}
+.wt-val-sub {
+  font-size: 0.72rem;
+  color: var(--wt-ink-dim);
+}
+.wt-bar {
+  height: 8px;
+  border-radius: 6px;
+  background: #0006;
+  overflow: hidden;
+  border: 1px solid #0007;
+}
+.wt-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: 6px;
+}
+.wt-fill-gold {
+  background: linear-gradient(90deg, #8f6f2a, var(--wt-gold-br));
+}
+.wt-fill-red {
+  background: linear-gradient(90deg, #7a2a1c, var(--wt-wax-br));
+}
+.wt-fill-green {
+  background: linear-gradient(90deg, #5a7a3a, #9fbf5a);
+}
+.wt-spacer {
+  flex: 1;
+}
+/* The Clean/Detail toggle — the density switch. It used to ride beside a ⚑
+   Council bell; that bell is gone (it opened a copy of the aside already on
+   screen), so this is the ribbon's last control. */
+.wt-detail {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--wt-iron-3);
+  border: 1px solid var(--wt-edge);
+  border-radius: 999px;
+  padding: 7px 13px;
+  color: var(--wt-ink-dim);
+  margin-right: 8px;
+}
+.wt-detail:hover {
+  border-color: var(--wt-gold);
+  color: var(--wt-ink);
+}
+.wt-detail.on {
+  border-color: var(--wt-gold);
+  color: var(--wt-gold-br);
+  background: #33291a;
+}
+/* The compact toggle that rides in every panel head, left of the ✕. */
+.wt-detail-sm {
+  margin-right: 8px;
+  padding: 6px 11px;
+  flex-shrink: 0;
+}
+.wt-detail-lbl {
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+  font-family: var(--wt-disp);
+}
+/* A case id shown as a name in the world (components.tsx CaseName). */
+.casename strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+/* ── The unit-card (the Civ/Tropico read): a per-type glyph on a tinted
+   square, the type as a small colored chip, the door + person a quiet
+   subtitle. Tones are set per work-family in caselabel.ts's central map. */
+.tone-craft {
+  --cn: #d19a33;
+}
+.tone-alarm {
+  --cn: #d05a41;
+}
+.tone-coin {
+  --cn: #c7a44e;
+}
+.tone-lease {
+  --cn: #5aa168;
+}
+.tone-turn {
+  --cn: #9a7bb0;
+}
+.tone-folk {
+  --cn: #b98d5e;
+}
+.tone-law {
+  --cn: #7d97ad;
+}
+.tone-survey {
+  --cn: #5f9e94;
+}
+.tone-plain {
+  --cn: #a89f8c;
+}
+.cn-g {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  font-size: 0.8rem;
+  line-height: 1;
+  flex-shrink: 0;
+  background: color-mix(in srgb, var(--cn, #a89f8c) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--cn, #a89f8c) 40%, transparent);
+}
+.cn-g-sm {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  font-size: 0.66rem;
+  vertical-align: -3px;
+}
+.casecard {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+.casecard .cn-g {
+  margin-top: 1px;
+}
+.cn-body {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.cn-head {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  flex-wrap: wrap;
+  line-height: 1.25;
+}
+.cn-chip {
+  font-size: 0.56rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  line-height: 1;
+  color: var(--cn, var(--ink-dim));
+  border: 1px solid color-mix(in srgb, var(--cn, #a89f8c) 50%, transparent);
+  background: color-mix(in srgb, var(--cn, #a89f8c) 10%, transparent);
+  border-radius: 999px;
+  padding: 2px 7px;
+  white-space: nowrap;
+}
+/* The work-order Priority pill (the Lane-B taxonomy, surfaced on the card). */
+.cn-pri {
+  font-size: 0.56rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  line-height: 1;
+  border-radius: 999px;
+  padding: 2px 7px;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+.pri-urgent {
+  color: #e8917a;
+  border-color: color-mix(in srgb, #c0492f 55%, transparent);
+  background: color-mix(in srgb, #c0492f 16%, transparent);
+}
+.pri-normal {
+  color: var(--ink-dim);
+  border-color: color-mix(in srgb, #a89f8c 40%, transparent);
+  background: color-mix(in srgb, #a89f8c 8%, transparent);
+}
+.pri-low {
+  color: var(--ink-dim);
+  opacity: 0.7;
+  border-color: color-mix(in srgb, #a89f8c 28%, transparent);
+}
+/* The work-order Status chip — the lifecycle stage, dressed like the Priority
+ * pill so a card reads as one family. Green as the arc nears close, amber
+ * mid-arc, quiet at the two ends (new/canceled). */
+.cn-status {
+  font-size: 0.56rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  line-height: 1;
+  border-radius: 999px;
+  padding: 2px 7px;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  margin-left: 0.4rem;
+}
+.status-new {
+  color: var(--ink-dim);
+  border-color: color-mix(in srgb, #a89f8c 40%, transparent);
+  background: color-mix(in srgb, #a89f8c 8%, transparent);
+}
+.status-assigned,
+.status-scheduled {
+  color: #d9a441;
+  border-color: color-mix(in srgb, #b5811f 50%, transparent);
+  background: color-mix(in srgb, #b5811f 14%, transparent);
+}
+.status-in-progress {
+  color: #6fa8dc;
+  border-color: color-mix(in srgb, #2f6fa3 55%, transparent);
+  background: color-mix(in srgb, #2f6fa3 16%, transparent);
+}
+.status-on-hold {
+  color: var(--ink-dim);
+  opacity: 0.75;
+  border-color: color-mix(in srgb, #a89f8c 28%, transparent);
+}
+.status-completed {
+  color: #7cb87c;
+  border-color: color-mix(in srgb, #3f8f3f 50%, transparent);
+  background: color-mix(in srgb, #3f8f3f 14%, transparent);
+}
+.status-canceled {
+  color: var(--ink-dim);
+  opacity: 0.6;
+  border-color: color-mix(in srgb, #a89f8c 24%, transparent);
+  text-decoration: line-through;
+}
+/* The SLA band chip — the target-response clock the word is held to. One
+ * quiet dress; the Status chip already carries the color signal. */
+.cn-sla {
+  font-size: 0.56rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  color: var(--ink-dim);
+  border: 1px solid color-mix(in srgb, var(--ink-dim) 30%, transparent);
+  border-radius: 999px;
+  padding: 2px 7px;
+  white-space: nowrap;
+  margin-left: 0.4rem;
+}
+.ledger-body .cn-status,
+.ledger-body .cn-sla {
+  margin-left: 0.4rem;
+}
+/* A clerk's proposal on the step in hand — who proposed, the gate signal, words. */
+.flow-proposal {
+  display: block;
+  margin-top: 3px;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.flow-by {
+  font-size: 0.62rem;
+  font-style: italic;
+  color: var(--wt-gold, #c8a24a);
+}
+.flow-note {
+  overflow-wrap: anywhere;
+}
+.gate-chip {
+  font-size: 0.56rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  border-radius: 999px;
+  padding: 2px 7px;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+.gate-warn {
+  color: #e8917a;
+  border-color: color-mix(in srgb, #c0492f 55%, transparent);
+  background: color-mix(in srgb, #c0492f 16%, transparent);
+}
+.gate-ok {
+  color: #8fbf8a;
+  border-color: color-mix(in srgb, #4f8a45 50%, transparent);
+  background: color-mix(in srgb, #4f8a45 12%, transparent);
+}
+.cn-sub {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--ink-dim);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+.casecard .casename-raw {
+  display: block;
+  margin-top: 1px;
+  overflow-wrap: anywhere;
+}
+.casename-at {
+  color: var(--ink-dim);
+}
+.casename-who {
+  color: var(--ink-dim);
+  font-style: italic;
+}
+.casename-raw {
+  color: var(--ink-dim);
+  opacity: 0.65;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.82em;
+}
+/* Named for the retired ⚑ bell; still worn by the Clean/Detail toggle. */
+
+/* ── The command rail ───────────────────────────────────────────────── */
+.wt-cap {
+  font-size: 0.5rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.wt-pip {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--wt-wax);
+  color: #ffe;
+  font-size: 0.6rem;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--wt-iron);
+}
+
+/* ── The board (the illuminated map) ────────────────────────────────── */
+.wt-board {
+  grid-area: board;
+  position: relative;
+  border-radius: 14px;
+  padding: 0;
+  overflow: hidden;
+  min-height: 420px;
+  border: 10px solid transparent;
+  background:
+    linear-gradient(var(--wt-iron-2), var(--wt-iron-2)) padding-box,
+    repeating-linear-gradient(45deg, #4a3f2c 0 9px, #322a1e 9px 18px) border-box;
+  box-shadow: inset 0 0 40px #0009, 0 10px 30px #000a;
+}
+.wt-vellum {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(80% 60% at 50% 20%, #536046 0, var(--wt-vellum) 55%, var(--wt-vellum-3) 100%);
+  box-shadow: inset 0 0 80px #0000002e, inset 0 0 160px #6b57281f;
+}
+.wt-vellum::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(#00000010 1px, transparent 1px),
+    linear-gradient(90deg, #00000010 1px, transparent 1px);
+  background-size: 46px 46px;
+  -webkit-mask-image: radial-gradient(75% 75% at 50% 45%, #000 55%, transparent 100%);
+  mask-image: radial-gradient(75% 75% at 50% 45%, #000 55%, transparent 100%);
+}
+.wt-cartouche {
+  position: absolute;
+  inset: 12px;
+  border: 1.5px solid var(--wt-sepia-dim)55;
+  border-radius: 8px;
+  pointer-events: none;
+}
+.wt-cartouche::after {
+  content: '❧';
+  position: absolute;
+  right: 10px;
+  bottom: 4px;
+  color: var(--wt-sepia-dim)66;
+  font-size: 1.2rem;
+}
+.wt-compass {
+  position: absolute;
+  left: 18px;
+  bottom: 14px;
+  width: 62px;
+  height: 62px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+.wt-board-inner {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  padding: 16px 20px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* the throne crest atop the realm */
+.wt-crown {
+  align-self: center;
+  text-align: center;
+  color: var(--wt-sepia);
+  margin: 2px 0 8px;
+}
+.wt-who {
+  font-family: var(--wt-disp);
+  font-size: 1.05rem;
+}
+/* The crown line is a road into the Crown panel — a subtle chip on the vellum. */
+.wt-who-btn {
+  background: none;
+  border: none;
+  padding: 2px 6px;
+  margin: -2px -6px;
+  border-radius: 7px;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+.wt-who-btn:hover {
+  background: #d8c49b66;
+}
+.wt-who-btn:focus-visible {
+  outline: 2px solid var(--wt-wax-br);
+  outline-offset: 1px;
+}
+.wt-who b {
+  color: var(--wt-gold-br);
+}
+.wt-obj {
+  font-size: 0.68rem;
+  color: var(--wt-sepia-dim);
+  letter-spacing: 0.04em;
+}
+/* The same sentence, in the ribbon — where the DEFAULT board can see it. It
+   takes the spacer's old job of pushing the Clean toggle right, so it grows to
+   fill whatever the gauges leave and wraps with the ribbon on a narrow screen
+   instead of overflowing it. Brighter than the card-view twin above, because
+   there it was a footnote under the crown and here it is the instruction. */
+.wt-obj-ribbon {
+  /* No longer flex-grow: it holds five words, not a paragraph, and a growing
+     child is what pushed this strip to three rows on a 1366px screen. */
+  flex: 0 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.42;
+  color: var(--wt-ink-dim);
+  letter-spacing: 0.01em;
+  border-left: 2px solid var(--wt-gold);
+  padding-left: 12px;
+}
+.wt-obj-ribbon b {
+  margin-right: 6px;
+  color: var(--wt-gold-br);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.66rem;
+}
+
+/* the field strips and their captions */
+.wt-field-cap {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--wt-sepia-dim);
+  margin: 6px 2px 8px;
+}
+.wt-field-cap-later {
+  margin-top: 16px;
+  border-top: 1px dashed #b09b6a88;
+  padding-top: 10px;
+}
+.wt-field {
+  display: grid;
+  gap: 14px 16px;
+  grid-template-columns: repeat(auto-fit, minmax(196px, 1fr));
+  align-content: start;
+}
+
+/* holdings laid across the vellum */
+.wt-holding {
+  position: relative;
+  background: linear-gradient(180deg, var(--wt-vellum-2), var(--wt-vellum-3));
+  border: 1px solid var(--wt-vellum-ln);
+  border-radius: 10px;
+  padding: 12px 12px 10px;
+  color: var(--wt-sepia);
+  box-shadow: 0 2px 0 #0000001a, inset 0 1px 0 #fff6;
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s,
+    outline-color 0.12s;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  text-align: left;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.wt-holding:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px #0003, inset 0 1px 0 #fff8;
+  outline-color: var(--wt-gold);
+}
+.wt-holding.is-empty {
+  background: linear-gradient(180deg, #5a4436, #4a382c);
+  border-color: #b98d78;
+}
+.wt-hhead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.wt-hgrow {
+  flex: 1;
+  min-width: 0;
+}
+.wt-medallion {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--wt-disp);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #f6ecd2;
+  background: #6a5a34;
+  box-shadow: 0 0 0 3px #e8dcbb, 0 0 0 5px var(--ring, #5aa168), 0 1px 4px #0005;
+}
+.wt-medallion.is-vacant {
+  color: #7a3b2c;
+  background: #e8dcbb;
+}
+.wt-htitle {
+  font-family: var(--wt-disp);
+  font-size: 1.02rem;
+  line-height: 1.05;
+  color: var(--wt-sepia);
+}
+.wt-hholder {
+  font-size: 0.72rem;
+  color: var(--wt-sepia-dim);
+}
+.wt-hholder b {
+  color: var(--wt-sepia);
+}
+.wt-tag {
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.wt-tag.t-green {
+  background: #cfe6cf;
+  color: #24592f;
+}
+.wt-tag.t-amber {
+  background: #f0e0b8;
+  color: #6e4e12;
+}
+.wt-tag.t-red {
+  background: #efcdbf;
+  color: #7a2c1a;
+}
+.wt-hwork {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.wt-pips {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.wt-pipdot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: #7a6a40;
+  opacity: 0.8;
+}
+.wt-pipdot.f {
+  background: var(--wt-amber);
+}
+.wt-pipdot.c {
+  background: var(--wt-red);
+}
+.wt-hcount {
+  font-family: var(--wt-disp);
+  font-size: 0.82rem;
+  color: var(--wt-sepia);
+}
+.wt-waxink {
+  color: var(--wt-wax-br);
+}
+.wt-hmeta {
+  font-size: 0.66rem;
+  color: var(--wt-sepia-dim);
+}
+.wt-capbar {
+  height: 5px;
+  border-radius: 4px;
+  background: #b09b6a55;
+  overflow: hidden;
+}
+.wt-capbar > span {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #8f6f2a, var(--wt-gold));
+}
+
+/* undelegated posts — flags of work on no seat */
+.wt-posts {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  align-items: stretch;
+}
+.wt-post {
+  flex: 1 1 120px;
+  background: #4a5340cc;
+  border: 1px dashed var(--wt-wax);
+  border-radius: 8px;
+  padding: 7px 10px;
+  color: var(--wt-sepia);
+  text-align: left;
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.wt-post:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px #0003;
+}
+.wt-post-h {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+.wt-post-n {
+  font-family: var(--wt-disp);
+  font-weight: 700;
+  color: var(--wt-wax-br);
+}
+.wt-post-c {
+  font-family: var(--wt-disp);
+  /* The deep russet reads at 1.35:1 on moss — invisible. The bright russet is
+     the same colour with the light on it. */
+  color: var(--wt-wax-br);
+}
+.wt-post-s {
+  font-size: 0.62rem;
+  color: var(--wt-sepia-dim);
+}
+
+/* the Patrons ring the edge */
+.wt-patrons {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  align-items: center;
+}
+.wt-pcap {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--wt-sepia-dim);
+  margin-right: 4px;
+}
+.wt-fav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #4a5340;
+  border: 1px solid var(--wt-vellum-ln);
+  border-radius: 999px;
+  padding: 3px 9px 3px 4px;
+  color: var(--wt-sepia);
+}
+button.wt-fav:hover {
+  border-color: var(--wt-gold);
+  box-shadow: 0 2px 8px #0002;
+}
+.wt-fav.gone {
+  opacity: 0.55;
+  text-decoration: line-through;
+}
+.wt-coin {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #33260f;
+  background: conic-gradient(var(--fc, #5aa168) calc(var(--f, 100) * 1%), #c9b98f 0);
+  box-shadow: inset 0 0 0 1.5px #ffffff55;
+  flex-shrink: 0;
+}
+.wt-coin-dark {
+  display: inline-grid;
+  vertical-align: middle;
+  box-shadow: inset 0 0 0 1.5px #00000033;
+}
+.wt-nm {
+  font-size: 0.68rem;
+}
+
+/* ── The time control ───────────────────────────────────────────────── */
+.wt-dial {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid var(--wt-gold);
+  position: relative;
+  box-shadow: inset 0 0 8px #c7a44e33;
+  flex-shrink: 0;
+}
+.wt-dial::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2px;
+  height: 12px;
+  background: var(--wt-gold-br);
+  transform-origin: bottom;
+  transform: translate(-50%, -100%) rotate(var(--a, 40deg));
+  transition: transform 0.4s;
+}
+.wt-tbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(180deg, #33291a, #241d12);
+  border: 1px solid var(--wt-edge);
+  border-radius: 10px;
+  padding: 9px 15px;
+  color: var(--wt-ink);
+  font-size: 0.84rem;
+  transition: border-color 0.12s, transform 0.1s;
+}
+.wt-tbtn:hover:not(:disabled) {
+  border-color: var(--wt-gold);
+  transform: translateY(-1px);
+}
+.wt-tbtn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.wt-tbtn.primary {
+  border-color: var(--wt-gold);
+  color: var(--wt-gold-br);
+  box-shadow: inset 0 0 0 1px #c7a44e33;
+}
+.wt-tbtn.danger:hover {
+  border-color: var(--wt-red);
+  color: var(--wt-wax-br);
+}
+.wt-hint {
+  font-size: 0.68rem;
+  color: var(--wt-ink-dim);
+}
+.wt-muster {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.wt-seedin {
+  background: var(--wt-iron-3);
+  border: 1px solid var(--wt-edge);
+  border-radius: 10px;
+  color: var(--wt-ink);
+  font-size: 0.84rem;
+  padding: 9px 12px;
+  min-width: 200px;
+}
+.wt-seedin:focus {
+  border-color: var(--wt-gold);
+  outline: none;
+}
+
+/* ── The council feed (heralds of the realm) ────────────────────────── */
+.wt-advisor {
+  grid-area: advisor;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  /* Bounded by its own ROW, not by the window. Measured against the viewport
+     (100dvh - 24px) it could stand taller than the row it lives in and spill
+     over the war-clock footer below — and it did: with the grid given a
+     definite height, six heralds reached past the row and the aside's last card
+     sat on top of "Begin the campaign", swallowing the click. A panel that
+     covers a control is the fault this kingdom keeps re-learning; the browser
+     found it here only because a scripted click could not land. Stretching to
+     the row and scrolling inside it is what the cards always wanted. */
+  align-self: stretch;
+  max-height: 100%;
+  overflow-y: auto;
+  min-height: 0;
+}
+.wt-acap {
+  font-family: var(--wt-disp);
+  color: var(--wt-gold-br);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  padding: 2px 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.wt-acap::before {
+  content: '⚜';
+}
+.wt-scrap {
+  background: linear-gradient(180deg, #4e5a41, #414c36);
+  color: var(--wt-sepia);
+  border: 1px solid var(--wt-vellum-ln);
+  border-left: 4px solid var(--wt-wax);
+  border-radius: 8px;
+  padding: 9px 11px;
+  box-shadow: 0 6px 16px #0006;
+  animation: wt-slidein 0.4s ease both;
+}
+.wt-scrap.warn {
+  border-left-color: var(--wt-amber);
+}
+.wt-scrap.info {
+  border-left-color: var(--wt-sepia-dim);
+}
+.wt-sh {
+  font-family: var(--wt-disp);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--wt-sepia);
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.wt-sb {
+  font-size: 0.72rem;
+  color: var(--wt-sepia-dim);
+  margin-top: 2px;
+}
+.wt-sact {
+  margin-top: 7px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.wt-sact button {
+  font-size: 0.66rem;
+  background: #d3c08f;
+  border: 1px solid var(--wt-vellum-ln);
+  border-radius: 6px;
+  padding: 3px 9px;
+  color: #4a3512;
+}
+.wt-sact button:hover {
+  background: var(--wt-gold);
+}
+/* on iron ground (panels), the roads dress for the dark */
+.wt-panel .wt-sact button {
+  background: var(--wt-iron-3);
+  border-color: var(--wt-edge);
+  color: var(--wt-ink-dim);
+  font-size: 0.72rem;
+  padding: 5px 10px;
+}
+.wt-panel .wt-sact button:hover {
+  border-color: var(--wt-gold);
+  color: var(--wt-gold-br);
+  background: var(--wt-iron-3);
+}
+@keyframes wt-slidein {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── The overlay panel (a seat entered, over the board) ─────────────── */
+.wt-scrim {
+  position: fixed;
+  inset: 0;
+  background: #0b0906cc;
+  backdrop-filter: blur(2px);
+  z-index: 60;
+  animation: wt-fade 0.2s both;
+}
+@keyframes wt-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+/* A surface entered takes the CENTRE of the table (Edwin, 2026-07-27) — it IS
+   the board, wearing a different face. The ribbon, the command rail, the
+   Council, and the war clock stand still around it; nothing slides over the
+   master screen any more. Same grid area, same framed dress as the board, so
+   entering a surface reads as the table turning rather than a sheet arriving. */
+.wt-panel {
+  grid-area: board;
+  min-width: 0;
+  border-radius: 14px;
+  border: 10px solid transparent;
+  background:
+    linear-gradient(#201a12, #17130d) padding-box,
+    repeating-linear-gradient(45deg, #4a3f2c 0 9px, #322a1e 9px 18px) border-box;
+  box-shadow: inset 0 0 40px #0009, 0 10px 30px #000a;
+  display: flex;
+  flex-direction: column;
+  animation: wt-panelin 0.2s ease-out both;
+}
+/* The dense surfaces (the Ledger, a fief) once needed a wider sheet than the
+   drawer allowed. In the centre they already have the whole board, so `wide`
+   only keeps the trimmings it always carried. */
+.wt-panel-wide .wt-pbody {
+  padding: 14px 20px 22px;
+}
+.wt-panel-wide .banner {
+  display: none;
+}
+.wt-panel-wide .kpis {
+  margin-top: 0;
+}
+@keyframes wt-panelin {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wt-panel {
+    animation: none;
+  }
+}
+.wt-close-lbl {
+  font-size: 0.72rem;
+  margin-left: 4px;
+}
+.wt-ptop {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--wt-edge);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.wt-ptop .wt-medallion {
+  box-shadow: 0 0 0 3px #17130d, 0 0 0 5px var(--ring, var(--wt-gold)), 0 1px 4px #0005;
+}
+.wt-panel h2 {
+  font-family: var(--wt-disp);
+  margin: 0;
+  font-size: 1.3rem;
+  color: var(--wt-gold-br);
+}
+.wt-psub {
+  font-size: 0.72rem;
+  color: var(--wt-ink-dim);
+}
+.wt-pbody {
+  padding: 14px 18px 18px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+/* The way back to the Table. It carries its words now that a surface takes the
+   whole centre — with nothing sliding away, "✕" alone left no sign of where
+   the ✕ went. A pill, not a 32px box, or the label breaks over two lines. */
+.wt-close {
+  margin-left: auto;
+  background: var(--wt-iron-3);
+  border: 1px solid var(--wt-edge);
+  border-radius: 8px;
+  min-height: 32px;
+  padding: 0 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+  color: var(--wt-ink-dim);
+  flex-shrink: 0;
+}
+.wt-close:hover {
+  color: var(--wt-ink);
+  border-color: var(--wt-gold);
+}
+.wt-stats {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.wt-stat {
+  flex: 1 1 6rem;
+  background: var(--wt-iron-2);
+  border: 1px solid var(--wt-edge);
+  border-radius: 10px;
+  padding: 9px 11px;
+}
+.wt-stat-n {
+  font-family: var(--wt-disp);
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+.wt-stat-n.bad {
+  color: var(--wt-red);
+}
+.wt-stat-n.warn {
+  color: var(--wt-amber);
+}
+.wt-stat-n.good {
+  color: var(--wt-green);
+}
+.wt-card {
+  background: var(--wt-iron-2);
+  border: 1px solid var(--wt-edge);
+  border-radius: 10px;
+  padding: 12px 13px;
+}
+.wt-card h3 {
+  margin: 0 0 4px;
+  font-family: var(--wt-disp);
+  font-size: 0.98rem;
+  color: var(--wt-ink);
+  font-weight: 600;
+}
+.wt-fine {
+  margin: 0 0 8px;
+  font-size: 0.74rem;
+  color: var(--wt-ink-dim);
+  line-height: 1.4;
+}
+.wt-fine:last-child {
+  margin-bottom: 0;
+}
+.wt-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--wt-edge-soft);
+}
+.wt-row:last-child {
+  border-bottom: none;
+}
+.wt-rowt {
+  font-size: 0.8rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.wt-rowt b {
+  color: var(--wt-gold-br);
+  font-weight: 600;
+}
+.wt-rowm {
+  font-size: 0.66rem;
+  color: var(--wt-ink-dim);
+}
+.wt-old {
+  color: var(--wt-amber);
+}
+/* A small state coin for a fief on the map / by-territory rolls. */
+.wt-fdot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--fc, var(--wt-ink-dim));
+  vertical-align: middle;
+}
+.wt-orders {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.wt-orders li {
+  font-size: 0.78rem;
+  color: var(--wt-ink);
+  line-height: 1.4;
+}
+.wt-go {
+  font-size: 0.68rem;
+  background: linear-gradient(180deg, #33291a, #241d12);
+  border: 1px solid var(--wt-gold);
+  color: var(--wt-gold-br);
+  border-radius: 7px;
+  padding: 5px 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.wt-go:hover:not(:disabled) {
+  background: var(--wt-gold);
+  color: #241d12;
+}
+.wt-go:disabled {
+  opacity: 0.45;
+  cursor: default;
+  border-color: var(--wt-edge);
+  color: var(--wt-ink-dim);
+}
+.wt-select,
+.wt-textin {
+  background: var(--wt-iron-3);
+  border: 1px solid var(--wt-edge);
+  border-radius: 7px;
+  color: var(--wt-ink);
+  font-size: 0.74rem;
+  padding: 5px 8px;
+  max-width: 100%;
+}
+.wt-select-wide {
+  width: 100%;
+  padding: 8px;
+  font-size: 0.8rem;
+}
+.wt-textin {
+  flex: 1 1 160px;
+  padding: 7px 10px;
+  font-size: 0.8rem;
+}
+.wt-select:focus,
+.wt-textin:focus {
+  border-color: var(--wt-gold);
+  outline: none;
+}
+.wt-actline {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 4px;
+}
+.wt-disclose {
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: left;
+  font-size: 0.8rem;
+  color: var(--wt-ink);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.wt-disclose b {
+  color: var(--wt-gold-br);
+  font-weight: 600;
+}
+.wt-intake {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--wt-edge-soft);
+}
+.wt-intake:last-of-type {
+  border-bottom: none;
+}
+.wt-queue {
+  padding: 7px 0;
+  border-bottom: 1px solid var(--wt-edge-soft);
+}
+.wt-queue:last-of-type {
+  border-bottom: none;
+}
+.wt-queue-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.wt-queue-drill {
+  margin: 4px 0 0 14px;
+  padding-left: 8px;
+  border-left: 2px solid var(--wt-edge-soft);
+}
+
+/* the tree drill, echoing the built seat */
+.wt-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+  background: var(--wt-iron-3);
+  border: 1px solid var(--wt-edge-soft);
+  border-radius: 8px;
+  padding: 8px 9px;
+}
+.wt-tlevel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-items: center;
+}
+.wt-tl {
+  flex: 0 0 3.6rem;
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--wt-ink-dim);
+}
+.wt-tchip {
+  font-size: 0.74rem;
+  border: 1px solid var(--wt-edge);
+  background: var(--wt-iron-2);
+  color: var(--wt-ink);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+.wt-tchip:hover {
+  border-color: var(--wt-ink-dim);
+}
+.wt-tchip.on {
+  border-color: var(--wt-gold);
+  color: var(--wt-gold-br);
+}
+.wt-tchip.leaf {
+  border-color: var(--wt-green);
+  color: #9fdca9;
+}
+.wt-tchip.leaf:hover {
+  background: var(--wt-green);
+  color: #10230f;
+}
+
+/* ── The table on a narrow screen ───────────────────────────────────── */
+@media (max-width: 900px) {
+  .wt-table {
+    grid-template-columns: 1fr;
+    /* Stacked, the page is MEANT to scroll: the bands cannot share one screen.
+       So the definite height the HUD needs is given back, and the rows go back
+       to sizing themselves to their content. */
+    height: auto;
+    grid-template-rows: none;
+    grid-template-areas:
+      'ribbon'
+      'board'
+      'advisor';
+  }
+  .wt-advisor {
+    position: static;
+    max-height: none;
+    overflow-y: visible;
+  }
+  .wt-gauge {
+    min-width: 112px;
+    flex: 1 1 112px;
+  }
+}
+/* ── The panels in the hand (≤560px): the slack taken in ─────────────
+   On a phone the overlay sheets kept their desk-sized margins and read
+   loose — big gaps, tall rows, numerals shouting over thin columns. Here
+   the padding, gaps, and display sizes draw closer so one screen shows
+   more of the book. Same panels, same words, same roads: density only,
+   and only under 560px — the desk and the tablet keep their dress. */
+@media (max-width: 560px) {
+  /* the panel head: a smaller seal, closer type */
+  .wt-ptop {
+    padding: 11px 13px;
+    gap: 10px;
+  }
+  .wt-ptop .wt-medallion {
+    width: 34px;
+    height: 34px;
+    font-size: 0.95rem;
+  }
+  .wt-panel h2 {
+    font-size: 1.15rem;
+  }
+  .wt-psub {
+    font-size: 0.68rem;
+  }
+
+  /* the panel body: closer cards, a tighter line of march */
+  .wt-pbody,
+  .wt-panel-wide .wt-pbody {
+    padding: 10px 12px 16px;
+    gap: 9px;
+  }
+  .wt-card {
+    padding: 9px 11px;
+  }
+  .wt-stats {
+    gap: 7px;
+  }
+  .wt-stat {
+    padding: 7px 9px;
+  }
+  .wt-stat-n {
+    font-size: 1.28rem;
+  }
+  .wt-row {
+    padding: 5px 0;
+  }
+  .wt-fine {
+    margin-bottom: 6px;
+  }
+  .wt-twobooks {
+    gap: 0.6rem;
+  }
+
+  /* The Ledger sheet reuses the court's own cards; inside the phone panel
+     they shed the desk margins too. Scoped to .wt-panel on purpose — the
+     old court views keep their own dress untouched. */
+  .wt-panel .card {
+    padding: 0.65rem 0.75rem;
+    margin-bottom: 0.65rem;
+  }
+  .wt-panel .card h3 {
+    margin-bottom: 0.45rem;
+  }
+  .wt-panel .kpis {
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+  }
+  .wt-panel .kpi {
+    flex-basis: 6rem;
+    padding: 0.5rem 0.6rem;
+  }
+  .wt-panel .kpi .num {
+    font-size: 1.35rem;
+  }
+  .wt-panel .kpi .lbl {
+    margin-top: 0.2rem;
+  }
+  .wt-panel .desk-list li {
+    padding: 0.25rem 0;
+  }
+  /* a case's chip train may wrap on the narrow sheet, never poke past it */
+  .wt-panel .case-row {
+    flex-wrap: wrap;
+  }
+
+  /* the war-controls strip draws in the same; the seed field yields its
+     fixed width so the muster row packs instead of wrapping wide */
+  .wt-seedin {
+    min-width: 0;
+    flex: 1 1 140px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wt *,
+  .wt-scrim,
+  .wt-panel {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ── The save-failure banner (B1) ──────────────────────────────────────
+   A vault write was refused. The record is safe in the localStorage mirror
+   but is NOT in the vault, so we say so, loudly, above every panel — never
+   let a lost write pass in silence. Fixed to the foot so it never blocks the
+   board, z above the overlay panel (61) so it shows even mid-edit. */
+.save-alert {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  z-index: 80;
+  width: min(560px, calc(100vw - 24px));
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 13px 15px;
+  background: linear-gradient(180deg, #2a1712, #22120e);
+  border: 1px solid var(--red);
+  border-radius: 9px;
+  box-shadow: 0 10px 34px #000c, 0 0 0 1px #0008;
+  color: var(--ink);
+  animation: save-alert-in 0.24s cubic-bezier(0.3, 0.7, 0.3, 1) both;
+}
+@keyframes save-alert-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+.save-alert-mark {
+  font-size: 18px;
+  line-height: 1.3;
+  flex-shrink: 0;
+}
+.save-alert-body {
+  flex: 1;
+  min-width: 0;
+}
+.save-alert-title {
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: 0.02em;
+  margin-bottom: 2px;
+}
+.save-alert-say {
+  font-size: 13px;
+  color: var(--ink-dim);
+  line-height: 1.4;
+}
+.save-alert-retry {
+  flex-shrink: 0;
+  align-self: center;
+  padding: 7px 14px;
+  background: var(--red);
+  color: #1a0d0a;
+  font-weight: 700;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.save-alert-retry:hover {
+  filter: brightness(1.1);
+}
+.save-alert-retry:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* ── The first-run onboarding overlay (BETA BLOCKER S4) ────────────────
+   A one-time welcome + glossary for a guest who has never seen the court.
+   Self-contained: its own small palette (not the `.wt`-scoped variables,
+   so it renders correctly no matter where it mounts), z above everything
+   else on the board including the save-failure banner. */
+.wt-onb-root {
+  --onb-iron: #17140f;
+  --onb-iron-2: #201a12;
+  --onb-iron-3: #2c241a;
+  --onb-edge: #43392a;
+  --onb-gold: #c7a44e;
+  --onb-gold-br: #e6ca7d;
+  --onb-ink: #ece3cf;
+  --onb-ink-dim: #a89d83;
+  --onb-wax: #9c2f22;
+  --onb-disp: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+  --onb-util: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+.wt-onb-scrim {
+  position: fixed;
+  inset: 0;
+  background: #0b0906d9;
+  backdrop-filter: blur(2px);
+  z-index: 100;
+  animation: wt-onb-fade 0.2s both;
+}
+.wt-onb-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 101;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow-y: auto;
+}
+@keyframes wt-onb-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.wt-onb-panel {
+  width: min(560px, 100%);
+  max-height: min(88dvh, 720px);
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, var(--onb-iron-2), var(--onb-iron));
+  border: 1px solid var(--onb-gold);
+  border-radius: 14px;
+  box-shadow: 0 24px 64px #000c, 0 0 0 1px #0007;
+  color: var(--onb-ink);
+  font-family: var(--onb-util);
+  animation: wt-onb-in 0.28s cubic-bezier(0.3, 0.7, 0.3, 1) both;
+}
+@keyframes wt-onb-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.wt-onb-panel :focus-visible {
+  outline: 2px solid var(--onb-gold);
+  outline-offset: 2px;
+}
+.wt-onb-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid var(--onb-edge);
+}
+.wt-onb-seal {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 35% 30%, #c24634 0, var(--onb-wax) 45%, #6e1f16 100%);
+  color: #f3d9b8;
+  font-family: var(--onb-disp);
+  font-size: 1.2rem;
+  font-weight: 700;
+  box-shadow: inset 0 2px 3px #ffffff3d, 0 2px 5px #0008;
+  border: 1px solid #00000055;
+}
+.wt-onb-htext {
+  flex: 1;
+  min-width: 0;
+}
+.wt-onb-htext h2 {
+  margin: 0 0 4px;
+  font-family: var(--onb-disp);
+  font-size: 1.28rem;
+  color: var(--onb-gold-br);
+}
+.wt-onb-htext p {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--onb-ink-dim);
+}
+.wt-onb-x {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  background: var(--onb-iron-3);
+  border: 1px solid var(--onb-edge);
+  border-radius: 8px;
+  color: var(--onb-ink-dim);
+  font: inherit;
+  cursor: pointer;
+}
+.wt-onb-x:hover {
+  color: var(--onb-ink);
+  border-color: var(--onb-gold);
+}
+.wt-onb-body {
+  padding: 14px 18px;
+  overflow-y: auto;
+  min-height: 0;
+}
+.wt-onb-lede {
+  margin: 0 0 10px;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--onb-ink-dim);
+}
+.wt-onb-gloss {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.wt-onb-row {
+  background: var(--onb-iron-2);
+  border: 1px solid var(--onb-edge);
+  border-radius: 10px;
+  padding: 9px 12px;
+}
+.wt-onb-row dt {
+  font-family: var(--onb-disp);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--onb-gold-br);
+  margin-bottom: 2px;
+}
+.wt-onb-row dd {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--onb-ink-dim);
+}
+.wt-onb-foot {
+  padding: 14px 18px 18px;
+  border-top: 1px solid var(--onb-edge);
+  display: flex;
+  justify-content: flex-end;
+}
+.wt-onb-enter {
+  padding: 10px 18px;
+  background: linear-gradient(90deg, #8f6f2a, var(--onb-gold-br));
+  color: #241a08;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  font: inherit;
+  cursor: pointer;
+}
+.wt-onb-enter:hover {
+  filter: brightness(1.06);
+}
+@media (max-width: 480px) {
+  .wt-onb-wrap {
+    padding: 10px;
+    align-items: flex-end;
+  }
+  .wt-onb-panel {
+    max-height: min(92dvh, 720px);
+  }
+  .wt-onb-head {
+    padding: 14px 14px 12px;
+  }
+  .wt-onb-body {
+    padding: 12px 14px;
+  }
+  .wt-onb-foot {
+    padding: 12px 14px 14px;
+  }
+  .wt-onb-enter {
+    width: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wt-onb-scrim,
+  .wt-onb-panel {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ── The clerks' word ──────────────────────────────────────────────────────
+   The fleet is ten seats reasoning through a live brain — about a minute of
+   real work. A minute of silence reads as a broken button, so the wait and its
+   outcome both stand on the board, in the War Table's own dress. */
+.wt-clerkline {
+  /* Fixed to the foot, like the save-failure alert: the board is a long scroll
+     and the war-clock bar sits thousands of pixels down it, so a status line
+     placed in the flow would narrate the wait somewhere the Regent cannot see.
+     Above the overlay panel (61) so the word still reaches them mid-edit, below
+     the save alert (80), which outranks everything. */
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  z-index: 70;
+  width: min(620px, calc(100vw - 24px));
+  box-shadow: 0 10px 30px #000a;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border: 1px solid var(--wt-edge);
+  border-left: 3px solid var(--wt-gold);
+  border-radius: 10px;
+  background: linear-gradient(180deg, #33291a, #241d12);
+  color: var(--wt-ink);
+  font-size: 0.86rem;
+}
+.wt-clerkline.is-done {
+  border-left-color: var(--wt-green);
+}
+.wt-clerkline.is-empty {
+  border-left-color: var(--wt-ink-dim);
+}
+.wt-clerkline.is-error {
+  border-left-color: var(--wt-red);
+}
+.wt-clerkmark {
+  font-size: 1.05rem;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.wt-clerktext {
+  flex: 1;
+  min-width: 0;
+}
+.wt-clerkline b {
+  color: var(--wt-gold-br);
+  font-weight: 600;
+}
+.wt-clerkline.is-error b {
+  color: var(--wt-wax-br);
+}
+.wt-clerkx {
+  background: none;
+  border: none;
+  color: var(--wt-ink-dim);
+  font-size: 0.9rem;
+  padding: 2px 6px;
+  flex-shrink: 0;
+}
+.wt-clerkx:hover {
+  color: var(--wt-gold);
+}
+/* The turning quill — the one sign the board is thinking. */
+.wt-spin {
+  width: 13px;
+  height: 13px;
+  border: 2px solid #c7a44e55;
+  border-top-color: var(--wt-gold-br);
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+  animation: wt-spin 0.9s linear infinite;
+}
+@keyframes wt-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wt-spin {
+    animation-duration: 3s;
+  }
+}
+.wt-tbtn.is-working {
+  border-color: var(--wt-gold);
+  color: var(--wt-gold-br);
+  opacity: 1;
+}
+
+/* ── The clerks' proposals, on the Ledger ──────────────────────────────────
+   What the fleet parked for the Regent's word. It stands first on the Ledger
+   because it is what a Regent arriving from "the clerks worked" came to read
+   — before, it was indistinguishable from a thousand other awaiting rows. */
+.clerk-card {
+  border-left: 3px solid var(--wt-gold);
+}
+.clerk-prop {
+  align-items: flex-start;
+}
+.ledger-prop {
+  color: var(--wt-gold-br);
+}
+.clerk-seat {
+  color: var(--wt-gold-br);
+  font-weight: 600;
+  margin-right: 6px;
+}
+.clerk-note {
+  display: block;
+  font-size: 0.76rem;
+  color: var(--wt-ink-dim);
+  margin-top: 2px;
+}
+
+/* ── The Council's cards are doors, not posters ────────────────────────────
+   Every piece of a herald leads somewhere (Edwin, 2026-07-27): the head to the
+   surface it concerns, each name it speaks to that subject, the week to the
+   war clock. Dressed for the parchment scrap, not the iron chrome — the app's
+   default .link colours belong to the other palette. */
+.wt-shead-go,
+.wt-swhen-go {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.wt-shead-go {
+  color: var(--wt-sepia);
+  text-decoration: underline;
+  text-decoration-color: var(--wt-sepia)44;
+  text-underline-offset: 3px;
+}
+.wt-shead-go:hover {
+  color: var(--wt-wax-br);
+  text-decoration-color: var(--wt-wax-br);
+}
+.wt-swhen-go {
+  color: var(--wt-sepia-dim);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.wt-swhen-go:hover {
+  color: var(--wt-wax-br);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+/* The names a herald speaks — inline doors to their subjects.
+   NOT bold. A card carries three or four of these, and at 600 weight every one
+   of them read as EMPHASIS rather than as a door: the eye was dragged to
+   "6 boxes", "2 untriaged", three Patron names, in that order, and the sentence
+   holding them was never read at all. That is most of what "text dense" meant
+   (Edwin, 2026-07-29). Weight is for importance; a door is marked by its colour
+   and its underline, which hover and focus then confirm. */
+.wt-scrap .link {
+  color: var(--wt-sepia);
+  font-weight: inherit;
+  text-decoration-color: #f0e2c655;
+}
+.wt-scrap .link:hover {
+  color: var(--wt-wax-br);
+  text-decoration-color: var(--wt-wax-br);
+}
+.wt-shead-go:focus-visible,
+.wt-swhen-go:focus-visible,
+.wt-scrap .link:focus-visible {
+  outline: 2px solid var(--wt-wax-br);
+  outline-offset: 2px;
+}
+
+/* ── The court's docket ────────────────────────────────────────────────────
+   Holding court is not a thing done at a keep — going to a keep is
+   administering. Court is where the realm's matters are brought TO the Crown,
+   heaviest first, each one a door to where the word is given. */
+.wt-matter {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  padding: 11px 12px;
+  border: 1px solid var(--wt-edge);
+  border-left: 3px solid var(--wt-gold);
+  border-radius: 10px;
+  background: var(--wt-iron-2);
+  color: var(--wt-ink);
+  margin-bottom: 8px;
+}
+.wt-matter:hover {
+  border-color: var(--wt-gold);
+}
+.wt-matter.is-crisis {
+  border-left-color: var(--wt-red);
+}
+.wt-matter-rank {
+  color: var(--wt-ink-dim);
+  font-size: 0.8rem;
+  min-width: 1.6rem;
+  flex-shrink: 0;
+}
+.wt-matter-body {
+  flex: 1;
+  min-width: 0;
+}
+.wt-matter-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.wt-matter-head b {
+  color: var(--wt-gold-br);
+}
+.wt-matter-kind {
+  font-size: 0.7rem;
+  color: var(--wt-ink-dim);
+}
+.wt-matter-asks {
+  display: block;
+  font-size: 0.78rem;
+  margin-top: 3px;
+}
+.wt-matter-foot {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--wt-ink-dim);
+  margin-top: 3px;
+}
+.wt-matter-go {
+  color: var(--wt-gold);
+  flex-shrink: 0;
+  align-self: center;
+}
+
+/* The board when the living realm holds it — the map fills the frame, so the
+   parchment dress and the inner padding step aside. */
+.wt-board-realm {
+  padding: 0;
+  overflow: hidden;
+}
+.wt-board-realm > canvas,
+.wt-board-realm .rl-root {
+  width: 100%;
+  height: 100%;
+}
+/* The way back to the old card board while the realm settles. */
+.wt-boardswap {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  /* Above the map's own chrome, which lies over the whole canvas — at a lower
+     layer the button rendered but could not be clicked. */
+  z-index: 40;
+  background: linear-gradient(180deg, var(--wt-iron-3), var(--wt-iron-2));
+  border: 1px solid var(--wt-edge);
+  border-radius: 9px;
+  padding: 7px 12px;
+  color: var(--wt-ink-dim);
+  font-size: 0.74rem;
+}
+.wt-boardswap:hover {
+  border-color: var(--wt-gold);
+  color: var(--wt-gold-br);
+}
+
+
+/* ═══ The Census as a COURT HIERARCHY (docs/WRIT-THE-BROKERAGE.md) ═══════════
+   Edwin: "move away from it feeling just like a website scrolling list."
+   The line of answer is drawn literally — every branch hangs off a rule down
+   its left, so a squire beneath a knight beneath a lord READS as three deep
+   instead of as three more rows. Everything here rides the board's own tokens;
+   the repaint stays those few lines at the top. */
+
+.ct {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.ct-sec {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.ct-sec-h {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--wt-edge);
+}
+.ct-sec-h h3 {
+  margin: 0;
+  font-family: var(--wt-disp);
+  font-size: 1.06rem;
+  font-weight: 600;
+  color: var(--wt-sepia);
+  letter-spacing: 0.01em;
+}
+/* The section's numeral — a seal in the margin, not a bullet. */
+.ct-num {
+  font-family: var(--wt-disp);
+  font-size: 0.82rem;
+  color: var(--wt-gold);
+  border: 1px solid var(--wt-gold);
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  align-self: center;
+}
+.ct-count {
+  margin-left: auto;
+  font-size: 0.68rem;
+  color: var(--wt-ink-dim);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* A house of the court: an office, a fief, a guild. */
+.ct-house-h {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 7px;
+  margin-bottom: 3px;
+  border-bottom: 1px solid var(--wt-edge-soft);
+}
+.ct-house-n {
+  font-family: var(--wt-disp);
+  font-size: 0.95rem;
+  color: var(--wt-gold-br);
+  font-weight: 600;
+}
+.ct-tag {
+  margin-left: auto;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--wt-ink-dim);
+  border: 1px solid var(--wt-edge);
+  border-radius: 999px;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+.ct-tag-bad,
+.ct-tag.ct-st-stewardship {
+  color: var(--wt-red);
+  border-color: color-mix(in srgb, var(--wt-red) 55%, transparent);
+}
+.ct-tag.ct-st-regency {
+  color: var(--wt-amber);
+  border-color: color-mix(in srgb, var(--wt-amber) 55%, transparent);
+}
+.ct-tag.ct-st-lorded,
+.ct-tag.ct-st-plurality {
+  color: var(--wt-green);
+  border-color: color-mix(in srgb, var(--wt-green) 55%, transparent);
+}
+
+/* A subject where they stand. */
+.ct-subject {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 0;
+}
+.ct-badge {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--wt-disp);
+  font-size: 0.66rem;
+  letter-spacing: 0.02em;
+  color: var(--wt-ink-dim);
+  background: var(--wt-iron-3);
+  border: 1px solid var(--wt-edge);
+}
+.ct-crown .ct-badge,
+.ct-seat .ct-badge {
+  color: var(--wt-gold-br);
+  border-color: var(--wt-gold);
+  background: linear-gradient(180deg, #33291a, #241d12);
+}
+.ct-hand .ct-badge {
+  opacity: 0.8;
+}
+.ct-who {
+  min-width: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.ct-name {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  flex-wrap: wrap;
+  font-size: 0.82rem;
+}
+.ct-name b {
+  color: var(--wt-gold-br);
+  font-weight: 600;
+}
+.ct-crown .ct-name,
+.ct-seat .ct-name {
+  font-size: 0.9rem;
+}
+.ct-role {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--wt-ink-dim);
+}
+.ct-note {
+  font-size: 0.68rem;
+  color: var(--wt-ink-dim);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.ct-acts {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+/* A revocation should never look like the thing to press. */
+.ct-quiet {
+  border-color: var(--wt-edge);
+  color: var(--wt-ink-dim);
+  background: var(--wt-iron-3);
+}
+.ct-quiet:hover:not(:disabled) {
+  border-color: var(--wt-red);
+  background: var(--wt-iron-3);
+  color: var(--wt-red);
+}
+
+/* The line of answer, drawn. */
+.ct-branch {
+  margin: 6px 0 0 12px;
+  padding-left: 13px;
+  border-left: 1px solid var(--wt-edge);
+}
+.ct-branch.ct-deep {
+  margin-left: 8px;
+  border-left-style: dashed;
+}
+.ct-branch-t {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--wt-ink-dim);
+  padding: 2px 0 3px;
+}
+
+/* An empty seat says so, with the act to fill it on the same line. */
+.ct-vacancy {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 7px 9px;
+  margin: 4px 0;
+  border: 1px dashed color-mix(in srgb, var(--wt-red) 45%, var(--wt-edge));
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--wt-red) 7%, transparent);
+}
+.ct-vac-mark {
+  color: var(--wt-red);
+  font-size: 0.8rem;
+}
+.ct-vac-t {
+  font-size: 0.74rem;
+  color: var(--wt-ink);
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+.ct-seat {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 5px;
+}
+.ct-none {
+  margin: 4px 0;
+  font-size: 0.7rem;
+  color: var(--wt-ink-dim);
+  font-style: italic;
+}
+.ct-found {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.ct-empty p {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--wt-ink-dim);
+}
+.ct-empty b {
+  color: var(--wt-ink);
+}
+.ct-adrift {
+  border-color: color-mix(in srgb, var(--wt-amber) 45%, var(--wt-edge));
+}
+.ct-hamlet {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 5px 0;
+  font-size: 0.78rem;
+}
+
+/* Phone: the acts drop under the name rather than squeezing it to nothing. */
+@media (max-width: 560px) {
+  .ct {
+    gap: 14px;
+  }
+  .ct-subject {
+    flex-wrap: wrap;
+  }
+  .ct-acts {
+    width: 100%;
+    justify-content: flex-start;
+    padding-left: 35px;
+  }
+  .ct-branch {
+    margin-left: 4px;
+    padding-left: 9px;
+  }
+}
+
+/* The panel header on a phone — found while verifying the Census, and present
+   on EVERY panel since the surfaces took the centre of the table. The two
+   pills on the right are flex-shrink:0 and the title block is `flex: 1`, so at
+   390px the title was squeezed to 35px: "The Counting-house" broke one word
+   per line and its subtitle stood 234px tall. Let the head wrap instead — the
+   name takes the first line beside its medallion, the two ways out share the
+   second. */
+@media (max-width: 560px) {
+  .wt-ptop {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+  .wt-hgrow {
+    flex: 1 1 55%;
+  }
+  .wt-ptop .wt-detail-sm {
+    margin-left: auto;
+  }
+}
+
+/* ── The A/E/P fix in the Ledger: a row you can read is a row you can ACT on ──
+   Edwin, 2026-07-27: "in The Ledger I'm unable to click directly on the
+   proposals or anything within the list." The lists rendered fine and led
+   nowhere. `rowdoor` makes the case NAME the road; `rowgo` is the explicit verb
+   at the end of the row, so the act stands beside its information rather than
+   three scrolls below it. Only drawn where a cascade actually stands behind the
+   case — a door to nowhere is the fault, not a second copy of it. */
+.rowdoor {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 8px;
+}
+.rowdoor:hover {
+  background: color-mix(in srgb, var(--wt-gold, #c7a44e) 12%, transparent);
+}
+.rowdoor:focus-visible {
+  outline: 2px solid var(--wt-gold, #c7a44e);
+  outline-offset: 2px;
+}
+.rowgo {
+  margin-left: auto;
+  flex-shrink: 0;
+  align-self: center;
+  font-size: 0.66rem;
+  white-space: nowrap;
+  background: linear-gradient(180deg, #33291a, #241d12);
+  border: 1px solid var(--wt-gold, #c7a44e);
+  color: var(--wt-gold-br, #e6ca7d);
+  border-radius: 7px;
+  padding: 4px 9px;
+  cursor: pointer;
+}
+.rowgo:hover {
+  background: var(--wt-gold, #c7a44e);
+  color: #241d12;
+}
+/* On a queue row the verb leads, because the row's own click is a disclosure
+   and the two must not be mistaken for each other. */
+.rowgo-lead {
+  margin-left: 0;
+  order: -1;
+}
+.clerk-prop .rowgo {
+  align-self: flex-start;
+}
+
+/* (The Council surface stood here. It rendered the same heralds as the standing
+   aside, at the same moment, in the middle of the board — so opening it cost
+   you the map to be shown a list already six inches to the right. Removed
+   2026-07-29 with the ⚑ that opened it.) */
+
+/* ── The clerks at work — PLACEHOLDER ART ────────────────────────────────────
+   Edwin, 2026-07-27: "maybe we could add a fun animation here? I don't trust our
+   ability to create graphics so from this point on let's do largely
+   placeholders and/or just a note for a future full effort design run."
+   So: ten quills, one per seat of the fleet, scratching in turn while the
+   minute runs. Pure CSS, no asset, deliberately modest. A real design pass
+   should replace this strip wholesale — it is a sign of life, not a finished
+   piece. Honors prefers-reduced-motion. */
+.wt-scribes {
+  display: inline-flex;
+  gap: 2px;
+  align-items: flex-end;
+  line-height: 1;
+}
+.wt-quill {
+  font-size: 0.72rem;
+  color: var(--wt-gold);
+  opacity: 0.28;
+  transform-origin: 50% 90%;
+  animation: wt-scratch 1.6s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.13s);
+}
+@keyframes wt-scratch {
+  0%, 70%, 100% { opacity: 0.28; transform: rotate(0deg) translateY(0); }
+  12% { opacity: 1; transform: rotate(-16deg) translateY(-2px); }
+  24% { opacity: 1; transform: rotate(6deg) translateY(0); }
+  36% { opacity: 0.6; transform: rotate(-8deg) translateY(-1px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wt-quill { animation: none; opacity: 0.7; }
+}
+
+/* ── What the clerks parked, standing ON the map ─────────────────────────────
+   A finished run said its piece in the status line and then, once dismissed,
+   the board looked exactly as it had — the work existed only in the Ledger for
+   whoever thought to look. Now the realm shows that a scribe has been at work.
+   Sits opposite the board swap so the two never collide. */
+.wt-mapscrolls {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: linear-gradient(180deg, #3a2e18, #241d12);
+  border: 1px solid var(--wt-gold);
+  border-radius: 9px;
+  padding: 7px 12px;
+  color: var(--wt-gold-br);
+  font-size: 0.74rem;
+  box-shadow: 0 2px 10px #0006;
+}
+.wt-mapscrolls:hover {
+  background: var(--wt-gold);
+  color: #241d12;
+}
+.wt-mapscrolls-n {
+  font-family: var(--wt-disp);
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+.wt-pip-scroll {
+  background: var(--wt-gold);
+  color: #241d12;
+}
+@media (max-width: 560px) {
+  .wt-mapscrolls-t { display: none; }
+}
+
+/* A red month is not a fallen kingdom. The cartouche used to wear the
+   catastrophe colour for any negative trend, because `fallen` and "the month
+   runs to the bad" were the same boolean — so the "to the bad" wording was
+   unreachable dead code and the map cried ruin over a company with a full bank.
+   Amber for a bad month; the fallen dress is kept for coin actually gone. */
+.rl-cartouche--red {
+  color: var(--wt-amber, #d19a33);
+  border-color: color-mix(in srgb, var(--wt-amber, #d19a33) 55%, transparent);
+}
+
+/* ── The campaign, at the head of the Council ────────────────────────────────
+   The act in hand: what it teaches, where it stands, and the road to the place
+   it is answered. Every other scrap in the feed is a warning; this one is a
+   lesson, so it wears the gold rather than the amber. */
+.wt-camp {
+  border-color: var(--wt-gold);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--wt-gold) 10%, transparent), transparent);
+}
+.wt-camp.done {
+  border-color: var(--wt-green);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--wt-green) 10%, transparent), transparent);
+}
+.wt-camp-t {
+  font-family: var(--wt-disp);
+  font-size: 0.92rem;
+  color: var(--wt-gold-br);
+  margin: 3px 0 2px;
+}
+.wt-camp-p {
+  font-size: 0.7rem;
+  color: var(--wt-ink);
+  margin-top: 5px;
+  padding-top: 5px;
+  border-top: 1px dashed var(--wt-edge);
+}
+.wt-campn {
+  font-variant-numeric: tabular-nums;
+  color: var(--wt-gold);
+}
+
+/* ── The palette ───────────────────────────────────────────────────────────
+   One door to every surface and every act (⌘K · / · ?). This is what stands in
+   for the rail of nine glyphs and the footer of five buttons — the chrome could
+   only be retired once something else could reach what it reached.
+
+   It shows each command's KEY beside it on purpose: the player who searches
+   their way to the Ledger sees `g l` written next to it and goes that way next
+   time. A shortcut nobody is shown is a shortcut nobody uses. */
+.wt-cmdscrim {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: #0b0906cc;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 10vh 16px 16px;
+  animation: wt-fade 0.12s ease both;
+}
+.wt-cmd {
+  width: min(560px, 100%);
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, var(--wt-iron-2), var(--wt-iron));
+  border: 1px solid var(--wt-edge);
+  border-radius: 12px;
+  box-shadow: 0 24px 60px #000b;
+  overflow: hidden;
+}
+.wt-cmdin {
+  font-family: var(--wt-disp);
+  font-size: 1rem;
+  padding: 14px 16px;
+  border: 0;
+  border-bottom: 1px solid var(--wt-edge);
+  background: transparent;
+  color: var(--wt-ink);
+  outline: none;
+}
+.wt-cmdin::placeholder { color: var(--wt-ink-dim); }
+.wt-cmdlist {
+  overflow-y: auto;
+  min-height: 0;
+  padding: 6px;
+}
+.wt-cmdgrp {
+  font-family: var(--wt-disp);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--wt-gold);
+  padding: 9px 10px 4px;
+}
+.wt-cmdrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--wt-ink);
+  font: inherit;
+  font-size: 0.84rem;
+  cursor: pointer;
+}
+/* The highlight is the SAME whether reached by arrow key or by mouse, because
+   they are the same cursor — two different highlights would let a player see
+   one row lit and press another. */
+.wt-cmdrow.on { background: #ffffff14; }
+.wt-cmdrow.off { opacity: 0.45; cursor: not-allowed; }
+.wt-cmdrow:focus-visible { outline: 2px solid var(--wt-gold-br); outline-offset: -2px; }
+.wt-cmdlbl { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.wt-cmdhint { font-size: 0.68rem; color: var(--wt-ink-dim); }
+.wt-cmdkey,
+.wt-cmdfoot kbd {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.66rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--wt-edge);
+  background: #0003;
+  color: var(--wt-gold-br);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.wt-cmdnone { padding: 18px 12px; color: var(--wt-ink-dim); font-size: 0.82rem; }
+.wt-cmdfoot {
+  border-top: 1px solid var(--wt-edge);
+  padding: 8px 12px;
+  font-size: 0.68rem;
+  color: var(--wt-ink-dim);
+}
+.wt-cmdfoot kbd { color: var(--wt-ink-dim); }
+@media (prefers-reduced-motion: reduce) {
+  .wt-cmdscrim { animation: none; }
+}
+
+/* The palette's door in the ribbon. It wears its own shortcut, because a
+   keyboard nobody is told about is a keyboard nobody uses. */
+.wt-palbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--wt-edge);
+  background: #ffffff0a;
+  color: var(--wt-ink);
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+.wt-palbtn:hover { background: #ffffff16; border-color: var(--wt-gold); }
+.wt-palbtn:focus-visible { outline: 2px solid var(--wt-gold-br); outline-offset: 2px; }
+.wt-palbtn kbd {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+  padding: 2px 5px;
+  border-radius: 4px;
+  border: 1px solid var(--wt-edge);
+  background: #0004;
+  color: var(--wt-gold-br);
+}
+@media (max-width: 900px) {
+  /* On a phone the label and the chord both go; the glyph is the door. */
+  .wt-palbtn kbd, .wt-palbtn .wt-lbl { display: none; }
+}
+
+/* ── The war clock, in the ribbon ──────────────────────────────────────────
+   What is left of a 114px footer: the reading, and the two acts done often
+   enough to earn standing space. Everything else the footer held went to the
+   War Games surface, which is where you go to deploy anyway. */
+.wt-rclock {
+  display: inline-flex;
+  align-items: stretch;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.wt-rwhen {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--wt-edge);
+  background: #ffffff0a;
+  color: var(--wt-ink);
+  font-family: var(--wt-disp);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.wt-rwhen:hover { background: #ffffff16; border-color: var(--wt-gold); }
+.wt-rwhen .wt-dial { width: 15px; height: 15px; flex-shrink: 0; }
+.wt-radv {
+  width: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--wt-edge);
+  background: #ffffff0a;
+  color: var(--wt-ink);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.wt-radv:hover { background: #ffffff16; border-color: var(--wt-gold); }
+.wt-radv.primary { color: var(--wt-gold-br); border-color: var(--wt-gold); }
+.wt-rwhen:focus-visible,
+.wt-radv:focus-visible { outline: 2px solid var(--wt-gold-br); outline-offset: 2px; }
+
+/* ── The horn, on the War Games surface ────────────────────────────────────
+   The muster's acts, standing at the head of the surface they change. */
+.wt-horn {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  border: 1px solid var(--wt-edge);
+  background: #ffffff08;
+}
+.wt-horn .wt-tide { flex: 1 1 100%; margin: 0; }
+
+/* ── The Council, lowered ──────────────────────────────────────────────────
+   When the Council is down its COLUMN goes with it, rather than the aside
+   floating over the board. Overlaying was the tempting version and it was
+   wrong: the map keeps its cartouche, its standing note and the board-swap
+   button all on the right edge at right:18px, and a drawer sliding over them
+   would have covered three controls at once — the exact fault caught twice
+   already this session. A grid column that ceases to exist cannot occlude
+   anything. */
+.wt-table--nocouncil {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    'ribbon'
+    'board';
+}
+@media (max-width: 900px) {
+  .wt-table--nocouncil {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'ribbon'
+      'board';
+  }
+}
+
+/* The Council's door in the ribbon, wearing its count. */
+.wt-council-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--wt-edge);
+  background: #ffffff0a;
+  color: var(--wt-ink);
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+.wt-council-btn:hover { background: #ffffff16; border-color: var(--wt-gold); }
+.wt-council-btn.on { border-color: var(--wt-gold); color: var(--wt-gold-br); }
+.wt-council-btn:focus-visible { outline: 2px solid var(--wt-gold-br); outline-offset: 2px; }
+/* The count is the one thing a lowered Council cannot say for itself, so it
+   wears the amber of a thing that wants answering — never red: red means
+   distress and nothing else (the hue law). */
+.wt-councount {
+  min-width: 18px;
+  padding: 1px 5px;
+  border-radius: 9px;
+  background: var(--wt-amber);
+  color: #221a08;
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* The Council's own caption row — the "Why" toggle and the lowering. */
+.wt-acap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.wt-acap-acts { display: inline-flex; gap: 4px; flex-shrink: 0; }
+.wt-atog {
+  padding: 2px 7px;
+  border-radius: 6px;
+  border: 1px solid var(--wt-vellum-ln);
+  background: transparent;
+  color: var(--wt-sepia-dim);
+  font: inherit;
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.wt-atog:hover { color: var(--wt-sepia); border-color: var(--wt-sepia-dim); }
+.wt-atog.on { color: #221a08; background: #d3c08f; border-color: #d3c08f; }
+.wt-atog:focus-visible { outline: 2px solid var(--wt-gold-br); outline-offset: 2px; }
+@media (max-width: 900px) {
+  .wt-council-btn .wt-lbl { display: none; }
+}

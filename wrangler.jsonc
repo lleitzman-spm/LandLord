@@ -1,0 +1,70 @@
+// Cloudflare Worker deployment — a DISARMED TEMPLATE.
+//
+// This repository ships no deployment. There is no route, `workers_dev` is
+// false, and no project, account, domain or identity-wall value appears
+// anywhere below. A clone deploys nowhere until a self-hoster fills this in
+// deliberately, which is the intended default: the app runs fine locally with
+// `npm run dev` and needs none of this.
+//
+// ── What a self-hoster fills in ─────────────────────────────────────────────
+//
+//  1. `name` — your Worker's name.
+//
+//  2. `vars.SUPABASE_URL` — your own project URL, if you are using a vault at
+//     all. With none set the Worker serves the app and refuses the vault
+//     routes; the app falls back to the on-disk chronicle.
+//
+//  3. `vars.TEAM_DOMAIN` / `vars.POLICY_AUD` — ONLY if you are putting an
+//     identity wall (Cloudflare Access or equivalent) in front of the Worker.
+//     Neither is a credential: the audience tag rides in the `aud` claim of
+//     every assertion the wall issues, and the team domain is the public login
+//     origin. Knowing them mints nothing — only the wall's private key signs.
+//     They live here rather than in the secret store ON PURPOSE, so the wall's
+//     configuration is version-controlled and reviewable: a verifier silently
+//     pointed at the wrong audience is exactly the failure that would let
+//     another application's tokens through, and that must be visible in a diff.
+//
+//  4. Secrets — NEVER in this file, never in git:
+//       npx wrangler secret put SUPABASE_SECRET_KEY
+//       npx wrangler secret put CANONICAL_CAPABILITY_TOKEN
+//       npx wrangler secret put SOVEREIGN_EMAILS
+//       npx wrangler secret put MOONSHOT_API_KEY
+//
+//  5. `routes` — uncomment and name your own hostname LAST.
+//
+// ── The order, if you are putting a wall in front ───────────────────────────
+//
+// Wall first, route second, deploy third, verify fourth. Stand the identity
+// application up over the hostname BEFORE the route exists, so there is never a
+// window in which the app answers and the wall does not. Then verify from a
+// logged-out browser that the WALL answers, not the app — a deploy you have not
+// seen refuse you is a deploy you have not tested.
+//
+// `workers_dev` stays false throughout: a `*.workers.dev` subdomain is a second
+// door, and a wall on the custom domain does not cover it.
+{
+  "name": "landlord",
+  "main": "./src/worker.ts",
+  "compatibility_date": "2026-07-01",
+  // nodejs_compat: the /api/fleet route bundles the clerk fleet (harness/),
+  // which imports `node:crypto` (randomUUID) — the flag lets that resolve on
+  // the edge.
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "vars": {
+    // Your own project URL, or omit the whole block to run without a vault.
+    "SUPABASE_URL": "",
+    // Only if you are running an identity wall. Empty means no wall configured,
+    // and the Worker then refuses its private APIs rather than trusting a
+    // header — the safe default.
+    "TEAM_DOMAIN": "",
+    "POLICY_AUD": ""
+  },
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application"
+  }
+  // Disarmed. To go live, add your own hostname and redeploy:
+  // ,"routes": [{ "pattern": "landlord.example.com", "custom_domain": true }]
+}

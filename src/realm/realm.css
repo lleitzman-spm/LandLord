@@ -1,0 +1,313 @@
+/* The Realm Map's chrome — brass ink on dark leather, Georgia serif display.
+ * Everything sits OVER the canvas; the world beneath is the oiled page.
+ *
+ * Every colour is a custom property on .rl-root — the CSS half of the
+ * palette seam (the 3D half lives in palette.ts). Repaint here, once. */
+
+.rl-root {
+  /* The leather chrome tokens */
+  --rl-page: #3d2f21;
+  --rl-page-dark: #2a2018;
+  --rl-panel: rgba(42, 32, 24, 0.92);
+  --rl-panel-raised: rgba(58, 45, 32, 0.95);
+  --rl-border: rgba(199, 164, 78, 0.38);
+  --rl-border-strong: #c7a44e;
+  --rl-text: #ece3cf;
+  --rl-text-dim: #b3a582;
+  --rl-brass: #c7a44e;
+  --rl-shadow: rgba(0, 0, 0, 0.5);
+
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 480px;
+  background: var(--rl-page-dark);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: var(--rl-text);
+}
+
+.rl-root canvas {
+  display: block;
+}
+
+/* ── Tooltips (inside the canvas, via drei Html) ────────────────────────── */
+
+.rl-tip {
+  pointer-events: none;
+  background: var(--rl-panel);
+  border: 1px solid var(--rl-border);
+  border-radius: 3px;
+  padding: 4px 9px;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 13px;
+  color: var(--rl-text);
+  white-space: nowrap;
+  box-shadow: 0 2px 8px var(--rl-shadow);
+  transform: translateY(-6px);
+}
+
+.rl-tip--fief {
+  text-align: center;
+  padding: 6px 12px;
+}
+
+.rl-tip--fief strong {
+  display: block;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  color: var(--rl-brass);
+}
+
+.rl-tip--fief span {
+  display: block;
+  font-size: 12px;
+  color: var(--rl-text-dim);
+  font-style: italic;
+}
+
+.rl-tip strong {
+  display: block;
+}
+
+.rl-tip span {
+  display: block;
+  font-size: 11px;
+  color: var(--rl-text-dim);
+  font-style: italic;
+}
+
+/* ── The advisor rail ───────────────────────────────────────────────────── */
+
+.rl-rail {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 210px;
+  z-index: 10;
+}
+
+.rl-rail__title {
+  font-family: Georgia, serif;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rl-brass);
+  padding: 0 4px 2px;
+  border-bottom: 1px solid var(--rl-border);
+  margin-bottom: 2px;
+  text-shadow: 0 1px 2px var(--rl-shadow);
+}
+
+.rl-seat {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-align: left;
+  background: var(--rl-panel);
+  border: 1px solid var(--rl-border);
+  border-radius: 3px;
+  padding: 6px 9px;
+  cursor: pointer;
+  transition: background 120ms ease, transform 120ms ease;
+}
+
+.rl-seat:hover {
+  background: var(--rl-panel-raised);
+  transform: translateX(2px);
+}
+
+.rl-seat--vacant {
+  opacity: 0.6;
+  border-style: dashed;
+}
+
+.rl-seat__sigil {
+  font-size: 15px;
+  color: var(--rl-brass);
+  width: 16px;
+  text-align: center;
+}
+
+.rl-seat--vacant .rl-seat__sigil {
+  color: var(--rl-text-dim);
+}
+
+.rl-seat__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.rl-seat__guild {
+  font-family: Georgia, serif;
+  font-size: 13px;
+  color: var(--rl-text);
+}
+
+.rl-seat__master {
+  font-size: 11px;
+  font-style: italic;
+  color: var(--rl-text-dim);
+}
+
+/* ── The command bar ────────────────────────────────────────────────────── */
+
+.rl-command {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 2px;
+  background: var(--rl-panel);
+  border: 1px solid var(--rl-border);
+  border-radius: 3px;
+  padding: 3px;
+  box-shadow: 0 2px 10px var(--rl-shadow);
+  z-index: 10;
+}
+
+.rl-command__btn {
+  font-family: Georgia, serif;
+  font-size: 13px;
+  color: var(--rl-text);
+  background: transparent;
+  border: none;
+  border-radius: 2px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+
+.rl-command__btn:hover {
+  background: rgba(199, 164, 78, 0.18);
+}
+
+/* ── The coffers cartouche ──────────────────────────────────────────────── */
+
+.rl-cartouche {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  background: var(--rl-panel);
+  border: 1px solid var(--rl-border-strong);
+  border-radius: 3px;
+  padding: 5px 11px;
+  box-shadow: 0 1px 6px var(--rl-shadow);
+  z-index: 10;
+}
+
+.rl-cartouche__coin {
+  color: var(--rl-brass);
+  font-size: 14px;
+}
+
+.rl-cartouche__value {
+  font-family: Georgia, serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--rl-text);
+}
+
+.rl-cartouche__label {
+  font-size: 10px;
+  font-style: italic;
+  color: var(--rl-text-dim);
+}
+
+/* ── The war-horn call ──────────────────────────────────────────────────── */
+
+.rl-call {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.rl-call__line {
+  font-family: Georgia, serif;
+  font-size: 22px;
+  color: var(--rl-text-dim);
+  font-style: italic;
+  margin: 0;
+  text-shadow: 0 2px 6px var(--rl-shadow);
+}
+
+.rl-call__line--strong {
+  font-size: 30px;
+  font-style: normal;
+  color: var(--rl-brass);
+  margin-bottom: 14px;
+}
+
+.rl-call__horn {
+  pointer-events: auto;
+  font-family: Georgia, serif;
+  font-size: 16px;
+  color: var(--rl-brass);
+  background: var(--rl-panel-raised);
+  border: 1px solid var(--rl-border-strong);
+  border-radius: 3px;
+  padding: 11px 26px;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: background 140ms ease, transform 140ms ease;
+  box-shadow: 0 3px 14px var(--rl-shadow);
+}
+
+.rl-call__horn:hover {
+  background: var(--rl-page);
+  transform: translateY(-1px);
+}
+
+/* ── the map's chrome on a phone ───────────────────────────────────────────
+   The rail is 210px of a 390px screen and sat over the board's north-west
+   quarter, with the coffers over its north-east. Both move to strips at the
+   edges so the board itself is never covered by the furniture describing it. */
+@media (max-width: 560px) {
+  .rl-rail {
+    top: 6px;
+    left: 6px;
+    right: 6px;
+    max-width: none;
+    flex-direction: row;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .rl-rail__title {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    padding-right: 4px;
+  }
+
+  .rl-seat {
+    flex: 0 0 auto;
+    max-width: 44vw;
+  }
+
+  /* Bottom-LEFT, stacked over the survey glass: the bottom-right corner
+     belongs to the board-swap button, and two controls in one corner is how a
+     button becomes unpressable. */
+  .rl-cartouche {
+    top: 64px;
+    right: 6px;
+    bottom: auto;
+    z-index: 11;
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+}

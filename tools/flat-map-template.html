@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LandLord — the flat proving frame</title>
+<style>
+  html,body{margin:0;padding:0;background:#1E1108;height:100%;}
+  body{display:flex;align-items:center;justify-content:center;}
+  svg.frame{display:block;width:100vw;height:100vh;max-width:100%;}
+  .door,.knight{cursor:pointer;outline:none;}
+  .door .ring,.door .ring2,.knight .ring,.knight .ring2{opacity:0;transition:opacity .12s ease;}
+  .door:hover .ring,.knight:hover .ring{opacity:.75;}
+  .door:hover .ring2,.knight:hover .ring2{opacity:.5;}
+  .door:focus-visible .ring,.knight:focus-visible .ring{opacity:1;}
+  .door:focus-visible .ring2,.knight:focus-visible .ring2{opacity:1;}
+  .st-held  {--w1:#EADFC6;--w2:#CBBFA3;--r1:#7A5233;--r2:#46301E;--dk:#33200F;}
+  .st-bare  {--w1:#79705F;--w2:#5A5142;--r1:#4A3826;--r2:#2E2013;--dk:#26190C;}
+  .st-vacant{--w1:#B3B2A4;--w2:#8F9083;--r1:#5B4E3D;--r2:#352A1D;--dk:#26344C;--shut:1;}
+  .st-crisis{--w1:#EADFC6;--w2:#CBBFA3;--r1:#7A5233;--r2:#46301E;--dk:#33200F;--flag:1;}
+
+  /* THE INSPECTOR — design law 6 and the A/E/P check, drawn: the act stands
+     beside the record it changes. A surface that reports a state and makes you
+     navigate elsewhere to change it has failed, and that failure has shipped
+     here more than once. Copy sits on a clean field, never on the wood
+     (WRIT §10.5 — text on wood grain is where fantasy UIs die). */
+  .inspector{position:fixed;top:22px;right:22px;width:280px;
+    background:#171D2C;border:1px solid #3A2A10;border-radius:7px;
+    box-shadow:0 14px 34px rgba(0,0,0,.55);color:#EADFC6;
+    font:13px/1.45 ui-sans-serif,system-ui,sans-serif;overflow:hidden;
+    opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .12s,transform .12s}
+  .inspector[data-open]{opacity:1;transform:none;pointer-events:auto}
+  .inspector h2{margin:0;padding:11px 13px 3px;font-size:14px;font-weight:600;letter-spacing:.1px}
+  .inspector .kind{padding:0 13px 10px;font-size:10.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:#8A6323}
+  .inspector dl{margin:0;padding:9px 13px;display:grid;grid-template-columns:auto 1fr;
+    gap:5px 12px;border-top:1px solid #22304A}
+  .inspector dt{color:#8F9083;font-size:11.5px}
+  .inspector dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
+  .inspector .acts{display:flex;flex-direction:column;gap:6px;padding:11px 13px 13px;
+    border-top:1px solid #22304A;background:#131A28}
+  .inspector button{font:inherit;font-size:12.5px;padding:7px 10px;border-radius:5px;
+    border:1px solid #3A2A10;background:#22304A;color:#EADFC6;cursor:pointer;text-align:left}
+  .inspector button:hover{background:#2B3C5C}
+  .inspector button:focus-visible{outline:2px solid #F3EDDC;outline-offset:1px}
+  .inspector button.alarm{background:#5A2118;border-color:#7A2E22}
+  .inspector .none{color:#8F9083;font-size:11.5px;padding:2px 0 0}
+  .inspector .close{position:absolute;top:8px;right:9px;background:none;border:0;
+    color:#8F9083;font-size:15px;line-height:1;padding:3px 5px;cursor:pointer}
+
+  /* Only the BUILDING is a hit target. Its shadow is a wide filled ellipse and
+     its focus rings are strokes — all three capture clicks by default, so
+     aiming at a house could select the neighbour whose shadow you actually hit.
+     Found by clicking a door in crisis and having the panel open on a held one. */
+  .door .ring, .door .ring2 {pointer-events:none}
+</style>
+</head>
+<body>
+<aside class="inspector" id="inspector" role="region" aria-live="polite" aria-label="The selected holding">
+  <button class="close" id="insp-close" aria-label="Close">×</button>
+  <h2 id="insp-name">—</h2>
+  <div class="kind" id="insp-kind"></div>
+  <dl>
+    <dt>Standing</dt><dd id="insp-state">—</dd>
+    <dt>Fellowship</dt><dd id="insp-block">—</dd>
+    <dt>Parcel</dt><dd id="insp-parcel">—</dd>
+  </dl>
+  <div class="acts" id="insp-acts"></div>
+</aside>
+<svg class="frame" viewBox="0 0 1600 1000" role="group" aria-label="The war table: an illustrated estate map of two hundred and three doors, five rivers, five knights, and the week clock set into the table rim.">
+<defs>
+  <!-- ============ gradients ============ -->
+  <linearGradient id="woodBase" x1="0" y1="0" x2="0.25" y2="1">
+    <stop offset="0" stop-color="#4A2E1C"/>
+    <stop offset="0.45" stop-color="#3A2413"/>
+    <stop offset="1" stop-color="#2A180B"/>
+  </linearGradient>
+  <radialGradient id="sheen" cx="0.3" cy="0.22" r="0.75">
+    <stop offset="0" stop-color="#F3EDDC" stop-opacity="0.12"/>
+    <stop offset="0.55" stop-color="#F3EDDC" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="vig" cx="0.47" cy="0.44" r="0.75">
+    <stop offset="0.5" stop-color="#0D111C" stop-opacity="0"/>
+    <stop offset="0.8" stop-color="#0D111C" stop-opacity="0.3"/>
+    <stop offset="1" stop-color="#0D111C" stop-opacity="0.66"/>
+  </radialGradient>
+  <radialGradient id="pieceShadow" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#171D2C" stop-opacity="0.5"/>
+    <stop offset="0.6" stop-color="#171D2C" stop-opacity="0.3"/>
+    <stop offset="1" stop-color="#171D2C" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="brassTrim" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#E5C069"/>
+    <stop offset="0.45" stop-color="#C9973B"/>
+    <stop offset="1" stop-color="#6B4C18"/>
+  </linearGradient>
+  <linearGradient id="flagBrass" x1="0" y1="0" x2="1" y2="0.3">
+    <stop offset="0" stop-color="#E5C069"/>
+    <stop offset="0.6" stop-color="#C9973B"/>
+    <stop offset="1" stop-color="#8A6323"/>
+  </linearGradient>
+  <radialGradient id="bezelBrass" cx="0.38" cy="0.34" r="0.75">
+    <stop offset="0" stop-color="#F0D68C"/>
+    <stop offset="0.45" stop-color="#C9973B"/>
+    <stop offset="0.85" stop-color="#8A6323"/>
+    <stop offset="1" stop-color="#5E4415"/>
+  </radialGradient>
+  <radialGradient id="faceBrass" cx="0.42" cy="0.38" r="0.8">
+    <stop offset="0" stop-color="#B08430"/>
+    <stop offset="0.7" stop-color="#8A6323"/>
+    <stop offset="1" stop-color="#6B4C18"/>
+  </radialGradient>
+
+  <!-- ============ filters ============ -->
+  <filter id="f-wood-dark" x="-2%" y="-2%" width="104%" height="104%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.0042 0.105" numOctaves="4" seed="11" result="t"/>
+    <feColorMatrix in="t" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3.4 0 0 0 -1.5" result="a"/>
+    <feFlood flood-color="#1E1108" result="fc"/>
+    <feComposite in="fc" in2="a" operator="in"/>
+  </filter>
+  <filter id="f-wood-light" x="-2%" y="-2%" width="104%" height="104%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.0037 0.09" numOctaves="4" seed="27" result="t"/>
+    <feColorMatrix in="t" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3 0 0 0 -1.8" result="a"/>
+    <feFlood flood-color="#7A5233" result="fc"/>
+    <feComposite in="fc" in2="a" operator="in"/>
+  </filter>
+  <filter id="f-grain-dark" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="4" result="t"/>
+    <feColorMatrix in="t" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.4 1.4 0 0 -1.5" result="a"/>
+    <feFlood flood-color="#17251A" result="fc"/>
+    <feComposite in="fc" in2="a" operator="in"/>
+  </filter>
+  <filter id="f-grain-light" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="2" seed="14" result="t"/>
+    <feColorMatrix in="t" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.3 1.3 0 0 -1.55" result="a"/>
+    <feFlood flood-color="#D8CDB4" result="fc"/>
+    <feComposite in="fc" in2="a" operator="in"/>
+  </filter>
+  <filter id="f-rough" x="-4%" y="-4%" width="108%" height="108%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves="3" seed="9" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="f-soft" x="-30%" y="-30%" width="160%" height="160%">
+    <feGaussianBlur stdDeviation="11"/>
+  </filter>
+  <filter id="f-soft2" x="-60%" y="-60%" width="220%" height="220%">
+    <feGaussianBlur stdDeviation="5"/>
+  </filter>
+
+  <!-- ============ clip ============ -->
+  <clipPath id="panelClip"><rect x="-8" y="-8" width="1016" height="1016" rx="5"/></clipPath>
+  <clipPath id="clockFaceClip"><circle r="236"/></clipPath>
+
+  <!-- ============ door glyphs (light from the north-west; shadow falls south-east) ============ -->
+  <g id="g-c">
+    <ellipse cx="5.5" cy="1.3" rx="12" ry="3.9" fill="url(#pieceShadow)" pointer-events="none"/>
+    <rect x="-6.5" y="-8.5" width="13" height="8.5" style="fill:var(--w1)" stroke="#1E1108" stroke-opacity="0.28" stroke-width="0.5"/>
+    <rect x="1.2" y="-8.5" width="5.3" height="8.5" style="fill:var(--w2)"/>
+    <path d="M-8 -8.2 L0 -15.5 L0 -8.2 Z" style="fill:var(--r1)" stroke="#1E1108" stroke-opacity="0.3" stroke-width="0.5"/>
+    <path d="M0 -15.5 L8 -8.2 L0 -8.2 Z" style="fill:var(--r2)" stroke="#1E1108" stroke-opacity="0.3" stroke-width="0.5"/>
+    <rect x="-1.6" y="-4.6" width="3.2" height="4.6" style="fill:var(--dk)"/>
+    <g style="opacity:var(--shut,0)">
+      <rect x="-5.6" y="-7.2" width="11.2" height="1.7" fill="#1F2A3E" transform="rotate(-4)"/>
+      <rect x="-5.6" y="-3.9" width="11.2" height="1.7" fill="#1F2A3E" transform="rotate(3)"/>
+    </g>
+    <g style="opacity:var(--flag,0)">
+      <rect x="-0.5" y="-26.5" width="1" height="11.5" fill="#1E1108"/>
+      <path d="M0.4 -26.4 C4.5 -25.7 8 -25.5 12.5 -23.6 L0.4 -20 Z" fill="#7A2E22" stroke="#5A2118" stroke-width="0.5"/>
+    </g>
+  </g>
+  <g id="g-h">
+    <ellipse cx="7.0" cy="1.6" rx="14.5" ry="4.4" fill="url(#pieceShadow)" pointer-events="none"/>
+    <rect x="-6.5" y="-11.5" width="13" height="11.5" style="fill:var(--w1)" stroke="#1E1108" stroke-opacity="0.28" stroke-width="0.5"/>
+    <rect x="1.2" y="-11.5" width="5.3" height="11.5" style="fill:var(--w2)"/>
+    <path d="M-8 -11.2 L0 -19 L0 -11.2 Z" style="fill:var(--r1)" stroke="#1E1108" stroke-opacity="0.3" stroke-width="0.5"/>
+    <path d="M0 -19 L8 -11.2 L0 -11.2 Z" style="fill:var(--r2)" stroke="#1E1108" stroke-opacity="0.3" stroke-width="0.5"/>
+    <rect x="-4.4" y="-9.6" width="2.7" height="2.7" style="fill:var(--dk)"/>
+    <rect x="1.8" y="-9.6" width="2.7" height="2.7" style="fill:var(--dk)"/>
+    <rect x="-1.6" y="-4.9" width="3.2" height="4.9" style="fill:var(--dk)"/>
+    <g style="opacity:var(--shut,0)">
+      <rect x="-5.6" y="-9.6" width="11.2" height="1.7" fill="#1F2A3E" transform="rotate(-4)"/>
+      <rect x="-5.6" y="-5.4" width="11.2" height="1.7" fill="#1F2A3E" transform="rotate(3)"/>
+    </g>
+    <g style="opacity:var(--flag,0)">
+      <rect x="-0.5" y="-30" width="1" height="11.5" fill="#1E1108"/>
+      <path d="M0.4 -29.9 C4.5 -29.2 8 -29 12.5 -27.1 L0.4 -23.5 Z" fill="#7A2E22" stroke="#5A2118" stroke-width="0.5"/>
+    </g>
+  </g>
+  <g id="g-w">
+    <ellipse cx="4.8" cy="1.2" rx="17" ry="4.2" fill="url(#pieceShadow)" pointer-events="none"/>
+    <rect x="-12" y="-8.5" width="24" height="8.5" style="fill:var(--w1)" stroke="#1E1108" stroke-opacity="0.28" stroke-width="0.5"/>
+    <rect x="3" y="-8.5" width="9" height="8.5" style="fill:var(--w2)"/>
+    <path d="M-13.5 -8.2 L-5 -13.5 L0 -13.5 L0 -8.2 Z" style="fill:var(--r1)" stroke="#1E1108" stroke-opacity="0.3" stroke-width="0.5"/>
+    <path d="M0 -13.5 L5 -13.5 L13.5 -8.2 L0 -8.2 Z" style="fill:var(--r2)" stroke="#1E1108" stroke-opacity="0.3" stroke-width="0.5"/>
+    <rect x="-8.6" y="-6.4" width="2.7" height="2.7" style="fill:var(--dk)"/>
+    <rect x="6" y="-6.4" width="2.7" height="2.7" style="fill:var(--dk)"/>
+    <rect x="-1.6" y="-4.9" width="3.2" height="4.9" style="fill:var(--dk)"/>
+    <g style="opacity:var(--shut,0)">
+      <rect x="-10.6" y="-6.8" width="21.2" height="1.7" fill="#1F2A3E" transform="rotate(-2.5)"/>
+      <rect x="-10.6" y="-3.6" width="21.2" height="1.7" fill="#1F2A3E" transform="rotate(2)"/>
+    </g>
+    <g style="opacity:var(--flag,0)">
+      <rect x="-0.5" y="-24.5" width="1" height="11.5" fill="#1E1108"/>
+      <path d="M0.4 -24.4 C4.5 -23.7 8 -23.5 12.5 -21.6 L0.4 -18 Z" fill="#7A2E22" stroke="#5A2118" stroke-width="0.5"/>
+    </g>
+  </g>
+  <!-- fallen: the toppled house. The single loudest piece on the board. -->
+  <g id="g-f">
+    <ellipse cx="4.0" cy="1.8" rx="19" ry="5.4" fill="url(#pieceShadow)" pointer-events="none"/>
+    <ellipse cx="0" cy="0.6" rx="22" ry="7" fill="#7A2E22" opacity="0.14"/>
+    <ellipse cx="-1" cy="0.4" rx="15.5" ry="4.2" fill="#17251A" opacity="0.5"/>
+    <g transform="rotate(-7)">
+      <rect x="-13" y="-7" width="14" height="7" fill="#7A2E22" stroke="#3A1712" stroke-opacity="0.6" stroke-width="0.6"/>
+      <rect x="-13" y="-7" width="14" height="2.6" fill="#9C4030"/>
+      <path d="M1 -7 L1 0 L7.5 -3.5 Z" fill="#5A2118" stroke="#3A1712" stroke-opacity="0.6" stroke-width="0.5"/>
+      <rect x="-9.5" y="-4.6" width="2.6" height="2.6" fill="#2E1108"/>
+    </g>
+    <path d="M6 1.2 L17 -0.4 L13.5 -6.4 L4 -4.4 Z" fill="#3A2114" stroke="#1E1108" stroke-opacity="0.5" stroke-width="0.5"/>
+    <path d="M-15 -2 l-3.4 -1.4 M-14 2 l-3.6 0.8 M18 -3 l3.4 -1.6 M18.5 1 l3.4 0.6" stroke="#17251A" stroke-opacity="0.55" stroke-width="1" stroke-linecap="round"/>
+    <path d="M-12 -9.5 l-1.6 -2.2 M-8 -10.5 l-0.5 -2.6 M-15.5 -6.5 l-2.6 -1.2" stroke="#5A2118" stroke-opacity="0.9" stroke-width="1.1" stroke-linecap="round"/>
+  </g>
+  <!-- knight: the brass banner -->
+  <g id="g-k">
+    <ellipse cx="4" cy="1" rx="12" ry="4" fill="url(#pieceShadow)" pointer-events="none"/>
+    <ellipse cx="0" cy="-0.4" rx="4.2" ry="1.9" fill="#1E1108"/>
+    <ellipse cx="-0.6" cy="-0.8" rx="3" ry="1.2" fill="#3A2A10"/>
+    <rect x="-0.8" y="-40" width="1.6" height="40" fill="#1E1108"/>
+    <rect x="-0.8" y="-40" width="0.6" height="40" fill="#6B4C18"/>
+    <path d="M0.8 -39.5 C7 -38.8 13 -39.6 20.5 -37.8 L14.5 -33.6 L20.5 -29.8 C13 -30.6 7 -30 0.8 -30.8 Z" fill="url(#flagBrass)" stroke="#5E4415" stroke-width="0.7"/>
+    <path d="M0.8 -39.5 C7 -38.8 13 -39.6 20.5 -37.8" fill="none" stroke="#F0D68C" stroke-width="0.8" stroke-opacity="0.8"/>
+    <circle cx="0" cy="-41.6" r="2.4" fill="url(#bezelBrass)" stroke="#5E4415" stroke-width="0.6"/>
+  </g>
+</defs>
+
+<!-- ================= the table ================= -->
+<rect width="1600" height="1000" fill="url(#woodBase)"/>
+<rect width="1600" height="1000" filter="url(#f-wood-dark)" opacity="0.62"/>
+<rect width="1600" height="1000" filter="url(#f-wood-light)" opacity="0.34"/>
+<rect width="1600" height="1000" fill="url(#sheen)"/>
+
+<!-- ================= the map ================= -->
+<g transform="@@TRANSFORM@@">
+  <!-- shadow the board casts on the table -->
+  <rect x="-8" y="-8" width="1016" height="1016" rx="5" transform="translate(10 14)" fill="#120B06" opacity="0.6" filter="url(#f-soft)"/>
+  <!-- brass trim, then the board itself -->
+  <rect x="-13" y="-13" width="1026" height="1026" rx="7" fill="#1E1108"/>
+  <rect x="-11.5" y="-11.5" width="1023" height="1023" rx="6" fill="none" stroke="url(#brassTrim)" stroke-width="3"/>
+  <g clip-path="url(#panelClip)">
+    <rect x="-8" y="-8" width="1016" height="1016" fill="@@BASEFILL@@"/>
+    <g filter="url(#f-rough)">
+      @@BANDS@@
+      @@CONTOURS@@
+      <path d="@@HACHURES@@" fill="none" stroke="#1B2E1B" stroke-opacity="0.3" stroke-width="1.2" stroke-linecap="round"/>
+      @@RIVERS@@
+      @@PARCELS@@
+      @@COPSES@@
+    </g>
+    <rect x="-8" y="-8" width="1016" height="1016" filter="url(#f-grain-dark)" opacity="0.5"/>
+    <rect x="-8" y="-8" width="1016" height="1016" filter="url(#f-grain-light)" opacity="0.22"/>
+    <!-- inset shading where the board meets its trim -->
+    <rect x="-4" y="-4" width="1008" height="1008" rx="4" fill="none" stroke="#17251A" stroke-opacity="0.5" stroke-width="14"/>
+  </g>
+  <!-- ============ the pieces ============ -->
+  <g id="doors"></g>
+  <g id="knights"></g>
+</g>
+
+<!-- ================= the week clock, set into the rim ================= -->
+<g id="clock" transform="translate(118 1042)">
+  <circle r="312" fill="#120B06" opacity="0.8" filter="url(#f-soft2)"/>
+  <circle r="302" fill="#131A28"/>
+  <circle r="294" fill="url(#bezelBrass)"/>
+  <g id="clockFlute"></g>
+  <circle r="293" fill="none" stroke="#5E4415" stroke-opacity="0.6" stroke-width="1.8"/>
+  <circle r="258" fill="none" stroke="#5E4415" stroke-opacity="0.7" stroke-width="2.2"/>
+  <circle r="252" fill="none" stroke="#F0D68C" stroke-opacity="0.3" stroke-width="1.2"/>
+  <circle r="246" fill="#131A28"/>
+  <g clip-path="url(#clockFaceClip)">
+    <circle r="236" fill="url(#faceBrass)"/>
+    <rect x="-236" y="-236" width="472" height="472" filter="url(#f-grain-dark)" opacity="0.3"/>
+  </g>
+  <circle r="236" fill="none" stroke="#5E4415" stroke-width="1.6" stroke-opacity="0.65"/>
+  <circle r="222" fill="none" stroke="#5E4415" stroke-width="1" stroke-opacity="0.4"/>
+  <g id="clockDial"></g>
+  <circle r="22" fill="url(#bezelBrass)" stroke="#5E4415" stroke-width="1.2"/>
+  <circle r="7.5" fill="#3A2A10"/>
+  <g id="clockRivets"></g>
+  <path d="M -239 -138 A 276 276 0 0 1 -48 -272" fill="none" stroke="#F6E2A0" stroke-width="7" stroke-opacity="0.35" stroke-linecap="round"/>
+</g>
+
+<!-- ================= the vignette ================= -->
+<rect width="1600" height="1000" fill="url(#vig)" pointer-events="none"/>
+
+<script>
+const NS='http://www.w3.org/2000/svg';
+// [x, y, kind, state, size, lean, street, tone] — baked from public/table-scene.json
+const DOORS=@@DOORS@@;
+const PARCELS=@@PARCELS_JS@@;
+// [x, y, name, lean]
+const KNIGHTS=@@KNIGHTS@@;
+
+const KIND={c:['#g-c',13],h:['#g-h',14],w:['#g-w',18]};
+function el(name,attrs){const e=document.createElementNS(NS,name);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+// the doors' real y extent, so the depth gradient is spent where pieces are
+const DY0=Math.min(...DOORS.map(d=>d[1]));
+const DYS=Math.max(1,Math.max(...DOORS.map(d=>d[1]))-DY0);
+// ── The inspector ─────────────────────────────────────────────────────────
+// Selecting a holding shows its record AND the acts available on it, on one
+// surface. The acts offered are a function of the STANDING — a bare door is
+// offered a knight, a door in crisis is offered the thing that ends the crisis
+// — so the panel never shows a control that would do nothing, which is the
+// dead-button fault the A/E/P check exists to catch.
+const ACTS={
+  held:   [['Look at the door','']],
+  bare:   [['Set a knight over it','']],
+  vacant: [['Begin the make-ready turn','']],
+  crisis: [['Answer the crisis','alarm'],['Set a knight over it','']],
+  fallen: [['Raise the fallen holding','alarm']],
+};
+const STANDING={held:'held and quiet',bare:'in no knight\u2019s care',vacant:'standing empty',
+  crisis:'in crisis',fallen:'fallen'};
+const insp=document.getElementById('inspector');
+function showDoor(d){
+  const [x,y,k,st,sz,lean,street]=d.row;
+  document.getElementById('insp-name').textContent=street;
+  document.getElementById('insp-kind').textContent=({c:'cottage',h:'house',w:'wide holding'})[k]||k;
+  document.getElementById('insp-state').textContent=STANDING[st]||st;
+  document.getElementById('insp-block').textContent=d.parcel&&d.parcel.block>=0?('the '+ORD[d.parcel.block%ORD.length]+' fellowship'):'holds alone';
+  document.getElementById('insp-parcel').textContent=d.parcel?(d.parcel.block>=0?('col '+(d.parcel.col+1)+' \u00b7 row '+(d.parcel.row+1)):'\u2014'):'\u2014';
+  const acts=document.getElementById('insp-acts');
+  acts.textContent='';
+  for(const [label,cls] of (ACTS[st]||[])){
+    const b=document.createElement('button');
+    b.textContent=label; if(cls)b.className=cls;
+    b.addEventListener('click',()=>{b.textContent=label+' \u2014 proposed, awaiting the Regent';b.disabled=true;});
+    acts.appendChild(b);
+  }
+  insp.setAttribute('data-open','');
+}
+const ORD=['first','second','third','fourth','fifth','sixth','seventh','eighth','ninth','tenth',
+  'eleventh','twelfth','thirteenth','fourteenth','fifteenth','sixteenth'];
+document.getElementById('insp-close').addEventListener('click',()=>insp.removeAttribute('data-open'));
+
+const doorsG=document.getElementById('doors');
+const frag=document.createDocumentFragment();
+let i=-1;
+for(const [x,y,k,st,sz,lean,street] of DOORS){
+  i++;
+  const fallen=st==='fallen';
+  const ref=fallen?'#g-f':KIND[k][0];
+  const rr=fallen?21:KIND[k][1];
+  // DEPTH. The board is a receding surface but every piece used to be stamped
+  // at one size, which is the loudest "assembled rather than drawn" tell. North
+  // (small y) is the far edge, so a piece grows as it comes forward.
+  //
+  // Normalised over the doors' ACTUAL y-range, not over the 0..1000 map: the
+  // holdings occupy about the middle two thirds, so a gradient spread across
+  // the whole map spent most of its range on empty ground and moved a piece by
+  // less than a pixel. Measured at ±11% it changed nothing at all; at ±22% over
+  // the real range it reads.
+  const depth=0.78+0.44*((y-DY0)/DYS);
+  const g=el('g',{class:'door st-'+st,tabindex:'0',role:'button',
+    'aria-label':street+' — '+st,
+    transform:'translate('+x+' '+y+') rotate('+(lean*140).toFixed(1)+') scale('+((0.55+sz*0.75)*(fallen?1.3:1)*depth).toFixed(3)+')'});
+  const t=document.createElementNS(NS,'title');t.textContent=street+' — '+st;g.appendChild(t);
+  // Every row that NAMES a thing is a door to that thing (A/E/P, accessibility):
+  // pointer AND keyboard reach the same surface.
+  const rec={row:[x,y,k,st,sz,lean,street],parcel:PARCELS[i]||null};
+  g.addEventListener('click',()=>showDoor(rec));
+  g.addEventListener('focus',()=>showDoor(rec));
+  g.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showDoor(rec);}});
+  // The ring sits on the PIECE, not on the ground under it: the glyph is drawn
+  // upward from its base, so a ring centred at the origin left the roof outside
+  // it and the bottom third over bare grass. And it is no longer gold — gold
+  // was doing the border, the flags and the clock as well, so "gold means
+  // selected" carried no information at all.
+  const cy=fallen?-6:-rr*0.52;
+  g.appendChild(el('ellipse',{class:'ring2',cx:0,cy:cy,rx:rr+2,ry:(rr+2)*0.82,fill:'none',stroke:'#141A24','stroke-width':'4.5'}));
+  g.appendChild(el('ellipse',{class:'ring',cx:0,cy:cy,rx:rr+2,ry:(rr+2)*0.82,fill:'none',stroke:'#F3EDDC','stroke-width':'2.2'}));
+  g.appendChild(el('use',{href:ref}));
+  frag.appendChild(g);
+}
+doorsG.appendChild(frag);
+const knightsG=document.getElementById('knights');
+for(const [x,y,name,lean] of KNIGHTS){
+  const g=el('g',{class:'knight',tabindex:'0',role:'img',
+    'aria-label':name+' — knight banner',
+    transform:'translate('+x+' '+y+') rotate('+(lean*120).toFixed(1)+')'});
+  const t=document.createElementNS(NS,'title');t.textContent=name;g.appendChild(t);
+  g.appendChild(el('circle',{class:'ring2',cy:-14,r:26,fill:'none',stroke:'#171D2C','stroke-width':'4'}));
+  g.appendChild(el('circle',{class:'ring',cy:-14,r:26,fill:'none',stroke:'#F0D68C','stroke-width':'2.2'}));
+  g.appendChild(el('use',{href:'#g-k'}));
+  knightsG.appendChild(g);
+}
+// the week dial: seven marks, no letters — the day is told by the raised pip and the hand
+const dial=document.getElementById('clockDial');
+const flute=document.getElementById('clockFlute');
+const rivets=document.getElementById('clockRivets');
+const DAY=2; // which of the seven the hand rests on
+// fluted bezel
+for(let i=0;i<72;i++){
+  const a=i*5*Math.PI/180, c=Math.cos(a), s=Math.sin(a);
+  flute.appendChild(el('line',{x1:c*262,y1:s*262,x2:c*288,y2:s*288,stroke:'#5E4415','stroke-width':'2.4',opacity:'0.3'}));
+  const a2=a+2.5*Math.PI/180, c2=Math.cos(a2), s2=Math.sin(a2);
+  flute.appendChild(el('line',{x1:c2*262,y1:s2*262,x2:c2*288,y2:s2*288,stroke:'#F0D68C','stroke-width':'1.2',opacity:'0.14'}));
+}
+// seven days
+for(let i=0;i<7;i++){
+  const a=(-90+i*(360/7))*Math.PI/180;
+  const c=Math.cos(a),s=Math.sin(a);
+  dial.appendChild(el('line',{x1:c*115,y1:s*115,x2:c*208,y2:s*208,stroke:'#5E4415','stroke-width':'3',opacity:'0.6'}));
+  const cur=i===DAY;
+  dial.appendChild(el('circle',{cx:c*178,cy:s*178,r:cur?18:13,fill:'#5E4415',opacity:'0.55'}));
+  dial.appendChild(el('circle',{cx:c*178,cy:s*178,r:cur?14:10,
+    fill:cur?'url(#bezelBrass)':'#6B4C18',stroke:cur?'#5E4415':'#3A2A10','stroke-width':cur?'2.2':'1.6'}));
+  if(cur){dial.appendChild(el('circle',{cx:c*178,cy:s*178,r:21,fill:'none',stroke:'#F0D68C','stroke-width':'1.4',opacity:'0.5'}));dial.appendChild(el('circle',{cx:c*178-4,cy:s*178-4,r:3.5,fill:'#F6E2A0',opacity:'0.8'}));}
+}
+// the hand
+{
+  const a=DAY*(360/7);
+  dial.appendChild(el('path',{d:'M -7.5 16 L -2.2 -152 L 0 -176 L 2.2 -152 L 7.5 16 L 0 30 Z',
+    fill:'#3A2A10',stroke:'#E5C069','stroke-width':'1.1',transform:'rotate('+a+')'}));
+}
+// four rivets on the bezel
+for(const deg of [-72,-24,24,72]){
+  const a=(deg-90)*Math.PI/180;
+  rivets.appendChild(el('circle',{cx:Math.cos(a)*274,cy:Math.sin(a)*274,r:8,
+    fill:'url(#bezelBrass)',stroke:'#3A2A10','stroke-width':'1.4'}));
+}
+</script>
+</svg>
+</body>
+</html>

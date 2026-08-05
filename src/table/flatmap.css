@@ -1,0 +1,310 @@
+/* THE MAP — the illustrated table.
+ *
+ * The piece palettes live here as CUSTOM PROPERTIES, not as class selectors on
+ * the glyph internals, and that is not a style preference: the glyphs are drawn
+ * through <use>, whose content sits in a shadow tree that document class
+ * selectors do not reach. Inherited properties and custom properties do. So a
+ * state sets --w1/--r1/--shut on the piece's own <g> and the kit picks them up.
+ *
+ * The hue law (src/table/palette.ts) holds: RED MEANS DISTRESS AND NOTHING
+ * ELSE. It is spent on the crisis pennant and on a failing fief's cloth, and
+ * nowhere else on this surface — not on a border, not on a hover, not on gold.
+ */
+
+.fm-root {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #1e1108;
+}
+
+.fm-frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+/* ── the pieces ─────────────────────────────────────────────────────────── */
+
+.fm-piece {
+  cursor: pointer;
+  outline: none;
+}
+
+.fm-ring,
+.fm-ring2 {
+  opacity: 0;
+  transition: opacity 0.12s ease;
+  /* Only the BUILDING is a hit target. Its shadow is a wide filled ellipse and
+     its focus rings are strokes — all three take clicks by default, so aiming
+     at a house could select the neighbour whose shadow you actually hit. Found
+     by clicking a door in crisis and having the panel open on a held one. */
+  pointer-events: none;
+}
+
+.fm-piece:hover .fm-ring { opacity: 0.75; }
+.fm-piece:hover .fm-ring2 { opacity: 0.5; }
+.fm-piece:focus-visible .fm-ring,
+.fm-piece:focus-visible .fm-ring2,
+.fm-sel .fm-ring,
+.fm-sel .fm-ring2 { opacity: 1; }
+
+/* The three standings a door can be in. There is no fourth: the proving
+   frame's `bare` and `fallen` were fictions of its invented source, and the
+   reading the app actually folds has exactly these. */
+.fm-st-held {
+  --w1: #eadfc6;
+  --w2: #cbbfa3;
+  --r1: #7a5233;
+  --r2: #46301e;
+  --dk: #33200f;
+}
+.fm-st-vacant {
+  --w1: #b3b2a4;
+  --w2: #8f9083;
+  --r1: #5b4e3d;
+  --r2: #352a1d;
+  --dk: #26344c;
+  --shut: 1;
+}
+.fm-st-crisis {
+  --w1: #eadfc6;
+  --w2: #cbbfa3;
+  --r1: #7a5233;
+  --r2: #46301e;
+  --dk: #33200f;
+  --flag: 1;
+}
+
+/* The knight's cloth reads their fief's condition — and a failing fief is the
+   one place on this map besides a crisis pennant that may wear red. */
+.fm-h-thriving { --cloth: url(#fm-flagBrass); }
+.fm-h-strained { --cloth: #8a6323; }
+.fm-h-failing { --cloth: #7a2e22; }
+
+.fm-capital { --cloth: url(#fm-flagBrass); }
+.fm-capname {
+  fill: #f3eddc;
+  font: 600 13px ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.4px;
+  paint-order: stroke;
+  stroke: #1e1108;
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+/* ── the surveyed ground ────────────────────────────────────────────────── */
+
+.fm-plots rect { cursor: pointer; }
+
+.fm-survey { cursor: pointer; }
+.fm-survey > rect { transition: fill-opacity 0.12s ease; }
+.fm-survey:hover > rect { fill-opacity: 1; }
+.fm-survey--dim > rect { fill-opacity: 0.62; }
+
+/* ── the survey glass ───────────────────────────────────────────────────── */
+
+.fm-glass {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  display: flex;
+  gap: 6px;
+  z-index: 3;
+}
+
+.fm-glass button {
+  min-width: 34px;
+  height: 34px;
+  padding: 0 9px;
+  border-radius: 6px;
+  border: 1px solid #3a2a10;
+  background: #22304a;
+  color: #eadfc6;
+  font: 600 15px/1 ui-sans-serif, system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.fm-glass button:hover { background: #2b3c5c; }
+.fm-glass button:focus-visible { outline: 2px solid #f3eddc; outline-offset: 1px; }
+.fm-glass__reset { font-size: 12px !important; font-weight: 500 !important; }
+
+/* ── the inspector ──────────────────────────────────────────────────────── */
+/* Design law 6, drawn: the act stands beside the record it changes. Copy sits
+   on a clean field, never on the wood — text on wood grain is where fantasy
+   interfaces die (WRIT §10.5). */
+
+.fm-inspector {
+  position: absolute;
+  /* Below the coffers cartouche, not on top of it: covering a reading in order
+     to show a reading is the same fault in a different coat. */
+  top: 58px;
+  right: 18px;
+  width: 282px;
+  max-width: calc(100% - 36px);
+  background: #171d2c;
+  border: 1px solid #3a2a10;
+  border-radius: 7px;
+  box-shadow: 0 14px 34px rgb(0 0 0 / 55%);
+  color: #eadfc6;
+  font: 13px/1.45 ui-sans-serif, system-ui, sans-serif;
+  overflow: hidden;
+  /* Above the map's chrome: the coffers cartouche sits at top-right with
+     z-index 10 and painted straight over this panel's title bar. */
+  z-index: 12;
+}
+
+.fm-inspector h2 {
+  margin: 0;
+  padding: 11px 34px 3px 13px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+}
+
+.fm-inspector__kind {
+  padding: 0 13px 10px;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #c9973b;
+}
+
+.fm-inspector dl {
+  margin: 0;
+  padding: 9px 13px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 5px 12px;
+  border-top: 1px solid #22304a;
+}
+
+.fm-inspector dt { color: #a9aa9c; font-size: 11.5px; }
+.fm-inspector dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+
+.fm-inspector__acts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 11px 13px 13px;
+  border-top: 1px solid #22304a;
+  background: #131a28;
+}
+
+.fm-inspector__acts button {
+  font: inherit;
+  font-size: 12.5px;
+  padding: 8px 10px;
+  border-radius: 5px;
+  border: 1px solid #3a2a10;
+  background: #22304a;
+  color: #eadfc6;
+  cursor: pointer;
+  text-align: left;
+}
+
+.fm-inspector__acts button:hover { background: #2b3c5c; }
+.fm-inspector__acts button:focus-visible { outline: 2px solid #f3eddc; outline-offset: 1px; }
+.fm-inspector__acts .fm-alarm { background: #5a2118; border-color: #7a2e22; }
+.fm-inspector__acts .fm-alarm:hover { background: #6d281d; }
+
+.fm-inspector__close {
+  position: absolute;
+  top: 6px;
+  right: 7px;
+  background: none;
+  border: 0;
+  color: #a9aa9c;
+  font-size: 17px;
+  line-height: 1;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+
+.fm-inspector__close:hover { color: #eadfc6; }
+.fm-inspector__close:focus-visible { outline: 2px solid #f3eddc; outline-offset: 1px; }
+
+/* ── what the board cannot show ─────────────────────────────────────────── */
+/* A count with no road is the first fault the A/E/P check names, so the count
+   IS the road. It sits under the cartouche, quiet, and never becomes a
+   scoreboard — it is one true sentence about what is missing. */
+
+.fm-unheld {
+  position: absolute;
+  right: 18px;
+  /* Clear of the board-swap button in the same corner. */
+  bottom: 58px;
+  max-width: 260px;
+  text-align: left;
+  padding: 9px 11px;
+  border-radius: 6px;
+  border: 1px solid #3a2a10;
+  background: #171d2ce6;
+  color: #d8cdb4;
+  font: 12px/1.4 ui-sans-serif, system-ui, sans-serif;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.fm-unheld:hover { background: #22304a; color: #eadfc6; }
+.fm-unheld:focus-visible { outline: 2px solid #f3eddc; outline-offset: 1px; }
+.fm-unheld b { color: #eadfc6; }
+.fm-unheld__go { display: block; margin-top: 3px; color: #c9973b; }
+.fm-unheld__brief { display: none; }
+
+/* ── the phone ──────────────────────────────────────────────────────────── */
+/* Everything that floats over a 390px board covers holdings, and this surface
+   had three such things stacked on the same corner. Measured before the fix:
+   eight of fourteen aimed clicks never reached the board at all — they landed
+   on an overlay — and the zoom controls sat UNDER the offices rail (z-index 3
+   against 10), so the one control that makes a phone map readable could not be
+   pressed. So on a narrow screen the chrome moves to the edges: the offices
+   run as a strip along the top, the survey glass and the cartouche take the
+   two bottom corners, and the standing note sits between them. */
+@media (max-width: 560px) {
+  /* Clear of the board-swap button, which is painted by the board itself and
+     therefore always lands on top of this panel — it was sitting squarely on
+     the second act. */
+  .fm-inspector {
+    top: auto;
+    right: 6px;
+    left: 6px;
+    bottom: 54px;
+    width: auto;
+    max-width: none;
+  }
+
+  .fm-glass {
+    bottom: 10px;
+    left: 10px;
+    z-index: 11;
+  }
+
+  /* A band ABOVE the bottom row, not squeezed into it. It used to sit between
+     the survey glass and the board-swap button on the same line — but that
+     reserved a fixed 96px for a button whose label makes it ~120px wide, so
+     "The Table" was painted over the last 20px of this note and the two
+     controls fought for the same corner again (measured on a 390px board,
+     2026-07-29). A gap budgeted against a neighbour's width is a collision
+     waiting for the neighbour to be renamed; clearing the row entirely is not.
+     It covers a sliver of ground, and only while doors actually stand adrift. */
+  .fm-unheld {
+    left: 10px;
+    right: 10px;
+    bottom: 56px;
+    top: auto;
+    max-width: none;
+    padding: 9px 8px;
+    text-align: center;
+    z-index: 11;
+  }
+
+  .fm-unheld__full { display: none; }
+  .fm-unheld__brief { display: block; white-space: nowrap; }
+
+  /* Reading a holding's card is the whole screen's job while it is open. */
+  .fm-root--inspecting .fm-unheld,
+  .fm-root--inspecting .fm-glass { display: none; }
+}

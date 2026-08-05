@@ -1,0 +1,1789 @@
+{
+  "marches": {
+    "arrivals": [
+      {
+        "id": "72433f14-0fda-4731-9f7e-8314fea1d514",
+        "title": "Roof leak reported at Willow Creek",
+        "arrivedOn": "2026-07-17"
+      },
+      {
+        "id": "25bf546f-88a6-4c4b-b85c-7e5b561da953",
+        "title": "Cold call from a software vendor",
+        "arrivedOn": "2026-07-17"
+      }
+    ],
+    "dispatches": [
+      {
+        "id": "9b19d8df-8c96-4080-8bf6-1914fe02b83b",
+        "arrivalId": "72433f14-0fda-4731-9f7e-8314fea1d514",
+        "territoryId": "maintenance",
+        "dispatchedOn": "2026-07-17"
+      }
+    ],
+    "turnaways": [
+      {
+        "id": "5599a13a-17d9-498d-a527-e6252c40ef55",
+        "arrivalId": "25bf546f-88a6-4c4b-b85c-7e5b561da953",
+        "turnedAwayOn": "2026-07-17"
+      }
+    ]
+  },
+  "treasury": {
+    "upkeeps": []
+  },
+  "acts": {
+    "grants": [
+      {
+        "id": "grant-pm-alys",
+        "territoryId": "property-management",
+        "personId": "alys",
+        "role": "lord",
+        "grantedOn": "2026-07-17"
+      },
+      {
+        "id": "grant-leasing-osric",
+        "territoryId": "leasing",
+        "personId": "osric",
+        "role": "lord",
+        "grantedOn": "2026-07-17"
+      },
+      {
+        "id": "grant-maintenance-mabel",
+        "territoryId": "maintenance",
+        "personId": "mabel",
+        "role": "mayor",
+        "grantedOn": "2026-07-17"
+      }
+    ],
+    "appointments": [
+      {
+        "id": "appoint-legal-marlowe",
+        "territoryId": "legal",
+        "personId": "marlowe",
+        "appointedOn": "2026-07-17"
+      }
+    ],
+    "postings": [
+      {
+        "id": "post-pm-thatch",
+        "territoryId": "property-management",
+        "personId": "thatch"
+      },
+      {
+        "id": "post-maintenance-mason",
+        "territoryId": "maintenance",
+        "personId": "mason"
+      },
+      {
+        "id": "post-technology-nick",
+        "territoryId": "technology",
+        "personId": "carver"
+      },
+      {
+        "id": "post-marketing-sterling",
+        "territoryId": "marketing",
+        "personId": "sterling"
+      }
+    ],
+    "fealties": [
+      {
+        "id": "fealty-pm-mabel",
+        "territoryId": "property-management",
+        "personId": "mabel"
+      }
+    ]
+  },
+  "census": {
+    "people": [
+      {
+        "id": "harold",
+        "name": "Harold",
+        "pledge": "king"
+      },
+      {
+        "id": "edwin",
+        "name": "Edwin",
+        "pledge": "steward",
+        "note": "Administers the kingdom for the King. Catch-basin for everything undelegated."
+      },
+      {
+        "id": "piers",
+        "name": "Piers",
+        "pledge": "squire",
+        "pledgedTo": "edwin",
+        "note": "Pledged to Edwin personally. Pre-hire, no fief."
+      },
+      {
+        "id": "alys",
+        "name": "Alys",
+        "pledge": "vassal"
+      },
+      {
+        "id": "mabel",
+        "name": "Mabel",
+        "pledge": "vassal"
+      },
+      {
+        "id": "osric",
+        "name": "Osric",
+        "pledge": "vassal"
+      },
+      {
+        "id": "marlowe",
+        "name": "Marlowe",
+        "pledge": "sellsword",
+        "note": "Outside counsel."
+      },
+      {
+        "id": "thatch",
+        "name": "Thatch",
+        "pledge": "sellsword"
+      },
+      {
+        "id": "mason",
+        "name": "Mason",
+        "pledge": "sellsword"
+      },
+      {
+        "id": "carver",
+        "name": "Carver",
+        "pledge": "sellsword"
+      },
+      {
+        "id": "sterling",
+        "name": "Sterling",
+        "pledge": "sellsword"
+      }
+    ],
+    "territories": [
+      {
+        "id": "property-management",
+        "name": "Property Management",
+        "kind": "fief"
+      },
+      {
+        "id": "maintenance",
+        "name": "Maintenance",
+        "kind": "hamlet",
+        "parentId": "property-management"
+      },
+      {
+        "id": "leasing",
+        "name": "Leasing",
+        "kind": "fief"
+      },
+      {
+        "id": "legal",
+        "name": "Legal",
+        "kind": "fief"
+      },
+      {
+        "id": "technology",
+        "name": "Technology",
+        "kind": "fief"
+      },
+      {
+        "id": "marketing",
+        "name": "Marketing",
+        "kind": "fief"
+      }
+    ]
+  },
+  "events": [],
+  "catalog": [
+    {
+      "key": "rent-post",
+      "title": "Post monthly rent",
+      "class": "run",
+      "mode": "auto",
+      "domain": "collections"
+    },
+    {
+      "key": "delinquency",
+      "title": "Delinquency follow-up",
+      "class": "run",
+      "mode": "human",
+      "domain": "collections"
+    },
+    {
+      "key": "work-order",
+      "title": "Triage a work order",
+      "class": "run",
+      "mode": "human",
+      "domain": "maintenance",
+      "note": "Raw intake — walk it down the tree (system → leaf) to put it in motion."
+    },
+    {
+      "key": "owner-statement",
+      "title": "Send the owner statement",
+      "class": "run",
+      "mode": "auto",
+      "domain": "owner-accounting"
+    },
+    {
+      "key": "lead-intake",
+      "title": "Intake a new-owner lead",
+      "class": "acq",
+      "mode": "auto",
+      "domain": "leasing"
+    },
+    {
+      "key": "list-unit",
+      "title": "List a vacant unit",
+      "class": "acq",
+      "mode": "human",
+      "domain": "leasing"
+    },
+    {
+      "key": "notice-received",
+      "title": "Log a tenant notice",
+      "class": "run",
+      "mode": "human",
+      "domain": "move-out"
+    },
+    {
+      "key": "confirm-vacate-date",
+      "title": "Confirm the vacate date",
+      "class": "run",
+      "mode": "human",
+      "domain": "move-out"
+    },
+    {
+      "key": "schedule-pre-inspection",
+      "title": "Schedule the pre-inspection",
+      "class": "run",
+      "mode": "human",
+      "domain": "move-out"
+    },
+    {
+      "key": "move-out-inspection",
+      "title": "Walk the move-out inspection",
+      "class": "run",
+      "mode": "human",
+      "domain": "move-out"
+    },
+    {
+      "key": "scope-the-turn",
+      "title": "Scope and price the turn",
+      "class": "run",
+      "mode": "human",
+      "domain": "move-out",
+      "woType": "unit-turn",
+      "priority": "normal",
+      "status": "new",
+      "slaBand": "7-day"
+    },
+    {
+      "key": "work-the-turn",
+      "title": "Work the turn to rent-ready",
+      "class": "run",
+      "mode": "human",
+      "domain": "move-out",
+      "woType": "unit-turn",
+      "priority": "normal",
+      "status": "in-progress",
+      "slaBand": "7-day"
+    },
+    {
+      "key": "deposit-accounting",
+      "title": "Itemize the deposit accounting",
+      "class": "run",
+      "mode": "human",
+      "domain": "move-out"
+    },
+    {
+      "key": "transfer-the-deposit",
+      "title": "Transfer the deposit",
+      "class": "run",
+      "mode": "human",
+      "domain": "move-out"
+    },
+    {
+      "key": "owner-reserve",
+      "title": "Request the owner reserve",
+      "class": "run",
+      "mode": "human",
+      "domain": "move-out",
+      "note": "A money step — only inside the open window of the circuit."
+    },
+    {
+      "key": "final-walk",
+      "title": "Verify rent-ready (final walk)",
+      "class": "acq",
+      "mode": "human",
+      "domain": "leasing"
+    },
+    {
+      "key": "show-and-screen",
+      "title": "Show and screen applicants",
+      "class": "acq",
+      "mode": "human",
+      "domain": "leasing"
+    },
+    {
+      "key": "vacancy-price-drop",
+      "title": "Drop the vacancy price",
+      "class": "acq",
+      "mode": "auto",
+      "domain": "leasing",
+      "note": "The weekly loop — repeats until leased."
+    },
+    {
+      "key": "reconcile",
+      "title": "Reconcile the trust account",
+      "class": "firm",
+      "mode": "human",
+      "domain": "compliance"
+    },
+    {
+      "key": "violation-notice",
+      "title": "Handle a violation or notice",
+      "class": "firm",
+      "mode": "human",
+      "domain": "compliance",
+      "system": "violations",
+      "completes": "violation-notice",
+      "note": "HOA / owner / vendor notice — classify, decide, serve, follow to cure."
+    },
+    {
+      "key": "renewal",
+      "title": "Work a lease renewal",
+      "class": "firm",
+      "mode": "human",
+      "domain": "renewals",
+      "completes": "lease-renewal",
+      "note": "The T-90 renewal cadence."
+    },
+    {
+      "key": "owner-onboarding",
+      "title": "Onboard a won property",
+      "class": "acq",
+      "mode": "human",
+      "domain": "onboarding",
+      "completes": "owner-onboarding",
+      "note": "A property won — intake, agreement, setup, walkthrough, go-live."
+    },
+    {
+      "key": "violation.classify",
+      "title": "Classify the notice",
+      "class": "firm",
+      "mode": "auto",
+      "domain": "compliance",
+      "system": "violations"
+    },
+    {
+      "key": "violation.decide",
+      "title": "Decide the violation",
+      "class": "firm",
+      "mode": "human",
+      "domain": "compliance",
+      "system": "violations"
+    },
+    {
+      "key": "violation.draft",
+      "title": "Draft the cure notice",
+      "class": "firm",
+      "mode": "auto",
+      "domain": "compliance",
+      "system": "violations"
+    },
+    {
+      "key": "violation.serve",
+      "title": "Serve the notice",
+      "class": "firm",
+      "mode": "human",
+      "domain": "compliance",
+      "system": "violations"
+    },
+    {
+      "key": "violation.cure",
+      "title": "Work the cure window",
+      "class": "firm",
+      "mode": "human",
+      "domain": "compliance",
+      "system": "violations"
+    },
+    {
+      "key": "violation.close",
+      "title": "Close the violation",
+      "class": "firm",
+      "mode": "human",
+      "domain": "compliance",
+      "system": "violations"
+    },
+    {
+      "key": "renewal.price",
+      "title": "Set the renewal rent",
+      "class": "firm",
+      "mode": "human",
+      "domain": "renewals"
+    },
+    {
+      "key": "renewal.draft-offer",
+      "title": "Draft the renewal offer",
+      "class": "firm",
+      "mode": "auto",
+      "domain": "renewals"
+    },
+    {
+      "key": "renewal.send-offer",
+      "title": "Send the renewal offer",
+      "class": "firm",
+      "mode": "auto",
+      "domain": "renewals"
+    },
+    {
+      "key": "renewal.owner-window",
+      "title": "Owner authorization window",
+      "class": "firm",
+      "mode": "auto",
+      "domain": "renewals"
+    },
+    {
+      "key": "renewal.tenant-response",
+      "title": "Chase the tenant to sign",
+      "class": "firm",
+      "mode": "auto",
+      "domain": "renewals"
+    },
+    {
+      "key": "renewal.countersign",
+      "title": "Countersign the renewal",
+      "class": "firm",
+      "mode": "human",
+      "domain": "renewals"
+    },
+    {
+      "key": "renewal.fee",
+      "title": "Post the renewal fee",
+      "class": "firm",
+      "mode": "auto",
+      "domain": "renewals"
+    },
+    {
+      "key": "renewal.record",
+      "title": "Record the renewal",
+      "class": "firm",
+      "mode": "auto",
+      "domain": "renewals"
+    },
+    {
+      "key": "onboarding.agreement",
+      "title": "Sign the management agreement",
+      "class": "acq",
+      "mode": "human",
+      "domain": "onboarding"
+    },
+    {
+      "key": "onboarding.setup",
+      "title": "Set up the records",
+      "class": "acq",
+      "mode": "auto",
+      "domain": "onboarding"
+    },
+    {
+      "key": "onboarding.walkthrough",
+      "title": "Walk the property",
+      "class": "acq",
+      "mode": "human",
+      "domain": "onboarding"
+    },
+    {
+      "key": "onboarding.insurance",
+      "title": "Verify owner insurance",
+      "class": "acq",
+      "mode": "auto",
+      "domain": "onboarding"
+    },
+    {
+      "key": "onboarding.make-ready",
+      "title": "Batch the make-ready",
+      "class": "acq",
+      "mode": "human",
+      "domain": "onboarding",
+      "woType": "unit-turn",
+      "priority": "normal",
+      "status": "scheduled",
+      "slaBand": "scheduled"
+    },
+    {
+      "key": "onboarding.lockbox",
+      "title": "Hang the lockbox",
+      "class": "acq",
+      "mode": "human",
+      "domain": "onboarding"
+    },
+    {
+      "key": "onboarding.report",
+      "title": "Send the first owner report",
+      "class": "acq",
+      "mode": "auto",
+      "domain": "onboarding"
+    },
+    {
+      "key": "onboarding.go-live",
+      "title": "List and syndicate",
+      "class": "acq",
+      "mode": "auto",
+      "domain": "onboarding"
+    },
+    {
+      "key": "maintenance.hvac.no-cooling",
+      "title": "No cooling",
+      "class": "run",
+      "mode": "human",
+      "domain": "maintenance",
+      "system": "hvac",
+      "woType": "resident",
+      "priority": "urgent",
+      "status": "new",
+      "slaBand": "same-day",
+      "completes": "vendor-dispatch",
+      "params": {
+        "trade": "HVAC",
+        "urgency": "emergency"
+      }
+    },
+    {
+      "key": "maintenance.hvac.no-heating",
+      "title": "No heating",
+      "class": "run",
+      "mode": "human",
+      "domain": "maintenance",
+      "system": "hvac",
+      "woType": "resident",
+      "priority": "urgent",
+      "status": "assigned",
+      "slaBand": "same-day",
+      "completes": "vendor-dispatch",
+      "params": {
+        "trade": "HVAC",
+        "urgency": "emergency"
+      }
+    },
+    {
+      "key": "maintenance.hvac.refrigerant-leak",
+      "title": "Refrigerant leak",
+      "class": "run",
+      "mode": "human",
+      "domain": "maintenance",
+      "system": "hvac",
+      "woType": "resident",
+      "priority": "urgent",
+      "status": "scheduled",
+      "slaBand": "same-day",
+      "completes": "vendor-dispatch",
+      "params": {
+        "trade": "HVAC",
+        "urgency": "urgent"
+      }
+    },
+    {
+      "key": "maintenance.hvac.thermostat",
+      "title": "Thermostat fault",
+      "class": "run",
+      "mode": "human",
+      "domain": "maintenance",
+      "system": "hvac",
+      "woType": "resident",
+      "priority": "normal",
+      "status": "in-progress",
+      "slaBand": "3-day",
+      "completes": "vendor-dispatch",
+      "params": {
+        "trade": "HVAC",
+        "urgency": "routine"
+      }
+    },
+    {
+      "key": "maintenance.hvac.routine-service",
+      "title": "Routine HVAC service",
+      "class": "run",
+      "mode": "human",
+      "domain": "maintenance",
+      "system": "hvac",
+      "woType": "internal",
+      "priority": "low",
+      "status": "on-hold",
+      "slaBand": "7-day",
+      "completes": "vendor-dispatch",
+      "params": {
+        "trade": "HVAC",
+        "urgency": "routine"
+      }
+    },
+    {
+      "key": "maintenance.plumbing.leak",
+      "title": "Active leak",
+      "class": "run",
+      "mode": "human",
+      "domain": "maintenance",
+      "system": "plumbing",
+      "woType": "resident",
+      "priority": "urgent",
+      "status": "completed",
+      "slaBand": "same-day",
+      "completes": "vendor-dispatch",
+      "params": {
+        "trade": "plumbing",
+        "urgency": "emergency"
+      }
+    },
+    {
+      "key": "maintenance.appliance.refrigerator",
+      "title": "Refrigerator down",
+      "class": "run",
+      "mode": "human",
+      "domain": "maintenance",
+      "system": "appliance",
+      "woType": "resident",
+      "priority": "urgent",
+      "status": "canceled",
+      "slaBand": "same-day",
+      "completes": "vendor-dispatch",
+      "params": {
+        "trade": "appliance",
+        "urgency": "urgent"
+      }
+    },
+    {
+      "key": "maintenance.escalation.habitability",
+      "title": "Habitability alarm",
+      "class": "run",
+      "mode": "human",
+      "domain": "maintenance",
+      "system": "escalation",
+      "woType": "resident",
+      "priority": "urgent",
+      "status": "new",
+      "slaBand": "same-day",
+      "note": "The rising tide — a neglected crisis come due. Work it before the Patron recalls the estate."
+    }
+  ],
+  "flows": [
+    {
+      "key": "move-out-relay",
+      "title": "Move-out → re-list relay",
+      "trigger": "A tenant gives notice",
+      "steps": [
+        {
+          "key": "log-notice",
+          "catalogRow": "notice-received",
+          "holder": "pm-desk",
+          "board": "Move-Out",
+          "edge": {
+            "after": 0
+          },
+          "slaDays": 1,
+          "note": "Notice logged and acknowledged; the clock starts."
+        },
+        {
+          "key": "confirm-date",
+          "catalogRow": "confirm-vacate-date",
+          "holder": "pm-desk",
+          "board": "Move-Out",
+          "edge": {
+            "after": 1
+          },
+          "slaDays": 2,
+          "note": "Vacate date confirmed in writing with the tenant."
+        },
+        {
+          "key": "pre-inspection",
+          "catalogRow": "schedule-pre-inspection",
+          "holder": "alys",
+          "board": "Move-Out",
+          "edge": {
+            "after": -14,
+            "before": -7
+          },
+          "note": "Walk the unit before the tenant leaves; scope the turn."
+        },
+        {
+          "key": "move-out-inspection",
+          "catalogRow": "move-out-inspection",
+          "holder": "alys",
+          "board": "Move-Out",
+          "edge": {
+            "after": 0,
+            "before": 2
+          },
+          "slaDays": 2,
+          "note": "Document condition against the deposit."
+        },
+        {
+          "key": "turn-scope",
+          "catalogRow": "scope-the-turn",
+          "holder": "va-desk",
+          "board": "Move-Out",
+          "edge": {
+            "after": 1,
+            "before": 3
+          },
+          "slaDays": 2,
+          "note": "Bids gathered, the turn scoped and priced."
+        },
+        {
+          "key": "owner-reserve",
+          "catalogRow": "owner-reserve",
+          "holder": "lp-queue",
+          "board": "Deposit Transfer",
+          "edge": {
+            "after": 3,
+            "before": 10,
+            "onOrAfterDayOfMonth": 15,
+            "beforeDayOfMonth": 10
+          },
+          "slaDays": 5,
+          "note": "A ~$750 owner reserve, requested only inside the open window."
+        },
+        {
+          "key": "turn-work",
+          "catalogRow": "work-the-turn",
+          "holder": "va-desk",
+          "board": "Move-Out",
+          "edge": {
+            "after": 3,
+            "before": 10
+          },
+          "slaDays": 7,
+          "note": "The turn itself: vendors dispatched, unit made ready."
+        },
+        {
+          "key": "deposit-accounting",
+          "catalogRow": "deposit-accounting",
+          "holder": "alys",
+          "board": "Deposit Transfer",
+          "edge": {
+            "after": 2,
+            "before": 21
+          },
+          "slaDays": 3,
+          "note": "Deductions itemized and sent inside the statutory window."
+        },
+        {
+          "key": "deposit-transfer",
+          "catalogRow": "transfer-the-deposit",
+          "holder": "lp-queue",
+          "board": "Deposit Transfer",
+          "edge": {
+            "after": 21,
+            "before": 30
+          },
+          "slaDays": 5,
+          "note": "What is owed moves: refund out, damages to the owner."
+        },
+        {
+          "key": "final-walk",
+          "catalogRow": "final-walk",
+          "holder": "osric",
+          "board": "Leasing",
+          "edge": {
+            "after": 10,
+            "before": 12
+          },
+          "note": "Rent-ready verified before the listing goes live."
+        },
+        {
+          "key": "list-unit",
+          "catalogRow": "list-unit",
+          "holder": "osric",
+          "board": "Leasing",
+          "edge": {
+            "after": 12
+          },
+          "slaDays": 2,
+          "note": "Photos, price, syndication — the unit is on the market."
+        },
+        {
+          "key": "show-and-screen",
+          "catalogRow": "show-and-screen",
+          "holder": "osric",
+          "board": "Leasing",
+          "edge": {
+            "after": 12,
+            "before": 40
+          },
+          "note": "Showings worked, applicants screened."
+        },
+        {
+          "key": "weekly-price-drop",
+          "catalogRow": "vacancy-price-drop",
+          "holder": "osric",
+          "board": "Leasing",
+          "edge": {
+            "after": 19
+          },
+          "repeatEveryDays": 7,
+          "condition": "until leased",
+          "note": "The vacancy loop: $25 off the ask each week it sits."
+        }
+      ]
+    },
+    {
+      "key": "vendor-dispatch",
+      "title": "Vendor dispatch",
+      "trigger": "A work order is reported",
+      "steps": [
+        {
+          "key": "report",
+          "catalogRow": "work-order",
+          "holder": "pm-desk",
+          "board": "Intake",
+          "edge": {
+            "after": 0
+          },
+          "slaDays": 1,
+          "note": "The report logged — what broke, which door, how it reached us."
+        },
+        {
+          "key": "identify",
+          "catalogRow": "work-order",
+          "holder": "mabel",
+          "board": "Intake",
+          "edge": {
+            "after": 0
+          },
+          "slaDays": 1,
+          "note": "Walked down the tree to a leaf — a {trade} call, {urgency} priority."
+        },
+        {
+          "key": "assign-vendor",
+          "catalogRow": "work-order",
+          "holder": "va-desk",
+          "board": "Dispatch",
+          "edge": {
+            "after": 0,
+            "before": 1
+          },
+          "slaDays": 1,
+          "note": "A artisan of the {trade} trade chosen for a {urgency} call."
+        },
+        {
+          "key": "dispatch",
+          "catalogRow": "work-order",
+          "holder": "va-desk",
+          "board": "Dispatch",
+          "edge": {
+            "after": 0,
+            "before": 1
+          },
+          "slaDays": 1,
+          "note": "The {trade} artisan dispatched — {urgency} window, tenant notified."
+        },
+        {
+          "key": "invoice-in",
+          "catalogRow": "work-order",
+          "holder": "lp-queue",
+          "board": "Settlement",
+          "edge": {
+            "after": 1,
+            "before": 7
+          },
+          "slaDays": 5,
+          "note": "The {trade} artisan's invoice received and matched to the work."
+        },
+        {
+          "key": "confirm-work",
+          "catalogRow": "work-order",
+          "holder": "mabel",
+          "board": "Dispatch",
+          "edge": {
+            "after": 1,
+            "before": 7
+          },
+          "slaDays": 3,
+          "note": "The fix confirmed with the tenant — the {trade} work holds."
+        },
+        {
+          "key": "pay-vendor",
+          "catalogRow": "work-order",
+          "holder": "lp-queue",
+          "board": "Settlement",
+          "edge": {
+            "after": 3,
+            "before": 10,
+            "onOrAfterDayOfMonth": 15,
+            "beforeDayOfMonth": 10
+          },
+          "slaDays": 5,
+          "note": "The artisan paid — only inside the open window of the circuit."
+        },
+        {
+          "key": "post-to-accounting",
+          "catalogRow": "work-order",
+          "holder": "lp-queue",
+          "board": "Settlement",
+          "edge": {
+            "after": 3,
+            "before": 14
+          },
+          "slaDays": 5,
+          "note": "The cost posted to the door and its owner — the ledger balanced."
+        }
+      ]
+    },
+    {
+      "key": "violation-notice",
+      "title": "Violation / notice",
+      "trigger": "A violation or notice arrives",
+      "steps": [
+        {
+          "key": "receive",
+          "catalogRow": "violation-notice",
+          "holder": "pm-desk",
+          "board": "Intake",
+          "edge": {
+            "after": 0
+          },
+          "note": "The notice logged — HOA, owner, or vendor; what, which door, from whom."
+        },
+        {
+          "key": "classify",
+          "catalogRow": "violation.classify",
+          "holder": "va-desk",
+          "board": "Intake",
+          "edge": {
+            "after": 0
+          },
+          "note": "Classified by kind and severity — the {violation} named."
+        },
+        {
+          "key": "decide",
+          "catalogRow": "violation.decide",
+          "holder": "mabel",
+          "board": "Judgment",
+          "edge": {
+            "after": 1
+          },
+          "slaDays": 2,
+          "note": "The call a human makes: cure, waive, or send the {violation} up the ladder."
+        },
+        {
+          "key": "draft-notice",
+          "catalogRow": "violation.draft",
+          "holder": "va-desk",
+          "board": "Notice",
+          "edge": {
+            "after": 1,
+            "before": 3
+          },
+          "slaDays": 2,
+          "note": "The cure notice drafted from the template — the {days}-day window stated."
+        },
+        {
+          "key": "serve",
+          "catalogRow": "violation.serve",
+          "holder": "pm-desk",
+          "board": "Notice",
+          "edge": {
+            "after": 2,
+            "before": 4
+          },
+          "slaDays": 2,
+          "note": "Served and recorded — the legal gate kept, the clock on record."
+        },
+        {
+          "key": "cure-window",
+          "catalogRow": "violation.cure",
+          "holder": "mabel",
+          "board": "Follow-up",
+          "edge": {
+            "after": 3
+          },
+          "repeatEveryDays": 7,
+          "condition": "until cured",
+          "note": "The cure period worked — reminded each week it stands open."
+        },
+        {
+          "key": "close",
+          "catalogRow": "violation.close",
+          "holder": "pm-desk",
+          "board": "Close",
+          "edge": {
+            "after": 10
+          },
+          "slaDays": 3,
+          "note": "The outcome recorded and the case closed — cured, or handed up the ladder."
+        }
+      ]
+    },
+    {
+      "key": "lease-renewal",
+      "title": "Lease renewal",
+      "trigger": "A lease nears its term (T-90)",
+      "steps": [
+        {
+          "key": "open-window",
+          "catalogRow": "renewal",
+          "holder": "lp-queue",
+          "board": "Renewal",
+          "edge": {
+            "after": 0
+          },
+          "note": "The T-90 window opens — the term in sight, the file pulled."
+        },
+        {
+          "key": "price",
+          "catalogRow": "renewal.price",
+          "holder": "osric",
+          "board": "Pricing",
+          "edge": {
+            "after": 1
+          },
+          "slaDays": 3,
+          "note": "The rent call a human makes — hold, raise by {increase}, or let the door go."
+        },
+        {
+          "key": "draft-offer",
+          "catalogRow": "renewal.draft-offer",
+          "holder": "lp-queue",
+          "board": "Offer",
+          "edge": {
+            "after": 2,
+            "before": 5
+          },
+          "slaDays": 2,
+          "note": "The renewal offer drafted at the set {rent} — the packet staged."
+        },
+        {
+          "key": "send-offer",
+          "catalogRow": "renewal.send-offer",
+          "holder": "lp-queue",
+          "board": "Offer",
+          "edge": {
+            "after": 3,
+            "before": 6
+          },
+          "slaDays": 1,
+          "note": "The offer sent to the tenant — the term and the {rent} on the table."
+        },
+        {
+          "key": "owner-window",
+          "catalogRow": "renewal.owner-window",
+          "holder": "lp-queue",
+          "board": "Owner",
+          "edge": {
+            "after": 3,
+            "before": 10
+          },
+          "slaDays": 7,
+          "condition": "silence is authorization",
+          "note": "The owner's window — silence past it stands as consent."
+        },
+        {
+          "key": "tenant-response",
+          "catalogRow": "renewal.tenant-response",
+          "holder": "lp-queue",
+          "board": "Offer",
+          "edge": {
+            "after": 6
+          },
+          "repeatEveryDays": 7,
+          "condition": "until signed",
+          "note": "The tenant chased each week — signed, or the term runs month-to-month."
+        },
+        {
+          "key": "countersign",
+          "catalogRow": "renewal.countersign",
+          "holder": "osric",
+          "board": "Execution",
+          "edge": {
+            "after": 20,
+            "before": 30
+          },
+          "slaDays": 2,
+          "note": "The broker's signature — the one hand the machine never holds."
+        },
+        {
+          "key": "post-fee",
+          "catalogRow": "renewal.fee",
+          "holder": "lp-queue",
+          "board": "Settlement",
+          "edge": {
+            "after": 20,
+            "before": 30,
+            "onOrAfterDayOfMonth": 15,
+            "beforeDayOfMonth": 10
+          },
+          "slaDays": 5,
+          "note": "The renewal fee posted — only inside the open window of the circuit."
+        },
+        {
+          "key": "record",
+          "catalogRow": "renewal.record",
+          "holder": "lp-queue",
+          "board": "Close",
+          "edge": {
+            "after": 25
+          },
+          "slaDays": 2,
+          "note": "Filed and notified — unsigned rolls to month-to-month with the premium."
+        }
+      ]
+    },
+    {
+      "key": "owner-onboarding",
+      "title": "Owner onboarding",
+      "trigger": "A new owner's property is won",
+      "steps": [
+        {
+          "key": "intake",
+          "catalogRow": "owner-onboarding",
+          "holder": "pm-desk",
+          "board": "Intake",
+          "edge": {
+            "after": 0
+          },
+          "note": "The owner intake logged — the property, the doors, the terms sought."
+        },
+        {
+          "key": "agreement",
+          "catalogRow": "onboarding.agreement",
+          "holder": "osric",
+          "board": "Agreement",
+          "edge": {
+            "after": 1
+          },
+          "slaDays": 3,
+          "note": "The management agreement — a signature and a judgment, kept human."
+        },
+        {
+          "key": "set-up-records",
+          "catalogRow": "onboarding.setup",
+          "holder": "va-desk",
+          "board": "Setup",
+          "edge": {
+            "after": 2,
+            "before": 5
+          },
+          "slaDays": 3,
+          "note": "Records opened and defaults set in the system of record."
+        },
+        {
+          "key": "walkthrough",
+          "catalogRow": "onboarding.walkthrough",
+          "holder": "alys",
+          "board": "Onsite",
+          "edge": {
+            "after": 2,
+            "before": 7
+          },
+          "slaDays": 4,
+          "note": "The property walked — the onsite judgment the machine can't make."
+        },
+        {
+          "key": "verify-insurance",
+          "catalogRow": "onboarding.insurance",
+          "holder": "va-desk",
+          "board": "Compliance",
+          "edge": {
+            "after": 3,
+            "before": 8
+          },
+          "slaDays": 5,
+          "note": "Owner insurance verified and on file — the coverage gate."
+        },
+        {
+          "key": "make-ready",
+          "catalogRow": "onboarding.make-ready",
+          "holder": "va-desk",
+          "board": "Make-Ready",
+          "edge": {
+            "after": 5
+          },
+          "condition": "if the door stands vacant",
+          "note": "The make-ready batched — only where a door comes empty."
+        },
+        {
+          "key": "lockbox",
+          "catalogRow": "onboarding.lockbox",
+          "holder": "alys",
+          "board": "Onsite",
+          "edge": {
+            "after": 5,
+            "before": 9
+          },
+          "slaDays": 3,
+          "note": "Keys logged and the lockbox hung — the physical leg."
+        },
+        {
+          "key": "first-report",
+          "catalogRow": "onboarding.report",
+          "holder": "pm-desk",
+          "board": "Report",
+          "edge": {
+            "after": 7,
+            "before": 12
+          },
+          "slaDays": 3,
+          "note": "The first owner report sent — the relationship opened on the books."
+        },
+        {
+          "key": "go-live",
+          "catalogRow": "onboarding.go-live",
+          "holder": "osric",
+          "board": "Leasing",
+          "edge": {
+            "after": 10
+          },
+          "condition": "if the door stands vacant",
+          "note": "Built and syndicated — the vacant door goes to market."
+        }
+      ]
+    }
+  ],
+  "economy": {
+    "accounts": [
+      {
+        "role": "trust_cash_rent",
+        "code": "1010",
+        "name": "Trust Checking — Rent Collections",
+        "book": "trust",
+        "type": "asset",
+        "normal": "debit",
+        "isTrustCash": true,
+        "bank": "trust-rent"
+      },
+      {
+        "role": "trust_cash_deposits",
+        "code": "1020",
+        "name": "Trust Checking — Security Deposits",
+        "book": "trust",
+        "type": "asset",
+        "normal": "debit",
+        "isTrustCash": true,
+        "bank": "trust-deposit"
+      },
+      {
+        "role": "owner_reserve_cash",
+        "code": "1030",
+        "name": "Owner Reserve Checking",
+        "book": "trust",
+        "type": "asset",
+        "normal": "debit",
+        "isTrustCash": true,
+        "bank": "trust-reserve"
+      },
+      {
+        "role": "ar_tenants",
+        "code": "1200",
+        "name": "Accounts Receivable — Tenants",
+        "book": "trust",
+        "type": "asset",
+        "normal": "debit"
+      },
+      {
+        "role": "security_deposits_held",
+        "code": "2010",
+        "name": "Security Deposits Held",
+        "book": "trust",
+        "type": "liability",
+        "normal": "credit"
+      },
+      {
+        "role": "owner_reserves_held",
+        "code": "2020",
+        "name": "Owner Reserves Held",
+        "book": "trust",
+        "type": "liability",
+        "normal": "credit"
+      },
+      {
+        "role": "ap_vendors",
+        "code": "2100",
+        "name": "Accounts Payable — Vendors",
+        "book": "trust",
+        "type": "liability",
+        "normal": "credit"
+      },
+      {
+        "role": "irs_withholding_payable",
+        "code": "2110",
+        "name": "IRS Backup Withholding Payable",
+        "book": "trust",
+        "type": "liability",
+        "normal": "credit"
+      },
+      {
+        "role": "due_to_mgmt",
+        "code": "2400",
+        "name": "Due to Management Company",
+        "book": "trust",
+        "type": "liability",
+        "normal": "credit",
+        "isBridge": true
+      },
+      {
+        "role": "owner_equity",
+        "code": "3000",
+        "name": "Owner's Equity / Net Held",
+        "book": "trust",
+        "type": "equity",
+        "normal": "credit"
+      },
+      {
+        "role": "rent_income",
+        "code": "4000",
+        "name": "Rent Income",
+        "book": "trust",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "late_fee_income",
+        "code": "4100",
+        "name": "Late Fee Income",
+        "book": "trust",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "pet_rent_income",
+        "code": "4110",
+        "name": "Pet Rent",
+        "book": "trust",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "utility_reimb_income",
+        "code": "4120",
+        "name": "Utility Reimbursement (RUBS)",
+        "book": "trust",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "chargeback_income",
+        "code": "4130",
+        "name": "Tenant Chargeback (owner)",
+        "book": "trust",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "mtm_premium_income",
+        "code": "4140",
+        "name": "Month-to-Month Premium (owner)",
+        "book": "trust",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "moveout_reserve_held",
+        "code": "2030",
+        "name": "Move-Out Reserve Held",
+        "book": "trust",
+        "type": "liability",
+        "normal": "credit"
+      },
+      {
+        "role": "repairs_expense",
+        "code": "5000",
+        "name": "Repairs & Maintenance",
+        "book": "trust",
+        "type": "expense",
+        "normal": "debit"
+      },
+      {
+        "role": "mgmt_fee_expense",
+        "code": "5300",
+        "name": "Management Fee (owner expense)",
+        "book": "trust",
+        "type": "expense",
+        "normal": "debit"
+      },
+      {
+        "role": "leasing_fee_expense",
+        "code": "5310",
+        "name": "Leasing / Placement Fee (owner expense)",
+        "book": "trust",
+        "type": "expense",
+        "normal": "debit"
+      },
+      {
+        "role": "markup_expense",
+        "code": "5320",
+        "name": "Maintenance Markup (owner expense)",
+        "book": "trust",
+        "type": "expense",
+        "normal": "debit"
+      },
+      {
+        "role": "mtm_fee_expense",
+        "code": "5330",
+        "name": "Month-to-Month Premium Fee (owner expense)",
+        "book": "trust",
+        "type": "expense",
+        "normal": "debit"
+      },
+      {
+        "role": "late_fee_share_expense",
+        "code": "5340",
+        "name": "Late Fee Share (owner expense)",
+        "book": "trust",
+        "type": "expense",
+        "normal": "debit"
+      },
+      {
+        "role": "op_cash",
+        "code": "1000",
+        "name": "Operating Checking",
+        "book": "corporate",
+        "type": "asset",
+        "normal": "debit",
+        "bank": "operating"
+      },
+      {
+        "role": "bypass_cash",
+        "code": "1005",
+        "name": "By-Pass Checking — Commissions",
+        "book": "corporate",
+        "type": "asset",
+        "normal": "debit",
+        "bank": "by-pass"
+      },
+      {
+        "role": "due_from_trust",
+        "code": "1200c",
+        "name": "Due from Trust",
+        "book": "corporate",
+        "type": "asset",
+        "normal": "debit",
+        "isBridge": true
+      },
+      {
+        "role": "ap_corp",
+        "code": "2000c",
+        "name": "Accounts Payable — Company",
+        "book": "corporate",
+        "type": "liability",
+        "normal": "credit"
+      },
+      {
+        "role": "mgmt_fee_income",
+        "code": "4200",
+        "name": "Management Fee Income",
+        "book": "corporate",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "leasing_income",
+        "code": "4210",
+        "name": "Leasing / Placement Income",
+        "book": "corporate",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "markup_income",
+        "code": "4220",
+        "name": "Maintenance Markup Income",
+        "book": "corporate",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "late_fee_share_income",
+        "code": "4230",
+        "name": "Late Fee Share",
+        "book": "corporate",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "renewal_income",
+        "code": "4215",
+        "name": "Renewal Fee Income",
+        "book": "corporate",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "mtm_income",
+        "code": "4216",
+        "name": "Month-to-Month Premium Fee Income",
+        "book": "corporate",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "nsf_income",
+        "code": "4240",
+        "name": "NSF Fee Income",
+        "book": "corporate",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "admin_income",
+        "code": "4250",
+        "name": "Administrative Fee Income",
+        "book": "corporate",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "reletting_income",
+        "code": "4260",
+        "name": "Reletting Fee Income",
+        "book": "corporate",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "ancillary_income",
+        "code": "4270",
+        "name": "Ancillary Income",
+        "book": "corporate",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "rbp_income",
+        "code": "4271",
+        "name": "Resident Benefit (RBP) Income",
+        "book": "corporate",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "pet_damage_income",
+        "code": "4272",
+        "name": "Pet Damage Guarantee Income",
+        "book": "corporate",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "risk_enforcement_income",
+        "code": "4273",
+        "name": "Risk / Enforcement Income",
+        "book": "corporate",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "project_coord_income",
+        "code": "4274",
+        "name": "Project Coordination Income",
+        "book": "corporate",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "annual_admin_income",
+        "code": "4275",
+        "name": "Annual Admin Income",
+        "book": "corporate",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "referral_income",
+        "code": "4276",
+        "name": "Referral Income",
+        "book": "corporate",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "warranty_income",
+        "code": "4277",
+        "name": "Warranty Coordination Income",
+        "book": "corporate",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "application_income",
+        "code": "4278",
+        "name": "Application Fee Income",
+        "book": "corporate",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "ac_seasonal_income",
+        "code": "4279",
+        "name": "Seasonal AC Rental Income",
+        "book": "corporate",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "vendor_discount_income",
+        "code": "4280",
+        "name": "Vendor Discount Income",
+        "book": "corporate",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "other_income",
+        "code": "4300",
+        "name": "Other / Ancillary Income",
+        "book": "corporate",
+        "type": "income",
+        "normal": "credit"
+      },
+      {
+        "role": "payroll_expense",
+        "code": "5100c",
+        "name": "Payroll & Contractor Labor",
+        "book": "corporate",
+        "type": "expense",
+        "normal": "debit"
+      },
+      {
+        "role": "software_expense",
+        "code": "5200c",
+        "name": "Software & Platforms",
+        "book": "corporate",
+        "type": "expense",
+        "normal": "debit"
+      },
+      {
+        "role": "overhead_expense",
+        "code": "5400c",
+        "name": "Office, Insurance & Overhead",
+        "book": "corporate",
+        "type": "expense",
+        "normal": "debit"
+      }
+    ],
+    "feeRules": [
+      {
+        "kind": "management",
+        "basis": "collected_income",
+        "rateBps": 750
+      },
+      {
+        "kind": "leasing",
+        "basis": "gross_rent",
+        "rateBps": 7500
+      },
+      {
+        "kind": "markup",
+        "basis": "flat",
+        "rateBps": 1250
+      },
+      {
+        "kind": "renewal",
+        "basis": "flat",
+        "flatCents": 27500
+      },
+      {
+        "kind": "reletting",
+        "basis": "gross_rent",
+        "rateBps": 7500
+      },
+      {
+        "kind": "nsf",
+        "basis": "flat",
+        "flatCents": 5500
+      },
+      {
+        "kind": "admin",
+        "basis": "flat",
+        "flatCents": 4500
+      },
+      {
+        "kind": "ancillary",
+        "basis": "flat",
+        "flatCents": 5500
+      },
+      {
+        "kind": "application",
+        "basis": "per_adult",
+        "flatCents": 4000
+      },
+      {
+        "kind": "rbp",
+        "basis": "flat",
+        "flatCents": 3500
+      },
+      {
+        "kind": "pet_damage",
+        "basis": "flat",
+        "flatCents": 2000
+      },
+      {
+        "kind": "risk_enforcement",
+        "basis": "flat",
+        "flatCents": 1250
+      },
+      {
+        "kind": "project_coordination",
+        "basis": "flat",
+        "flatCents": 17500
+      },
+      {
+        "kind": "annual_admin",
+        "basis": "flat",
+        "flatCents": 15000
+      },
+      {
+        "kind": "referral",
+        "basis": "flat",
+        "flatCents": 35000
+      },
+      {
+        "kind": "warranty",
+        "basis": "flat",
+        "flatCents": 6500
+      },
+      {
+        "kind": "ac_seasonal",
+        "basis": "flat",
+        "flatCents": 12500
+      },
+      {
+        "kind": "mtm",
+        "basis": "new_rent",
+        "rateBps": 750,
+        "splitBps": 3500
+      },
+      {
+        "kind": "late_split",
+        "basis": "flat",
+        "splitBps": 6000
+      }
+    ],
+    "spendApprovalCents": 35000,
+    "estateSpendCaps": [
+      {
+        "estateId": "harrow-c",
+        "capCents": 90000
+      }
+    ],
+    "budget": [
+      {
+        "accountRole": "mgmt_fee_income",
+        "monthlyCents": 2200000
+      },
+      {
+        "accountRole": "markup_income",
+        "monthlyCents": 200000
+      },
+      {
+        "accountRole": "payroll_expense",
+        "monthlyCents": 1500000
+      },
+      {
+        "accountRole": "software_expense",
+        "monthlyCents": 150000
+      },
+      {
+        "accountRole": "overhead_expense",
+        "monthlyCents": 200000
+      }
+    ]
+  },
+  "estates": [],
+  "money": [],
+  "wargame": null,
+  "rev": 2
+}
