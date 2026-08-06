@@ -82,23 +82,29 @@ it. Tenancy is the thing that makes "from firm A's point of view" expressible at
 and building a per-engagement relationship model before there is a tenant to scope it
 to would produce the wrong shape twice.
 
-## ~~Trust-accounting rules that vary by jurisdiction~~ — SETTLED 2026-08-06
+## Trust-accounting rules that vary by jurisdiction — ANSWERED FOR TENANT ONE, OPEN FOR THE PRODUCT
 
-**Settled: properties are always in one jurisdiction, so one number is correct.**
-*"Properties will never be outside of texas, owners likely will be."*
+**The operator's own firms: Texas only.** *"Properties will never be outside of texas,
+owners likely will be."* Trust-accounting duty follows the property and the licensed
+broker, not the owner's address, so for those firms one number is correct.
 
-Trust-accounting duty follows the property and the licensed broker, not the owner's
-address, so the sweep-days limit stays a single deployment-wide number and does NOT
-move onto the realm record. Recorded here explicitly rather than left looking like an
-oversight — an unexplained single number and a deliberate one are indistinguishable
-from the outside, which is the whole reason this file exists.
+**That does not settle it, and this entry was briefly recorded as though it did.** It
+was written 2026-08-06 as "the limit stays a single DEPLOYMENT-WIDE number", which is
+false the moment LandLord is what it is: **multi-tenant, single vertical**. One
+deployment serves many property-management companies, and the second one licensed
+outside Texas breaks a deployment-wide constant. The answer given was true of tenant
+one; it was recorded as true of the product, and those are different claims.
 
-**What this does NOT settle, and must not be read as settling.** Owners being
-out-of-state is a real and separate axis. It does not touch trust accounting, and it
-may well touch owner reporting — non-resident withholding and year-end tax documents
-are governed by where the OWNER sits, not the property. Nothing in the tree models
-that today. It is not raised as a question here because nobody has yet said it is in
-scope; if owner reporting is ever built, this is the first thing to ask about it.
+**So: the sweep-days limit belongs on the TENANT record, not the deployment and not
+the economy.** That is a live constraint on the tenancy design rather than a
+follow-on from it — a tenant is not merely an isolation boundary, it is the thing
+that carries jurisdiction, and jurisdiction is the first thing found that a tenant
+must carry. Anything else discovered to be per-tenant-jurisdictional belongs beside it.
+
+**Still separate, still unmodelled.** Owners being out-of-state does not touch trust
+accounting and may well touch owner reporting — non-resident withholding and year-end
+tax documents follow where the OWNER sits. Nothing models that. Not in scope until
+somebody says so; if owner reporting is ever built, ask this first.
 
 ## Multi-tenancy, and what the per-identity vault rows actually are
 
