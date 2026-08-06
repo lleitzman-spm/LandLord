@@ -125,7 +125,81 @@ export type FlowBook = FlowTemplate[];
 // pace). Holders stay real ids (seats and queues; the vendor is a artisan's
 // queue) — the trade is flavor in the note, never a fake seat.
 
-export const FOUNDING_FLOWS: FlowBook = [
+
+// ── Where the timing numbers live ───────────────────────────────────────────
+//
+// NOT HERE. Every day offset, SLA, calendar edge and repeat interval in this
+// book — 116 of them — is declared in `knowledge/facts.json` and read back at
+// load. The templates below carry the SHAPE of the work (who holds it, which
+// board, which catalog row) and none of its quantities.
+//
+// WHY, in one sentence: a bare integer has nowhere to put "varies by contract",
+// so whoever writes each site picks a value and moves on, and the drift is
+// invisible. The sibling firm's corpus had the owner-approval cap in seven
+// places carrying two different values, five of them inside conditions that
+// executed. Nobody was careless; the data shape made it unavoidable and then
+// made it silent.
+//
+// A fact can carry what an integer cannot: what KIND of quantity it is, what
+// date it is measured from (`anchor` — the field whose absence made one step
+// read as permanently breached), its scope, and its provenance. Change a
+// deadline in `facts.json` and the flow changes; there is no second copy to
+// forget.
+//
+// A step whose facts are missing gets an EMPTY edge, not a default. An invented
+// deadline is worse than an absent one: absent reads as "no due date", invented
+// reads as authoritative and is wrong.
+
+import factsDoc from '../../knowledge/facts.json' with { type: 'json' };
+
+type TimingFact = { id: string; kind?: string; value?: unknown; anchorRef?: string };
+
+const TIMING: Map<string, number> = new Map();
+const ANCHORS: Map<string, 'opened' | 'target'> = new Map();
+for (const f of (factsDoc as { facts: TimingFact[] }).facts) {
+  if (!f.id.startsWith('fact:flow-') || typeof f.value !== 'number') continue;
+  TIMING.set(f.id, f.value);
+  if (f.anchorRef === 'target' || f.anchorRef === 'opened') {
+    ANCHORS.set(f.id.replace(/-(after|before)$/, ''), f.anchorRef);
+  }
+}
+
+const num = (flowKey: string, stepKey: string, field: string): number | undefined =>
+  TIMING.get(`fact:flow-${flowKey}-${stepKey}-${field}`);
+
+/** A step as authored: the shape of the work, with no quantities in it. */
+type UntimedStep = Omit<FlowStep, 'edge' | 'slaDays' | 'repeatEveryDays'>;
+type UntimedTemplate = Omit<FlowTemplate, 'steps'> & { steps: UntimedStep[] };
+
+/** Join the authored shapes to their declared numbers. This is the only place
+ *  the two halves meet, so there is exactly one thing to read to know how a
+ *  timing is resolved. */
+function withTiming(book: UntimedTemplate[]): FlowBook {
+  return book.map((t) => ({
+    ...t,
+    steps: t.steps.map((s) => {
+      const edge: TimingEdge = {};
+      const after = num(t.key, s.key, 'after');
+      const before = num(t.key, s.key, 'before');
+      const onAfter = num(t.key, s.key, 'onOrAfterDayOfMonth');
+      const beforeDom = num(t.key, s.key, 'beforeDayOfMonth');
+      if (after !== undefined) edge.after = after;
+      if (before !== undefined) edge.before = before;
+      if (onAfter !== undefined) edge.onOrAfterDayOfMonth = onAfter;
+      if (beforeDom !== undefined) edge.beforeDayOfMonth = beforeDom;
+      const anchor = ANCHORS.get(`fact:flow-${t.key}-${s.key}`);
+      if (anchor) edge.anchor = anchor;
+      const sla = num(t.key, s.key, 'slaDays');
+      const repeat = num(t.key, s.key, 'repeatEveryDays');
+      const step: FlowStep = { ...s, edge };
+      if (sla !== undefined) step.slaDays = sla;
+      if (repeat !== undefined) step.repeatEveryDays = repeat;
+      return step;
+    }),
+  }));
+}
+
+export const FOUNDING_FLOWS: FlowBook = withTiming(([
   {
     key: 'move-out-relay',
     title: 'Move-out → re-list relay',
@@ -136,8 +210,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'notice-received',
         holder: 'pm-desk',
         board: 'Move-Out',
-        edge: { after: 0 },
-        slaDays: 1,
         note: 'Notice logged and acknowledged; the clock starts.',
       },
       {
@@ -145,8 +217,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'confirm-vacate-date',
         holder: 'pm-desk',
         board: 'Move-Out',
-        edge: { after: 1 },
-        slaDays: 2,
         note: 'Vacate date confirmed in writing with the tenant.',
       },
       {
@@ -157,7 +227,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         // Counted from the tenant's LAST DAY, not from the day notice landed —
         // the only step in the book on a different clock, and the reason
         // `anchor` exists. See TimingEdge.
-        edge: { after: -14, before: -7, anchor: 'target' },
         note: 'Walk the unit before the tenant leaves; scope the turn.',
       },
       {
@@ -165,8 +234,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'move-out-inspection',
         holder: 'alys',
         board: 'Move-Out',
-        edge: { after: 0, before: 2 },
-        slaDays: 2,
         note: 'Document condition against the deposit.',
       },
       {
@@ -174,8 +241,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'scope-the-turn',
         holder: 'va-desk',
         board: 'Move-Out',
-        edge: { after: 1, before: 3 },
-        slaDays: 2,
         note: 'Bids gathered, the turn scoped and priced.',
       },
       {
@@ -183,8 +248,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'owner-reserve',
         holder: 'lp-queue',
         board: 'Deposit Transfer',
-        edge: { after: 3, before: 10, onOrAfterDayOfMonth: 15, beforeDayOfMonth: 10 },
-        slaDays: 5,
         note: 'A ~$750 owner reserve, requested only inside the open window.',
       },
       {
@@ -192,8 +255,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'work-the-turn',
         holder: 'va-desk',
         board: 'Move-Out',
-        edge: { after: 3, before: 10 },
-        slaDays: 7,
         note: 'The turn itself: vendors dispatched, unit made ready.',
       },
       {
@@ -201,8 +262,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'deposit-accounting',
         holder: 'alys',
         board: 'Deposit Transfer',
-        edge: { after: 2, before: 21 },
-        slaDays: 3,
         note: 'Deductions itemized and sent inside the statutory window.',
       },
       {
@@ -210,8 +269,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'transfer-the-deposit',
         holder: 'lp-queue',
         board: 'Deposit Transfer',
-        edge: { after: 21, before: 30 },
-        slaDays: 5,
         note: 'What is owed moves: refund out, damages to the owner.',
       },
       {
@@ -219,7 +276,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'final-walk',
         holder: 'osric',
         board: 'Leasing',
-        edge: { after: 10, before: 12 },
         note: 'Rent-ready verified before the listing goes live.',
       },
       {
@@ -227,8 +283,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'list-unit',
         holder: 'osric',
         board: 'Leasing',
-        edge: { after: 12 },
-        slaDays: 2,
         note: 'Photos, price, syndication — the unit is on the market.',
       },
       {
@@ -236,7 +290,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'show-and-screen',
         holder: 'osric',
         board: 'Leasing',
-        edge: { after: 12, before: 40 },
         note: 'Showings worked, applicants screened.',
       },
       {
@@ -244,8 +297,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'vacancy-price-drop',
         holder: 'osric',
         board: 'Leasing',
-        edge: { after: 19 },
-        repeatEveryDays: 7,
         condition: 'until leased',
         note: 'The vacancy loop: $25 off the ask each week it sits.',
       },
@@ -261,8 +312,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'work-order',
         holder: 'pm-desk',
         board: 'Intake',
-        edge: { after: 0 },
-        slaDays: 1,
         note: 'The report logged — what broke, which door, how it reached us.',
       },
       {
@@ -270,8 +319,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'work-order',
         holder: 'mabel',
         board: 'Intake',
-        edge: { after: 0 },
-        slaDays: 1,
         note: 'Walked down the tree to a leaf — a {trade} call, {urgency} priority.',
       },
       {
@@ -279,8 +326,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'work-order',
         holder: 'va-desk',
         board: 'Dispatch',
-        edge: { after: 0, before: 1 },
-        slaDays: 1,
         note: 'A artisan of the {trade} trade chosen for a {urgency} call.',
       },
       {
@@ -288,8 +333,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'work-order',
         holder: 'va-desk',
         board: 'Dispatch',
-        edge: { after: 0, before: 1 },
-        slaDays: 1,
         note: 'The {trade} artisan dispatched — {urgency} window, tenant notified.',
       },
       {
@@ -297,8 +340,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'work-order',
         holder: 'lp-queue',
         board: 'Settlement',
-        edge: { after: 1, before: 7 },
-        slaDays: 5,
         note: "The {trade} artisan's invoice received and matched to the work.",
       },
       {
@@ -306,8 +347,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'work-order',
         holder: 'mabel',
         board: 'Dispatch',
-        edge: { after: 1, before: 7 },
-        slaDays: 3,
         note: 'The fix confirmed with the tenant — the {trade} work holds.',
       },
       {
@@ -315,8 +354,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'work-order',
         holder: 'lp-queue',
         board: 'Settlement',
-        edge: { after: 3, before: 10, onOrAfterDayOfMonth: 15, beforeDayOfMonth: 10 },
-        slaDays: 5,
         note: 'The artisan paid — only inside the open window of the circuit.',
       },
       {
@@ -324,8 +361,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'work-order',
         holder: 'lp-queue',
         board: 'Settlement',
-        edge: { after: 3, before: 14 },
-        slaDays: 5,
         note: 'The cost posted to the door and its owner — the ledger balanced.',
       },
     ],
@@ -345,7 +380,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'violation-notice',
         holder: 'pm-desk',
         board: 'Intake',
-        edge: { after: 0 },
         note: 'The notice logged — HOA, owner, or vendor; what, which door, from whom.',
       },
       {
@@ -353,7 +387,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'violation.classify',
         holder: 'va-desk',
         board: 'Intake',
-        edge: { after: 0 },
         note: 'Classified by kind and severity — the {violation} named.',
       },
       {
@@ -361,8 +394,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'violation.decide',
         holder: 'mabel',
         board: 'Judgment',
-        edge: { after: 1 },
-        slaDays: 2,
         note: 'The call a human makes: cure, waive, or send the {violation} up the ladder.',
       },
       {
@@ -370,8 +401,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'violation.draft',
         holder: 'va-desk',
         board: 'Notice',
-        edge: { after: 1, before: 3 },
-        slaDays: 2,
         note: 'The cure notice drafted from the template — the {days}-day window stated.',
       },
       {
@@ -379,8 +408,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'violation.serve',
         holder: 'pm-desk',
         board: 'Notice',
-        edge: { after: 2, before: 4 },
-        slaDays: 2,
         note: 'Served and recorded — the legal gate kept, the clock on record.',
       },
       {
@@ -388,8 +415,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'violation.cure',
         holder: 'mabel',
         board: 'Follow-up',
-        edge: { after: 3 },
-        repeatEveryDays: 7,
         condition: 'until cured',
         note: 'The cure period worked — reminded each week it stands open.',
       },
@@ -398,8 +423,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'violation.close',
         holder: 'pm-desk',
         board: 'Close',
-        edge: { after: 10 },
-        slaDays: 3,
         note: 'The outcome recorded and the case closed — cured, or handed up the ladder.',
       },
     ],
@@ -419,7 +442,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'renewal',
         holder: 'lp-queue',
         board: 'Renewal',
-        edge: { after: 0 },
         note: 'The T-90 window opens — the term in sight, the file pulled.',
       },
       {
@@ -427,8 +449,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'renewal.price',
         holder: 'osric',
         board: 'Pricing',
-        edge: { after: 1 },
-        slaDays: 3,
         note: 'The rent call a human makes — hold, raise by {increase}, or let the door go.',
       },
       {
@@ -436,8 +456,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'renewal.draft-offer',
         holder: 'lp-queue',
         board: 'Offer',
-        edge: { after: 2, before: 5 },
-        slaDays: 2,
         note: 'The renewal offer drafted at the set {rent} — the packet staged.',
       },
       {
@@ -445,8 +463,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'renewal.send-offer',
         holder: 'lp-queue',
         board: 'Offer',
-        edge: { after: 3, before: 6 },
-        slaDays: 1,
         note: 'The offer sent to the tenant — the term and the {rent} on the table.',
       },
       {
@@ -454,8 +470,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'renewal.owner-window',
         holder: 'lp-queue',
         board: 'Owner',
-        edge: { after: 3, before: 10 },
-        slaDays: 7,
         condition: 'silence is authorization',
         note: "The owner's window — silence past it stands as consent.",
       },
@@ -464,8 +478,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'renewal.tenant-response',
         holder: 'lp-queue',
         board: 'Offer',
-        edge: { after: 6 },
-        repeatEveryDays: 7,
         condition: 'until signed',
         note: 'The tenant chased each week — signed, or the term runs month-to-month.',
       },
@@ -474,8 +486,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'renewal.countersign',
         holder: 'osric',
         board: 'Execution',
-        edge: { after: 20, before: 30 },
-        slaDays: 2,
         note: "The broker's signature — the one hand the machine never holds.",
       },
       {
@@ -483,8 +493,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'renewal.fee',
         holder: 'lp-queue',
         board: 'Settlement',
-        edge: { after: 20, before: 30, onOrAfterDayOfMonth: 15, beforeDayOfMonth: 10 },
-        slaDays: 5,
         note: 'The renewal fee posted — only inside the open window of the circuit.',
       },
       {
@@ -492,8 +500,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'renewal.record',
         holder: 'lp-queue',
         board: 'Close',
-        edge: { after: 25 },
-        slaDays: 2,
         note: 'Filed and notified — unsigned rolls to month-to-month with the premium.',
       },
     ],
@@ -513,7 +519,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'owner-onboarding',
         holder: 'pm-desk',
         board: 'Intake',
-        edge: { after: 0 },
         note: 'The owner intake logged — the property, the doors, the terms sought.',
       },
       {
@@ -521,8 +526,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'onboarding.agreement',
         holder: 'osric',
         board: 'Agreement',
-        edge: { after: 1 },
-        slaDays: 3,
         note: "The management agreement — a signature and a judgment, kept human.",
       },
       {
@@ -530,8 +533,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'onboarding.setup',
         holder: 'va-desk',
         board: 'Setup',
-        edge: { after: 2, before: 5 },
-        slaDays: 3,
         note: 'Records opened and defaults set in the system of record.',
       },
       {
@@ -539,8 +540,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'onboarding.walkthrough',
         holder: 'alys',
         board: 'Onsite',
-        edge: { after: 2, before: 7 },
-        slaDays: 4,
         note: "The property walked — the onsite judgment the machine can't make.",
       },
       {
@@ -548,8 +547,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'onboarding.insurance',
         holder: 'va-desk',
         board: 'Compliance',
-        edge: { after: 3, before: 8 },
-        slaDays: 5,
         note: 'Owner insurance verified and on file — the coverage gate.',
       },
       {
@@ -557,7 +554,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'onboarding.make-ready',
         holder: 'va-desk',
         board: 'Make-Ready',
-        edge: { after: 5 },
         condition: 'if the door stands vacant',
         note: 'The make-ready batched — only where a door comes empty.',
       },
@@ -566,8 +562,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'onboarding.lockbox',
         holder: 'alys',
         board: 'Onsite',
-        edge: { after: 5, before: 9 },
-        slaDays: 3,
         note: 'Keys logged and the lockbox hung — the physical leg.',
       },
       {
@@ -575,8 +569,6 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'onboarding.report',
         holder: 'pm-desk',
         board: 'Report',
-        edge: { after: 7, before: 12 },
-        slaDays: 3,
         note: 'The first owner report sent — the relationship opened on the books.',
       },
       {
@@ -584,13 +576,12 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'onboarding.go-live',
         holder: 'osric',
         board: 'Leasing',
-        edge: { after: 10 },
         condition: 'if the door stands vacant',
         note: 'Built and syndicated — the vacant door goes to market.',
       },
     ],
   },
-];
+] as UntimedTemplate[]));
 
 // ── The engine: instantiate a flow as events ────────────────────────────────
 // Triggering a flow opens a case and hands its FIRST step — the log records what

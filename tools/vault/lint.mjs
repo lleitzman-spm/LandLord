@@ -520,6 +520,44 @@ function checkCascadeOrder(graph) {
   return { flows: flows.length, backwards, mixed };
 }
 
+
+/** NO TIMING LITERAL IN THE FLOW BOOK.
+ *
+ *  All 116 governing numbers now live in `knowledge/facts.json` and `flows.ts`
+ *  reads them at load. That is only true until somebody adds a step and types
+ *  `slaDays: 5` because it is quicker — and one literal is all it takes for the
+ *  file to become a second home, which is the exact shape that put the
+ *  owner-approval cap in seven places carrying two values.
+ *
+ *  FATAL, and cheap: a new step costs one line in `facts.json`. Retrofitting a
+ *  hundred does not. */
+const TIMING_LITERAL = /\b(slaDays|repeatEveryDays|after|before|onOrAfterDayOfMonth|beforeDayOfMonth)\s*:\s*-?\d/g;
+function checkFlowLiterals() {
+  const rel = 'src/domain/flows.ts';
+  const src = readText(path.join(REPO, rel));
+  if (!src) return { sites: 0 };
+  // Only the authored template block — the interface declares these names, and
+  // the resolver assigns them from variables, and neither is a literal.
+  const start = src.indexOf('export const FOUNDING_FLOWS');
+  if (start === -1) return { sites: 0 };
+  const body = src.slice(start);
+  const lines = body.split('\n');
+  let sites = 0;
+  for (let i = 0; i < lines.length; i++) {
+    const code = stripCommentsAndStrings(lines[i]);
+    TIMING_LITERAL.lastIndex = 0;
+    let m;
+    while ((m = TIMING_LITERAL.exec(code))) {
+      sites++;
+      fatal(
+        'flow-literals',
+        `${rel}: a timing number is typed into the flow book — \`${m[0].trim()}\`. Every governing number belongs in knowledge/facts.json; the flow book reads them at load.`,
+      );
+    }
+  }
+  return { sites };
+}
+
 function main() {
   const graph = buildGraph();
   const pages = loadBookPages();
@@ -536,6 +574,7 @@ function main() {
   const literals = checkLiterals(graph);
   const resolved = checkResolvedTables(pages);
   const cascade = checkCascadeOrder(graph);
+  const flowLits = checkFlowLiterals();
 
   for (const b of graph.brokenKnowledge) fatal('knowledge', `unreadable: ${b}`);
   for (const u of graph.unresolvedLinks) {
@@ -564,6 +603,12 @@ function main() {
       ? '  cascades         no flows mined — the operational graph is not built'
       : `  cascades         ${cascade.flows} flow(s)  ·  ${cascade.backwards} step(s) running backwards against the clock, ${cascade.mixed} flow(s) mixing two unanchored clocks`,
   );
+  console.log(
+    flowLits.sites === 0
+      ? '  flow literals    none — every timing number lives in knowledge/facts.json'
+      : `  flow literals    ${flowLits.sites} timing number(s) typed into the flow book — see FATAL below`,
+  );
+
   const groups = {};
   for (const f of findings.fatal) (groups[f.check] = groups[f.check] || []).push(f.msg);
   const wgroups = {};

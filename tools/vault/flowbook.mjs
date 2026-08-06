@@ -128,75 +128,11 @@ export function edgeInWords(edge, slaDays, repeatEveryDays) {
   return parts.join(', ');
 }
 
-/** EVERY GOVERNING NUMBER IN THE FLOW BOOK, AS A FIRST-CLASS OBJECT.
- *
- *  There are 116 of them — every SLA, every day offset, every calendar edge and
- *  repeat interval — and until now each was a bare integer sitting in a step. A
- *  bare integer has no room to say what KIND of quantity it is, what date it is
- *  measured from, or who decided it. `slaDays: 5` cannot tell you whether five
- *  days is a statutory deadline, a client promise, or somebody's preference from
- *  a meeting, and it cannot tell you it disagrees with the five somewhere else.
- *
- *  Note what this deliberately does NOT do: it does not move the numbers out of
- *  the flow book. The flow book IS the configuration — the whole design is that
- *  no branch of code knows the word "move-out" — so a number living there is
- *  already declared rather than buried in an expression. What was missing was
- *  identity and provenance, and that is what a fact adds.
- *
- *  `anchor` is the field this repo learned the hard way. A day offset is
- *  meaningless without the date it counts from; leaving it implicit made one step
- *  read as permanently breached. Every day-offset fact below carries it. */
-function timingFactNodes(book, raw) {
-  const nodes = [];
-  const flowsByKey = new Map(book.map((t) => [t.key, t]));
-  const push = (flowKey, step, kind, field, value, unit, anchor, why) => {
-    const t = flowsByKey.get(flowKey);
-    nodes.push(
-      makeNode({
-        id: `fact:flow-${slugify(flowKey)}-${slugify(step.key)}-${slugify(field)}`,
-        type: 'fact',
-        label: `${t ? t.title : flowKey} · ${step.key} · ${field}`,
-        standing: 'built',
-        standing_source: 'derived',
-        summary: why,
-        source_path: FLOWS_TS,
-        source_line: lineOf(raw, step.key),
-        quote: `key: '${step.key}'`,
-        origin: 'derived',
-        edges: [
-          { to: `place:${slugify(flowKey)}-${slugify(step.key)}`, why: 'the step this number governs' },
-          { to: `flow:${slugify(flowKey)}`, why: 'declared in this flow' },
-          { to: `module:${FLOWS_TS}`, why: 'declared in this module' },
-        ],
-        extra: { factKind: kind, value, unit, anchor, field, flowKey, stepKey: step.key },
-      }),
-    );
-  };
-  for (const t of book) {
-    for (const step of t.steps || []) {
-      const e = step.edge || {};
-      const anchor = e.anchor === 'target' ? "the case's target date" : 'the day the case opened';
-      for (const f of ['after', 'before']) {
-        if (typeof e[f] !== 'number') continue;
-        push(t.key, step, 'day-offset', f, e[f], 'days', anchor,
-          `${f === 'after' ? 'Earliest' : 'Latest'} this step may start: ${e[f]} day(s) from ${anchor}.`);
-      }
-      for (const f of ['onOrAfterDayOfMonth', 'beforeDayOfMonth']) {
-        if (typeof e[f] !== 'number') continue;
-        push(t.key, step, 'calendar-deadline', f, e[f], 'day-of-month', 'the calendar month',
-          `A calendar edge: the step is bound to the ${e[f]}th of the month. Money steps carry these so a payment lands in the right disbursement.`);
-      }
-      if (typeof step.slaDays === 'number')
-        push(t.key, step, 'duration-threshold', 'slaDays', step.slaDays, 'days', "this step's own edge",
-          `The wait: ${step.slaDays} day(s) past its edge before the reading calls this step breached.`);
-      if (typeof step.repeatEveryDays === 'number')
-        push(t.key, step, 'cadence', 'repeatEveryDays', step.repeatEveryDays, 'days', "this step's own edge",
-          `Repeats every ${step.repeatEveryDays} day(s)${step.condition ? ` ${step.condition}` : ''}.`);
-    }
-  }
-  return nodes;
-}
-
+// THE TIMING FACTS USED TO BE MINTED HERE, as a view over the numbers in the flow
+// book. They are not a view any more: all 116 now live in `knowledge/facts.json`,
+// which is where the writ says a governing number belongs, and `flows.ts` reads
+// them back at load. Minting them here as well would mint the same ids twice.
+// The ordinary knowledge miner picks them up from their real home.
 /** The whole operational graph, as nodes. Places are steps; arrows are the declared
  *  cascade order (the `steps` array IS the order the application walks); guards are
  *  the timing edges and SLAs; tokens are what a case carries while it moves. */
@@ -371,6 +307,5 @@ export function flowBookNodes() {
       }
     });
   }
-  nodes.push(...timingFactNodes(book, raw));
   return { nodes, present: true, reason: '' };
 }

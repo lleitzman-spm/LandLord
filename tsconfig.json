@@ -7,6 +7,10 @@
     "jsx": "react-jsx",
     "strict": true,
     "allowArbitraryExtensions": true,
+    // `knowledge/facts.json` is the declared home of every governing number
+    // (WRIT-THE-GREAT-BOOK: "never a literal in the code"), and `src/domain/flows.ts`
+    // reads its timings from there rather than holding them.
+    "resolveJsonModule": true,
     "skipLibCheck": true,
 
     /* Bundler mode */
