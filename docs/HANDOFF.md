@@ -172,10 +172,8 @@ Unclaimed and roughly ordered by how much they unblock:
    a sandbox, not tenant isolation, and nothing should describe them as such
    until they are. This is the gap between "a working app" and "software anyone
    else can use", and `docs/OPEN-QUESTIONS.md` names it too.
-2. **Write-loss surfacing.** Writes are whole-document upserts and last writer
-   wins. A losing write should say so in the interface; today it can be silent.
-3. **Clerk fleet on non-simulated data.** Proven on the war game only.
-4. **Twenty orphan pages** — decisions and laws nothing in the Book cites. Not
+2. **Clerk fleet on non-simulated data.** Proven on the war game only.
+3. **Twenty orphan pages** — decisions and laws nothing in the Book cites. Not
    cosmetic: an uncited decision is one nobody can find, which is how a thing
    gets built twice.
 
@@ -183,6 +181,24 @@ Unclaimed and roughly ordered by how much they unblock:
 — until they exist, `npm run book` has nothing to compile." They exist and it
 compiles 1,106 pages. That line was stale in exactly the way this file's own
 discipline warns about, which is why it is named here rather than quietly deleted.
+
+**Retired from this list 2026-08-06 (second):** "Write-loss surfacing — a losing
+write should say so in the interface; today it can be silent." **It already says
+so.** The whole path is built: the worker does compare-and-set on `rev` and hands
+back the fresh document on 409; the client 3-way-merges rather than overwriting;
+and a write that is *refused* or *unreachable* raises a banner naming which of the
+two happened, because they call for opposite acts — a vault that answered and said
+no will keep saying no, while one that never answered is usually a dropped line.
+
+Checked, not read: `refused` (503) and `unreachable` (aborted connection) each
+driven in Chromium. Banner up in both, `role="alert"`, fully inside the viewport,
+`elementFromPoint` clean at three points on its face — so it is not merely in the
+DOM behind something — and **Try again** genuinely issues another write. The
+distinct guidance per failure kind renders as designed.
+
+Two sessions in a row have now found a "next candidate" already done. The pattern
+is worth naming: this list is written when work is *proposed* and only revised
+when someone thinks to. Check the tree before picking one up.
 
 ## What needs a human
 
