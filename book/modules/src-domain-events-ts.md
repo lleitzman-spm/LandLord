@@ -95,6 +95,7 @@ aliases:
 - [[a revoked grant struck on the remote side stays struck]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a spend on the higher-cap estate CLEARS; the same spend on an unlisted estate GATES]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a struck money event stays struck through the merge]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a target-anchored step with NO target date is unknown, never overdue]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[act five is met by holding the watch with no door in crisis]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[act four is met by ANSWERING three of the clerks’ proposals]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[act one is met by SEATING the empty craft — a record, not a flag]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -119,6 +120,7 @@ aliases:
 - [[every goal reads UNMET when no holding is dealt at all]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[every named box and cascade actually LANDS on the board]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[every office an act leaves headless stands in the census]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[every other step still counts from the open date, unchanged]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[every seat an act names resolves]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[every step of every named flow resolves — row, holder and key]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[founding is empty and reads as founding]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -156,6 +158,7 @@ aliases:
 - [[the fallback (no base) CANNOT honor a strike — it resurrects (documents the limit)]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the grand muster is UNCHANGED by the campaign’s knobs — a GOLDEN fingerprint]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the move-out relay also folds clean to done]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[the step IS anchored to the target date, not left to default]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the THE_REGENT role resolves against the census it is dealt into]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the writing session keeps its own board change when it is the one that moved it]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[threads the estate through so the spend gate reads a per-estate cap]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -165,6 +168,8 @@ aliases:
 - [[two writers appending disjoint events lose nothing WITH a base (3-way)]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[unionById keeps both sides, remote first, dedupes by id]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[unions money and record books by id too (no owner/grant append lost)]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[with a target date ahead, it is due relative to THAT date]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[with the target date past, it breaches like any other step]] — *imported by the test FILE (shared source, not a claim about this one test)*
 
 ## Documents that cite this source
 

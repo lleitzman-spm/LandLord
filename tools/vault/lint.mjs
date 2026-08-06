@@ -483,21 +483,31 @@ function checkCascadeOrder(graph) {
   for (const f of flows) {
     const t = (f.extra || {}).flow;
     const steps = t && Array.isArray(t.steps) ? t.steps : [];
-    const signs = new Set(
-      steps.map(start).filter((v) => v !== null).map((v) => (v < 0 ? 'back-from-event' : 'forward-from-trigger')),
-    );
-    if (signs.size > 1) {
+    // `TimingEdge.anchor` now says which date an offset counts from, so a flow
+    // mixing clocks is only a finding when a step LEAVES IT UNDECLARED. A negative
+    // offset with no anchor is the shape that made `pre-inspection` read as
+    // permanently breached: the engine defaults it to the case's open date, which
+    // is the one date it certainly is not measured from.
+    const unanchored = steps.filter((x) => {
+      const v = start(x);
+      return v !== null && v < 0 && !(x.edge && x.edge.anchor);
+    });
+    if (unanchored.length) {
       mixed++;
       warn(
         'cascade',
-        `${f.id} mixes offsets counted FORWARD from its trigger with offsets counted BACK from its event, and \`TimingEdge\` carries no anchor field to tell them apart — every reading of this flow has to guess which clock a step hangs off`,
+        `${f.id} has ${unanchored.length} step(s) with a NEGATIVE offset and no declared anchor (${unanchored
+          .map((x) => `\`${x.key}\``)
+          .join(', ')}) — the engine will count them forward from the case's open date, which is the one date they are certainly not measured from, and they will read as breached from the moment they are handed`,
       );
     }
     for (let i = 1; i < steps.length; i++) {
       const prev = start(steps[i - 1]);
       const cur = start(steps[i]);
       if (prev === null || cur === null) continue;
-      if (prev < 0 !== cur < 0) continue; // different clocks — the warning above covers it
+      const anchorOf = (x) => (x.edge && x.edge.anchor) || 'opened';
+      if (anchorOf(steps[i - 1]) !== anchorOf(steps[i])) continue; // different clocks; not comparable
+      if (prev < 0 !== cur < 0) continue; // unanchored mixed signs — the warning above covers it
       if (cur < prev) {
         backwards++;
         warn(

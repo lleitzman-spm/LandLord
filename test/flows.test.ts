@@ -108,3 +108,73 @@ describe('the end of a cascade', () => {
     expect(readCase(log, inst.caseId).status).toBe('done');
   });
 });
+
+describe('flows — a timing edge is counted from the date it names (the anchor)', () => {
+  // WHY THIS SUITE EXISTS. `readFlow` measured every day-offset forward from the
+  // day the case OPENED, because that is the only date a case carries. But
+  // `pre-inspection` on the move-out relay is written `{ after: -14, before: -7 }`
+  // — "between fourteen and seven days before the tenant LEAVES". Read against the
+  // open date, `after: -14` claims the step was due a fortnight before the case
+  // existed, so `elapsed > after + wait` was true the moment it was handed. Every
+  // move-out case in the system carried a step marked BREACHED from day zero,
+  // permanently, with nothing anyone could do to clear it.
+  //
+  // A red flag that cannot be cleared is worse than no flag: it teaches its reader
+  // to ignore the column, and that column is how a real breach gets noticed.
+  const tpl = FOUNDING_FLOWS.find((f) => f.key === 'move-out-relay')!;
+  const OPEN = '2026-08-06T09:00:00.000Z';
+
+  /** Open a case and hand the first few steps, so the cascade has REACHED the
+   *  step under test — an unreached step can never breach, which would make this
+   *  suite pass for the wrong reason. */
+  function opened(n = 4) {
+    const log: KingdomEvent[] = [{ id: 'e0', at: OPEN, caseId: 'C1', kind: 'opened' }];
+    tpl.steps.slice(0, n).forEach((s, i) =>
+      log.push({
+        id: `e${i + 1}`,
+        at: OPEN,
+        caseId: 'C1',
+        kind: 'handed',
+        catalogRow: s.catalogRow,
+        holder: s.holder,
+      }),
+    );
+    return log;
+  }
+  const preInspection = (r: ReturnType<typeof readFlow>) =>
+    r!.steps.find((s) => s.step.key === 'pre-inspection')!;
+
+  it('the step IS anchored to the target date, not left to default', () => {
+    // Guards the data, not the engine: drop the anchor from the step and the
+    // engine silently goes back to measuring it from the open date.
+    expect(tpl.steps.find((s) => s.key === 'pre-inspection')!.edge.anchor).toBe('target');
+  });
+
+  it('a target-anchored step with NO target date is unknown, never overdue', () => {
+    const s = preInspection(readFlow(tpl, opened(), 'C1', OPEN));
+    expect(s.dueInDays, 'no anchor date can yield no due date').toBeNull();
+    expect(s.breached, 'unknown is not overdue — this is the regression').toBe(false);
+  });
+
+  it('with a target date ahead, it is due relative to THAT date', () => {
+    // Tenant leaves in 30 days; the step is due at T-14, so 16 days out.
+    const r = readFlow(tpl, opened(), 'C1', OPEN, '2026-09-05T09:00:00.000Z');
+    const s = preInspection(r);
+    expect(s.dueInDays).toBe(16);
+    expect(s.breached).toBe(false);
+  });
+
+  it('with the target date past, it breaches like any other step', () => {
+    // The fix must not make the step unbreachable — that would trade a false
+    // red for a false green, which is the worse of the two.
+    const r = readFlow(tpl, opened(), 'C1', OPEN, '2026-07-17T09:00:00.000Z');
+    expect(preInspection(r).breached).toBe(true);
+  });
+
+  it('every other step still counts from the open date, unchanged', () => {
+    const r = readFlow(tpl, opened(), 'C1', OPEN);
+    const confirm = r!.steps.find((s) => s.step.key === 'confirm-date')!;
+    expect(confirm.dueInDays).toBe(1);
+    expect(confirm.breached).toBe(false);
+  });
+});

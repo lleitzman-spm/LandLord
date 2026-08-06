@@ -36,6 +36,27 @@ export interface TimingEdge {
   before?: number;
   onOrAfterDayOfMonth?: number;
   beforeDayOfMonth?: number;
+  /** WHICH DATE the day offsets count from. This field was missing, and its
+   *  absence was not a documentation gap — it was a live defect.
+   *
+   *  `readFlow` measured every offset forward from the day the case OPENED,
+   *  because that is the only date a case carries. But `pre-inspection` on the
+   *  move-out relay is written `{ after: -14, before: -7 }`, meaning "between
+   *  fourteen and seven days before the tenant LEAVES" — a different date
+   *  entirely. Read against the case's open date, `after: -14` says the step was
+   *  due a fortnight before the case existed, so `daysSinceOpen > after + wait`
+   *  is true the instant the step is handed. Every move-out case in the system
+   *  showed that step permanently BREACHED, from day zero, forever.
+   *
+   *  A red flag nobody can clear is worse than no flag: it trains its reader to
+   *  ignore the column, and the column is how a breach gets noticed at all.
+   *
+   *  `opened` (the default) keeps every existing step behaving exactly as before.
+   *  `target` means the offsets count from the case's own target date — the
+   *  move-out date, the lease expiry — supplied by the caller. A case that does
+   *  not know its target date yields **no due date and no breach**, which is the
+   *  honest answer: unknown is not overdue. */
+  anchor?: 'opened' | 'target';
 }
 
 /** Who gets the ball on a step: a census person id, or a queue name (a role
@@ -133,7 +154,10 @@ export const FOUNDING_FLOWS: FlowBook = [
         catalogRow: 'schedule-pre-inspection',
         holder: 'alys',
         board: 'Move-Out',
-        edge: { after: -14, before: -7 },
+        // Counted from the tenant's LAST DAY, not from the day notice landed —
+        // the only step in the book on a different clock, and the reason
+        // `anchor` exists. See TimingEdge.
+        edge: { after: -14, before: -7, anchor: 'target' },
         note: 'Walk the unit before the tenant leaves; scope the turn.',
       },
       {
@@ -932,10 +956,15 @@ export function readFlow(
   log: KingdomEvent[],
   caseId: string,
   now: string,
+  /** The case's own target date — the tenant's last day, the lease expiry —
+   *  for steps whose edge declares `anchor: 'target'`. Omitted or unknown, those
+   *  steps read as having no due date rather than as overdue. */
+  targetAt0?: string,
 ): FlowReading | null {
   const c = readCase(log, caseId);
   if (!c.events.length) return null;
   const openedAt = c.openedAt;
+  const targetAt = targetAt0 ?? null;
   const stepEvents = c.events.filter((e) => e.kind !== 'opened');
   // The latest kind recorded against each template step. Seed from the
   // emitted step events in order; then let any later event carrying a
@@ -966,18 +995,27 @@ export function readFlow(
   }
 
   const daysSinceOpen = openedAt ? daysBetween(openedAt, now) : null;
+  const daysSinceTarget = targetAt ? daysBetween(targetAt, now) : null;
   const steps: StepReading[] = tpl.steps.map((step, i) => {
     const after = step.edge.after ?? null;
-    const dueInDays = after == null || daysSinceOpen == null ? null : after - daysSinceOpen;
+    // EVERY OFFSET IS COUNTED FROM THE DATE ITS EDGE NAMES, not from the only
+    // date the case happens to carry. Before `anchor` existed this read
+    // `daysSinceOpen` for every step, which made the one step written against
+    // the tenant's last day (`pre-inspection`, at T-14) permanently breached
+    // from the moment it was handed. A step whose anchor date is unknown gets
+    // NO due date and NO breach — unknown is not overdue, and a red flag
+    // nobody can clear teaches its reader to stop looking at the column.
+    const elapsed = (step.edge.anchor ?? 'opened') === 'target' ? daysSinceTarget : daysSinceOpen;
+    const dueInDays = after == null || elapsed == null ? null : after - elapsed;
     const wait = step.slaDays ?? 0;
     // Only a step the cascade has actually reached can breach — a future step
     // not yet handed is not overdue, however far its calendar edge has slipped.
     const reached = kindByStep.has(step.key);
     const breached =
       reached &&
-      daysSinceOpen != null &&
+      elapsed != null &&
       after != null &&
-      daysSinceOpen > after + wait &&
+      elapsed > after + wait &&
       kindByStep.get(step.key) !== 'done';
     return {
       step,
