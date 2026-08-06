@@ -1,0 +1,22 @@
+{
+  "useMarkdownLinks": false,
+  "newLinkFormat": "shortest",
+  "alwaysUpdateLinks": true,
+  "attachmentFolderPath": "book/attachments",
+  "newFileLocation": "folder",
+  "newFileFolderPath": "book/memory",
+  "showUnsupportedFiles": false,
+  "userIgnoreFilters": [
+    "node_modules/",
+    "dist/",
+    "dist-operator/",
+    "dist-ssr/",
+    "scratchpad/",
+    "public/",
+    ".claude/"
+  ],
+  "strictLineBreaks": false,
+  "readableLineLength": true,
+  "showLineNumber": false,
+  "spellcheck": true
+}

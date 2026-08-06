@@ -1,9 +1,10 @@
 # Start here — the Great Book
 
-*This is the ONLY hand-written page in the Book. The compiler wrote it once and will never
-touch it again. Everything else under `book/` is generated and will be overwritten on the
-next run — a correction made to a generated page is gone at the next compile, and gone
-silently, having looked right for however long.*
+*Two things under `book/` are hand-written: this page, and the whole `memory/` shelf. The compiler
+sweeps only the shelves it built — each carries a `.generated-by-emit` marker — and leaves anything
+else alone. **Everything else is generated and will be overwritten on the next run** — a correction
+made to a generated page is gone at the next compile, and gone silently, having looked right for
+however long.*
 
 **Find the source, fix the source, re-compile.** The footer of every page names its source.
 
@@ -27,6 +28,7 @@ silently, having looked right for however long.*
 | a ratified decision | `knowledge/decisions.json` |
 | what the code actually does | the code; then re-compile and the page follows |
 | the standing of anything | the manifest, `knowledge/artifacts.json` |
+| something noticed but not yet ruled on | `book/memory/` — the antechamber, written by hand |
 
 ## Read the standing before you believe the page
 
@@ -35,6 +37,9 @@ Every page renders its standing on its face. `canon` is ratified and wins until 
 evidence that something works.** `contested` means two sources disagree and nobody has ruled.
 `retired` is history. `settled` was decided by Edwin and is not open.
 
-→ [[Map of the Great Book]]
+→ [[Map of the Great Book]] — every generated page, by shelf
+→ [[00 MEMORY]] — the antechamber: what is known but not yet ratified
 
-*This page is yours. A durable hand-written note goes here, or it goes in a source.*
+*This page is no longer the only hand-written one. `book/memory/` is a whole shelf the compiler
+does not own — a durable note goes there, or in a source. Nothing else under `book/` survives a
+compile.*

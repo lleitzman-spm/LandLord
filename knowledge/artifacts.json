@@ -31,7 +31,9 @@
       "source_line": 6,
       "quote": "EVERY VALUE BELOW IS A PLACEHOLDER.",
       "links": [],
-      "tags": ["artifact-manifest"]
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:dot-github",
@@ -45,7 +47,9 @@
       "source_line": 1,
       "quote": "CI — what a contributor needs, and the one gate that must never be skippable.",
       "links": [],
-      "tags": ["artifact-manifest"]
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:dot-gitignore",
@@ -59,7 +63,25 @@
       "source_line": 25,
       "quote": "The vault key never enters git (the walls ruling)",
       "links": [],
-      "tags": ["artifact-manifest"]
+      "tags": [
+        "artifact-manifest"
+      ]
+    },
+    {
+      "id": "artifact:dot-obsidian",
+      "type": "artifact",
+      "label": ".obsidian",
+      "standing": "built",
+      "path": ".obsidian",
+      "kind": "governance",
+      "summary": "Opens the repository as an Obsidian vault: wikilinks (never markdown links, matching the 8,697 the compiler emits), the graph coloured by shelf, and node_modules kept out of the index. Per-machine UI state is gitignored; shared settings are not.",
+      "source_path": ".obsidian/app.json",
+      "source_line": 2,
+      "quote": "\"useMarkdownLinks\": false",
+      "links": [],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:agents-md",
@@ -73,7 +95,9 @@
       "source_line": 12,
       "quote": "LandLord is an instrument panel disguised as an org chart",
       "links": [],
-      "tags": ["artifact-manifest"]
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:allowlist-md",
@@ -86,8 +110,12 @@
       "source_path": "ALLOWLIST.md",
       "source_line": 1,
       "quote": "ALLOWLIST — the migration ledger",
-      "links": ["decision:allowlist-not-scrub"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "decision:allowlist-not-scrub"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:claude-md",
@@ -100,8 +128,12 @@
       "source_path": "CLAUDE.md",
       "source_line": 10,
       "quote": "The rule that overrides everything",
-      "links": ["decision:no-real-personal-data-no-credential"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "decision:no-real-personal-data-no-credential"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:contributing-md",
@@ -115,7 +147,9 @@
       "source_line": 3,
       "quote": "Thanks for looking.",
       "links": [],
-      "tags": ["artifact-manifest"]
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:license",
@@ -129,7 +163,9 @@
       "source_line": 5,
       "quote": "Permission is hereby granted, free of charge, to any person obtaining a copy",
       "links": [],
-      "tags": ["artifact-manifest"]
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:readme-md",
@@ -143,7 +179,9 @@
       "source_line": 24,
       "quote": "The data in this repository is a fictional demo tenant.",
       "links": [],
-      "tags": ["artifact-manifest"]
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:security-md",
@@ -157,7 +195,9 @@
       "source_line": 30,
       "quote": "LandLord ships **no deployment and no credentials**.",
       "links": [],
-      "tags": ["artifact-manifest"]
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:data-dir",
@@ -170,8 +210,12 @@
       "source_path": "README.md",
       "source_line": 116,
       "quote": "Seed data for the demo tenant, and the general PM reference library.",
-      "links": ["entity:the-chronicle"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "entity:the-chronicle"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:docs-dir",
@@ -185,7 +229,9 @@
       "source_line": 117,
       "quote": "`KINGDOM.md` is the constitution; the `WRIT-*.md` files are per-surface design documents.",
       "links": [],
-      "tags": ["artifact-manifest"]
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:harness-dir",
@@ -198,8 +244,12 @@
       "source_path": "README.md",
       "source_line": 115,
       "quote": "The clerk fleet — one module per seat, plus the brain policy and its fallbacks.",
-      "links": ["entity:the-clerk-fleet"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "entity:the-clerk-fleet"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:index-html",
@@ -213,7 +263,9 @@
       "source_line": 9,
       "quote": "<div id=\"root\"></div>",
       "links": [],
-      "tags": ["artifact-manifest"]
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:knowledge-dir",
@@ -227,7 +279,10 @@
       "source_line": 58,
       "quote": "`knowledge/artifacts.json` declares **every** path at the repo root on two axes.",
       "links": [],
-      "tags": ["artifact-manifest", "great-book"]
+      "tags": [
+        "artifact-manifest",
+        "great-book"
+      ]
     },
     {
       "id": "artifact:book-dir",
@@ -241,7 +296,10 @@
       "source_line": 136,
       "quote": "sources → pages. Deletes and rewrites its own directories.",
       "links": [],
-      "tags": ["artifact-manifest", "great-book"]
+      "tags": [
+        "artifact-manifest",
+        "great-book"
+      ]
     },
     {
       "id": "artifact:package-lock-json",
@@ -255,7 +313,9 @@
       "source_line": 2,
       "quote": "\"name\": \"landlord\"",
       "links": [],
-      "tags": ["artifact-manifest"]
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:package-json",
@@ -269,7 +329,9 @@
       "source_line": 2,
       "quote": "\"name\": \"landlord\"",
       "links": [],
-      "tags": ["artifact-manifest"]
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:public-dir",
@@ -282,8 +344,12 @@
       "source_path": "README.md",
       "source_line": 141,
       "quote": "The land** — procedurally generated.",
-      "links": ["law:land-invented"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "law:land-invented"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:realm-preview-html",
@@ -297,7 +363,9 @@
       "source_line": 1,
       "quote": "<title>Realm</title>",
       "links": [],
-      "tags": ["artifact-manifest"]
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:realm-preview-tsx",
@@ -311,7 +379,9 @@
       "source_line": 2,
       "quote": "import RealmView from './src/realm/RealmView';",
       "links": [],
-      "tags": ["artifact-manifest"]
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:src-dir",
@@ -325,7 +395,9 @@
       "source_line": 110,
       "quote": "The model. Pure functions over records — no React, no I/O.",
       "links": [],
-      "tags": ["artifact-manifest"]
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:supabase-dir",
@@ -338,8 +410,12 @@
       "source_path": "supabase/migrations/20260722_per_identity_chronicle.sql",
       "source_line": 1,
       "quote": "Per-identity chronicle sandboxes (beta blocker B2).",
-      "links": ["entity:the-vault"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "entity:the-vault"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:table-preview-html",
@@ -353,7 +429,9 @@
       "source_line": 1,
       "quote": "The War Table — the proving frame",
       "links": [],
-      "tags": ["artifact-manifest"]
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:table-preview-tsx",
@@ -366,8 +444,12 @@
       "source_path": "table-preview.tsx",
       "source_line": 2,
       "quote": "The War Table proving frame — standalone preview (WRIT-THE-WAR-TABLE §11).",
-      "links": ["decision:diegetic-war-table"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "decision:diegetic-war-table"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:test-dir",
@@ -381,7 +463,9 @@
       "source_line": 119,
       "quote": "Vitest.",
       "links": [],
-      "tags": ["artifact-manifest"]
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:tools-dir",
@@ -395,7 +479,9 @@
       "source_line": 118,
       "quote": "Standalone scripts: the terrain baker, the Great Book compiler, the leak scanner.",
       "links": [],
-      "tags": ["artifact-manifest"]
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:tsconfig-json",
@@ -409,7 +495,9 @@
       "source_line": 13,
       "quote": "\"moduleResolution\": \"bundler\"",
       "links": [],
-      "tags": ["artifact-manifest"]
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:vite-config-ts",
@@ -423,7 +511,9 @@
       "source_line": 1,
       "quote": "import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';",
       "links": [],
-      "tags": ["artifact-manifest"]
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:vite-operator-config-ts",
@@ -436,8 +526,12 @@
       "source_path": "vite.operator.config.ts",
       "source_line": 11,
       "quote": "No React, no DOM, no worker — just the readings and the hands.",
-      "links": ["entity:the-clerk-fleet"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "entity:the-clerk-fleet"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:vite-wargame-config-ts",
@@ -450,8 +544,12 @@
       "source_path": "vite.wargame.config.ts",
       "source_line": 4,
       "quote": "The war-game dealer's build — a lib bundle of the generator so the terminal",
-      "links": ["entity:war-game"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "entity:war-game"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:vitest-config-ts",
@@ -465,7 +563,9 @@
       "source_line": 2,
       "quote": "The safety net (Shot 0).",
       "links": [],
-      "tags": ["artifact-manifest"]
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:wrangler-jsonc",
@@ -479,7 +579,10 @@
       "source_line": 1,
       "quote": "This repository ships no deployment.",
       "links": [],
-      "tags": ["artifact-manifest", "walls"]
+      "tags": [
+        "artifact-manifest",
+        "walls"
+      ]
     },
     {
       "id": "artifact:docs-clerk-brain-doctrine",
@@ -492,8 +595,12 @@
       "source_path": "docs/CLERK-BRAIN-DOCTRINE.md",
       "source_line": 13,
       "quote": "A clerk is three separable choices, not one: where it RUNS, what it THINKS with, and what TOOLS sit\nbeneath it.",
-      "links": ["decision:clerk-brain-cheapest-that-clears-the-bar"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "decision:clerk-brain-cheapest-that-clears-the-bar"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:docs-env-setup",
@@ -506,8 +613,12 @@
       "source_path": "docs/ENV-SETUP.md",
       "source_line": 3,
       "quote": "cloned fresh at session start and reclaimed when",
-      "links": ["decision:blender-is-the-oven-not-the-plate"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "decision:blender-is-the-oven-not-the-plate"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:docs-handoff",
@@ -521,7 +632,9 @@
       "source_line": 8,
       "quote": "This file starts empty in the public repository, on purpose.",
       "links": [],
-      "tags": ["artifact-manifest"]
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:docs-k3-profile",
@@ -534,8 +647,12 @@
       "source_path": "docs/K3-PROFILE.md",
       "source_line": 16,
       "quote": "a 2.8T-parameter open-weight multimodal",
-      "links": ["decision:k3-parameters-temperature-one"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "decision:k3-parameters-temperature-one"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:docs-kingdom",
@@ -549,7 +666,9 @@
       "source_line": 3,
       "quote": "This document is the constitution of LandLord.",
       "links": [],
-      "tags": ["artifact-manifest"]
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:docs-library-pm",
@@ -562,8 +681,12 @@
       "source_path": "docs/LIBRARY-PM.md",
       "source_line": 3,
       "quote": "10 domains, 24 flow grammars,\n297 leaves.",
-      "links": ["entity:catalog-tree"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "entity:catalog-tree"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:docs-model-doctrine",
@@ -576,8 +699,12 @@
       "source_path": "docs/MODEL-DOCTRINE.md",
       "source_line": 17,
       "quote": "How the kingdom allocates its minds across its work.",
-      "links": ["decision:opus-drives-right-hand-builds"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "decision:opus-drives-right-hand-builds"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:docs-open-questions",
@@ -590,8 +717,13 @@
       "source_path": "docs/OPEN-QUESTIONS.md",
       "source_line": 3,
       "quote": "Decisions that are genuinely open, written down rather than settled quietly in",
-      "links": ["decision:fee-terms-need-more-shapes", "decision:multi-tenancy-shape-open"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "decision:fee-terms-need-more-shapes",
+        "decision:multi-tenancy-shape-open"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:docs-parallel-sessions",
@@ -604,8 +736,12 @@
       "source_path": "docs/PARALLEL-SESSIONS.md",
       "source_line": 3,
       "quote": "How to run several Claude sessions at once",
-      "links": ["decision:run-many-sessions-coordinate-through-repo"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "decision:run-many-sessions-coordinate-through-repo"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:docs-research-economy",
@@ -618,8 +754,12 @@
       "source_path": "docs/RESEARCH-ECONOMY.md",
       "source_line": 3,
       "quote": "Scope: general, model-focused, and vendor-accurate. No private figures from any firm.",
-      "links": ["entity:fee-bridge"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "entity:fee-bridge"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:docs-war-games",
@@ -632,8 +772,13 @@
       "source_path": "docs/WAR-GAMES.md",
       "source_line": 3,
       "quote": "The realm's proving ground: a live simulation of the whole operation",
-      "links": ["entity:war-game", "decision:jevons-trap-strategic-thesis"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "entity:war-game",
+        "decision:jevons-trap-strategic-thesis"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:docs-writ-economy",
@@ -646,8 +791,13 @@
       "source_path": "docs/WRIT-ECONOMY.md",
       "source_line": 1,
       "quote": "the economy pillar, re-expressed as chronicle readings",
-      "links": ["entity:economy-book", "entity:money-event"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "entity:economy-book",
+        "entity:money-event"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:docs-writ-flow-engine",
@@ -660,8 +810,12 @@
       "source_path": "docs/WRIT-FLOW-ENGINE.md",
       "source_line": 1,
       "quote": "the flow engine (the operator's spine)",
-      "links": ["entity:flow-template"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "entity:flow-template"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:docs-writ-operator-hands",
@@ -674,8 +828,12 @@
       "source_path": "docs/WRIT-OPERATOR-HANDS.md",
       "source_line": 1,
       "quote": "the operator's hands (swing two, part one)",
-      "links": ["entity:human-in-the-loop-arc"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "entity:human-in-the-loop-arc"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:docs-writ-task-language",
@@ -688,8 +846,13 @@
       "source_path": "docs/WRIT-TASK-LANGUAGE.md",
       "source_line": 1,
       "quote": "the task-language, the consequences, and the Regent's seat",
-      "links": ["entity:catalog-tree", "entity:consequence-engine"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "entity:catalog-tree",
+        "entity:consequence-engine"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:docs-writ-the-brokerage",
@@ -702,8 +865,12 @@
       "source_path": "docs/WRIT-THE-BROKERAGE.md",
       "source_line": 1,
       "quote": "offices, guilds, fiefs, and the line of answer",
-      "links": ["decision:brokerage-refounding-ratified"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "decision:brokerage-refounding-ratified"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:docs-writ-the-campaign",
@@ -716,8 +883,13 @@
       "source_path": "docs/WRIT-THE-CAMPAIGN.md",
       "source_line": 1,
       "quote": "the Muster Library and the Intro Campaign",
-      "links": ["entity:the-intro-campaign", "entity:scenario"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "entity:the-intro-campaign",
+        "entity:scenario"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:docs-writ-the-great-book",
@@ -730,8 +902,14 @@
       "source_path": "docs/WRIT-THE-GREAT-BOOK.md",
       "source_line": 1,
       "quote": "the living wiki, and the law that keeps it honest",
-      "links": ["decision:great-book-never-edit-a-page", "decision:no-quote-no-object"],
-      "tags": ["artifact-manifest", "great-book"]
+      "links": [
+        "decision:great-book-never-edit-a-page",
+        "decision:no-quote-no-object"
+      ],
+      "tags": [
+        "artifact-manifest",
+        "great-book"
+      ]
     },
     {
       "id": "artifact:docs-writ-the-land",
@@ -744,8 +922,12 @@
       "source_path": "docs/WRIT-THE-LAND.md",
       "source_line": 1,
       "quote": "pods, knights, owners, and guilds (the realm remodeled)",
-      "links": ["decision:land-remodeled-superseded-by-brokerage"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "decision:land-remodeled-superseded-by-brokerage"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:docs-writ-the-realm-map",
@@ -758,8 +940,13 @@
       "source_path": "docs/WRIT-THE-REALM-MAP.md",
       "source_line": 1,
       "quote": "the illuminated map, come alive",
-      "links": ["decision:painterly-not-photoreal", "decision:realm-map-orchestrated-by-k3-reviewed-by-opus"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "decision:painterly-not-photoreal",
+        "decision:realm-map-orchestrated-by-k3-reviewed-by-opus"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:docs-writ-the-war-table",
@@ -772,8 +959,13 @@
       "source_path": "docs/WRIT-THE-WAR-TABLE.md",
       "source_line": 1,
       "quote": "the War Table (the front-end direction)",
-      "links": ["decision:diegetic-war-table", "decision:shire-promotion-thresholds-picked"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "decision:diegetic-war-table",
+        "decision:shire-promotion-thresholds-picked"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:docs-writ-war-game",
@@ -786,8 +978,12 @@
       "source_path": "docs/WRIT-WAR-GAME.md",
       "source_line": 1,
       "quote": "the first War Game (the proving ground)",
-      "links": ["entity:war-game"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "entity:war-game"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     },
     {
       "id": "artifact:docs-frames",
@@ -800,8 +996,12 @@
       "source_path": "docs/frames/flat-proving-frame.html",
       "source_line": 6,
       "quote": "LandLord — the flat proving frame",
-      "links": ["law:board-flat-2d"],
-      "tags": ["artifact-manifest"]
+      "links": [
+        "law:board-flat-2d"
+      ],
+      "tags": [
+        "artifact-manifest"
+      ]
     }
   ]
 }
