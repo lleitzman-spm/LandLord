@@ -43,6 +43,7 @@ aliases:
 
 ## Modules
 
+- [[src/CommandPalette.tsx]] — *this writ names the exported symbol `CommandPalette`*
 - [[src/domain/escape.ts]] — *this writ names the exported symbol `EscapeReading`*
 - [[src/domain/flows.ts]] — *this writ names the exported symbol `failStep`; this writ names the exported symbol `FlowReading`; +3 more*
 - [[src/operator-core.ts]] — *this writ names the exported symbol `FlowReading`; this writ names the exported symbol `readFlow`*
@@ -69,6 +70,8 @@ aliases:
 
 *Files this page names by path. Again: a citation of the file, nothing more.*
 
+- [[.gitattributes]]
+- [[CLAUDE.md]]
 - [[docs/OPEN-QUESTIONS.md]]
 - [[Open questions]]
 - [[src/domain/escape.ts]]

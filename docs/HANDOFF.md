@@ -38,6 +38,41 @@ yours rather than forcing your copy over live work.
 
 ## State of play
 
+**2026-08-06 (later) — the Book opens as a vault, two labels stopped lying, and a
+blocker turned out to be built.** All green: `npm run build`, 442 tests,
+`leakcheck` 0, `book:lint` 0 dangling with 1,045 quotes re-verified.
+
+- **The Book is an Obsidian vault.** It already was one without anyone aiming at
+  it — wikilinks throughout, frontmatter aliases, typed shelves. What it lacked
+  was a config and anywhere to write by hand. `book/memory/` is a shelf the
+  compiler cannot sweep (verified byte-identical across a full recompile, not
+  assumed), and `CLAUDE.md` now points a session at it — notes nobody is told to
+  read are not memory. `.gitattributes` pins LF so a Windows clone does not
+  rewrite all 1,138 generated pages as CRLF.
+- **`⌘K` is gone from the interface.** Two faults, one after the other. The label
+  was Mac-only while the handler had always taken `metaKey || ctrlKey` — the
+  worse shape, since the shortcut worked and no PC user would ever have
+  complained; they simply never learned it existed. Then the badge came off the
+  board entirely (Luke): *"a menu in settings, not on screen — that's forcing
+  tutorial throughout the game."* No new surface was needed; `CommandPalette.tsx`
+  already declares itself the key map and refuses a second screen repeating it.
+- **Write-loss surfacing was already built** — see the retirement note below. Two
+  stale candidates in two sessions is now itself recorded as a pattern.
+
+**Open and unresolved — the frame question.** Luke, 2026-08-06: *"the real one
+shouldn't be a video game with video game score points."* The ribbon reads
+COFFERS · DELEGATION DEBT · PATRONS · ESCAPE RATE · *drive the debt to zero* —
+state counters with a win condition. The sibling's command bridge reads
+consequences with a date (ESCAPED TO ME · **ABOUT TO BREACH 2026-09-03** ·
+DRIFTING · UNTRUSTED). Nothing is decided and nothing was changed. Two things a
+next session should know before touching it: the objective line was added
+2026-07-29 answering *"once the game starts I'm still not sure what to do"* — the
+same need a bridge serves, reached for in game clothing — and `KINGDOM.md:552`
+ratifies the **War Game** as deliberately a game, which is separable from the main
+board's HUD. *Also: "bridge" names two unrelated things across these projects —
+the sibling's command bridge and LandLord's trust/corporate fee bridge. They were
+conflated in conversation; they are not the same idea.*
+
 **2026-08-06 — the operational graph, and every governing number made first-class.**
 All green: `npm run build`, 413 tests, `node tools/leakcheck.mjs` 0 findings,
 `npm run book` 1,106 pages / 4,315 roads, `npm run book:lint` exit 0 with 1,013
