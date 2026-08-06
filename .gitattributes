@@ -1,0 +1,31 @@
+# Line endings are LF everywhere, on every machine that clones this.
+#
+# The Book is 1,138 generated pages. The compiler writes LF; Git for Windows
+# installs with core.autocrlf=true and rewrites them CRLF on checkout. Without
+# this file the two disagree quietly — diffs that show a whole file changed when
+# nothing did, and a quote check comparing a CRLF source against an LF quote.
+# Declaring it here beats asking every machine to configure itself correctly.
+* text=auto eol=lf
+
+# Binary — never touched, never diffed as text.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.bin binary
+*.woff binary
+*.woff2 binary
+*.pdf binary
+*.zip binary
+
+# Generated shelves: real, reviewable content, but a compile rewrites all of
+# them at once. Collapsed in diffs so a review shows the sources that changed
+# rather than the thousand pages that followed.
+book/** linguist-generated=true
+
+# — except the memory shelf, which is written by hand and whose diffs are the
+# whole point of reading them.
+book/memory/** -linguist-generated
+book/00 START HERE.md -linguist-generated

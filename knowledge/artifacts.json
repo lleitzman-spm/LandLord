@@ -68,6 +68,22 @@
       ]
     },
     {
+      "id": "artifact:dot-gitattributes",
+      "type": "artifact",
+      "label": ".gitattributes",
+      "standing": "built",
+      "path": ".gitattributes",
+      "kind": "governance",
+      "summary": "LF line endings on every machine that clones this, so a Windows checkout does not rewrite all 1,138 generated pages as CRLF and set the compiler and the working tree quietly at odds. Also collapses the generated shelves in diffs, excepting the hand-written memory shelf.",
+      "source_path": ".gitattributes",
+      "source_line": 8,
+      "quote": "* text=auto eol=lf",
+      "links": [],
+      "tags": [
+        "artifact-manifest"
+      ]
+    },
+    {
       "id": "artifact:dot-obsidian",
       "type": "artifact",
       "label": ".obsidian",
