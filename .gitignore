@@ -52,7 +52,10 @@ renders/
 art-*.png
 
 # Machine-local agent harness settings
-.claude/
+# (glob, not `.claude/`, so the exception below can re-include a single file)
+.claude/*
+# ...except the shared session-report hook, which is repo policy, not machine state.
+!.claude/settings.json
 
 # Obsidian — the Book opens as a vault. Settings are shared (link format, graph
 # colours, which core plugins are on); per-machine UI state and installed
