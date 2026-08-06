@@ -7,6 +7,13 @@ open-source codebase; everything here is craft, not house politics.
 it, and it wins until amended. Per-surface design documents are `docs/WRIT-*.md`.
 `CONTRIBUTING.md` holds the human-facing version of most of this.
 
+**Then read `book/memory/`** — three short hand-written notes, and the only place
+a human leaves word for you between sessions. `open-questions` is what is waiting
+on a ruling; `learned` is what already cost somebody something to find out. It
+takes a minute and it is the difference between picking up and starting over.
+Everything else under `book/` is compiled and will be overwritten; that shelf is
+not, so **never edit a generated page** — find its source, fix that, recompile.
+
 ## The rule that overrides everything
 
 **No real personal data and no credential may ever enter this repository.** Not
