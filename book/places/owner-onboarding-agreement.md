@@ -55,6 +55,11 @@ on or after day 1, and it is BREACHED if it sits 3 days past that
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Owner onboarding · agreement · after]] — *the step this number governs*
+- [[Owner onboarding · agreement · slaDays]] — *the step this number governs*
+
 ### flow
 
 - [[Owner onboarding]] — *a step of this flow*

@@ -54,6 +54,11 @@ between 14 days BEFORE the event and 7 days BEFORE the event
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Move-out → re-list relay · pre-inspection · after]] — *the step this number governs*
+- [[Move-out → re-list relay · pre-inspection · before]] — *the step this number governs*
+
 ### flow
 
 - [[Move-out → re-list relay]] — *a step of this flow*

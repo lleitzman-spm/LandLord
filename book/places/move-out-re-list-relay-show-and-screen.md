@@ -54,6 +54,11 @@ between day 12 and day 40
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Move-out → re-list relay · show-and-screen · after]] — *the step this number governs*
+- [[Move-out → re-list relay · show-and-screen · before]] — *the step this number governs*
+
 ### flow
 
 - [[Move-out → re-list relay]] — *a step of this flow*

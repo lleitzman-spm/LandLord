@@ -54,6 +54,10 @@ on or after the day it fires
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Owner onboarding · intake · after]] — *the step this number governs*
+
 ### flow
 
 - [[Owner onboarding]] — *a step of this flow*

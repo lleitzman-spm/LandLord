@@ -56,6 +56,11 @@ on or after day 3, then again every 7 days
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Violation / notice · cure-window · after]] — *the step this number governs*
+- [[Violation / notice · cure-window · repeatEveryDays]] — *the step this number governs*
+
 ### flow
 
 - [[Violation / notice]] — *a step of this flow*

@@ -55,6 +55,12 @@ between day 20 and day 30, and it is BREACHED if it sits 2 days past that
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Lease renewal · countersign · after]] — *the step this number governs*
+- [[Lease renewal · countersign · before]] — *the step this number governs*
+- [[Lease renewal · countersign · slaDays]] — *the step this number governs*
+
 ### flow
 
 - [[Lease renewal]] — *a step of this flow*

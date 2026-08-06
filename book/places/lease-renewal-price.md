@@ -55,6 +55,11 @@ on or after day 1, and it is BREACHED if it sits 3 days past that
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Lease renewal · price · after]] — *the step this number governs*
+- [[Lease renewal · price · slaDays]] — *the step this number governs*
+
 ### flow
 
 - [[Lease renewal]] — *a step of this flow*

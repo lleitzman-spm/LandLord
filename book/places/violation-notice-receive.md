@@ -54,6 +54,10 @@ on or after the day it fires
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Violation / notice · receive · after]] — *the step this number governs*
+
 ### flow
 
 - [[Violation / notice]] — *a step of this flow*

@@ -55,6 +55,12 @@ between day 1 and day 7, and it is BREACHED if it sits 3 days past that
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Vendor dispatch · confirm-work · after]] — *the step this number governs*
+- [[Vendor dispatch · confirm-work · before]] — *the step this number governs*
+- [[Vendor dispatch · confirm-work · slaDays]] — *the step this number governs*
+
 ### flow
 
 - [[Vendor dispatch]] — *a step of this flow*

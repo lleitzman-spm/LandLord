@@ -93,6 +93,33 @@ Triggered by: A lease nears its term (T-90). 9 steps across 7 board(s), 2 hand(s
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Lease renewal · countersign · after]] — *declared in this flow*
+- [[Lease renewal · countersign · before]] — *declared in this flow*
+- [[Lease renewal · countersign · slaDays]] — *declared in this flow*
+- [[Lease renewal · draft-offer · after]] — *declared in this flow*
+- [[Lease renewal · draft-offer · before]] — *declared in this flow*
+- [[Lease renewal · draft-offer · slaDays]] — *declared in this flow*
+- [[Lease renewal · open-window · after]] — *declared in this flow*
+- [[Lease renewal · owner-window · after]] — *declared in this flow*
+- [[Lease renewal · owner-window · before]] — *declared in this flow*
+- [[Lease renewal · owner-window · slaDays]] — *declared in this flow*
+- [[Lease renewal · post-fee · after]] — *declared in this flow*
+- [[Lease renewal · post-fee · before]] — *declared in this flow*
+- [[Lease renewal · post-fee · beforeDayOfMonth]] — *declared in this flow*
+- [[Lease renewal · post-fee · onOrAfterDayOfMonth]] — *declared in this flow*
+- [[Lease renewal · post-fee · slaDays]] — *declared in this flow*
+- [[Lease renewal · price · after]] — *declared in this flow*
+- [[Lease renewal · price · slaDays]] — *declared in this flow*
+- [[Lease renewal · record · after]] — *declared in this flow*
+- [[Lease renewal · record · slaDays]] — *declared in this flow*
+- [[Lease renewal · send-offer · after]] — *declared in this flow*
+- [[Lease renewal · send-offer · before]] — *declared in this flow*
+- [[Lease renewal · send-offer · slaDays]] — *declared in this flow*
+- [[Lease renewal · tenant-response · after]] — *declared in this flow*
+- [[Lease renewal · tenant-response · repeatEveryDays]] — *declared in this flow*
+
 ### guard
 
 - [[when countersign may start]] — *a condition inside this flow*

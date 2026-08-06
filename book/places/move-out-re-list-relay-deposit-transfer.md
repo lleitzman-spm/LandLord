@@ -55,6 +55,12 @@ between day 21 and day 30, and it is BREACHED if it sits 5 days past that
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Move-out → re-list relay · deposit-transfer · after]] — *the step this number governs*
+- [[Move-out → re-list relay · deposit-transfer · before]] — *the step this number governs*
+- [[Move-out → re-list relay · deposit-transfer · slaDays]] — *the step this number governs*
+
 ### flow
 
 - [[Move-out → re-list relay]] — *a step of this flow*

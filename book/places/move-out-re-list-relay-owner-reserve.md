@@ -55,6 +55,14 @@ between day 3 and day 10, on or after the 15th of the month, before the 10th of 
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Move-out → re-list relay · owner-reserve · after]] — *the step this number governs*
+- [[Move-out → re-list relay · owner-reserve · before]] — *the step this number governs*
+- [[Move-out → re-list relay · owner-reserve · beforeDayOfMonth]] — *the step this number governs*
+- [[Move-out → re-list relay · owner-reserve · onOrAfterDayOfMonth]] — *the step this number governs*
+- [[Move-out → re-list relay · owner-reserve · slaDays]] — *the step this number governs*
+
 ### flow
 
 - [[Move-out → re-list relay]] — *a step of this flow*

@@ -55,6 +55,12 @@ between day 1 and day 3, and it is BREACHED if it sits 2 days past that
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Violation / notice · draft-notice · after]] — *the step this number governs*
+- [[Violation / notice · draft-notice · before]] — *the step this number governs*
+- [[Violation / notice · draft-notice · slaDays]] — *the step this number governs*
+
 ### flow
 
 - [[Violation / notice]] — *a step of this flow*

@@ -55,6 +55,14 @@ between day 3 and day 10, on or after the 15th of the month, before the 10th of 
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Vendor dispatch · pay-vendor · after]] — *the step this number governs*
+- [[Vendor dispatch · pay-vendor · before]] — *the step this number governs*
+- [[Vendor dispatch · pay-vendor · beforeDayOfMonth]] — *the step this number governs*
+- [[Vendor dispatch · pay-vendor · onOrAfterDayOfMonth]] — *the step this number governs*
+- [[Vendor dispatch · pay-vendor · slaDays]] — *the step this number governs*
+
 ### flow
 
 - [[Vendor dispatch]] — *a step of this flow*

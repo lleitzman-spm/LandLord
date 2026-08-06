@@ -55,6 +55,12 @@ between day 2 and day 5, and it is BREACHED if it sits 2 days past that
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Lease renewal · draft-offer · after]] — *the step this number governs*
+- [[Lease renewal · draft-offer · before]] — *the step this number governs*
+- [[Lease renewal · draft-offer · slaDays]] — *the step this number governs*
+
 ### flow
 
 - [[Lease renewal]] — *a step of this flow*

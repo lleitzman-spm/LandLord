@@ -55,6 +55,12 @@ between day 1 and day 7, and it is BREACHED if it sits 5 days past that
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Vendor dispatch · invoice-in · after]] — *the step this number governs*
+- [[Vendor dispatch · invoice-in · before]] — *the step this number governs*
+- [[Vendor dispatch · invoice-in · slaDays]] — *the step this number governs*
+
 ### flow
 
 - [[Vendor dispatch]] — *a step of this flow*

@@ -55,6 +55,12 @@ between day 3 and day 14, and it is BREACHED if it sits 5 days past that
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Vendor dispatch · post-to-accounting · after]] — *the step this number governs*
+- [[Vendor dispatch · post-to-accounting · before]] — *the step this number governs*
+- [[Vendor dispatch · post-to-accounting · slaDays]] — *the step this number governs*
+
 ### flow
 
 - [[Vendor dispatch]] — *a step of this flow*

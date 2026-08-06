@@ -55,6 +55,11 @@ on or after day 10, and it is BREACHED if it sits 3 days past that
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Violation / notice · close · after]] — *the step this number governs*
+- [[Violation / notice · close · slaDays]] — *the step this number governs*
+
 ### flow
 
 - [[Violation / notice]] — *a step of this flow*

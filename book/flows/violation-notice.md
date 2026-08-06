@@ -87,6 +87,23 @@ Triggered by: A violation or notice arrives. 7 steps across 5 board(s), 3 hand(s
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Violation / notice · classify · after]] — *declared in this flow*
+- [[Violation / notice · close · after]] — *declared in this flow*
+- [[Violation / notice · close · slaDays]] — *declared in this flow*
+- [[Violation / notice · cure-window · after]] — *declared in this flow*
+- [[Violation / notice · cure-window · repeatEveryDays]] — *declared in this flow*
+- [[Violation / notice · decide · after]] — *declared in this flow*
+- [[Violation / notice · decide · slaDays]] — *declared in this flow*
+- [[Violation / notice · draft-notice · after]] — *declared in this flow*
+- [[Violation / notice · draft-notice · before]] — *declared in this flow*
+- [[Violation / notice · draft-notice · slaDays]] — *declared in this flow*
+- [[Violation / notice · receive · after]] — *declared in this flow*
+- [[Violation / notice · serve · after]] — *declared in this flow*
+- [[Violation / notice · serve · before]] — *declared in this flow*
+- [[Violation / notice · serve · slaDays]] — *declared in this flow*
+
 ### guard
 
 - [[when classify may start]] — *a condition inside this flow*

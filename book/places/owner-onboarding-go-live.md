@@ -55,6 +55,10 @@ on or after day 10
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Owner onboarding · go-live · after]] — *the step this number governs*
+
 ### flow
 
 - [[Owner onboarding]] — *a step of this flow*

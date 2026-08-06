@@ -56,6 +56,11 @@ on or after day 19, then again every 7 days
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Move-out → re-list relay · weekly-price-drop · after]] — *the step this number governs*
+- [[Move-out → re-list relay · weekly-price-drop · repeatEveryDays]] — *the step this number governs*
+
 ### flow
 
 - [[Move-out → re-list relay]] — *a step of this flow*

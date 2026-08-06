@@ -55,6 +55,11 @@ on or after the day it fires, and it is BREACHED if it sits 1 day past that
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Move-out → re-list relay · log-notice · after]] — *the step this number governs*
+- [[Move-out → re-list relay · log-notice · slaDays]] — *the step this number governs*
+
 ### flow
 
 - [[Move-out → re-list relay]] — *a step of this flow*

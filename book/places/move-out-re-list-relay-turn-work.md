@@ -55,6 +55,12 @@ between day 3 and day 10, and it is BREACHED if it sits 7 days past that
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Move-out → re-list relay · turn-work · after]] — *the step this number governs*
+- [[Move-out → re-list relay · turn-work · before]] — *the step this number governs*
+- [[Move-out → re-list relay · turn-work · slaDays]] — *the step this number governs*
+
 ### flow
 
 - [[Move-out → re-list relay]] — *a step of this flow*

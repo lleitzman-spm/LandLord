@@ -54,6 +54,10 @@ on or after the day it fires
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Lease renewal · open-window · after]] — *the step this number governs*
+
 ### flow
 
 - [[Lease renewal]] — *a step of this flow*

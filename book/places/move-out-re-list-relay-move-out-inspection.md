@@ -55,6 +55,12 @@ between the day it fires and day 2, and it is BREACHED if it sits 2 days past th
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Move-out → re-list relay · move-out-inspection · after]] — *the step this number governs*
+- [[Move-out → re-list relay · move-out-inspection · before]] — *the step this number governs*
+- [[Move-out → re-list relay · move-out-inspection · slaDays]] — *the step this number governs*
+
 ### flow
 
 - [[Move-out → re-list relay]] — *a step of this flow*

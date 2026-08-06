@@ -90,6 +90,33 @@ Triggered by: A work order is reported. 8 steps across 3 board(s), 4 hand(s).
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Vendor dispatch · assign-vendor · after]] — *declared in this flow*
+- [[Vendor dispatch · assign-vendor · before]] — *declared in this flow*
+- [[Vendor dispatch · assign-vendor · slaDays]] — *declared in this flow*
+- [[Vendor dispatch · confirm-work · after]] — *declared in this flow*
+- [[Vendor dispatch · confirm-work · before]] — *declared in this flow*
+- [[Vendor dispatch · confirm-work · slaDays]] — *declared in this flow*
+- [[Vendor dispatch · dispatch · after]] — *declared in this flow*
+- [[Vendor dispatch · dispatch · before]] — *declared in this flow*
+- [[Vendor dispatch · dispatch · slaDays]] — *declared in this flow*
+- [[Vendor dispatch · identify · after]] — *declared in this flow*
+- [[Vendor dispatch · identify · slaDays]] — *declared in this flow*
+- [[Vendor dispatch · invoice-in · after]] — *declared in this flow*
+- [[Vendor dispatch · invoice-in · before]] — *declared in this flow*
+- [[Vendor dispatch · invoice-in · slaDays]] — *declared in this flow*
+- [[Vendor dispatch · pay-vendor · after]] — *declared in this flow*
+- [[Vendor dispatch · pay-vendor · before]] — *declared in this flow*
+- [[Vendor dispatch · pay-vendor · beforeDayOfMonth]] — *declared in this flow*
+- [[Vendor dispatch · pay-vendor · onOrAfterDayOfMonth]] — *declared in this flow*
+- [[Vendor dispatch · pay-vendor · slaDays]] — *declared in this flow*
+- [[Vendor dispatch · post-to-accounting · after]] — *declared in this flow*
+- [[Vendor dispatch · post-to-accounting · before]] — *declared in this flow*
+- [[Vendor dispatch · post-to-accounting · slaDays]] — *declared in this flow*
+- [[Vendor dispatch · report · after]] — *declared in this flow*
+- [[Vendor dispatch · report · slaDays]] — *declared in this flow*
+
 ### guard
 
 - [[when assign-vendor may start]] — *a condition inside this flow*

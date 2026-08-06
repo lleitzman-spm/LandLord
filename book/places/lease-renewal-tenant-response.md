@@ -56,6 +56,11 @@ on or after day 6, then again every 7 days
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Lease renewal · tenant-response · after]] — *the step this number governs*
+- [[Lease renewal · tenant-response · repeatEveryDays]] — *the step this number governs*
+
 ### flow
 
 - [[Lease renewal]] — *a step of this flow*

@@ -52,6 +52,125 @@ aliases:
 - [[Writ — the operator's hands (swing two, part one)]] — *this writ names the exported symbol `handStep`; this writ names the exported symbol `readFlow`*
 - [[Writ — the task-language, the consequences, and the Regent's seat]] — *this writ names the exported symbol `flowsAtFounding`; this writ names the exported symbol `FlowTemplate`; +4 more*
 
+### Facts it depends on
+
+- [[Lease renewal · countersign · after]] — *declared in this module*
+- [[Lease renewal · countersign · before]] — *declared in this module*
+- [[Lease renewal · countersign · slaDays]] — *declared in this module*
+- [[Lease renewal · draft-offer · after]] — *declared in this module*
+- [[Lease renewal · draft-offer · before]] — *declared in this module*
+- [[Lease renewal · draft-offer · slaDays]] — *declared in this module*
+- [[Lease renewal · open-window · after]] — *declared in this module*
+- [[Lease renewal · owner-window · after]] — *declared in this module*
+- [[Lease renewal · owner-window · before]] — *declared in this module*
+- [[Lease renewal · owner-window · slaDays]] — *declared in this module*
+- [[Lease renewal · post-fee · after]] — *declared in this module*
+- [[Lease renewal · post-fee · before]] — *declared in this module*
+- [[Lease renewal · post-fee · beforeDayOfMonth]] — *declared in this module*
+- [[Lease renewal · post-fee · onOrAfterDayOfMonth]] — *declared in this module*
+- [[Lease renewal · post-fee · slaDays]] — *declared in this module*
+- [[Lease renewal · price · after]] — *declared in this module*
+- [[Lease renewal · price · slaDays]] — *declared in this module*
+- [[Lease renewal · record · after]] — *declared in this module*
+- [[Lease renewal · record · slaDays]] — *declared in this module*
+- [[Lease renewal · send-offer · after]] — *declared in this module*
+- [[Lease renewal · send-offer · before]] — *declared in this module*
+- [[Lease renewal · send-offer · slaDays]] — *declared in this module*
+- [[Lease renewal · tenant-response · after]] — *declared in this module*
+- [[Lease renewal · tenant-response · repeatEveryDays]] — *declared in this module*
+- [[Move-out → re-list relay · confirm-date · after]] — *declared in this module*
+- [[Move-out → re-list relay · confirm-date · slaDays]] — *declared in this module*
+- [[Move-out → re-list relay · deposit-accounting · after]] — *declared in this module*
+- [[Move-out → re-list relay · deposit-accounting · before]] — *declared in this module*
+- [[Move-out → re-list relay · deposit-accounting · slaDays]] — *declared in this module*
+- [[Move-out → re-list relay · deposit-transfer · after]] — *declared in this module*
+- [[Move-out → re-list relay · deposit-transfer · before]] — *declared in this module*
+- [[Move-out → re-list relay · deposit-transfer · slaDays]] — *declared in this module*
+- [[Move-out → re-list relay · final-walk · after]] — *declared in this module*
+- [[Move-out → re-list relay · final-walk · before]] — *declared in this module*
+- [[Move-out → re-list relay · list-unit · after]] — *declared in this module*
+- [[Move-out → re-list relay · list-unit · slaDays]] — *declared in this module*
+- [[Move-out → re-list relay · log-notice · after]] — *declared in this module*
+- [[Move-out → re-list relay · log-notice · slaDays]] — *declared in this module*
+- [[Move-out → re-list relay · move-out-inspection · after]] — *declared in this module*
+- [[Move-out → re-list relay · move-out-inspection · before]] — *declared in this module*
+- [[Move-out → re-list relay · move-out-inspection · slaDays]] — *declared in this module*
+- [[Move-out → re-list relay · owner-reserve · after]] — *declared in this module*
+- [[Move-out → re-list relay · owner-reserve · before]] — *declared in this module*
+- [[Move-out → re-list relay · owner-reserve · beforeDayOfMonth]] — *declared in this module*
+- [[Move-out → re-list relay · owner-reserve · onOrAfterDayOfMonth]] — *declared in this module*
+- [[Move-out → re-list relay · owner-reserve · slaDays]] — *declared in this module*
+- [[Move-out → re-list relay · pre-inspection · after]] — *declared in this module*
+- [[Move-out → re-list relay · pre-inspection · before]] — *declared in this module*
+- [[Move-out → re-list relay · show-and-screen · after]] — *declared in this module*
+- [[Move-out → re-list relay · show-and-screen · before]] — *declared in this module*
+- [[Move-out → re-list relay · turn-scope · after]] — *declared in this module*
+- [[Move-out → re-list relay · turn-scope · before]] — *declared in this module*
+- [[Move-out → re-list relay · turn-scope · slaDays]] — *declared in this module*
+- [[Move-out → re-list relay · turn-work · after]] — *declared in this module*
+- [[Move-out → re-list relay · turn-work · before]] — *declared in this module*
+- [[Move-out → re-list relay · turn-work · slaDays]] — *declared in this module*
+- [[Move-out → re-list relay · weekly-price-drop · after]] — *declared in this module*
+- [[Move-out → re-list relay · weekly-price-drop · repeatEveryDays]] — *declared in this module*
+- [[Owner onboarding · agreement · after]] — *declared in this module*
+- [[Owner onboarding · agreement · slaDays]] — *declared in this module*
+- [[Owner onboarding · first-report · after]] — *declared in this module*
+- [[Owner onboarding · first-report · before]] — *declared in this module*
+- [[Owner onboarding · first-report · slaDays]] — *declared in this module*
+- [[Owner onboarding · go-live · after]] — *declared in this module*
+- [[Owner onboarding · intake · after]] — *declared in this module*
+- [[Owner onboarding · lockbox · after]] — *declared in this module*
+- [[Owner onboarding · lockbox · before]] — *declared in this module*
+- [[Owner onboarding · lockbox · slaDays]] — *declared in this module*
+- [[Owner onboarding · make-ready · after]] — *declared in this module*
+- [[Owner onboarding · set-up-records · after]] — *declared in this module*
+- [[Owner onboarding · set-up-records · before]] — *declared in this module*
+- [[Owner onboarding · set-up-records · slaDays]] — *declared in this module*
+- [[Owner onboarding · verify-insurance · after]] — *declared in this module*
+- [[Owner onboarding · verify-insurance · before]] — *declared in this module*
+- [[Owner onboarding · verify-insurance · slaDays]] — *declared in this module*
+- [[Owner onboarding · walkthrough · after]] — *declared in this module*
+- [[Owner onboarding · walkthrough · before]] — *declared in this module*
+- [[Owner onboarding · walkthrough · slaDays]] — *declared in this module*
+- [[Vendor dispatch · assign-vendor · after]] — *declared in this module*
+- [[Vendor dispatch · assign-vendor · before]] — *declared in this module*
+- [[Vendor dispatch · assign-vendor · slaDays]] — *declared in this module*
+- [[Vendor dispatch · confirm-work · after]] — *declared in this module*
+- [[Vendor dispatch · confirm-work · before]] — *declared in this module*
+- [[Vendor dispatch · confirm-work · slaDays]] — *declared in this module*
+- [[Vendor dispatch · dispatch · after]] — *declared in this module*
+- [[Vendor dispatch · dispatch · before]] — *declared in this module*
+- [[Vendor dispatch · dispatch · slaDays]] — *declared in this module*
+- [[Vendor dispatch · identify · after]] — *declared in this module*
+- [[Vendor dispatch · identify · slaDays]] — *declared in this module*
+- [[Vendor dispatch · invoice-in · after]] — *declared in this module*
+- [[Vendor dispatch · invoice-in · before]] — *declared in this module*
+- [[Vendor dispatch · invoice-in · slaDays]] — *declared in this module*
+- [[Vendor dispatch · pay-vendor · after]] — *declared in this module*
+- [[Vendor dispatch · pay-vendor · before]] — *declared in this module*
+- [[Vendor dispatch · pay-vendor · beforeDayOfMonth]] — *declared in this module*
+- [[Vendor dispatch · pay-vendor · onOrAfterDayOfMonth]] — *declared in this module*
+- [[Vendor dispatch · pay-vendor · slaDays]] — *declared in this module*
+- [[Vendor dispatch · post-to-accounting · after]] — *declared in this module*
+- [[Vendor dispatch · post-to-accounting · before]] — *declared in this module*
+- [[Vendor dispatch · post-to-accounting · slaDays]] — *declared in this module*
+- [[Vendor dispatch · report · after]] — *declared in this module*
+- [[Vendor dispatch · report · slaDays]] — *declared in this module*
+- [[Violation / notice · classify · after]] — *declared in this module*
+- [[Violation / notice · close · after]] — *declared in this module*
+- [[Violation / notice · close · slaDays]] — *declared in this module*
+- [[Violation / notice · cure-window · after]] — *declared in this module*
+- [[Violation / notice · cure-window · repeatEveryDays]] — *declared in this module*
+- [[Violation / notice · decide · after]] — *declared in this module*
+- [[Violation / notice · decide · slaDays]] — *declared in this module*
+- [[Violation / notice · draft-notice · after]] — *declared in this module*
+- [[Violation / notice · draft-notice · before]] — *declared in this module*
+- [[Violation / notice · draft-notice · slaDays]] — *declared in this module*
+- [[Violation / notice · receive · after]] — *declared in this module*
+- [[Violation / notice · serve · after]] — *declared in this module*
+- [[Violation / notice · serve · before]] — *declared in this module*
+- [[Violation / notice · serve · slaDays]] — *declared in this module*
+
 ### Entities
 
 - [[CatalogRow]] — *names the exported symbol `FlowTemplate`*

@@ -55,6 +55,12 @@ between the day it fires and day 1, and it is BREACHED if it sits 1 day past tha
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Vendor dispatch · dispatch · after]] — *the step this number governs*
+- [[Vendor dispatch · dispatch · before]] — *the step this number governs*
+- [[Vendor dispatch · dispatch · slaDays]] — *the step this number governs*
+
 ### flow
 
 - [[Vendor dispatch]] — *a step of this flow*

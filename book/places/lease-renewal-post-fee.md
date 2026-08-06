@@ -55,6 +55,14 @@ between day 20 and day 30, on or after the 15th of the month, before the 10th of
 
 ## Backlinks
 
+### Facts it depends on
+
+- [[Lease renewal · post-fee · after]] — *the step this number governs*
+- [[Lease renewal · post-fee · before]] — *the step this number governs*
+- [[Lease renewal · post-fee · beforeDayOfMonth]] — *the step this number governs*
+- [[Lease renewal · post-fee · onOrAfterDayOfMonth]] — *the step this number governs*
+- [[Lease renewal · post-fee · slaDays]] — *the step this number governs*
+
 ### flow
 
 - [[Lease renewal]] — *a step of this flow*
