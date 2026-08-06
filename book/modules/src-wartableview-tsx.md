@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-4597 lines · 1 exported symbol.
+4653 lines · 1 exported symbol.
 
 ## What the file says of itself
 
@@ -36,7 +36,7 @@ aliases:
 
 ## Shape
 
-- **Lines:** 4597
+- **Lines:** 4653
 - **Exported symbols (1):** `WarTableView`
 - **Assets it pulls in (no page, so no road):** `src/realm/realm.css`
 
@@ -56,6 +56,7 @@ aliases:
 - [[src/domain/docket.ts]] — *imported by this file*
 - [[src/domain/economy.ts]] — *imported by this file*
 - [[src/domain/economySetting.ts]] — *imported by this file*
+- [[src/domain/escape.ts]] — *imported by this file*
 - [[src/domain/estate.ts]] — *imported by this file*
 - [[src/domain/events.ts]] — *imported by this file*
 - [[src/domain/flows.ts]] — *imported by this file*

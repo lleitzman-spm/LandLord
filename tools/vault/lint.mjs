@@ -583,6 +583,50 @@ function checkCascadeOrder(graph) {
  *
  *  FATAL, and cheap: a new step costs one line in `facts.json`. Retrofitting a
  *  hundred does not. */
+/** CLOSURE ON THE FAILURE PATH — every declared way out must lead somewhere.
+ *
+ *  A step declares `onFail: '<step key>'`, the step a case goes to when this one
+ *  fails. The one thing that must never happen is a route naming a step the flow
+ *  does not have: the engine would record the failure and then have nowhere to
+ *  hand the case, which is the silent write loss the whole path exists to close.
+ *  FATAL.
+ *
+ *  A step with NO `onFail` is not a finding here. It cannot fail — `failStep`
+ *  refuses to write for it — so it is undecided, not broken. It is counted and
+ *  reported, because an absence is a reading, but a book with no routes at all
+ *  is a legitimate state of the design and this check does not pretend
+ *  otherwise. What it would be wrong to do is default the missing ones to
+ *  something, and that is a temptation this check has to not create.
+ *
+ *  Read from the mined graph rather than the source text, so a route that
+ *  survives the parser but names a stranger is still caught. */
+function checkFailureRoutes(graph) {
+  const flows = graph.nodes.filter((n) => n.type === 'flow');
+  let routed = 0;
+  let selfRouted = 0;
+  let unrouted = 0;
+  let broken = 0;
+  for (const f of flows) {
+    const t = (f.extra || {}).flow;
+    const steps = t && Array.isArray(t.steps) ? t.steps : [];
+    const keys = new Set(steps.map((s) => s.key));
+    for (const s of steps) {
+      if (!s.onFail) unrouted++;
+      else if (!keys.has(s.onFail)) {
+        broken++;
+        fatal(
+          'failure-routes',
+          `${f.id}: step \`${s.key}\` routes a failure to \`${s.onFail}\`, which is not a step of this flow — a case that failed here would be recorded and then have nowhere to go`,
+        );
+      } else {
+        routed++;
+        if (s.onFail === s.key) selfRouted++;
+      }
+    }
+  }
+  return { flows: flows.length, routed, selfRouted, unrouted, broken };
+}
+
 const TIMING_LITERAL = /\b(slaDays|repeatEveryDays|after|before|onOrAfterDayOfMonth|beforeDayOfMonth)\s*:\s*-?\d/g;
 function checkFlowLiterals() {
   const rel = 'src/domain/flows.ts';
@@ -627,6 +671,7 @@ function main() {
   const resolved = checkResolvedTables(pages);
   const cascade = checkCascadeOrder(graph);
   const flowLits = checkFlowLiterals();
+  const failRoutes = checkFailureRoutes(graph);
 
   for (const b of graph.brokenKnowledge) fatal('knowledge', `unreadable: ${b}`);
   for (const u of graph.unresolvedLinks) {
@@ -659,6 +704,16 @@ function main() {
     flowLits.sites === 0
       ? '  flow literals    none — every timing number lives in knowledge/facts.json'
       : `  flow literals    ${flowLits.sites} timing number(s) typed into the flow book — see FATAL below`,
+  );
+  // The unrouted count is the headline on purpose. It is not a fault — a step
+  // with no `onFail` cannot fail, so nothing is stranded — but it is the size
+  // of a design decision nobody has made, and the only way that stays visible
+  // is a number on the page every run.
+  console.log(
+    failRoutes.flows === 0
+      ? '  failure routes   no flows mined — the failure path is not readable'
+      : `  failure routes   ${failRoutes.routed} step(s) declare a way out (${failRoutes.selfRouted} back to themselves)  ·  ${failRoutes.unrouted} declare none and therefore CANNOT fail — undecided, not broken` +
+          (failRoutes.broken ? `  ·  ${failRoutes.broken} route(s) name a step that does not exist — see FATAL below` : ''),
   );
 
   const groups = {};

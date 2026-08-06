@@ -55,6 +55,7 @@ const KINDS: EventKind[] = [
   'awaiting',
   'approved',
   'overridden',
+  'failed',
 ];
 
 const KIND_MARK: Record<EventKind, string> = {
@@ -66,6 +67,11 @@ const KIND_MARK: Record<EventKind, string> = {
   awaiting: '⏳',
   approved: '✔',
   overridden: '✕',
+  // A step that did not go through. Its own mark rather than the override's ✕,
+  // because the two mean opposite things: an override is a human choosing
+  // otherwise and the cascade moving ON; a failure is the cascade going BACK.
+  // One glyph for both would hide every bit of rework in the log.
+  failed: '⤾',
 };
 
 function holderKnown(kingdom: Kingdom, holder: string): boolean {
@@ -828,6 +834,27 @@ function FlowInstanceCard({
           <span className="age age-old" title={`${r.breached.length} timing edge(s) breached`}>
             {' '}
             · ⚠ {r.breached.length}
+          </span>
+        )}
+        {/* THE REWORK. A step that failed and was redone leaves no trace in the
+            marks — the engine hands the remedy immediately, so the latest kind
+            is whatever came after, and a step failed six times renders exactly
+            like one that went through first time. This is the count, and it
+            says nothing at all on a clean case rather than a reassuring zero.
+            Nothing renders here today, because no step in the founding book
+            declares a failure route and so no step can fail. It is written now
+            so the day one does, the rework is already visible — a mechanism
+            whose evidence needs a second build to be seen is a mechanism that
+            runs unwatched. */}
+        {r.failures > 0 && (
+          <span
+            className="age age-old"
+            title={`${r.failures} failure(s) on this case — ${r.rework
+              .map((s) => `${s.step.key} ×${s.failures}`)
+              .join(', ')}. The step was redone; the cascade went back.`}
+          >
+            {' '}
+            · ⤾ {r.failures}
           </span>
         )}
         {open && (

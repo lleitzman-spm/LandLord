@@ -83,6 +83,26 @@ export interface FlowStep {
   /** A free-text condition, human-read ("until leased") — swing one records
    *  it; the clerks will act on it. */
   condition?: string;
+  /** WHERE A CASE GOES WHEN THIS STEP FAILS — the key of a step in THIS SAME
+   *  flow. Naming this step's own key is the remediation loop: put it in again,
+   *  correctly. Naming an earlier step sends the case back to where the bad
+   *  input entered. Naming a later one is a route around.
+   *
+   *  THERE IS NO DEFAULT, AND THAT IS THE DESIGN. A step that declares no
+   *  `onFail` CANNOT FAIL: `failStep` refuses to write a `failed` event for it,
+   *  so the engine can never park a case somewhere it has no way out of. Every
+   *  other shape was worse. Defaulting to "retry this step" invents a remedy
+   *  nobody chose and loops forever on an input that will never be right.
+   *  Defaulting to "the case dies here" is silent write loss with a schema.
+   *
+   *  So the absence is a reading, not a hole — `readFailureRoutes` counts the
+   *  steps with no exit and names them. Routing all of them by guesswork now
+   *  would be inventing dozens of remedies in an afternoon, which is the thing
+   *  this codebase already refuses to do with a threshold and should refuse to
+   *  do with a remedy. The mechanism is built; which steps may fail, and where
+   *  each goes, is a design decision, and the count keeps it visible until it
+   *  is made. */
+  onFail?: string;
   note?: string;
 }
 
@@ -893,6 +913,88 @@ export function overrideStep(
   return events;
 }
 
+// ── The failure path ────────────────────────────────────────────────────────
+//
+// Until now every writer above was a way FORWARD. A step could be handed,
+// noted, proposed, approved, overridden or done, and the whole vocabulary of
+// the engine was success — so a step that could not be completed had no way to
+// say so. It simply stopped, which on every board and in every count looks
+// exactly like a step nobody has reached yet.
+//
+// That gap matters most where the work is human. Luke, 2026-08-06: *"the human
+// steps especially can't just be rejected — there needs to be remediation to
+// either get them to put in the right input or to correct their input."* A
+// rejection with no road back is not a guard; it is a case dropped quietly.
+//
+// THE WHOLE SHAPE IS TWO PIECES. A step declares `onFail` — the step a case
+// goes to when this one fails. `failStep` writes the `failed` event and hands
+// that step. There is no third piece: no severity, no kinds of wrongness, no
+// retry budget. Those wait for evidence, and the escape rate is what will
+// generate it.
+
+/** Fail the step in hand and hand the step its `onFail` names — the remedy.
+ *
+ *  Returns BOTH events, like `completeStep`: the `failed` record and the hand
+ *  onto the remedy step. When `onFail` names this step's own key the case comes
+ *  straight back to the same desk, which is the ordinary shape for bad input:
+ *  put it in again, correctly.
+ *
+ *  A STEP THAT DECLARES NO `onFail` CANNOT FAIL — this returns `[]` and writes
+ *  nothing. It is the one gate that makes the mechanism safe to ship with no
+ *  routes declared: a `failed` event can never exist without somewhere for the
+ *  case to go, so the engine has no way to strand one. Refusing the write is
+ *  also the honest answer, because the alternative is choosing a remedy on the
+ *  case's behalf at the moment nobody has decided what the remedy is. */
+export function failStep(
+  tpl: FlowTemplate,
+  caseId: string,
+  index: number,
+  opts: { at: string; id: () => string; note?: string },
+  params?: FlowParams,
+): KingdomEvent[] {
+  if (index < 0 || index >= tpl.steps.length) return [];
+  const to = tpl.steps[index].onFail;
+  if (!to) return [];
+  const at = tpl.steps.findIndex((s) => s.key === to);
+  // An `onFail` naming a step this flow does not have is a broken route, and a
+  // broken route is worse than none: it would write the `failed` event and then
+  // have nowhere to hand. The lint catches this in the book (checkFailureRoutes,
+  // fatal) — this refuses it at the writer too, because a check that only runs
+  // in a tool is not a guarantee about what the engine does at runtime.
+  if (at === -1) return [];
+  return [answerStep(tpl, caseId, index, 'failed', opts), handStep(tpl, caseId, at, opts, params)];
+}
+
+/** How much of a flow book can fail at all — the closure reading over routes.
+ *
+ *  An absence is a reading (the same rule the escape rate runs on): a book where
+ *  no step declares a failure exit is not a book that cannot fail, it is a book
+ *  whose failures have nowhere to go, and the two must not look alike. This
+ *  gives that absence a size. */
+export interface FailureRoutes {
+  /** Steps declaring an `onFail` that names a real step in the same flow. */
+  routed: { flow: string; step: string; to: string; self: boolean }[];
+  /** Steps declaring no `onFail` at all. These cannot fail — `failStep` refuses
+   *  them — so they are not broken; they are undecided, and counted so. */
+  unrouted: { flow: string; step: string }[];
+  /** `onFail` naming a step the flow does not have. Always a fault: the lint is
+   *  fatal on these and `failStep` refuses to write for them. */
+  broken: { flow: string; step: string; to: string }[];
+}
+
+export function readFailureRoutes(flows: FlowBook): FailureRoutes {
+  const out: FailureRoutes = { routed: [], unrouted: [], broken: [] };
+  for (const t of flows) {
+    const keys = new Set(t.steps.map((s) => s.key));
+    for (const s of t.steps) {
+      if (!s.onFail) out.unrouted.push({ flow: t.key, step: s.key });
+      else if (!keys.has(s.onFail)) out.broken.push({ flow: t.key, step: s.key, to: s.onFail });
+      else out.routed.push({ flow: t.key, step: s.key, to: s.onFail, self: s.onFail === s.key });
+    }
+  }
+  return out;
+}
+
 // ── Readings — the cascade folded back from the log ─────────────────────────
 // General: no setting's names below, only template + events. Where the
 // cascade sits, what is next, which timing edges are breached — all folded.
@@ -912,6 +1014,17 @@ export interface StepReading {
   dueInDays: number | null;
   /** True once now is past the edge plus its wait — the breached reading. */
   breached: boolean;
+  /** HOW MANY TIMES THIS STEP HAS FAILED on this case. Counted from the log
+   *  rather than read off `kind`, and that is the whole reason it exists: the
+   *  commonest remedy is `onFail` naming the step's own key — put it in again —
+   *  and that writes `failed` then immediately `handed`, so latest-kind is
+   *  `handed` and a step failed six times reads identically to one nobody has
+   *  touched. A rework loop that leaves no trace is how a step that always
+   *  needs a person looks automatic.
+   *
+   *  It is also the evidence a remedy taxonomy would need. There is no taxonomy
+   *  here on purpose; this is what would earn one. */
+  failures: number;
 }
 
 export interface FlowReading {
@@ -928,6 +1041,13 @@ export interface FlowReading {
   boards: { board: string; steps: StepReading[] }[];
   /** How far the cascade has run: steps with any event past the opening. */
   advanced: number;
+  /** Steps this case has had to redo, worst first — the rework the cascade has
+   *  cost. Empty on a case that ran clean, which is not the same as a case
+   *  nobody has worked; `advanced` says which. */
+  rework: StepReading[];
+  /** Every time this case failed a step, counted. The number a remedy design
+   *  would be built on, and the reason `failed` is one kind and not five. */
+  failures: number;
 }
 
 const dayMs = 86_400_000;
@@ -963,6 +1083,7 @@ export function readFlow(
   const kindByStep = new Map<string, EventKind>();
   const noteByStep = new Map<string, string | undefined>();
   const actorByStep = new Map<string, string | undefined>();
+  const failsByStep = new Map<string, number>();
   for (const e of stepEvents) {
     // Every flow step event — hand (awaiting/handed) or answer (done/approved/
     // overridden/proposed) — is stamped `Step n/N` by `handStep`/`answerStep`,
@@ -983,6 +1104,12 @@ export function readFlow(
     kindByStep.set(step.key, e.kind);
     noteByStep.set(step.key, e.note);
     actorByStep.set(step.key, e.actor);
+    // FAILURES ACCUMULATE — they do not get overwritten by what came after.
+    // Latest-kind is the wrong instrument for a failure precisely because the
+    // engine always hands somewhere immediately afterwards, so the `failed`
+    // record is never the latest thing said about the step. Counting is the
+    // only way a rework loop leaves a mark.
+    if (e.kind === 'failed') failsByStep.set(step.key, (failsByStep.get(step.key) ?? 0) + 1);
   }
 
   const daysSinceOpen = openedAt ? daysBetween(openedAt, now) : null;
@@ -1016,9 +1143,14 @@ export function readFlow(
       actor: actorByStep.get(step.key),
       dueInDays,
       breached,
+      failures: failsByStep.get(step.key) ?? 0,
     };
   });
 
+  // `failed` is deliberately NOT in this set. A failed step has not been
+  // completed, so the cascade's head stays on it (or on whatever its `onFail`
+  // handed) rather than walking past — treating a failure as progress is the
+  // whole fault this path exists to close.
   const acted = new Set<EventKind>(['done', 'approved', 'overridden']);
   const next = steps.find((s) => s.kind == null || !acted.has(s.kind)) ?? null;
   const boards: { board: string; steps: StepReading[] }[] = [];
@@ -1039,6 +1171,8 @@ export function readFlow(
     breached: steps.filter((s) => s.breached),
     boards,
     advanced: steps.filter((s) => s.kind != null && acted.has(s.kind)).length,
+    rework: steps.filter((s) => s.failures > 0).sort((a, b) => b.failures - a.failures),
+    failures: steps.reduce((n, s) => n + s.failures, 0),
   };
 }
 

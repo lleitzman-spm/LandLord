@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Derived from the tree — the code is there to be read.*
 
-React view in `src/WarTableView.tsx` — 4597 lines.
+React view in `src/WarTableView.tsx` — 4653 lines.
 
 ## Where it lives
 
@@ -52,6 +52,7 @@ React view in `src/WarTableView.tsx` — 4597 lines.
 - [[src/domain/docket.ts]] — *imported by this view*
 - [[src/domain/economy.ts]] — *imported by this view*
 - [[src/domain/economySetting.ts]] — *imported by this view*
+- [[src/domain/escape.ts]] — *imported by this view*
 - [[src/domain/estate.ts]] — *imported by this view*
 - [[src/domain/events.ts]] — *imported by this view*
 - [[src/domain/flows.ts]] — *imported by this view*

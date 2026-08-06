@@ -22,7 +22,23 @@ export type EventKind =
   | 'proposed' // an agent proposes an act and waits on a human
   | 'awaiting' // parked on a human's judgment
   | 'approved' // a human ratified the proposal
-  | 'overridden'; // a human overrode the proposal
+  | 'overridden' // a human overrode the proposal
+  // THE STEP DID NOT SUCCEED. Every kind above this line is a way forward: the
+  // whole arc a case could record was one of success, so a step that could not
+  // be completed had no word for itself and simply stopped — which reads, on
+  // every board and every count, exactly like a step nobody has got to yet.
+  // That is the silent-loss shape, and it is why this kind exists.
+  //
+  // WHAT IT IS NOT. It is not a taxonomy. There are no tiers here, no kinds of
+  // wrongness, no severity — those wait until something real has been counted,
+  // because a classification invented before the evidence is a guess wearing a
+  // schema. `failed` says one thing: this step did not go through.
+  //
+  // WHERE THE CASE GOES NEXT is NOT recorded on the event. It is declared on
+  // the step, as `onFail` (src/domain/flows.ts) — a route is a property of the
+  // design, not of the incident, or every failure invents its own remedy at the
+  // moment it is least able to think clearly.
+  | 'failed';
 
 export interface KingdomEvent {
   id: string;

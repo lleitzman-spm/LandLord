@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-245 lines · 4 exported symbols.
+258 lines · 4 exported symbols.
 
 ## What the file says of itself
 
@@ -36,7 +36,7 @@ aliases:
 
 ## Shape
 
-- **Lines:** 245
+- **Lines:** 258
 - **Exported symbols (4):** `EscapeLine`, `EscapeReading`, `readDesignedCeiling`, `readEscape`
 
 ## Modules
@@ -50,10 +50,12 @@ aliases:
 ### Modules
 
 - [[src/LedgerView.tsx]] — *imported by this file*
+- [[src/WarTableView.tsx]] — *imported by this file*
 
 ### Surfaces
 
 - [[LedgerView]] — *imported by this view*
+- [[WarTableView]] — *imported by this view*
 
 ### Invariants that enforce it
 

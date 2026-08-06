@@ -255,6 +255,42 @@ export function flowBookNodes() {
         }),
       );
 
+      // ── the arrow BACK ────────────────────────────────────────────────────
+      // A failure route is a transition like any other, and mining it is the
+      // whole reason the operational graph exists: until `onFail`, every arrow
+      // in this graph pointed forward, so the graph drew a machine that could
+      // only succeed. The route is a literal step key on the step itself, so
+      // this is found, never asserted — and if it names a step the flow does
+      // not have, no arrow is drawn and the lint is fatal (checkFailureRoutes).
+      // A step with no route draws nothing, which is correct: it cannot fail.
+      if (s.onFail && steps.some((x) => x.key === s.onFail)) {
+        const back = `place:${slugify(t.key)}-${slugify(s.onFail)}`;
+        const self = s.onFail === s.key;
+        nodes.push(
+          makeNode({
+            id: `transition:${slugify(t.key)}-${slugify(s.key)}-onfail-${slugify(s.onFail)}`,
+            type: 'transition',
+            label: `${s.key} ⤾ ${s.onFail} (on failure)`,
+            standing: 'built',
+            standing_source: 'derived',
+            summary: self
+              ? `When ${s.key} fails the case comes straight back to the same desk — the remediation loop: put it in again, correctly.`
+              : `When ${s.key} fails the case goes to ${s.onFail}, ${steps.findIndex((x) => x.key === s.onFail) < i ? 'back upstream to where the bad input entered' : 'onward around the failure'}.`,
+            source_path: FLOWS_TS,
+            source_line: lineOf(raw, s.key),
+            quote: `onFail: '${s.onFail}'`,
+            origin: 'derived',
+            edges: [
+              { to: pid, why: 'the step that failed' },
+              { to: back, why: 'the step the case goes to' },
+              { to: fid, why: 'an arrow of this flow' },
+              { to: `module:${FLOWS_TS}`, why: 'declared in this module' },
+            ],
+            extra: { from: s.key, to: s.onFail, flowKey: t.key, on: 'failed', self },
+          }),
+        );
+      }
+
       // ── the arrow ─────────────────────────────────────────────────────────
       // The `steps` array is the declared cascade: this is the order the running
       // application walks, so consecutive steps are a found edge, not a guess at
