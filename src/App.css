@@ -3398,18 +3398,12 @@ button.wt-fav:hover {
 }
 .wt-palbtn:hover { background: #ffffff16; border-color: var(--wt-gold); }
 .wt-palbtn:focus-visible { outline: 2px solid var(--wt-gold-br); outline-offset: 2px; }
-.wt-palbtn kbd {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.62rem;
-  padding: 2px 5px;
-  border-radius: 4px;
-  border: 1px solid var(--wt-edge);
-  background: #0004;
-  color: var(--wt-gold-br);
-}
+/* The chord badge that stood here is gone (Luke, 2026-08-06) — a key printed on
+   the board teaches once and then sits there for every hour after. The palette
+   names every command beside its own key; that is where the teaching lives. */
 @media (max-width: 900px) {
-  /* On a phone the label and the chord both go; the glyph is the door. */
-  .wt-palbtn kbd, .wt-palbtn .wt-lbl { display: none; }
+  /* On a phone the label goes too; the glyph is the door. */
+  .wt-palbtn .wt-lbl { display: none; }
 }
 
 /* ── The war clock, in the ribbon ──────────────────────────────────────────

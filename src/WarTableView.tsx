@@ -1285,10 +1285,19 @@ export default function WarTableView({
           </button>
           {/* The palette's own door. A surface reachable ONLY by an
               undocumented keystroke is not reachable — that is the first
-              question the A/E/P check asks. It names its key so the mouse
-              teaches the keyboard, and it is the one control that must never be
-              retired, because it is how everything else is reached once the
-              chrome goes. */}
+              question the A/E/P check asks, and it is the one control that must
+              never be retired, because it is how everything else is reached once
+              the chrome goes.
+
+              IT NO LONGER WEARS ITS KEY (Luke, 2026-08-06): *"Don't even put
+              keybinding clutter in the UI… that's forcing tutorial throughout the
+              game."* A badge on the board teaches once and then sits there for
+              every hour after, which is a tutorial that never ends. The key still
+              reaches the palette, the tooltip still names it for anyone who
+              hovers, and the palette itself lists every command beside its own
+              key — which CommandPalette.tsx already calls the key map, refusing a
+              second surface that repeats them. The teaching lives there; the
+              board stays a board. */}
           <button
             className="wt-palbtn"
             onClick={() => setPaletteOpen(true)}
@@ -1296,7 +1305,6 @@ export default function WarTableView({
           >
             <span aria-hidden="true">☰</span>
             <span className="wt-lbl">Go</span>
-            <kbd>{MOD_K}</kbd>
           </button>
           {/* THE DENSITY TOGGLE MOVED TO THE PALETTE (`d`). It is set once and
               then left alone for a whole session — the weakest claim on standing
