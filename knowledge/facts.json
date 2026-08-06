@@ -1042,15 +1042,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `log-notice` of the `move-out-relay` flow, held by `pm-desk` on the Move-Out board.",
    "summary": "Earliest this step may start: 0 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 0 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'log-notice'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 209,
+   "governs_step": "log-notice",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-log-notice-slaDays",
@@ -1063,15 +1066,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `log-notice` of the `move-out-relay` flow, held by `pm-desk` on the Move-Out board.",
    "summary": "The wait: 1 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 1 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'log-notice'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 209,
+   "governs_step": "log-notice",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-confirm-date-after",
@@ -1084,15 +1090,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `confirm-date` of the `move-out-relay` flow, held by `pm-desk` on the Move-Out board.",
    "summary": "Earliest this step may start: 1 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 1 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'confirm-date'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 216,
+   "governs_step": "confirm-date",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-confirm-date-slaDays",
@@ -1105,15 +1114,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `confirm-date` of the `move-out-relay` flow, held by `pm-desk` on the Move-Out board.",
    "summary": "The wait: 2 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 2 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'confirm-date'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 216,
+   "governs_step": "confirm-date",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-pre-inspection-after",
@@ -1126,8 +1138,8 @@
    "anchor": "the case's target date",
    "scope": "Step `pre-inspection` of the `move-out-relay` flow, held by `alys` on the Move-Out board.",
    "summary": "Earliest this step may start: -14 day(s) from the case's target date.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: -14 day(s) from the case's target date.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'pre-inspection'",
    "links": [
     "module:src/domain/flows.ts"
    ],
@@ -1135,7 +1147,10 @@
     "flow-timing",
     "move-out-relay"
    ],
-   "anchorRef": "target"
+   "anchorRef": "target",
+   "source_line": 223,
+   "governs_step": "pre-inspection",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-pre-inspection-before",
@@ -1148,8 +1163,8 @@
    "anchor": "the case's target date",
    "scope": "Step `pre-inspection` of the `move-out-relay` flow, held by `alys` on the Move-Out board.",
    "summary": "Latest this step may start: -7 day(s) from the case's target date.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: -7 day(s) from the case's target date.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'pre-inspection'",
    "links": [
     "module:src/domain/flows.ts"
    ],
@@ -1157,7 +1172,10 @@
     "flow-timing",
     "move-out-relay"
    ],
-   "anchorRef": "target"
+   "anchorRef": "target",
+   "source_line": 223,
+   "governs_step": "pre-inspection",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-move-out-inspection-after",
@@ -1167,18 +1185,23 @@
    "kind": "day-offset",
    "value": 0,
    "unit": "days",
-   "anchor": "the day the case opened",
+   "anchor": "the case's target date",
    "scope": "Step `move-out-inspection` of the `move-out-relay` flow, held by `alys` on the Move-Out board.",
    "summary": "Earliest this step may start: 0 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 0 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'move-out-inspection'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "anchorRef": "target",
+   "anchor_note": "The inspection AT move-out. Its clock is the tenant's last day, not the day notice arrived — those are a month apart.",
+   "source_line": 233,
+   "governs_step": "move-out-inspection",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-move-out-inspection-before",
@@ -1188,18 +1211,23 @@
    "kind": "day-offset",
    "value": 2,
    "unit": "days",
-   "anchor": "the day the case opened",
+   "anchor": "the case's target date",
    "scope": "Step `move-out-inspection` of the `move-out-relay` flow, held by `alys` on the Move-Out board.",
    "summary": "Latest this step may start: 2 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 2 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'move-out-inspection'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "anchorRef": "target",
+   "anchor_note": "The inspection AT move-out. Its clock is the tenant's last day, not the day notice arrived — those are a month apart.",
+   "source_line": 233,
+   "governs_step": "move-out-inspection",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-move-out-inspection-slaDays",
@@ -1212,15 +1240,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `move-out-inspection` of the `move-out-relay` flow, held by `alys` on the Move-Out board.",
    "summary": "The wait: 2 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 2 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'move-out-inspection'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 233,
+   "governs_step": "move-out-inspection",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-turn-scope-after",
@@ -1233,15 +1264,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `turn-scope` of the `move-out-relay` flow, held by `va-desk` on the Move-Out board.",
    "summary": "Earliest this step may start: 1 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 1 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'turn-scope'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 240,
+   "governs_step": "turn-scope",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-turn-scope-before",
@@ -1254,15 +1288,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `turn-scope` of the `move-out-relay` flow, held by `va-desk` on the Move-Out board.",
    "summary": "Latest this step may start: 3 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 3 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'turn-scope'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 240,
+   "governs_step": "turn-scope",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-turn-scope-slaDays",
@@ -1275,15 +1312,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `turn-scope` of the `move-out-relay` flow, held by `va-desk` on the Move-Out board.",
    "summary": "The wait: 2 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 2 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'turn-scope'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 240,
+   "governs_step": "turn-scope",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-owner-reserve-after",
@@ -1296,15 +1336,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `owner-reserve` of the `move-out-relay` flow, held by `lp-queue` on the Deposit Transfer board.",
    "summary": "Earliest this step may start: 3 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 3 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'owner-reserve'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 247,
+   "governs_step": "owner-reserve",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-owner-reserve-before",
@@ -1317,15 +1360,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `owner-reserve` of the `move-out-relay` flow, held by `lp-queue` on the Deposit Transfer board.",
    "summary": "Latest this step may start: 10 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 10 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'owner-reserve'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 247,
+   "governs_step": "owner-reserve",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-owner-reserve-onOrAfterDayOfMonth",
@@ -1338,15 +1384,18 @@
    "anchor": "the calendar month",
    "scope": "Step `owner-reserve` of the `move-out-relay` flow, held by `lp-queue` on the Deposit Transfer board.",
    "summary": "The step is bound to on/after the 15th of the month.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The step is bound to on/after the 15th of the month.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'owner-reserve'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 247,
+   "governs_step": "owner-reserve",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-owner-reserve-beforeDayOfMonth",
@@ -1359,15 +1408,18 @@
    "anchor": "the calendar month",
    "scope": "Step `owner-reserve` of the `move-out-relay` flow, held by `lp-queue` on the Deposit Transfer board.",
    "summary": "The step is bound to before the 10th of the month.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The step is bound to before the 10th of the month.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'owner-reserve'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 247,
+   "governs_step": "owner-reserve",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-owner-reserve-slaDays",
@@ -1380,15 +1432,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `owner-reserve` of the `move-out-relay` flow, held by `lp-queue` on the Deposit Transfer board.",
    "summary": "The wait: 5 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 5 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'owner-reserve'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 247,
+   "governs_step": "owner-reserve",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-turn-work-after",
@@ -1401,15 +1456,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `turn-work` of the `move-out-relay` flow, held by `va-desk` on the Move-Out board.",
    "summary": "Earliest this step may start: 3 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 3 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'turn-work'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 254,
+   "governs_step": "turn-work",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-turn-work-before",
@@ -1422,15 +1480,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `turn-work` of the `move-out-relay` flow, held by `va-desk` on the Move-Out board.",
    "summary": "Latest this step may start: 10 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 10 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'turn-work'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 254,
+   "governs_step": "turn-work",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-turn-work-slaDays",
@@ -1443,15 +1504,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `turn-work` of the `move-out-relay` flow, held by `va-desk` on the Move-Out board.",
    "summary": "The wait: 7 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 7 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'turn-work'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 254,
+   "governs_step": "turn-work",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-deposit-accounting-after",
@@ -1461,18 +1525,23 @@
    "kind": "day-offset",
    "value": 2,
    "unit": "days",
-   "anchor": "the day the case opened",
+   "anchor": "the case's target date",
    "scope": "Step `deposit-accounting` of the `move-out-relay` flow, held by `alys` on the Deposit Transfer board.",
    "summary": "Earliest this step may start: 2 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 2 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'deposit-accounting'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "anchorRef": "target",
+   "anchor_note": "The deposit clock runs from SURRENDER, not from notice. Anchoring it to the day notice landed started the statutory window early, which is the wrong direction to be wrong in.",
+   "source_line": 261,
+   "governs_step": "deposit-accounting",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-deposit-accounting-before",
@@ -1482,18 +1551,23 @@
    "kind": "day-offset",
    "value": 21,
    "unit": "days",
-   "anchor": "the day the case opened",
+   "anchor": "the case's target date",
    "scope": "Step `deposit-accounting` of the `move-out-relay` flow, held by `alys` on the Deposit Transfer board.",
    "summary": "Latest this step may start: 21 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 21 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'deposit-accounting'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "anchorRef": "target",
+   "anchor_note": "The deposit clock runs from SURRENDER, not from notice. Anchoring it to the day notice landed started the statutory window early, which is the wrong direction to be wrong in.",
+   "source_line": 261,
+   "governs_step": "deposit-accounting",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-deposit-accounting-slaDays",
@@ -1506,15 +1580,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `deposit-accounting` of the `move-out-relay` flow, held by `alys` on the Deposit Transfer board.",
    "summary": "The wait: 3 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 3 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'deposit-accounting'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 261,
+   "governs_step": "deposit-accounting",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-deposit-transfer-after",
@@ -1524,18 +1601,23 @@
    "kind": "day-offset",
    "value": 21,
    "unit": "days",
-   "anchor": "the day the case opened",
+   "anchor": "the case's target date",
    "scope": "Step `deposit-transfer` of the `move-out-relay` flow, held by `lp-queue` on the Deposit Transfer board.",
    "summary": "Earliest this step may start: 21 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 21 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'deposit-transfer'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "anchorRef": "target",
+   "anchor_note": "Follows the accounting, and on the same clock as it.",
+   "source_line": 268,
+   "governs_step": "deposit-transfer",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-deposit-transfer-before",
@@ -1545,18 +1627,23 @@
    "kind": "day-offset",
    "value": 30,
    "unit": "days",
-   "anchor": "the day the case opened",
+   "anchor": "the case's target date",
    "scope": "Step `deposit-transfer` of the `move-out-relay` flow, held by `lp-queue` on the Deposit Transfer board.",
    "summary": "Latest this step may start: 30 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 30 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'deposit-transfer'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "anchorRef": "target",
+   "anchor_note": "Follows the accounting, and on the same clock as it.",
+   "source_line": 268,
+   "governs_step": "deposit-transfer",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-deposit-transfer-slaDays",
@@ -1569,15 +1656,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `deposit-transfer` of the `move-out-relay` flow, held by `lp-queue` on the Deposit Transfer board.",
    "summary": "The wait: 5 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 5 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'deposit-transfer'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 268,
+   "governs_step": "deposit-transfer",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-final-walk-after",
@@ -1590,15 +1680,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `final-walk` of the `move-out-relay` flow, held by `osric` on the Leasing board.",
    "summary": "Earliest this step may start: 10 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 10 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'final-walk'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 275,
+   "governs_step": "final-walk",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-final-walk-before",
@@ -1611,15 +1704,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `final-walk` of the `move-out-relay` flow, held by `osric` on the Leasing board.",
    "summary": "Latest this step may start: 12 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 12 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'final-walk'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 275,
+   "governs_step": "final-walk",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-list-unit-after",
@@ -1632,15 +1728,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `list-unit` of the `move-out-relay` flow, held by `osric` on the Leasing board.",
    "summary": "Earliest this step may start: 12 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 12 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'list-unit'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 282,
+   "governs_step": "list-unit",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-list-unit-slaDays",
@@ -1653,15 +1752,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `list-unit` of the `move-out-relay` flow, held by `osric` on the Leasing board.",
    "summary": "The wait: 2 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 2 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'list-unit'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 282,
+   "governs_step": "list-unit",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-show-and-screen-after",
@@ -1674,15 +1776,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `show-and-screen` of the `move-out-relay` flow, held by `osric` on the Leasing board.",
    "summary": "Earliest this step may start: 12 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 12 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'show-and-screen'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 289,
+   "governs_step": "show-and-screen",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-show-and-screen-before",
@@ -1695,15 +1800,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `show-and-screen` of the `move-out-relay` flow, held by `osric` on the Leasing board.",
    "summary": "Latest this step may start: 40 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 40 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'show-and-screen'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 289,
+   "governs_step": "show-and-screen",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-weekly-price-drop-after",
@@ -1716,15 +1824,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `weekly-price-drop` of the `move-out-relay` flow, held by `osric` on the Leasing board.",
    "summary": "Earliest this step may start: 19 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 19 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'weekly-price-drop'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 296,
+   "governs_step": "weekly-price-drop",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-move-out-relay-weekly-price-drop-repeatEveryDays",
@@ -1737,15 +1848,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `weekly-price-drop` of the `move-out-relay` flow, held by `osric` on the Leasing board.",
    "summary": "Repeats every 7 day(s) until leased.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Repeats every 7 day(s) until leased.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'weekly-price-drop'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "move-out-relay"
-   ]
+   ],
+   "source_line": 296,
+   "governs_step": "weekly-price-drop",
+   "governs_flow": "move-out-relay"
   },
   {
    "id": "fact:flow-vendor-dispatch-report-after",
@@ -1758,15 +1872,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `report` of the `vendor-dispatch` flow, held by `pm-desk` on the Intake board.",
    "summary": "Earliest this step may start: 0 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 0 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'report'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 311,
+   "governs_step": "report",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-vendor-dispatch-report-slaDays",
@@ -1779,15 +1896,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `report` of the `vendor-dispatch` flow, held by `pm-desk` on the Intake board.",
    "summary": "The wait: 1 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 1 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'report'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 311,
+   "governs_step": "report",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-vendor-dispatch-identify-after",
@@ -1800,15 +1920,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `identify` of the `vendor-dispatch` flow, held by `mabel` on the Intake board.",
    "summary": "Earliest this step may start: 0 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 0 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'identify'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 318,
+   "governs_step": "identify",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-vendor-dispatch-identify-slaDays",
@@ -1821,15 +1944,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `identify` of the `vendor-dispatch` flow, held by `mabel` on the Intake board.",
    "summary": "The wait: 1 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 1 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'identify'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 318,
+   "governs_step": "identify",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-vendor-dispatch-assign-vendor-after",
@@ -1842,15 +1968,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `assign-vendor` of the `vendor-dispatch` flow, held by `va-desk` on the Dispatch board.",
    "summary": "Earliest this step may start: 0 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 0 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'assign-vendor'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 325,
+   "governs_step": "assign-vendor",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-vendor-dispatch-assign-vendor-before",
@@ -1863,15 +1992,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `assign-vendor` of the `vendor-dispatch` flow, held by `va-desk` on the Dispatch board.",
    "summary": "Latest this step may start: 1 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 1 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'assign-vendor'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 325,
+   "governs_step": "assign-vendor",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-vendor-dispatch-assign-vendor-slaDays",
@@ -1884,15 +2016,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `assign-vendor` of the `vendor-dispatch` flow, held by `va-desk` on the Dispatch board.",
    "summary": "The wait: 1 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 1 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'assign-vendor'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 325,
+   "governs_step": "assign-vendor",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-vendor-dispatch-dispatch-after",
@@ -1905,15 +2040,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `dispatch` of the `vendor-dispatch` flow, held by `va-desk` on the Dispatch board.",
    "summary": "Earliest this step may start: 0 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 0 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'dispatch'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 332,
+   "governs_step": "dispatch",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-vendor-dispatch-dispatch-before",
@@ -1926,15 +2064,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `dispatch` of the `vendor-dispatch` flow, held by `va-desk` on the Dispatch board.",
    "summary": "Latest this step may start: 1 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 1 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'dispatch'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 332,
+   "governs_step": "dispatch",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-vendor-dispatch-dispatch-slaDays",
@@ -1947,15 +2088,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `dispatch` of the `vendor-dispatch` flow, held by `va-desk` on the Dispatch board.",
    "summary": "The wait: 1 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 1 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'dispatch'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 332,
+   "governs_step": "dispatch",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-vendor-dispatch-invoice-in-after",
@@ -1968,15 +2112,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `invoice-in` of the `vendor-dispatch` flow, held by `lp-queue` on the Settlement board.",
    "summary": "Earliest this step may start: 1 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 1 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'invoice-in'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 339,
+   "governs_step": "invoice-in",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-vendor-dispatch-invoice-in-before",
@@ -1989,15 +2136,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `invoice-in` of the `vendor-dispatch` flow, held by `lp-queue` on the Settlement board.",
    "summary": "Latest this step may start: 7 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 7 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'invoice-in'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 339,
+   "governs_step": "invoice-in",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-vendor-dispatch-invoice-in-slaDays",
@@ -2010,15 +2160,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `invoice-in` of the `vendor-dispatch` flow, held by `lp-queue` on the Settlement board.",
    "summary": "The wait: 5 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 5 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'invoice-in'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 339,
+   "governs_step": "invoice-in",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-vendor-dispatch-confirm-work-after",
@@ -2031,15 +2184,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `confirm-work` of the `vendor-dispatch` flow, held by `mabel` on the Dispatch board.",
    "summary": "Earliest this step may start: 1 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 1 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'confirm-work'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 346,
+   "governs_step": "confirm-work",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-vendor-dispatch-confirm-work-before",
@@ -2052,15 +2208,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `confirm-work` of the `vendor-dispatch` flow, held by `mabel` on the Dispatch board.",
    "summary": "Latest this step may start: 7 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 7 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'confirm-work'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 346,
+   "governs_step": "confirm-work",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-vendor-dispatch-confirm-work-slaDays",
@@ -2073,15 +2232,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `confirm-work` of the `vendor-dispatch` flow, held by `mabel` on the Dispatch board.",
    "summary": "The wait: 3 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 3 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'confirm-work'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 346,
+   "governs_step": "confirm-work",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-vendor-dispatch-pay-vendor-after",
@@ -2094,15 +2256,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `pay-vendor` of the `vendor-dispatch` flow, held by `lp-queue` on the Settlement board.",
    "summary": "Earliest this step may start: 3 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 3 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'pay-vendor'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 353,
+   "governs_step": "pay-vendor",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-vendor-dispatch-pay-vendor-before",
@@ -2115,15 +2280,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `pay-vendor` of the `vendor-dispatch` flow, held by `lp-queue` on the Settlement board.",
    "summary": "Latest this step may start: 10 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 10 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'pay-vendor'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 353,
+   "governs_step": "pay-vendor",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-vendor-dispatch-pay-vendor-onOrAfterDayOfMonth",
@@ -2136,15 +2304,18 @@
    "anchor": "the calendar month",
    "scope": "Step `pay-vendor` of the `vendor-dispatch` flow, held by `lp-queue` on the Settlement board.",
    "summary": "The step is bound to on/after the 15th of the month.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The step is bound to on/after the 15th of the month.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'pay-vendor'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 353,
+   "governs_step": "pay-vendor",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-vendor-dispatch-pay-vendor-beforeDayOfMonth",
@@ -2157,15 +2328,18 @@
    "anchor": "the calendar month",
    "scope": "Step `pay-vendor` of the `vendor-dispatch` flow, held by `lp-queue` on the Settlement board.",
    "summary": "The step is bound to before the 10th of the month.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The step is bound to before the 10th of the month.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'pay-vendor'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 353,
+   "governs_step": "pay-vendor",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-vendor-dispatch-pay-vendor-slaDays",
@@ -2178,15 +2352,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `pay-vendor` of the `vendor-dispatch` flow, held by `lp-queue` on the Settlement board.",
    "summary": "The wait: 5 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 5 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'pay-vendor'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 353,
+   "governs_step": "pay-vendor",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-vendor-dispatch-post-to-accounting-after",
@@ -2199,15 +2376,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `post-to-accounting` of the `vendor-dispatch` flow, held by `lp-queue` on the Settlement board.",
    "summary": "Earliest this step may start: 3 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 3 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'post-to-accounting'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 360,
+   "governs_step": "post-to-accounting",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-vendor-dispatch-post-to-accounting-before",
@@ -2220,15 +2400,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `post-to-accounting` of the `vendor-dispatch` flow, held by `lp-queue` on the Settlement board.",
    "summary": "Latest this step may start: 14 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 14 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'post-to-accounting'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 360,
+   "governs_step": "post-to-accounting",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-vendor-dispatch-post-to-accounting-slaDays",
@@ -2241,15 +2424,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `post-to-accounting` of the `vendor-dispatch` flow, held by `lp-queue` on the Settlement board.",
    "summary": "The wait: 5 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 5 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'post-to-accounting'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "vendor-dispatch"
-   ]
+   ],
+   "source_line": 360,
+   "governs_step": "post-to-accounting",
+   "governs_flow": "vendor-dispatch"
   },
   {
    "id": "fact:flow-violation-notice-receive-after",
@@ -2262,15 +2448,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `receive` of the `violation-notice` flow, held by `pm-desk` on the Intake board.",
    "summary": "Earliest this step may start: 0 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 0 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'receive'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "violation-notice"
-   ]
+   ],
+   "source_line": 379,
+   "governs_step": "receive",
+   "governs_flow": "violation-notice"
   },
   {
    "id": "fact:flow-violation-notice-classify-after",
@@ -2283,15 +2472,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `classify` of the `violation-notice` flow, held by `va-desk` on the Intake board.",
    "summary": "Earliest this step may start: 0 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 0 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'classify'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "violation-notice"
-   ]
+   ],
+   "source_line": 386,
+   "governs_step": "classify",
+   "governs_flow": "violation-notice"
   },
   {
    "id": "fact:flow-violation-notice-decide-after",
@@ -2304,15 +2496,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `decide` of the `violation-notice` flow, held by `mabel` on the Judgment board.",
    "summary": "Earliest this step may start: 1 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 1 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'decide'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "violation-notice"
-   ]
+   ],
+   "source_line": 393,
+   "governs_step": "decide",
+   "governs_flow": "violation-notice"
   },
   {
    "id": "fact:flow-violation-notice-decide-slaDays",
@@ -2325,15 +2520,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `decide` of the `violation-notice` flow, held by `mabel` on the Judgment board.",
    "summary": "The wait: 2 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 2 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'decide'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "violation-notice"
-   ]
+   ],
+   "source_line": 393,
+   "governs_step": "decide",
+   "governs_flow": "violation-notice"
   },
   {
    "id": "fact:flow-violation-notice-draft-notice-after",
@@ -2346,15 +2544,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `draft-notice` of the `violation-notice` flow, held by `va-desk` on the Notice board.",
    "summary": "Earliest this step may start: 1 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 1 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'draft-notice'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "violation-notice"
-   ]
+   ],
+   "source_line": 400,
+   "governs_step": "draft-notice",
+   "governs_flow": "violation-notice"
   },
   {
    "id": "fact:flow-violation-notice-draft-notice-before",
@@ -2367,15 +2568,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `draft-notice` of the `violation-notice` flow, held by `va-desk` on the Notice board.",
    "summary": "Latest this step may start: 3 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 3 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'draft-notice'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "violation-notice"
-   ]
+   ],
+   "source_line": 400,
+   "governs_step": "draft-notice",
+   "governs_flow": "violation-notice"
   },
   {
    "id": "fact:flow-violation-notice-draft-notice-slaDays",
@@ -2388,15 +2592,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `draft-notice` of the `violation-notice` flow, held by `va-desk` on the Notice board.",
    "summary": "The wait: 2 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 2 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'draft-notice'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "violation-notice"
-   ]
+   ],
+   "source_line": 400,
+   "governs_step": "draft-notice",
+   "governs_flow": "violation-notice"
   },
   {
    "id": "fact:flow-violation-notice-serve-after",
@@ -2409,15 +2616,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `serve` of the `violation-notice` flow, held by `pm-desk` on the Notice board.",
    "summary": "Earliest this step may start: 2 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 2 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'serve'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "violation-notice"
-   ]
+   ],
+   "source_line": 407,
+   "governs_step": "serve",
+   "governs_flow": "violation-notice"
   },
   {
    "id": "fact:flow-violation-notice-serve-before",
@@ -2430,15 +2640,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `serve` of the `violation-notice` flow, held by `pm-desk` on the Notice board.",
    "summary": "Latest this step may start: 4 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 4 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'serve'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "violation-notice"
-   ]
+   ],
+   "source_line": 407,
+   "governs_step": "serve",
+   "governs_flow": "violation-notice"
   },
   {
    "id": "fact:flow-violation-notice-serve-slaDays",
@@ -2451,15 +2664,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `serve` of the `violation-notice` flow, held by `pm-desk` on the Notice board.",
    "summary": "The wait: 2 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 2 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'serve'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "violation-notice"
-   ]
+   ],
+   "source_line": 407,
+   "governs_step": "serve",
+   "governs_flow": "violation-notice"
   },
   {
    "id": "fact:flow-violation-notice-cure-window-after",
@@ -2472,15 +2688,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `cure-window` of the `violation-notice` flow, held by `mabel` on the Follow-up board.",
    "summary": "Earliest this step may start: 3 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 3 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'cure-window'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "violation-notice"
-   ]
+   ],
+   "source_line": 414,
+   "governs_step": "cure-window",
+   "governs_flow": "violation-notice"
   },
   {
    "id": "fact:flow-violation-notice-cure-window-repeatEveryDays",
@@ -2493,15 +2712,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `cure-window` of the `violation-notice` flow, held by `mabel` on the Follow-up board.",
    "summary": "Repeats every 7 day(s) until cured.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Repeats every 7 day(s) until cured.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'cure-window'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "violation-notice"
-   ]
+   ],
+   "source_line": 414,
+   "governs_step": "cure-window",
+   "governs_flow": "violation-notice"
   },
   {
    "id": "fact:flow-violation-notice-close-after",
@@ -2514,15 +2736,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `close` of the `violation-notice` flow, held by `pm-desk` on the Close board.",
    "summary": "Earliest this step may start: 10 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 10 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'close'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "violation-notice"
-   ]
+   ],
+   "source_line": 422,
+   "governs_step": "close",
+   "governs_flow": "violation-notice"
   },
   {
    "id": "fact:flow-violation-notice-close-slaDays",
@@ -2535,15 +2760,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `close` of the `violation-notice` flow, held by `pm-desk` on the Close board.",
    "summary": "The wait: 3 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 3 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'close'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "violation-notice"
-   ]
+   ],
+   "source_line": 422,
+   "governs_step": "close",
+   "governs_flow": "violation-notice"
   },
   {
    "id": "fact:flow-lease-renewal-open-window-after",
@@ -2556,15 +2784,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `open-window` of the `lease-renewal` flow, held by `lp-queue` on the Renewal board.",
    "summary": "Earliest this step may start: 0 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 0 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'open-window'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 441,
+   "governs_step": "open-window",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-lease-renewal-price-after",
@@ -2577,15 +2808,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `price` of the `lease-renewal` flow, held by `osric` on the Pricing board.",
    "summary": "Earliest this step may start: 1 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 1 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'price'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 448,
+   "governs_step": "price",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-lease-renewal-price-slaDays",
@@ -2598,15 +2832,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `price` of the `lease-renewal` flow, held by `osric` on the Pricing board.",
    "summary": "The wait: 3 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 3 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'price'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 448,
+   "governs_step": "price",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-lease-renewal-draft-offer-after",
@@ -2619,15 +2856,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `draft-offer` of the `lease-renewal` flow, held by `lp-queue` on the Offer board.",
    "summary": "Earliest this step may start: 2 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 2 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'draft-offer'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 455,
+   "governs_step": "draft-offer",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-lease-renewal-draft-offer-before",
@@ -2640,15 +2880,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `draft-offer` of the `lease-renewal` flow, held by `lp-queue` on the Offer board.",
    "summary": "Latest this step may start: 5 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 5 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'draft-offer'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 455,
+   "governs_step": "draft-offer",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-lease-renewal-draft-offer-slaDays",
@@ -2661,15 +2904,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `draft-offer` of the `lease-renewal` flow, held by `lp-queue` on the Offer board.",
    "summary": "The wait: 2 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 2 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'draft-offer'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 455,
+   "governs_step": "draft-offer",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-lease-renewal-send-offer-after",
@@ -2682,15 +2928,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `send-offer` of the `lease-renewal` flow, held by `lp-queue` on the Offer board.",
    "summary": "Earliest this step may start: 3 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 3 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'send-offer'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 462,
+   "governs_step": "send-offer",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-lease-renewal-send-offer-before",
@@ -2703,15 +2952,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `send-offer` of the `lease-renewal` flow, held by `lp-queue` on the Offer board.",
    "summary": "Latest this step may start: 6 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 6 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'send-offer'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 462,
+   "governs_step": "send-offer",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-lease-renewal-send-offer-slaDays",
@@ -2724,15 +2976,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `send-offer` of the `lease-renewal` flow, held by `lp-queue` on the Offer board.",
    "summary": "The wait: 1 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 1 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'send-offer'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 462,
+   "governs_step": "send-offer",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-lease-renewal-owner-window-after",
@@ -2745,15 +3000,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `owner-window` of the `lease-renewal` flow, held by `lp-queue` on the Owner board.",
    "summary": "Earliest this step may start: 3 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 3 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'owner-window'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 469,
+   "governs_step": "owner-window",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-lease-renewal-owner-window-before",
@@ -2766,15 +3024,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `owner-window` of the `lease-renewal` flow, held by `lp-queue` on the Owner board.",
    "summary": "Latest this step may start: 10 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 10 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'owner-window'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 469,
+   "governs_step": "owner-window",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-lease-renewal-owner-window-slaDays",
@@ -2787,15 +3048,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `owner-window` of the `lease-renewal` flow, held by `lp-queue` on the Owner board.",
    "summary": "The wait: 7 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 7 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'owner-window'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 469,
+   "governs_step": "owner-window",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-lease-renewal-tenant-response-after",
@@ -2808,15 +3072,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `tenant-response` of the `lease-renewal` flow, held by `lp-queue` on the Offer board.",
    "summary": "Earliest this step may start: 6 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 6 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'tenant-response'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 477,
+   "governs_step": "tenant-response",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-lease-renewal-tenant-response-repeatEveryDays",
@@ -2829,15 +3096,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `tenant-response` of the `lease-renewal` flow, held by `lp-queue` on the Offer board.",
    "summary": "Repeats every 7 day(s) until signed.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Repeats every 7 day(s) until signed.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'tenant-response'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 477,
+   "governs_step": "tenant-response",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-lease-renewal-countersign-after",
@@ -2850,15 +3120,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `countersign` of the `lease-renewal` flow, held by `osric` on the Execution board.",
    "summary": "Earliest this step may start: 20 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 20 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'countersign'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 485,
+   "governs_step": "countersign",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-lease-renewal-countersign-before",
@@ -2871,15 +3144,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `countersign` of the `lease-renewal` flow, held by `osric` on the Execution board.",
    "summary": "Latest this step may start: 30 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 30 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'countersign'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 485,
+   "governs_step": "countersign",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-lease-renewal-countersign-slaDays",
@@ -2892,15 +3168,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `countersign` of the `lease-renewal` flow, held by `osric` on the Execution board.",
    "summary": "The wait: 2 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 2 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'countersign'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 485,
+   "governs_step": "countersign",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-lease-renewal-post-fee-after",
@@ -2913,15 +3192,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `post-fee` of the `lease-renewal` flow, held by `lp-queue` on the Settlement board.",
    "summary": "Earliest this step may start: 20 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 20 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'post-fee'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 492,
+   "governs_step": "post-fee",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-lease-renewal-post-fee-before",
@@ -2934,15 +3216,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `post-fee` of the `lease-renewal` flow, held by `lp-queue` on the Settlement board.",
    "summary": "Latest this step may start: 30 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 30 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'post-fee'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 492,
+   "governs_step": "post-fee",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-lease-renewal-post-fee-onOrAfterDayOfMonth",
@@ -2955,15 +3240,18 @@
    "anchor": "the calendar month",
    "scope": "Step `post-fee` of the `lease-renewal` flow, held by `lp-queue` on the Settlement board.",
    "summary": "The step is bound to on/after the 15th of the month.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The step is bound to on/after the 15th of the month.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'post-fee'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 492,
+   "governs_step": "post-fee",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-lease-renewal-post-fee-beforeDayOfMonth",
@@ -2976,15 +3264,18 @@
    "anchor": "the calendar month",
    "scope": "Step `post-fee` of the `lease-renewal` flow, held by `lp-queue` on the Settlement board.",
    "summary": "The step is bound to before the 10th of the month.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The step is bound to before the 10th of the month.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'post-fee'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 492,
+   "governs_step": "post-fee",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-lease-renewal-post-fee-slaDays",
@@ -2997,15 +3288,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `post-fee` of the `lease-renewal` flow, held by `lp-queue` on the Settlement board.",
    "summary": "The wait: 5 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 5 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'post-fee'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 492,
+   "governs_step": "post-fee",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-lease-renewal-record-after",
@@ -3018,15 +3312,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `record` of the `lease-renewal` flow, held by `lp-queue` on the Close board.",
    "summary": "Earliest this step may start: 25 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 25 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'record'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 499,
+   "governs_step": "record",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-lease-renewal-record-slaDays",
@@ -3039,15 +3336,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `record` of the `lease-renewal` flow, held by `lp-queue` on the Close board.",
    "summary": "The wait: 2 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 2 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'record'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "lease-renewal"
-   ]
+   ],
+   "source_line": 499,
+   "governs_step": "record",
+   "governs_flow": "lease-renewal"
   },
   {
    "id": "fact:flow-owner-onboarding-intake-after",
@@ -3060,15 +3360,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `intake` of the `owner-onboarding` flow, held by `pm-desk` on the Intake board.",
    "summary": "Earliest this step may start: 0 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 0 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'intake'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "owner-onboarding"
-   ]
+   ],
+   "source_line": 518,
+   "governs_step": "intake",
+   "governs_flow": "owner-onboarding"
   },
   {
    "id": "fact:flow-owner-onboarding-agreement-after",
@@ -3081,15 +3384,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `agreement` of the `owner-onboarding` flow, held by `osric` on the Agreement board.",
    "summary": "Earliest this step may start: 1 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 1 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'agreement'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "owner-onboarding"
-   ]
+   ],
+   "source_line": 525,
+   "governs_step": "agreement",
+   "governs_flow": "owner-onboarding"
   },
   {
    "id": "fact:flow-owner-onboarding-agreement-slaDays",
@@ -3102,15 +3408,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `agreement` of the `owner-onboarding` flow, held by `osric` on the Agreement board.",
    "summary": "The wait: 3 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 3 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'agreement'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "owner-onboarding"
-   ]
+   ],
+   "source_line": 525,
+   "governs_step": "agreement",
+   "governs_flow": "owner-onboarding"
   },
   {
    "id": "fact:flow-owner-onboarding-set-up-records-after",
@@ -3123,15 +3432,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `set-up-records` of the `owner-onboarding` flow, held by `va-desk` on the Setup board.",
    "summary": "Earliest this step may start: 2 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 2 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'set-up-records'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "owner-onboarding"
-   ]
+   ],
+   "source_line": 532,
+   "governs_step": "set-up-records",
+   "governs_flow": "owner-onboarding"
   },
   {
    "id": "fact:flow-owner-onboarding-set-up-records-before",
@@ -3144,15 +3456,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `set-up-records` of the `owner-onboarding` flow, held by `va-desk` on the Setup board.",
    "summary": "Latest this step may start: 5 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 5 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'set-up-records'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "owner-onboarding"
-   ]
+   ],
+   "source_line": 532,
+   "governs_step": "set-up-records",
+   "governs_flow": "owner-onboarding"
   },
   {
    "id": "fact:flow-owner-onboarding-set-up-records-slaDays",
@@ -3165,15 +3480,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `set-up-records` of the `owner-onboarding` flow, held by `va-desk` on the Setup board.",
    "summary": "The wait: 3 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 3 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'set-up-records'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "owner-onboarding"
-   ]
+   ],
+   "source_line": 532,
+   "governs_step": "set-up-records",
+   "governs_flow": "owner-onboarding"
   },
   {
    "id": "fact:flow-owner-onboarding-walkthrough-after",
@@ -3186,15 +3504,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `walkthrough` of the `owner-onboarding` flow, held by `alys` on the Onsite board.",
    "summary": "Earliest this step may start: 2 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 2 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'walkthrough'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "owner-onboarding"
-   ]
+   ],
+   "source_line": 539,
+   "governs_step": "walkthrough",
+   "governs_flow": "owner-onboarding"
   },
   {
    "id": "fact:flow-owner-onboarding-walkthrough-before",
@@ -3207,15 +3528,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `walkthrough` of the `owner-onboarding` flow, held by `alys` on the Onsite board.",
    "summary": "Latest this step may start: 7 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 7 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'walkthrough'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "owner-onboarding"
-   ]
+   ],
+   "source_line": 539,
+   "governs_step": "walkthrough",
+   "governs_flow": "owner-onboarding"
   },
   {
    "id": "fact:flow-owner-onboarding-walkthrough-slaDays",
@@ -3228,15 +3552,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `walkthrough` of the `owner-onboarding` flow, held by `alys` on the Onsite board.",
    "summary": "The wait: 4 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 4 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'walkthrough'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "owner-onboarding"
-   ]
+   ],
+   "source_line": 539,
+   "governs_step": "walkthrough",
+   "governs_flow": "owner-onboarding"
   },
   {
    "id": "fact:flow-owner-onboarding-verify-insurance-after",
@@ -3249,15 +3576,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `verify-insurance` of the `owner-onboarding` flow, held by `va-desk` on the Compliance board.",
    "summary": "Earliest this step may start: 3 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 3 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'verify-insurance'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "owner-onboarding"
-   ]
+   ],
+   "source_line": 546,
+   "governs_step": "verify-insurance",
+   "governs_flow": "owner-onboarding"
   },
   {
    "id": "fact:flow-owner-onboarding-verify-insurance-before",
@@ -3270,15 +3600,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `verify-insurance` of the `owner-onboarding` flow, held by `va-desk` on the Compliance board.",
    "summary": "Latest this step may start: 8 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 8 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'verify-insurance'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "owner-onboarding"
-   ]
+   ],
+   "source_line": 546,
+   "governs_step": "verify-insurance",
+   "governs_flow": "owner-onboarding"
   },
   {
    "id": "fact:flow-owner-onboarding-verify-insurance-slaDays",
@@ -3291,15 +3624,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `verify-insurance` of the `owner-onboarding` flow, held by `va-desk` on the Compliance board.",
    "summary": "The wait: 5 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 5 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'verify-insurance'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "owner-onboarding"
-   ]
+   ],
+   "source_line": 546,
+   "governs_step": "verify-insurance",
+   "governs_flow": "owner-onboarding"
   },
   {
    "id": "fact:flow-owner-onboarding-make-ready-after",
@@ -3312,15 +3648,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `make-ready` of the `owner-onboarding` flow, held by `va-desk` on the Make-Ready board.",
    "summary": "Earliest this step may start: 5 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 5 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'make-ready'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "owner-onboarding"
-   ]
+   ],
+   "source_line": 553,
+   "governs_step": "make-ready",
+   "governs_flow": "owner-onboarding"
   },
   {
    "id": "fact:flow-owner-onboarding-lockbox-after",
@@ -3333,15 +3672,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `lockbox` of the `owner-onboarding` flow, held by `alys` on the Onsite board.",
    "summary": "Earliest this step may start: 5 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 5 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'lockbox'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "owner-onboarding"
-   ]
+   ],
+   "source_line": 561,
+   "governs_step": "lockbox",
+   "governs_flow": "owner-onboarding"
   },
   {
    "id": "fact:flow-owner-onboarding-lockbox-before",
@@ -3354,15 +3696,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `lockbox` of the `owner-onboarding` flow, held by `alys` on the Onsite board.",
    "summary": "Latest this step may start: 9 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 9 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'lockbox'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "owner-onboarding"
-   ]
+   ],
+   "source_line": 561,
+   "governs_step": "lockbox",
+   "governs_flow": "owner-onboarding"
   },
   {
    "id": "fact:flow-owner-onboarding-lockbox-slaDays",
@@ -3375,15 +3720,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `lockbox` of the `owner-onboarding` flow, held by `alys` on the Onsite board.",
    "summary": "The wait: 3 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 3 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'lockbox'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "owner-onboarding"
-   ]
+   ],
+   "source_line": 561,
+   "governs_step": "lockbox",
+   "governs_flow": "owner-onboarding"
   },
   {
    "id": "fact:flow-owner-onboarding-first-report-after",
@@ -3396,15 +3744,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `first-report` of the `owner-onboarding` flow, held by `pm-desk` on the Report board.",
    "summary": "Earliest this step may start: 7 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 7 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'first-report'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "owner-onboarding"
-   ]
+   ],
+   "source_line": 568,
+   "governs_step": "first-report",
+   "governs_flow": "owner-onboarding"
   },
   {
    "id": "fact:flow-owner-onboarding-first-report-before",
@@ -3417,15 +3768,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `first-report` of the `owner-onboarding` flow, held by `pm-desk` on the Report board.",
    "summary": "Latest this step may start: 12 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Latest this step may start: 12 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'first-report'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "owner-onboarding"
-   ]
+   ],
+   "source_line": 568,
+   "governs_step": "first-report",
+   "governs_flow": "owner-onboarding"
   },
   {
    "id": "fact:flow-owner-onboarding-first-report-slaDays",
@@ -3438,15 +3792,18 @@
    "anchor": "this step's own edge",
    "scope": "Step `first-report` of the `owner-onboarding` flow, held by `pm-desk` on the Report board.",
    "summary": "The wait: 3 day(s) past its edge before the reading calls this step breached.",
-   "source_path": "knowledge/facts.json",
-   "quote": "The wait: 3 day(s) past its edge before the reading calls this step breached.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'first-report'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "owner-onboarding"
-   ]
+   ],
+   "source_line": 568,
+   "governs_step": "first-report",
+   "governs_flow": "owner-onboarding"
   },
   {
    "id": "fact:flow-owner-onboarding-go-live-after",
@@ -3459,15 +3816,18 @@
    "anchor": "the day the case opened",
    "scope": "Step `go-live` of the `owner-onboarding` flow, held by `osric` on the Leasing board.",
    "summary": "Earliest this step may start: 10 day(s) from the day the case opened.",
-   "source_path": "knowledge/facts.json",
-   "quote": "Earliest this step may start: 10 day(s) from the day the case opened.",
+   "source_path": "src/domain/flows.ts",
+   "quote": "key: 'go-live'",
    "links": [
     "module:src/domain/flows.ts"
    ],
    "tags": [
     "flow-timing",
     "owner-onboarding"
-   ]
+   ],
+   "source_line": 575,
+   "governs_step": "go-live",
+   "governs_flow": "owner-onboarding"
   }
  ],
  "residual": [

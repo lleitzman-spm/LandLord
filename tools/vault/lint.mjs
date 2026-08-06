@@ -146,6 +146,32 @@ function linksOf(page) {
 // 1 + 2 — dangling links and orphans
 // ─────────────────────────────────────────────────────────────────────────────
 
+
+/** ORPHANS THAT ARE EXPECTED, WITH REASONS — and the strong temptation not to.
+ *
+ *  The obvious way to clear an orphan is to have every source document link the
+ *  objects mined from it. That was tried in the sibling repo and it is a trap: it
+ *  makes every mined page un-orphanable by construction, and the orphan check —
+ *  the one check that catches a page nobody can reach — silently stops meaning
+ *  anything. It was removed there for exactly that reason and is not coming back
+ *  here.
+ *
+ *  So orphans get classified, never manufactured. Repo furniture is genuinely
+ *  unreferenced and always will be: nothing in a property-management Book has any
+ *  business linking to `.gitignore`. Naming those keeps the count honest, so the
+ *  ones that remain are real — a decision or a law nothing cites is a live signal
+ *  that it is disconnected from the work, and that is worth seeing. */
+const EXPECTED_ORPHANS = {
+  'book/artifacts/contributing-md.md': 'repo furniture — contribution process, not domain knowledge',
+  'book/artifacts/github.md': 'repo furniture — CI configuration',
+  'book/artifacts/gitignore.md': 'repo furniture — nothing in a Book links to an ignore file',
+  'book/artifacts/license.md': 'repo furniture — the licence governs the repo, not the domain',
+  'book/artifacts/security-md.md': 'repo furniture — disclosure policy',
+  'book/artifacts/tsconfig-json.md': 'repo furniture — compiler configuration',
+  'book/artifacts/vite-config-ts.md': 'repo furniture — bundler configuration',
+  'book/artifacts/vitest-config-ts.md': 'repo furniture — test-runner configuration',
+};
+
 function checkLinksAndOrphans(pages) {
   const byName = new Map();
   for (const p of pages) for (const n of p.names) if (!byName.has(n)) byName.set(n, p);
@@ -190,10 +216,23 @@ function checkLinksAndOrphans(pages) {
     for (const p of list) m[p.type] = (m[p.type] || 0) + 1;
     return Object.entries(m).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k}=${v}`).join('  ') || 'none';
   };
-  if (orphans.length) {
-    warn('orphans', `${orphans.length} page(s) nothing points at — ${byType(orphans)}`);
-    for (const p of orphans.slice(0, 25)) warn('orphans', `    ${p.rel}`);
-    if (orphans.length > 25) warn('orphans', `    …and ${orphans.length - 25} more`);
+  const expected = orphans.filter((p) => EXPECTED_ORPHANS[p.rel]);
+  const unexpected = orphans.filter((p) => !EXPECTED_ORPHANS[p.rel]);
+  // A declaration that stops being true is worse than no declaration: if a page
+  // named here gains a road, the entry is stale and says so.
+  for (const rel of Object.keys(EXPECTED_ORPHANS)) {
+    const p = pages.find((x) => x.rel === rel);
+    if (p && !orphans.includes(p)) {
+      warn('orphans', `${rel} is declared an EXPECTED orphan but something now points at it — drop the declaration`);
+    }
+  }
+  if (expected.length) {
+    warn('orphans', `${expected.length} expected orphan(s) — repo furniture, declared with reasons, not counted as debt`);
+  }
+  if (unexpected.length) {
+    warn('orphans', `${unexpected.length} page(s) nothing points at — ${byType(unexpected)}`);
+    for (const p of unexpected.slice(0, 25)) warn('orphans', `    ${p.rel}`);
+    if (unexpected.length > 25) warn('orphans', `    …and ${unexpected.length - 25} more`);
   }
   if (backOnly.length) {
     warn('orphans', `${backOnly.length} page(s) reachable ONLY through a Backlinks section — ${byType(backOnly)}`);
@@ -201,7 +240,7 @@ function checkLinksAndOrphans(pages) {
   if (unpointed.length) {
     warn('orphans', `${unpointed.length} page(s) whose Backlinks section is EMPTY — nothing in the Book points at the idea — ${byType(unpointed)}`);
   }
-  return { dangling, orphans: orphans.length, backOnly: backOnly.length, unpointed: unpointed.length, pages: pages.length };
+  return { dangling, orphans: unexpected.length, expectedOrphans: expected.length, backOnly: backOnly.length, unpointed: unpointed.length, pages: pages.length };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -501,20 +540,33 @@ function checkCascadeOrder(graph) {
           .join(', ')}) — the engine will count them forward from the case's open date, which is the one date they are certainly not measured from, and they will read as breached from the moment they are handed`,
       );
     }
-    for (let i = 1; i < steps.length; i++) {
-      const prev = start(steps[i - 1]);
-      const cur = start(steps[i]);
+    // A CASCADE IS NOT ONE LINE. A flow runs PARALLEL TRACKS — the move-out board,
+    // the deposit board and the leasing board advance alongside each other, and a
+    // step on one is not "after" a step on another just because it is written
+    // lower in the array. Comparing across boards manufactured findings that were
+    // never real (a deposit transfer at day 21 "before" a final walk at day 10 —
+    // two different tracks, both correct). Compare within a track, and a track is
+    // a board on one clock.
+    const trackOf = (x) => `${x.board || ''}|${(x.edge && x.edge.anchor) || 'opened'}`;
+    const tracks = new Map();
+    for (const x of steps) {
+      if (!tracks.has(trackOf(x))) tracks.set(trackOf(x), []);
+      tracks.get(trackOf(x)).push(x);
+    }
+    for (const steps2 of tracks.values()) {
+    for (let i = 1; i < steps2.length; i++) {
+      const prev = start(steps2[i - 1]);
+      const cur = start(steps2[i]);
       if (prev === null || cur === null) continue;
-      const anchorOf = (x) => (x.edge && x.edge.anchor) || 'opened';
-      if (anchorOf(steps[i - 1]) !== anchorOf(steps[i])) continue; // different clocks; not comparable
-      if (prev < 0 !== cur < 0) continue; // unanchored mixed signs — the warning above covers it
+      const steps = steps2;
       if (cur < prev) {
         backwards++;
         warn(
           'cascade',
-          `${f.id}: step ${i + 1} \`${steps[i].key}\` may start at ${cur} but \`${steps[i - 1].key}\` before it starts at ${prev} — the declared order runs backwards against the clock`,
+          `${f.id}: on the ${steps[i].board} board, \`${steps[i].key}\` may start at ${cur} but \`${steps[i - 1].key}\` before it starts at ${prev} — the declared order runs backwards against the clock`,
         );
       }
+    }
     }
   }
   return { flows: flows.length, backwards, mixed };
