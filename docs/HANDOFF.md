@@ -85,6 +85,49 @@ Corrections made to this repo's own instruments, worth knowing about:
   document linking what was mined from it — is a trap that makes every mined page
   un-orphanable; it was tried and removed in the sibling repo.
 
+**2026-08-06, later — the escape rate, its door, and the failure path.**
+All green: `npm run build`, **437 tests**, `npm run book:lint` exit 0 with
+**1,037 quotes** re-verified against disk.
+
+- **The escape rate is measured.** `src/domain/escape.ts` — what fraction of
+  work reaches a person. It is the number the whole product is judged against
+  (21 hr/door/yr × 10,000 doors against one person's ~2,000 hours means ~99% of
+  the hours must never reach a human) and nothing here computed it. It reports
+  **designed** escapes (steps the flow book means to be human) apart from
+  **unplanned** ones (a step marked `auto` that somebody touched anyway),
+  because a total that mixes them says the operator is busy and not why.
+  It sets **no target** — that would make it unfalsifiable — and reports
+  NOT MEASURED rather than 0% over no work.
+  It also reports what it rests on: **46 steps but only 39 independent
+  judgments**, because `mode` lives on the catalog ROW and all eight
+  vendor-dispatch steps share one row.
+
+- **The Ledger got a standing door.** The surface holding that number was
+  reachable only by the command bar, a proposal count that exists only when a
+  clerk has parked something, and a self-dismissing toast — three conditional
+  roads. The rate now rides the ribbon and opens the Ledger. It is a READOUT,
+  not a gauge: the measure names no target, and a bar draws a scale with a good
+  end and a bad end. Measured cost — one row at 1366px unchanged; **2px of
+  ribbon slack left**, so the next thing added there has to take space from
+  something, not shave this.
+
+- **A step can fail.** Every event kind was a way forward, so a step that could
+  not be completed simply stopped — indistinguishable from one nobody reached.
+  `FlowStep.onFail` names where a case goes; `failStep` writes the `failed`
+  record and hands that step. **A step with no `onFail` cannot fail** — the
+  writer refuses it — so the engine can never strand a case, and the honest
+  current state is **46 of 46 unrouted**, printed by the lint every run.
+  Which steps may fail, and where each goes, is a design decision nobody has
+  made; routing them by guesswork would be inventing forty-six remedies in an
+  afternoon. **No remedy taxonomy** — that waits for evidence, and the escape
+  rate is what will generate it.
+
+- **Known and stated, not fixed:** the escape rate cannot see rework. A step
+  counts once however many times it was worked, so three human attempts read as
+  one. Fixing it means deciding a `failed` event implies a person, and nothing
+  in the engine says so yet. `FlowReading.failures` counts rework separately in
+  the meantime.
+
 ## Next candidates
 
 Unclaimed and roughly ordered by how much they unblock:
