@@ -57,9 +57,10 @@ art-*.png
 # ...except the shared session-report hook, which is repo policy, not machine state.
 !.claude/settings.json
 
-# Obsidian — the Book opens as a vault. Settings are shared (link format, graph
-# colours, which core plugins are on); per-machine UI state and installed
-# plugins are not, and workspace.json rewrites itself on every pane you move.
+# Obsidian — the Book opens as a vault. Shared: link format and graph colours,
+# which are facts about this repository. Not shared: per-machine UI state,
+# installed plugins, theme — and workspace.json rewrites itself on every pane
+# you move.
 .obsidian/workspace.json
 .obsidian/workspace-mobile.json
 .obsidian/cache
