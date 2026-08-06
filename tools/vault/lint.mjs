@@ -583,13 +583,22 @@ function checkCascadeOrder(graph) {
  *
  *  FATAL, and cheap: a new step costs one line in `facts.json`. Retrofitting a
  *  hundred does not. */
-/** CLOSURE ON THE FAILURE PATH — every declared way out must lead somewhere.
+/** CLOSURE ON THE FAILURE PATH — every declared way out must lead somewhere,
+ *  and must not claim two things that cannot both be true.
  *
- *  A step declares `onFail: '<step key>'`, the step a case goes to when this one
- *  fails. The one thing that must never happen is a route naming a step the flow
- *  does not have: the engine would record the failure and then have nowhere to
- *  hand the case, which is the silent write loss the whole path exists to close.
- *  FATAL.
+ *  A step declares `onFail: { to, detects, endsAt }`. TWO THINGS ARE FATAL:
+ *
+ *  1. A route naming a step the flow does not have. The engine would record the
+ *     failure and then have nowhere to hand the case — the silent write loss the
+ *     whole path exists to close.
+ *
+ *  2. `detects: 'judgment'` whose remedy step sits on a catalog row marked
+ *     `auto`. The book is asserting that no machine can catch this failure and
+ *     that a machine performs the repair. One is wrong and nothing says which.
+ *     It matters because of the direction the error runs: `judgment` is the
+ *     floor under the escape rate — work no automation will ever take — so this
+ *     pairing is how an automation layer gets credited with catching what no
+ *     automation can catch.
  *
  *  A step with NO `onFail` is not a finding here. It cannot fail — `failStep`
  *  refuses to write for it — so it is undecided, not broken. It is counted and
@@ -600,31 +609,46 @@ function checkCascadeOrder(graph) {
  *
  *  Read from the mined graph rather than the source text, so a route that
  *  survives the parser but names a stranger is still caught. */
-function checkFailureRoutes(graph) {
+function checkFailureRoutes(graph, modeOf) {
   const flows = graph.nodes.filter((n) => n.type === 'flow');
   let routed = 0;
   let selfRouted = 0;
   let unrouted = 0;
   let broken = 0;
+  let escalating = 0;
+  let judgmentOnAuto = 0;
   for (const f of flows) {
     const t = (f.extra || {}).flow;
     const steps = t && Array.isArray(t.steps) ? t.steps : [];
-    const keys = new Set(steps.map((s) => s.key));
+    const byKey = new Map(steps.map((s) => [s.key, s]));
     for (const s of steps) {
-      if (!s.onFail) unrouted++;
-      else if (!keys.has(s.onFail)) {
+      const route = s.onFail;
+      if (!route) {
+        unrouted++;
+        continue;
+      }
+      const remedy = byKey.get(route.to);
+      if (!remedy) {
         broken++;
         fatal(
           'failure-routes',
-          `${f.id}: step \`${s.key}\` routes a failure to \`${s.onFail}\`, which is not a step of this flow — a case that failed here would be recorded and then have nowhere to go`,
+          `${f.id}: step \`${s.key}\` routes a failure to \`${route.to}\`, which is not a step of this flow — a case that failed here would be recorded and then have nowhere to go`,
         );
-      } else {
-        routed++;
-        if (s.onFail === s.key) selfRouted++;
+        continue;
+      }
+      routed++;
+      if (route.to === s.key) selfRouted++;
+      if (route.endsAt === 'operator') escalating++;
+      if (route.detects === 'judgment' && modeOf && modeOf.get(remedy.catalogRow) === 'auto') {
+        judgmentOnAuto++;
+        fatal(
+          'failure-routes',
+          `${f.id}: step \`${s.key}\` declares \`detects: 'judgment'\` — no machine can catch this failure — and routes the repair to \`${route.to}\`, whose catalog row \`${remedy.catalogRow}\` is marked \`auto\`. Both cannot be true. Either the failure is machine-detectable (\`validation\` or \`absence\`), or the remedy is not something a machine performs.`,
+        );
       }
     }
   }
-  return { flows: flows.length, routed, selfRouted, unrouted, broken };
+  return { flows: flows.length, routed, selfRouted, unrouted, broken, escalating, judgmentOnAuto };
 }
 
 const TIMING_LITERAL = /\b(slaDays|repeatEveryDays|after|before|onOrAfterDayOfMonth|beforeDayOfMonth)\s*:\s*-?\d/g;
@@ -671,7 +695,14 @@ function main() {
   const resolved = checkResolvedTables(pages);
   const cascade = checkCascadeOrder(graph);
   const flowLits = checkFlowLiterals();
-  const failRoutes = checkFailureRoutes(graph);
+  // The catalog modes come from the mined graph, not from re-reading the source:
+  // the cross-check must be asking about the same rows the flows were mined
+  // against, or it would be checking one book with another book's answers.
+  const modeOf = new Map();
+  for (const n of graph.nodes) {
+    if (n.type === 'task' && n.extra && n.extra.row && n.extra.row.key) modeOf.set(n.extra.row.key, n.extra.row.mode);
+  }
+  const failRoutes = checkFailureRoutes(graph, modeOf);
 
   for (const b of graph.brokenKnowledge) fatal('knowledge', `unreadable: ${b}`);
   for (const u of graph.unresolvedLinks) {
@@ -712,8 +743,9 @@ function main() {
   console.log(
     failRoutes.flows === 0
       ? '  failure routes   no flows mined — the failure path is not readable'
-      : `  failure routes   ${failRoutes.routed} step(s) declare a way out (${failRoutes.selfRouted} back to themselves)  ·  ${failRoutes.unrouted} declare none and therefore CANNOT fail — undecided, not broken` +
-          (failRoutes.broken ? `  ·  ${failRoutes.broken} route(s) name a step that does not exist — see FATAL below` : ''),
+      : `  failure routes   ${failRoutes.routed} step(s) declare a way out (${failRoutes.selfRouted} back to themselves, ${failRoutes.escalating} ESCALATING to the one operator)  ·  ${failRoutes.unrouted} declare none and therefore CANNOT fail — undecided, not broken` +
+          (failRoutes.broken ? `  ·  ${failRoutes.broken} route(s) name a step that does not exist — see FATAL below` : '') +
+          (failRoutes.judgmentOnAuto ? `  ·  ${failRoutes.judgmentOnAuto} judgment failure(s) repaired on an \`auto\` row — see FATAL below` : ''),
   );
 
   const groups = {};

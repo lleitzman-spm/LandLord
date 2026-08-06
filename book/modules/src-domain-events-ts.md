@@ -89,9 +89,11 @@ aliases:
 - [[a clerk’s proposal is heard ONCE — never also as a bare waiting case]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a craft left headless IS brought before the court]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a CRISIS outranks a fresh matter, and held COIN outranks a bare wait]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a failure sent back to the party who erred is NOT an escape]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a failure that is redone still leaves a mark — the count, not the latest kind]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a fully-worked vendor-dispatch folds to done and reaches settlement]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a human touching an AUTO step is an unplanned escape — the machine failed]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a judgment failure repaired on an `auto` row is a fault — the two claims cannot both hold]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a loaded estate roster flips isFoundingChronicle to non-founding]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a MIDDLE step hands on and closes NOTHING]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a muster deployed on the remote side is adopted, not clobbered by a stale local]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -121,6 +123,7 @@ aliases:
 - [[approving the final step records that the case is DONE]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[caps what one court hears, keeping the heaviest and still every kind]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[carries the originating event id onto the opening record]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[counts each escalation, not each step — this is where rework becomes visible]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[deals six cascades, four boxes on the Regent, and two raw tickets]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[deals the scenario’s doors and knights]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[distinct signals on the same subject open distinct cases]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -172,6 +175,7 @@ aliases:
 - [[still routes ordinary rows — the scan must not fire on real work]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the case READS as done once the last step is ratified]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the case spine feeds the gate end-to-end: readCase(estateId) → spendGate]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[the escape count is not folded into the rate]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the fallback (no base) CANNOT honor a strike — it resurrects (documents the limit)]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the founding book declares no failure routes, and says so rather than defaulting]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the founding flow book budgets most of its steps to a person]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -188,6 +192,7 @@ aliases:
 - [[unionById keeps both sides, remote first, dedupes by id]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[unions money and record books by id too (no owner/grant append lost)]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[with a target date ahead, it is due relative to THAT date]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[with no routes declared the count is zero and the rate is unchanged]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[with the target date past, it breaches like any other step]] — *imported by the test FILE (shared source, not a claim about this one test)*
 
 ## Documents that cite this source

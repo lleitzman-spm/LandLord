@@ -541,6 +541,23 @@ function EscapeBand({ escape }: { escape: ReturnType<typeof readEscape> }) {
           </p>
         </>
       )}
+      {/* THE ESCALATION COUNT SITS BESIDE THE RATE AND IS NOT FOLDED INTO IT.
+          The rate answers "how much of the work is human"; this answers "how
+          often did it go wrong and land on the one operator". They run over
+          different units — the rate over steps reached, this over failures —
+          so a single blended number would answer neither. It is only shown
+          once something has escalated, because zero here is ambiguous while no
+          step in the book declares a failure route at all: it would read as
+          "nothing went wrong" when the truth is "nothing can". */}
+      {escape.escalated > 0 && (
+        <p className="fine">
+          <strong>
+            {escape.escalated} failure{escape.escalated === 1 ? '' : 's'} escalated to the operator
+          </strong>{' '}
+          — counted per failure, not per step, so this is the one place rework shows. A step redone
+          three times costs three slices of the one person's day and still counts once above.
+        </p>
+      )}
       {escape.unmeasured > 0 && (
         <p className="fine">
           {escape.unmeasured} reached step{escape.unmeasured === 1 ? '' : 's'} declare no mode in

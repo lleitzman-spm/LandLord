@@ -9,10 +9,18 @@
 // needs to be remediation to either get them to put in the right input or to
 // correct their input."*
 //
-// The shape is two pieces and no more. `FlowStep.onFail` names the step a case
-// goes to when this one fails; `failStep` writes the `failed` record and hands
-// that step. No severity, no kinds of wrongness, no retry budget — a taxonomy
-// invented before anything has been counted is a guess wearing a schema.
+// The shape is two pieces and no more. `FlowStep.onFail` is a `FailureRoute` —
+// where the case goes, how the failure was caught (`detects`), and where it comes
+// to rest (`endsAt`); `failStep` writes the `failed` record and hands the remedy
+// step. Still no severity, no retry budget, no taxonomy of wrongness.
+//
+// The two axes are the sibling project's, reached from evidence rather than from
+// an engine, and adopted so the two projects' escape counts are one number
+// instead of two wearing one word. Only the shape crossed.
+//
+// `endsAt: 'operator'` is the one that carries weight: it is the declaration —
+// not an inference — that a failure cost the single human running the system a
+// slice of their day. It is what lets the escape rate see rework at all.
 //
 // These tests use their OWN templates rather than the founding book, and that
 // is deliberate: the founding book declares no routes at all (46 of 46), and
@@ -30,6 +38,7 @@ import {
   readFailureRoutes,
   readFlow,
 } from '../src/domain/flows';
+import { readEscape } from '../src/domain/escape';
 import type { FlowTemplate } from '../src/domain/flows';
 import type { KingdomEvent } from '../src/domain/events';
 
@@ -44,7 +53,14 @@ const SELF_ROUTED: FlowTemplate = {
   trigger: 'a test says so',
   steps: [
     { key: 'first', catalogRow: 'r-a', holder: 'h1', board: 'B', edge: {} },
-    { key: 'middle', catalogRow: 'r-b', holder: 'h2', board: 'B', edge: {}, onFail: 'middle' },
+    {
+      key: 'middle',
+      catalogRow: 'r-b',
+      holder: 'h2',
+      board: 'B',
+      edge: {},
+      onFail: { to: 'middle', detects: 'validation', endsAt: 'origin' },
+    },
     { key: 'last', catalogRow: 'r-c', holder: 'h3', board: 'B', edge: {} },
   ],
 };
@@ -58,7 +74,14 @@ const BACK_ROUTED: FlowTemplate = {
   steps: [
     { key: 'first', catalogRow: 'r-a', holder: 'h1', board: 'B', edge: {} },
     { key: 'middle', catalogRow: 'r-b', holder: 'h2', board: 'B', edge: {} },
-    { key: 'last', catalogRow: 'r-c', holder: 'h3', board: 'B', edge: {}, onFail: 'first' },
+    {
+      key: 'last',
+      catalogRow: 'r-c',
+      holder: 'h3',
+      board: 'B',
+      edge: {},
+      onFail: { to: 'first', detects: 'judgment', endsAt: 'operator' },
+    },
   ],
 };
 
@@ -69,7 +92,14 @@ const BROKEN: FlowTemplate = {
   title: 'A flow with a route to nowhere',
   trigger: 'a test says so',
   steps: [
-    { key: 'only', catalogRow: 'r-a', holder: 'h1', board: 'B', edge: {}, onFail: 'a-step-that-does-not-exist' },
+    {
+      key: 'only',
+      catalogRow: 'r-a',
+      holder: 'h1',
+      board: 'B',
+      edge: {},
+      onFail: { to: 'a-step-that-does-not-exist', detects: 'absence', endsAt: 'origin' },
+    },
   ],
 };
 
@@ -157,13 +187,98 @@ describe('the failure path — a step that fails goes somewhere', () => {
   });
 });
 
+describe('the failure path — what it lets the escape rate see', () => {
+  // THE BLIND SPOT THIS CLOSES. `readEscape` counts a step ONCE however many
+  // times it was worked, so three passes at one step read as one. Before the
+  // route declared where a failure comes to rest there was no honest way to fix
+  // that: counting `failed` as human attention meant ASSUMING a person is
+  // involved, and nothing in the engine said so. `endsAt: 'operator'` says so.
+  const ESCALATING: FlowTemplate = {
+    key: 'test-escalates',
+    title: 'A flow whose failures land on the operator',
+    trigger: 'a test says so',
+    steps: [
+      { key: 'machine-does-it', catalogRow: 'auto-row', holder: 'h1', board: 'B', edge: {} },
+      {
+        key: 'hard-call',
+        catalogRow: 'human-row',
+        holder: 'h2',
+        board: 'B',
+        edge: {},
+        onFail: { to: 'hard-call', detects: 'judgment', endsAt: 'operator' },
+      },
+    ],
+  };
+  const BOUNCING: FlowTemplate = {
+    ...ESCALATING,
+    key: 'test-bounces',
+    steps: [
+      ESCALATING.steps[0],
+      { ...ESCALATING.steps[1], onFail: { to: 'hard-call', detects: 'absence', endsAt: 'origin' } },
+    ],
+  };
+  const CATALOG = [
+    { key: 'auto-row', mode: 'auto' },
+    { key: 'human-row', mode: 'human' },
+  ] as never;
+
+  function drive(tpl: FlowTemplate, failures: number) {
+    const { caseId, log, opts } = open(tpl);
+    log.push(...completeStep(tpl, caseId, 0, opts));
+    for (let i = 0; i < failures; i++) log.push(...failStep(tpl, caseId, 1, opts));
+    return log;
+  }
+
+  it('counts each escalation, not each step — this is where rework becomes visible', () => {
+    const log = drive(ESCALATING, 3);
+    const r = readEscape([ESCALATING], CATALOG, log);
+    // The step is reached once and stays reached once...
+    expect(r.stepsReached).toBe(2);
+    expect(r.designed).toBe(1);
+    // ...but the operator was pulled in three times, and now that shows.
+    expect(r.escalated).toBe(3);
+  });
+
+  it('a failure sent back to the party who erred is NOT an escape', () => {
+    const log = drive(BOUNCING, 3);
+    const r = readEscape([BOUNCING], CATALOG, log);
+    // Same three failures, same step, same everything except where the case
+    // comes to rest. Costing the operator a chase is not costing them a
+    // judgment, and a model that could not tell them apart would count every
+    // remedy as coverage.
+    expect(r.escalated).toBe(0);
+    expect(r.designed).toBe(1);
+  });
+
+  it('the escape count is not folded into the rate', () => {
+    const log = drive(ESCALATING, 3);
+    const r = readEscape([ESCALATING], CATALOG, log);
+    // One of two reached steps is designed-human. The three escalations do NOT
+    // push the numerator to 4/2 — they are a different measure over a different
+    // unit, and a rate above 1 would be the tell that they had been mixed.
+    expect(r.rate).toBe(0.5);
+    expect(r.escaped).toBe(1);
+  });
+
+  it('with no routes declared the count is zero and the rate is unchanged', () => {
+    // The whole founding book is in this state. Zero here must mean "nothing
+    // escalated", and it does, because no step can fail at all.
+    const log = drive(SELF_ROUTED, 0);
+    const r = readEscape([SELF_ROUTED], CATALOG, log);
+    expect(r.escalated).toBe(0);
+  });
+});
+
 describe('the failure path — closure over a book', () => {
   it('names routed, unrouted and broken apart', () => {
     const routes = readFailureRoutes([SELF_ROUTED, BACK_ROUTED, BROKEN]);
     expect(routes.routed).toEqual([
-      { flow: 'test-self', step: 'middle', to: 'middle', self: true },
-      { flow: 'test-back', step: 'last', to: 'first', self: false },
+      { flow: 'test-self', step: 'middle', to: 'middle', self: true, detects: 'validation', endsAt: 'origin' },
+      { flow: 'test-back', step: 'last', to: 'first', self: false, detects: 'judgment', endsAt: 'operator' },
     ]);
+    // One of the two routes escalates. This is the escape count read off the
+    // book alone, before any case is worked.
+    expect(routes.escalating).toBe(1);
     expect(routes.unrouted).toHaveLength(4);
     expect(routes.broken).toEqual([
       { flow: 'test-broken', step: 'only', to: 'a-step-that-does-not-exist' },
@@ -185,5 +300,52 @@ describe('the failure path — closure over a book', () => {
     expect(routes.routed).toHaveLength(0);
     // A broken route in the founding book would be a real fault at any count.
     expect(routes.broken).toEqual([]);
+    expect(routes.escalating).toBe(0);
+  });
+
+  it('a judgment failure repaired on an `auto` row is a fault — the two claims cannot both hold', () => {
+    // The book says no machine can catch this failure, and hands the repair to a
+    // step a machine performs. One of those is wrong and nothing says which.
+    const AUTO_REMEDY: FlowTemplate = {
+      key: 'test-judgment',
+      title: 'A judgment call repaired by a machine',
+      trigger: 'a test says so',
+      steps: [
+        { key: 'call-it', catalogRow: 'r-auto', holder: 'h1', board: 'B', edge: {} },
+        {
+          key: 'weigh',
+          catalogRow: 'r-human',
+          holder: 'h2',
+          board: 'B',
+          edge: {},
+          onFail: { to: 'call-it', detects: 'judgment', endsAt: 'operator' },
+        },
+      ],
+    };
+    const bad = readFailureRoutes(
+      [AUTO_REMEDY],
+      new Map([
+        ['r-auto', 'auto'],
+        ['r-human', 'human'],
+      ]),
+    );
+    expect(bad.judgmentOnAuto).toEqual([{ flow: 'test-judgment', step: 'weigh', to: 'call-it' }]);
+
+    // Same book, same route, remedy row marked human — nothing to report. It is
+    // the PAIRING that is the fault, not either half on its own.
+    const ok = readFailureRoutes(
+      [AUTO_REMEDY],
+      new Map([
+        ['r-auto', 'human'],
+        ['r-human', 'human'],
+      ]),
+    );
+    expect(ok.judgmentOnAuto).toEqual([]);
+
+    // WITHOUT THE CATALOG IT DOES NOT PRETEND TO HAVE CHECKED. An absence is a
+    // reading: no modes handed in means no cross-check ran, and the empty array
+    // must not be read as a clean bill. This is the same rule the escape rate
+    // runs on for a row with no mode.
+    expect(readFailureRoutes([AUTO_REMEDY]).judgmentOnAuto).toEqual([]);
   });
 });

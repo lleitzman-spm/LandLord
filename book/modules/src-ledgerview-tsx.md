@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-1299 lines · 1 exported symbol.
+1316 lines · 1 exported symbol.
 
 ## What the file says of itself
 
@@ -30,7 +30,7 @@ aliases:
 
 ## Shape
 
-- **Lines:** 1299
+- **Lines:** 1316
 - **Exported symbols (1):** `LedgerView`
 
 ## Modules

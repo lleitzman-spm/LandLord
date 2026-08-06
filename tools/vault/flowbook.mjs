@@ -263,22 +263,39 @@ export function flowBookNodes() {
       // this is found, never asserted — and if it names a step the flow does
       // not have, no arrow is drawn and the lint is fatal (checkFailureRoutes).
       // A step with no route draws nothing, which is correct: it cannot fail.
-      if (s.onFail && steps.some((x) => x.key === s.onFail)) {
-        const back = `place:${slugify(t.key)}-${slugify(s.onFail)}`;
-        const self = s.onFail === s.key;
+      const route = s.onFail;
+      if (route && route.to && steps.some((x) => x.key === route.to)) {
+        const back = `place:${slugify(t.key)}-${slugify(route.to)}`;
+        const self = route.to === s.key;
+        // The two axes ride the arrow, because they are what makes it countable.
+        // `endsAt` decides whether this arrow is an ESCAPE — the number the whole
+        // product is measured against — and `detects` decides whether a machine
+        // could ever have fired it. An arrow that carried neither would draw the
+        // failure path and say nothing about what it costs.
+        const caught = {
+          validation: 'caught as malformed input, which a machine can see',
+          absence: 'caught as a step that never happened, which a machine can see by the missing record',
+          judgment: 'caught only by a person — the input was well-formed and the call was wrong, and no machine will ever see that',
+        }[route.detects];
+        const rests =
+          route.endsAt === 'operator'
+            ? 'It comes to rest on the one operator: this arrow is an ESCAPE.'
+            : 'It goes back to the party who erred, so it costs the operator the chase and not the judgment.';
         nodes.push(
           makeNode({
-            id: `transition:${slugify(t.key)}-${slugify(s.key)}-onfail-${slugify(s.onFail)}`,
+            id: `transition:${slugify(t.key)}-${slugify(s.key)}-onfail-${slugify(route.to)}`,
             type: 'transition',
-            label: `${s.key} ⤾ ${s.onFail} (on failure)`,
+            label: `${s.key} ⤾ ${route.to} (on failure${route.endsAt === 'operator' ? ', escalates' : ''})`,
             standing: 'built',
             standing_source: 'derived',
-            summary: self
-              ? `When ${s.key} fails the case comes straight back to the same desk — the remediation loop: put it in again, correctly.`
-              : `When ${s.key} fails the case goes to ${s.onFail}, ${steps.findIndex((x) => x.key === s.onFail) < i ? 'back upstream to where the bad input entered' : 'onward around the failure'}.`,
+            summary:
+              (self
+                ? `When ${s.key} fails the case comes straight back to the same desk — the remediation loop: put it in again, correctly.`
+                : `When ${s.key} fails the case goes to ${route.to}, ${steps.findIndex((x) => x.key === route.to) < i ? 'back upstream to where the bad input entered' : 'onward around the failure'}.`) +
+              ` The failure is ${caught}. ${rests}`,
             source_path: FLOWS_TS,
             source_line: lineOf(raw, s.key),
-            quote: `onFail: '${s.onFail}'`,
+            quote: `to: '${route.to}'`,
             origin: 'derived',
             edges: [
               { to: pid, why: 'the step that failed' },
@@ -286,7 +303,16 @@ export function flowBookNodes() {
               { to: fid, why: 'an arrow of this flow' },
               { to: `module:${FLOWS_TS}`, why: 'declared in this module' },
             ],
-            extra: { from: s.key, to: s.onFail, flowKey: t.key, on: 'failed', self },
+            extra: {
+              from: s.key,
+              to: route.to,
+              flowKey: t.key,
+              on: 'failed',
+              self,
+              detects: route.detects,
+              endsAt: route.endsAt,
+              escape: route.endsAt === 'operator',
+            },
           }),
         );
       }

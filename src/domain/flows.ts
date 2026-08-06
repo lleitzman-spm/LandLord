@@ -63,6 +63,66 @@ export interface TimingEdge {
  *  nobody holds yet — the queue reads as the holder until a setting maps it). */
 export type HolderRef = string;
 
+/** HOW A FAILURE IS CAUGHT — and therefore whether a machine could ever raise it.
+ *
+ *  This is the axis that decides what can be automated, so it must not be a
+ *  free-text note. A book that cannot say which of its failures a machine can
+ *  detect cannot say what it would cost to run.
+ *
+ *    validation — malformed input. A blank field, an amount out of range, a date
+ *                 before the one it must follow. A machine can see it.
+ *    absence    — a step never happened, visible by its missing output. A
+ *                 machine can see it, because what is missing is a record.
+ *    judgment   — well-formed input, wrong call. The estimate is a real number
+ *                 and it is the wrong number. NO machine can see it, ever.
+ *
+ *  The distinction earns its keep at the third value. `judgment` is the floor
+ *  under the escape rate: work no automation can take, however good it gets. A
+ *  book that blurs judgment into validation reports a ceiling it cannot reach,
+ *  and the blur always runs the same direction — toward the flattering number. */
+export type FailureDetects = 'validation' | 'absence' | 'judgment';
+
+/** WHERE A FAILED CASE COMES TO REST — and only one of the two is an escape.
+ *
+ *    origin   — back to the party who erred: the tenant, the owner, the artisan.
+ *               Costs the operator nothing but the chase.
+ *    operator — up to the one human running the system. This is an ESCAPE, and
+ *               the escape count is the number this whole product is measured
+ *               against (src/domain/escape.ts: one operator, 10,000 doors).
+ *
+ *  A model that cannot tell a bounce-back from an escalation counts every
+ *  remedy as coverage and reports the flattering half. That is the entire
+ *  reason this field exists rather than a boolean `remediated`. */
+export type FailureEnds = 'origin' | 'operator';
+
+/** A step's failure exit — where the case goes, how the failure was caught, and
+ *  where it comes to rest.
+ *
+ *  WHY THIS IS THREE FIELDS AND NOT A STRING. The first cut of this was
+ *  `onFail: string` — a step key and nothing else. It was enough to move a case
+ *  and useless for anything else: a route that only says *where next* cannot be
+ *  counted against the bar the product is judged by, because the two questions
+ *  that matter about a failure are whether a machine could have caught it and
+ *  whether it cost the one operator a slice of their day. Neither is derivable
+ *  from a step key.
+ *
+ *  The three axes are not ours. The sibling project drew the same layer from its
+ *  own evidence and landed on `detects` and `terminates_at` with the same values
+ *  and the same rule about judgment; adopting them costs nothing and means the
+ *  two projects' escape numbers are the same number rather than two numbers
+ *  wearing one word. Only the shape crossed — no instance, no evidence, no
+ *  figure. Our field names are ours; the VALUES match on purpose, because that
+ *  is what makes the counts comparable. */
+export interface FailureRoute {
+  /** The step a failed case is handed — a key in THIS SAME flow. Naming this
+   *  step's own key is the remediation loop: put it in again, correctly. Naming
+   *  an earlier step sends the case back to where the bad input entered. Naming
+   *  a later one is a route around. */
+  to: string;
+  detects: FailureDetects;
+  endsAt: FailureEnds;
+}
+
 export interface FlowStep {
   key: string;
   /** The catalog row this step is an instance of — every step references the
@@ -83,10 +143,8 @@ export interface FlowStep {
   /** A free-text condition, human-read ("until leased") — swing one records
    *  it; the clerks will act on it. */
   condition?: string;
-  /** WHERE A CASE GOES WHEN THIS STEP FAILS — the key of a step in THIS SAME
-   *  flow. Naming this step's own key is the remediation loop: put it in again,
-   *  correctly. Naming an earlier step sends the case back to where the bad
-   *  input entered. Naming a later one is a route around.
+  /** WHERE A CASE GOES WHEN THIS STEP FAILS, HOW THE FAILURE IS CAUGHT, AND
+   *  WHERE IT COMES TO REST — see `FailureRoute`.
    *
    *  THERE IS NO DEFAULT, AND THAT IS THE DESIGN. A step that declares no
    *  `onFail` CANNOT FAIL: `failStep` refuses to write a `failed` event for it,
@@ -102,7 +160,7 @@ export interface FlowStep {
    *  do with a remedy. The mechanism is built; which steps may fail, and where
    *  each goes, is a design decision, and the count keeps it visible until it
    *  is made. */
-  onFail?: string;
+  onFail?: FailureRoute;
   note?: string;
 }
 
@@ -926,11 +984,27 @@ export function overrideStep(
 // either get them to put in the right input or to correct their input."* A
 // rejection with no road back is not a guard; it is a case dropped quietly.
 //
-// THE WHOLE SHAPE IS TWO PIECES. A step declares `onFail` — the step a case
-// goes to when this one fails. `failStep` writes the `failed` event and hands
-// that step. There is no third piece: no severity, no kinds of wrongness, no
-// retry budget. Those wait for evidence, and the escape rate is what will
-// generate it.
+// THE WHOLE SHAPE IS TWO PIECES. A step declares `onFail` — a `FailureRoute`
+// naming where the case goes, how the failure is caught, and where it comes to
+// rest. `failStep` writes the `failed` event and hands the remedy step. There
+// is still no third piece: no severity, no retry budget, no taxonomy of
+// wrongness. Those wait for evidence.
+//
+// THE ROUTE GREW TWO AXES, AND THEY WERE NOT INVENTED HERE. The first cut was a
+// bare step key. It could move a case and could not answer either question that
+// makes a failure worth recording — could a machine have caught this, and did it
+// cost the one operator a piece of their day. The sibling project reached the
+// same layer from the opposite direction, drawing it out of real procedure
+// rather than out of an engine, and arrived at the same two axes with the same
+// values. Taking them is not borrowing an answer; it is declining to invent a
+// second vocabulary for a distinction two independent passes already agreed on.
+// The shape crossed and nothing else did — no instance, no evidence, no figure.
+//
+// IT COST NOTHING BECAUSE NOTHING WAS ROUTED YET. Every step in the book still
+// declares no exit, so widening `onFail` from a string to a record migrated
+// exactly zero declarations. The refusal to route the book by guesswork — which
+// looked like leaving work undone — is what made the correction free. A book
+// with forty-six guessed routes would have had forty-six of them to revisit.
 
 /** Fail the step in hand and hand the step its `onFail` names — the remedy.
  *
@@ -953,9 +1027,9 @@ export function failStep(
   params?: FlowParams,
 ): KingdomEvent[] {
   if (index < 0 || index >= tpl.steps.length) return [];
-  const to = tpl.steps[index].onFail;
-  if (!to) return [];
-  const at = tpl.steps.findIndex((s) => s.key === to);
+  const route = tpl.steps[index].onFail;
+  if (!route) return [];
+  const at = tpl.steps.findIndex((s) => s.key === route.to);
   // An `onFail` naming a step this flow does not have is a broken route, and a
   // broken route is worse than none: it would write the `failed` event and then
   // have nowhere to hand. The lint catches this in the book (checkFailureRoutes,
@@ -973,23 +1047,69 @@ export function failStep(
  *  gives that absence a size. */
 export interface FailureRoutes {
   /** Steps declaring an `onFail` that names a real step in the same flow. */
-  routed: { flow: string; step: string; to: string; self: boolean }[];
+  routed: {
+    flow: string;
+    step: string;
+    to: string;
+    self: boolean;
+    detects: FailureDetects;
+    endsAt: FailureEnds;
+  }[];
   /** Steps declaring no `onFail` at all. These cannot fail — `failStep` refuses
    *  them — so they are not broken; they are undecided, and counted so. */
   unrouted: { flow: string; step: string }[];
   /** `onFail` naming a step the flow does not have. Always a fault: the lint is
    *  fatal on these and `failStep` refuses to write for them. */
   broken: { flow: string; step: string; to: string }[];
+  /** THE ONE CROSS-CHECK BETWEEN THE TWO AXES, AND IT IS FATAL.
+   *
+   *  A route that claims `detects: 'judgment'` while its remedy step sits on a
+   *  catalog row marked `auto` is asserting two things that cannot both be
+   *  true: that no machine can catch this failure, and that a machine performs
+   *  the repair. One of them is wrong and the book does not say which.
+   *
+   *  It matters because of which way the error runs. `judgment` is the floor
+   *  under the escape rate — work no automation will ever take — so a book that
+   *  mislabels an automatable failure as judgment reports a floor that is too
+   *  high, and one that hangs a judgment call on an `auto` row has quietly
+   *  promised a machine will exercise judgment. The second is how an automation
+   *  layer gets credited with catching what no automation can catch. */
+  judgmentOnAuto: { flow: string; step: string; to: string }[];
+  /** Routed steps whose failure comes to rest on the one operator — the escape
+   *  count, in the flow book's own declaration, before any case is worked. */
+  escalating: number;
 }
 
-export function readFailureRoutes(flows: FlowBook): FailureRoutes {
-  const out: FailureRoutes = { routed: [], unrouted: [], broken: [] };
+/** @param modeOf a catalog row key → its `mode`, for the judgment cross-check.
+ *  Optional: without it the reading still reports routes, and reports zero
+ *  `judgmentOnAuto` rather than pretending it checked. */
+export function readFailureRoutes(flows: FlowBook, modeOf?: Map<string, string | undefined>): FailureRoutes {
+  const out: FailureRoutes = { routed: [], unrouted: [], broken: [], judgmentOnAuto: [], escalating: 0 };
   for (const t of flows) {
-    const keys = new Set(t.steps.map((s) => s.key));
+    const byKey = new Map(t.steps.map((s) => [s.key, s]));
     for (const s of t.steps) {
-      if (!s.onFail) out.unrouted.push({ flow: t.key, step: s.key });
-      else if (!keys.has(s.onFail)) out.broken.push({ flow: t.key, step: s.key, to: s.onFail });
-      else out.routed.push({ flow: t.key, step: s.key, to: s.onFail, self: s.onFail === s.key });
+      const route = s.onFail;
+      if (!route) {
+        out.unrouted.push({ flow: t.key, step: s.key });
+        continue;
+      }
+      const remedy = byKey.get(route.to);
+      if (!remedy) {
+        out.broken.push({ flow: t.key, step: s.key, to: route.to });
+        continue;
+      }
+      out.routed.push({
+        flow: t.key,
+        step: s.key,
+        to: route.to,
+        self: route.to === s.key,
+        detects: route.detects,
+        endsAt: route.endsAt,
+      });
+      if (route.endsAt === 'operator') out.escalating += 1;
+      if (route.detects === 'judgment' && modeOf?.get(remedy.catalogRow) === 'auto') {
+        out.judgmentOnAuto.push({ flow: t.key, step: s.key, to: route.to });
+      }
     }
   }
   return out;

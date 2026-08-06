@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-1198 lines · 25 exported symbols.
+1318 lines · 28 exported symbols.
 
 ## What the file says of itself
 
@@ -34,8 +34,8 @@ aliases:
 
 ## Shape
 
-- **Lines:** 1198
-- **Exported symbols (25):** `FOUNDING_FLOWS`, `FailureRoutes`, `FlowBook`, `FlowInstance`, `FlowParams`, `FlowReading`, `FlowStep`, `FlowTemplate`, `HolderRef`, `StepReading`, `TimingEdge`, `approveStep`, `completeStep`, `edgeLine`, `failStep`, `flowsAtFounding`, `fullParams`, `handStep`, `instantiateFlow`, `overrideStep`, `paramsOf`, `proposeStep`, `readFailureRoutes`, `readFlow`, `readFlows`
+- **Lines:** 1318
+- **Exported symbols (28):** `FOUNDING_FLOWS`, `FailureDetects`, `FailureEnds`, `FailureRoute`, `FailureRoutes`, `FlowBook`, `FlowInstance`, `FlowParams`, `FlowReading`, `FlowStep`, `FlowTemplate`, `HolderRef`, `StepReading`, `TimingEdge`, `approveStep`, `completeStep`, `edgeLine`, `failStep`, `flowsAtFounding`, `fullParams`, `handStep`, `instantiateFlow`, `overrideStep`, `paramsOf`, `proposeStep`, `readFailureRoutes`, `readFlow`, `readFlows`
 - **Assets it pulls in (no page, so no road):** `knowledge/facts.json`
 
 ## Modules
@@ -46,7 +46,7 @@ aliases:
 
 ### Writs that specify it
 
-- [[Handoff — where things stand]] — *this writ names the exported symbol `readFlow`; this writ names the exported symbol `TimingEdge`*
+- [[Handoff — where things stand]] — *this writ names the exported symbol `failStep`; this writ names the exported symbol `FlowReading`; +3 more*
 - [[The Kingdom — Canon]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `completeStep`; +6 more*
 - [[The PM Task-and-Process Library (reference)]] — *this writ names the exported symbol `FlowTemplate`; this writ names the exported symbol `instantiateFlow`; +1 more*
 - [[Writ — the flow engine (the operator's spine)]] — *this writ names the exported symbol `FOUNDING_FLOWS`*
@@ -220,6 +220,7 @@ aliases:
 - [[a door the book does not hold reads UNPLACED, and is named]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a door the book holds places cleanly — realm, shire, fee and knight]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a door’s shire and its fee stand in the SAME realm as the door]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[a failure sent back to the party who erred is NOT an escape]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a failure that is redone still leaves a mark — the count, not the latest kind]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a fee scattered across two shires reads fine, and rolls up as ONE fee]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a fee with doors scattered across three metros reads fine]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -233,6 +234,7 @@ aliases:
 - [[a headless office reads as headless — never as somebody else’s]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a house mtm rule with no splitBps falls back to the named constant]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a human touching an AUTO step is an unplanned escape — the machine failed]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a judgment failure repaired on an `auto` row is a fault — the two claims cannot both hold]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a known band still returns its figure]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a loaded estate roster flips isFoundingChronicle to non-founding]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a march PROMOTES when the records change, with no field written]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -319,6 +321,7 @@ aliases:
 - [[catches an over-sweep (bridge driven negative) the aggregate checker misses]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[catches an owner overdrawn (commingling guard)]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[commission_sweep lands the markup in By-Pass, never operating, and stays sound]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[counts each escalation, not each step — this is where rework becomes visible]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[counts each kind of override, and the house cap as one]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[deals six cascades, four boxes on the Regent, and two raw tickets]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[deals the scenario’s doors and knights]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -445,6 +448,7 @@ aliases:
 - [[the coffers ARE dry when the Crown’s own banks run out]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[the control reads a SHIRE — all three clauses hold]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[the doors read held / vacant / crisis — all three states are drawn]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[the escape count is not folded into the rate]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the fallback (no base) CANNOT honor a strike — it resurrects (documents the limit)]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[the fee bridge ties]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[the Fee shape itself holds only id, realm, name and patron]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -489,6 +493,7 @@ aliases:
 - [[unions money and record books by id too (no owner/grant append lost)]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[with a target date ahead, it is due relative to THAT date]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[with no game standing, upkeep falls back to the treasury rolls]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[with no routes declared the count is zero and the rate is unchanged]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[with the target date past, it breaches like any other step]] — *imported by the test FILE (shared source, not a claim about this one test)*
 
 ### flow

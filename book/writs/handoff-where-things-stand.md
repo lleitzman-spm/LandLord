@@ -39,8 +39,8 @@ aliases:
 
 ## Modules
 
-- [[src/domain/flows.ts]] — *this writ names the exported symbol `readFlow`; this writ names the exported symbol `TimingEdge`*
-- [[src/operator-core.ts]] — *this writ names the exported symbol `readFlow`*
+- [[src/domain/flows.ts]] — *this writ names the exported symbol `failStep`; this writ names the exported symbol `FlowReading`; +3 more*
+- [[src/operator-core.ts]] — *this writ names the exported symbol `FlowReading`; this writ names the exported symbol `readFlow`*
 
 ## artifact
 
@@ -66,6 +66,7 @@ aliases:
 
 - [[docs/OPEN-QUESTIONS.md]]
 - [[Open questions]]
+- [[src/domain/escape.ts]]
 - [[src/domain/flows.ts]]
 
 ---
