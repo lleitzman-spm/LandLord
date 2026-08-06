@@ -54,11 +54,20 @@ function ownerOf(c: CaseReading): string {
  *  artisan (mirrors `harness/clerks.mjs`'s SETTLE_STEP_KEYS). */
 const SETTLE_STEP_KEYS = new Set(['pay-vendor', 'pay']);
 
-/** What the settled WO cost, in cents. A clerk's reconciled invoice or quote if
- *  one ran (their notes carry the figure); else the working-fluid estimate by
- *  urgency band — the manual path, so a hand-worked WO still settles a real
- *  number without the data gate. */
-function settledBillCents(c: CaseReading, params: Record<string, string> | undefined): number {
+/** What the settled WO cost, in cents — or UNDEFINED when nothing says.
+ *
+ *  A clerk's reconciled invoice or quote if one ran (their notes carry the
+ *  figure); else the working-fluid estimate by urgency band, the manual path so
+ *  a hand-worked WO still settles a real number without the data gate.
+ *
+ *  When there is no invoice, no quote AND no urgency band, there is no honest
+ *  answer, and the previous one was a fabricated $350 that MOVED REAL MONEY
+ *  through the ledger. Undefined falls into the same "no money event" path as a
+ *  zero bill: nothing is posted, and nothing is invented. */
+function settledBillCents(
+  c: CaseReading,
+  params: Record<string, string> | undefined,
+): number | undefined {
   const dollars = (re: RegExp): number | null => {
     for (let i = c.events.length - 1; i >= 0; i--) {
       const m = c.events[i].note?.match(re);
@@ -70,6 +79,8 @@ function settledBillCents(c: CaseReading, params: Record<string, string> | undef
   if (invoice && invoice > 0) return invoice;
   const quoted = dollars(/quoted\s*\$([\d,]+)/i);
   if (quoted && quoted > 0) return quoted;
+  // Undefined when the work order names no urgency band — the gate reads that as
+  // `unclassified` and stops it, rather than weighing an invented number.
   return estimateSpendCents(params?.urgency);
 }
 
@@ -936,7 +947,9 @@ export function useChronicle(): ChronicleStore {
     const events = [...chronicle.events, ...appended];
     const reading = readCase(events, caseId);
     const billCents = settledBillCents(reading, paramsOf(events, caseId));
-    if (billCents <= 0) return [];
+    // Undefined means nothing said what this cost. No money moves on a number
+    // nobody produced.
+    if (billCents == null || billCents <= 0) return [];
     const seed = chronicle.wargame?.seed;
     return vendorSettlementMoney(economyOf(chronicle), chronicle.money, {
       caseId,

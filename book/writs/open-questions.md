@@ -32,9 +32,9 @@ aliases:
 ## Outline
 
 - Fee terms that are currently one shape, and probably need to be many
-- The spend gate's default when urgency is unknown
-- Whether "artisan" should be a pledge or a relationship
-- Trust-accounting rules that vary by jurisdiction
+- ~~The spend gate's default when urgency is unknown~~ — SETTLED 2026-08-06
+- Whether "artisan" should be a pledge or a relationship — ANSWERED, NOT YET BUILT
+- ~~Trust-accounting rules that vary by jurisdiction~~ — SETTLED 2026-08-06
 - Multi-tenancy, and what the per-identity vault rows actually are
 
 ## Decisions that touched it
@@ -47,8 +47,8 @@ aliases:
 
 ## Modules
 
-- [[src/domain/economy.ts]] — *this writ names the exported symbol `readCompliance`*
-- [[src/operator-core.ts]] — *this writ names the exported symbol `readCompliance`*
+- [[src/domain/economy.ts]] — *this writ names the exported symbol `estimateSpendCents`; this writ names the exported symbol `spendGate`*
+- [[src/operator-core.ts]] — *this writ names the exported symbol `estimateSpendCents`; this writ names the exported symbol `spendGate`*
 
 ## artifact
 
@@ -78,7 +78,7 @@ aliases:
 
 *Files this page names by path. Again: a citation of the file, nothing more.*
 
-- [[src/domain/tenure.ts]]
+- [[CLAUDE.md]]
 
 ---
 

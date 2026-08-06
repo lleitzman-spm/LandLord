@@ -402,24 +402,42 @@ const ESTIMATE_BY_URGENCY: Record<string, number> = {
   emergency: 140000, // demo: $1,400 — well over the cap
 };
 
-/** The founding default when a WO names no urgency band — set AT the cap so an
- *  unclassified spend defaults to needing approval (when in doubt, ask). */
-const DEFAULT_ESTIMATE_CENTS = 35000; // demo: $350 — set AT the demo cap
-
 /** A working-fluid estimated repair cost for a work order, from its `{urgency}`
- *  band. General/founding — a setting loads real estimates at the gate. */
-export function estimateSpendCents(urgency?: string): number {
-  if (!urgency) return DEFAULT_ESTIMATE_CENTS;
-  return ESTIMATE_BY_URGENCY[urgency.toLowerCase()] ?? DEFAULT_ESTIMATE_CENTS;
+ *  band — or UNDEFINED when the work order names no band this table knows.
+ *
+ *  THERE USED TO BE A DEFAULT HERE, and removing it is the point. An
+ *  unclassified work order returned `$350`, chosen to sit exactly AT the demo
+ *  cap so that it would trip the gate — "when in doubt, ask". It worked, and it
+ *  worked by coincidence: raise the cap to $500 and the same unclassified work
+ *  order silently reads `within-authority` and proceeds, on an estimate nobody
+ *  made, for a job nobody classified.
+ *
+ *  A sentinel wearing a dollar sign is worse than an absence, because every
+ *  reading downstream treats it as money. The gate cannot weigh what has not
+ *  been classified, and saying so is the honest answer — the same rule the
+ *  timing edges follow, where a step whose anchor date is unknown gets no due
+ *  date rather than a made-up one. Unknown is not overdue; unclassified is not
+ *  cheap. */
+export function estimateSpendCents(urgency?: string): number | undefined {
+  if (!urgency) return undefined;
+  return ESTIMATE_BY_URGENCY[urgency.toLowerCase()];
 }
 
-export type SpendDisposition = 'ungated' | 'within-authority' | 'needs-owner-approval';
+export type SpendDisposition =
+  | 'ungated'
+  | 'within-authority'
+  | 'needs-owner-approval'
+  /** The work order names no urgency this table knows, so there is no estimate
+   *  to weigh against the cap. It does not proceed — not because it is
+   *  expensive, but because nobody has said what it is. */
+  | 'unclassified';
 
 export interface SpendGate {
   /** The cap (NTE) in force in cents, or undefined when the economy sets none. */
   capCents?: number;
-  /** The repair's estimated cost the decision was read against. */
-  estimateCents: number;
+  /** The repair's estimated cost the decision was read against — ABSENT when the
+   *  work order was never classified, and absent is not zero. */
+  estimateCents?: number;
   /** True when the estimate is at or above the cap — the owner must approve
    *  before the vendor proceeds. */
   needsApproval: boolean;
@@ -437,8 +455,23 @@ export interface SpendGate {
  *  `estateId` is optional (slice 2, backward-compatible): named, it reads that
  *  estate's own cap when it has an override; omitted, the two-arg call behaves
  *  exactly as it always has, reading the house-wide cap. */
-export function spendGate(economy: EconomyBook, estimateCents: number, estateId?: string): SpendGate {
+export function spendGate(
+  economy: EconomyBook,
+  estimateCents: number | undefined,
+  estateId?: string,
+): SpendGate {
   const capCents = spendCapFor(economy, estateId);
+  // No estimate means the work order was never classified. It stops here, and
+  // the reason it stops is legible: not "over the cap" — which would be a claim
+  // about a number that does not exist — but "nobody has said what this is".
+  if (estimateCents == null) {
+    return {
+      ...(capCents == null ? {} : { capCents }),
+      needsApproval: true,
+      disposition: 'unclassified',
+      note: 'Unclassified work order — no urgency band, so no estimate. It cannot be weighed against the cap and does not proceed until somebody classifies it.',
+    };
+  }
   if (capCents == null) {
     return {
       estimateCents,

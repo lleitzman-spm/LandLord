@@ -35,7 +35,7 @@ A firm with a high cap gets unnecessary asks; a firm with a low cap gets none of
 
 ## Facts it depends on
 
-- [[Default estimate for an unclassified repair]] — *declared in `knowledge/decisions.json`*
+- [[Default estimate for an unclassified repair — RETIRED, there is no default]] — *declared in `knowledge/decisions.json`*
 
 ## artifact
 
@@ -49,7 +49,7 @@ A firm with a high cap gets unnecessary asks; a firm with a low cap gets none of
 
 ### Facts it depends on
 
-- [[Default estimate for an unclassified repair]] — *declared in `knowledge/facts.json`*
+- [[Default estimate for an unclassified repair — RETIRED, there is no default]] — *declared in `knowledge/facts.json`*
 
 ### artifact
 

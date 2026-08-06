@@ -1011,16 +1011,16 @@
   {
    "id": "fact:default-estimate-cents",
    "type": "fact",
-   "label": "Default estimate for an unclassified repair",
-   "standing": "built",
+   "label": "Default estimate for an unclassified repair — RETIRED, there is no default",
+   "standing": "retired",
    "kind": "flat-cents",
-   "value": 35000,
+   "value": null,
    "unit": "USD cents",
-   "scope": "Demo configuration — deliberately set AT the demo cap so an unclassified spend defaults to needing approval.",
-   "summary": "The founding default estimate when a work order names no urgency band, set at the demo spend cap (\"when in doubt, ask\").",
+   "scope": "Retired 2026-08-06. No successor value: the successor is an ABSENCE.",
+   "summary": "RETIRED. This was $350, chosen to sit exactly AT the demo spend cap so an unclassified work order would trip the gate — \"when in doubt, ask\". It worked by coincidence rather than by policy: raise the cap and the same unclassified work order read `within-authority` and proceeded on an estimate nobody made, and the settlement path posted that fabricated figure to the ledger as a real vendor payment. Superseded by a fourth spend disposition, `unclassified`, which stops the work order and says why. A sentinel wearing a dollar sign is worse than an absence, because every reading downstream treats it as money.",
    "source_path": "src/domain/economy.ts",
-   "source_line": 372,
-   "quote": "demo: $350 — set AT the demo cap",
+   "source_line": null,
+   "quote": "export function estimateSpendCents(urgency?: string): number | undefined {",
    "links": [
     "entity:spend-gate",
     "decision:spend-gate-unknown-urgency-default-open",
@@ -1029,7 +1029,8 @@
    "tags": [
     "economy",
     "demo-config"
-   ]
+   ],
+   "supersededBy": "SpendDisposition 'unclassified' — see src/domain/economy.ts"
   },
   {
    "id": "fact:flow-move-out-relay-log-notice-after",

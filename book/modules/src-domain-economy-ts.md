@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-1362 lines · 56 exported symbols.
+1395 lines · 56 exported symbols.
 
 ## What the file says of itself
 
@@ -36,14 +36,14 @@ aliases:
 
 ## Shape
 
-- **Lines:** 1362
+- **Lines:** 1395
 - **Exported symbols (56):** `AcctType`, `BankId`, `BankRec`, `BankRecs`, `Book`, `BridgeCheck`, `BudgetLine`, `BudgetVsActual`, `BudgetVsActualLine`, `Compliance`, `ComplianceCheck`, `CorporateCoffers`, `EARNED_FEE_LIMIT_DAYS`, `EconomyBook`, `FOUNDING_ECONOMY`, `FeeKind`, `FeeRule`, `LedgerAccount`, `MoneyEvent`, `MoneyKind`, `MoneyLog`, `OwnerStatement`, `PnL`, `PnLLine`, `Posting`, `Side`, `Solvency`, `SpendDisposition`, `SpendGate`, `SpendReconciliation`, `balanceOf`, `booksBalance`, `bridgeCheck`, `coinCents`, `economyAtFounding`, `estimateSpendCents`, `feeAmount`, `feeRuleFor`, `lateFeeSplit`, `mtmSplit`, `needsOwnerApproval`, `ownersInLog`, `postingsFor`, `readBankRecs`, `readBudgetVsActual`, `readCompliance`, `readCorporateCoffers`, `readOwnerStatement`, `readPnL`, `readPostings`, `readSolvency`, `reconcileSpend`, `sampleLedger`, `spendCapFor`, `spendGate`, `vendorSettlementMoney`
 
 ## Backlinks
 
 ### Writs that specify it
 
-- [[Open questions]] — *this writ names the exported symbol `readCompliance`*
+- [[Open questions]] — *this writ names the exported symbol `estimateSpendCents`; this writ names the exported symbol `spendGate`*
 - [[The Kingdom — Canon]] — *this writ names the exported symbol `BudgetLine`; this writ names the exported symbol `EARNED_FEE_LIMIT_DAYS`; +9 more*
 - [[Writ — the economy pillar, re-expressed as chronicle readings]] — *this writ names the exported symbol `EconomyBook`; this writ names the exported symbol `feeAmount`; +8 more*
 
@@ -58,7 +58,7 @@ aliases:
 - [[Corporate budget — overhead expense (demo)]] — *declared in `knowledge/facts.json`*
 - [[Corporate budget — payroll expense (demo)]] — *declared in `knowledge/facts.json`*
 - [[Corporate budget — software expense (demo)]] — *declared in `knowledge/facts.json`*
-- [[Default estimate for an unclassified repair]] — *declared in `knowledge/facts.json`*
+- [[Default estimate for an unclassified repair — RETIRED, there is no default]] — *declared in `knowledge/facts.json`; names the exported symbol `estimateSpendCents`*
 - [[Earned-fee sweep limit]] — *declared in `knowledge/facts.json`*
 - [[House owner-approval spend cap (demo)]] — *declared in `knowledge/facts.json`*
 - [[Late fee split — firm's cut (demo)]] — *declared in `knowledge/facts.json`*
@@ -119,6 +119,7 @@ aliases:
 - [[a cash-complete sample month is sound]] — *reached by the test FILE through its helper `test/invariants.ts` (shared source, not a claim about this one test)*
 - [[a Chancellor granted ONE fief holds one fief — an office is not land]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a chronicle predating the estates shelf migrates to the empty founding book]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a classified estimate is still weighed against the cap, both ways]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a clean founding brings NOTHING — the household is fully staffed]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a clerk’s proposal is heard ONCE — never also as a bare waiting case]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a craft left headless IS brought before the court]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -139,6 +140,7 @@ aliases:
 - [[a headless craft holds back EVERY metro, not one — the household is shared]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a headless office reads as headless — never as somebody else’s]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a house mtm rule with no splitBps falls back to the named constant]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a known band still returns its figure]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a loaded estate roster flips isFoundingChronicle to non-founding]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a march PROMOTES when the records change, with no field written]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a muster deployed on the remote side is adopted, not clobbered by a stale local]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -169,6 +171,7 @@ aliases:
 - [[a war door and an estate roster both go straight in]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a war door carries NO tenure of its own — only an address and an owner]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a well-ordered owner month is sound (income before fees, temporal-clean)]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a work order with no urgency band has NO estimate]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a zero/invalid bill posts nothing]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[accepts a well-formed patch and round-trips through applyEconomySetting]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[accepts null on a rate field (clear) but still rejects other non-numbers]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -194,7 +197,10 @@ aliases:
 - [[an estate's own NTE governs the settlement ceiling where it has one]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an id-keyed array merges by id, not by index]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an owed edict PRESSES as its day nears]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[an unclassified estimate stops, and says WHY it stopped]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an UNFUNDED owner settles soundly via the shortfall topup]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[an urgency band this table does not know has no estimate either]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[and it stops REGARDLESS of the cap — the old default did not]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[balances within both books (the bridge)]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[both books balance over the whole dealt money log]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[but two fiefs under one lord IS a plurality]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*

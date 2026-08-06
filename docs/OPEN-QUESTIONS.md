@@ -28,41 +28,77 @@ That covers a lot, but several real arrangements do not fit cleanly:
 compared. If they all fit `kind + basis + rate`, close this. If they do not, the
 gap is the design.
 
-## The spend gate's default when urgency is unknown
+## ~~The spend gate's default when urgency is unknown~~ — SETTLED 2026-08-06
 
-An unclassified repair estimate currently defaults **at** the approval cap, so it
-gates — "when in doubt, ask." That is defensible, but it means a firm with a high
-cap gets a lot of unnecessary asks, and a firm with a low cap gets none of the
-protection the default was meant to give.
+**Settled: an unclassified work order does not progress.** *"If it's unclassified it
+shouldn't progress because where will it go?"*
 
-**What would settle it:** whether operators experience the default as a safety
-net or as noise. Candidate alternative: no default at all, and an unclassified
-estimate is a *reading* ("unclassified — cannot gate") rather than a number.
+The question as originally written asked whether the default felt like a safety net
+or like noise. Reading the code to answer it turned up something worse than either:
+there was no policy, only a coincidence. An unclassified work order was given
+`$350`, a figure chosen to sit exactly AT the demo cap so it would trip the gate.
+Raise the cap to $500 and the same unclassified work order read `within-authority`
+and proceeded — on an estimate nobody made, for a job nobody classified. The
+settlement path then posted that fabricated figure to the ledger as a real vendor
+payment.
 
-## Whether "artisan" should be a pledge or a relationship
+There is no default now. `estimateSpendCents` returns undefined for an unknown band,
+`spendGate` returns a fourth disposition — `unclassified` — which stops the work
+order and says *why* it stopped, and the settlement posts no money for a bill nobody
+produced. Six tests, verified by restoring the sentinel and watching three fail.
 
-An outside vendor is stored as a pledge (`sellsword`) on a person, which makes
-"internal versus external" a property of the human rather than of the engagement.
-A contractor who is later hired inside the walls re-pledges, which works — but a
-person who is staff at one firm and a vendor to another cannot be modelled at
-all, and a shared-services arrangement between two firms would hit this
-immediately.
+The general rule this belongs to: **a sentinel wearing a dollar sign is worse than an
+absence, because every reading downstream treats it as money.** Same shape as the
+timing anchors, where a step whose date is unknown gets no due date rather than a
+made-up one. Unknown is not overdue; unclassified is not cheap.
 
-**What would settle it:** a case where one person genuinely holds both
-relationships at once. Until then the simpler model is probably right.
+## Whether "artisan" should be a pledge or a relationship — ANSWERED, NOT YET BUILT
 
-## Trust-accounting rules that vary by jurisdiction
+**The case exists, and it is not hypothetical.** This entry asked for "a case where
+one person genuinely holds both relationships at once. Until then the simpler model
+is probably right." That case was produced 2026-08-06, from the operator's own
+commercial arrangements, and it is not an edge — it is the normal shape of a small
+group of businesses that share owners.
 
-`readCompliance` folds five checks that hold nearly everywhere (the bank
-reconciles, no trust bank overdrawn, no owner overdrawn, deposits held whole,
-earned fees swept in time). The last one carries a day count, and that day count
-is set by the jurisdiction, not by the firm. Today it is one number for the whole
-deployment.
+Stated structurally (the people are real; their names are not this repository's to
+carry, per CLAUDE.md's first rule):
 
-**What would settle it:** whether a single deployment ever operates across two
-jurisdictions with different limits. If it does, the limit belongs on the realm
-record (`src/domain/tenure.ts` already models a realm and its regulator) rather
-than on the economy.
+- One individual is a **partner in firm A** and the **owner of firm B**, and firm B
+  is a **vendor to firm A**. Internal and external at once, in the same week, over
+  the same two entities.
+- A second individual is likewise a partner in one firm and the supplier of a
+  professional service to two others.
+
+Under the current model an outside vendor is a pledge on the PERSON, so
+internal-versus-external is a property of the human rather than of the engagement.
+These people cannot be represented at all: whichever pledge is chosen is wrong from
+the other firm's point of view, and both firms are in scope.
+
+**So the model has to change: the relationship belongs on the engagement, not on the
+person.** A person may hold several at once, each scoped to the counterparty.
+
+**Not built yet, and deliberately so** — it lands on top of tenancy rather than under
+it. Tenancy is the thing that makes "from firm A's point of view" expressible at all,
+and building a per-engagement relationship model before there is a tenant to scope it
+to would produce the wrong shape twice.
+
+## ~~Trust-accounting rules that vary by jurisdiction~~ — SETTLED 2026-08-06
+
+**Settled: properties are always in one jurisdiction, so one number is correct.**
+*"Properties will never be outside of texas, owners likely will be."*
+
+Trust-accounting duty follows the property and the licensed broker, not the owner's
+address, so the sweep-days limit stays a single deployment-wide number and does NOT
+move onto the realm record. Recorded here explicitly rather than left looking like an
+oversight — an unexplained single number and a deliberate one are indistinguishable
+from the outside, which is the whole reason this file exists.
+
+**What this does NOT settle, and must not be read as settling.** Owners being
+out-of-state is a real and separate axis. It does not touch trust accounting, and it
+may well touch owner reporting — non-resident withholding and year-end tax documents
+are governed by where the OWNER sits, not the property. Nothing in the tree models
+that today. It is not raised as a question here because nobody has yet said it is in
+scope; if owner reporting is ever built, this is the first thing to ask about it.
 
 ## Multi-tenancy, and what the per-identity vault rows actually are
 

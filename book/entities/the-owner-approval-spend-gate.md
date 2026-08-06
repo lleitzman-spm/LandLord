@@ -45,7 +45,7 @@ True when a repair cost is at or above the economy's threshold and so needs owne
 
 ### Facts it depends on
 
-- [[Default estimate for an unclassified repair]] — *declared in `knowledge/facts.json`*
+- [[Default estimate for an unclassified repair — RETIRED, there is no default]] — *declared in `knowledge/facts.json`*
 - [[House owner-approval spend cap (demo)]] — *declared in `knowledge/facts.json`*
 - [[Per-estate spend cap override (demo)]] — *declared in `knowledge/facts.json`*
 - [[Working-fluid repair estimate — emergency]] — *declared in `knowledge/facts.json`*

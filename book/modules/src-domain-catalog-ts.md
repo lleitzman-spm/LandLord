@@ -77,6 +77,7 @@ aliases:
 - [[a book cut over the muster places EVERY door — the join is sound]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a cash-complete sample month is sound]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a Chancellor granted ONE fief holds one fief — an office is not land]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[a classified estimate is still weighed against the cap, both ways]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a clean founding brings NOTHING — the household is fully staffed]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a clerk’s proposal is heard ONCE — never also as a bare waiting case]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a craft left headless IS brought before the court]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -97,6 +98,7 @@ aliases:
 - [[a headless craft holds back EVERY metro, not one — the household is shared]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a headless office reads as headless — never as somebody else’s]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a house mtm rule with no splitBps falls back to the named constant]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[a known band still returns its figure]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a march PROMOTES when the records change, with no field written]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a muster deployed on the remote side is adopted, not clobbered by a stale local]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a name the book does not hold reads as NOTHING rather than throwing]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -125,6 +127,7 @@ aliases:
 - [[a war door and an estate roster both go straight in]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a war door carries NO tenure of its own — only an address and an owner]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a well-ordered owner month is sound (income before fees, temporal-clean)]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[a work order with no urgency band has NO estimate]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a zero/invalid bill posts nothing]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[accepts a well-formed patch and round-trips through applyEconomySetting]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[accepts null on a rate field (clear) but still rejects other non-numbers]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -149,7 +152,10 @@ aliases:
 - [[an estate's own NTE governs the settlement ceiling where it has one]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[an id-keyed array merges by id, not by index]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[an owed edict PRESSES as its day nears]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[an unclassified estimate stops, and says WHY it stopped]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[an UNFUNDED owner settles soundly via the shortfall topup]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[an urgency band this table does not know has no estimate either]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[and it stops REGARDLESS of the cap — the old default did not]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[balances within both books (the bridge)]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[both books balance over the whole dealt money log]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[but two fiefs under one lord IS a plurality]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
