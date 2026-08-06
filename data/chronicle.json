@@ -189,7 +189,28 @@
       }
     ]
   },
-  "events": [],
+  "events": [
+    {
+      "id": "3792baad-2f30-44ce-8ae1-ec0920fce381",
+      "at": "2026-08-06T06:21:02.421Z",
+      "caseId": "vendor-dispatch: Willow Creek unit 4",
+      "kind": "opened",
+      "note": "A work order is reported — the Vendor dispatch begins: 8 steps.",
+      "params": {
+        "trade": "HVAC",
+        "urgency": "emergency"
+      }
+    },
+    {
+      "id": "c7d32b58-a9d9-4d91-88fc-04d2de1bfc4d",
+      "at": "2026-08-06T06:21:02.421Z",
+      "caseId": "vendor-dispatch: Willow Creek unit 4",
+      "kind": "awaiting",
+      "catalogRow": "work-order",
+      "holder": "pm-desk",
+      "note": "Step 1/8 · The report logged — what broke, which door, how it reached us. — on notice day"
+    }
+  ],
   "catalog": [
     {
       "key": "rent-post",
@@ -1785,5 +1806,5 @@
   "estates": [],
   "money": [],
   "wargame": null,
-  "rev": 2
+  "rev": 13
 }

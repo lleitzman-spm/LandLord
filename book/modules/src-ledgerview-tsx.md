@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-1197 lines · 1 exported symbol.
+1272 lines · 1 exported symbol.
 
 ## What the file says of itself
 
@@ -30,7 +30,7 @@ aliases:
 
 ## Shape
 
-- **Lines:** 1197
+- **Lines:** 1272
 - **Exported symbols (1):** `LedgerView`
 
 ## Modules
@@ -39,6 +39,7 @@ aliases:
 - [[src/detail.ts]] — *imported by this file*
 - [[src/domain/caselabel.ts]] — *imported by this file*
 - [[src/domain/catalog.ts]] — *imported by this file*
+- [[src/domain/escape.ts]] — *imported by this file*
 - [[src/domain/events.ts]] — *imported by this file*
 - [[src/domain/flows.ts]] — *imported by this file*
 - [[src/domain/states.ts]] — *imported by this file*

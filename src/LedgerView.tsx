@@ -32,6 +32,7 @@ import {
 } from './domain/catalog';
 import type { FlowReading, StepReading } from './domain/flows';
 import { edgeLine, readFlows } from './domain/flows';
+import { readEscape } from './domain/escape';
 import { regent } from './domain/states';
 import { caseBadge, caseLabel, seatLabel, spendSignal, titleFor } from './domain/caselabel';
 
@@ -185,6 +186,7 @@ export default function LedgerView({ events, catalog, flows, kingdom, now, focus
   const feed = [...log].sort((a, b) => (a.at < b.at ? 1 : -1)); // newest first
   const parked = clerkProposals(log).filter((p) => p.awaiting);
   const live = readFlows(flows.flows, log, now);
+  const escape = readEscape(flows.flows, catalog.rows, log);
   // Which case the cascade list opens on. It arrives from a road outside the
   // Ledger (nav.goToLedger(caseId)) but must also be settable from INSIDE it —
   // a proposal you can read and cannot open is information with no road to the
@@ -234,6 +236,8 @@ export default function LedgerView({ events, catalog, flows, kingdom, now, focus
         />
         <Kpi n={o.doneRecently} label="Done · 7d" tone={o.doneRecently > 0 ? 'green' : undefined} />
       </div>
+
+      <EscapeBand escape={escape} />
 
       {parked.length > 0 && (
         <div className="card clerk-card">
@@ -488,6 +492,77 @@ export default function LedgerView({ events, catalog, flows, kingdom, now, focus
         )}
       </div>
     </section>
+  );
+}
+
+
+/** THE ESCAPE RATE — what share of work reached a human.
+ *
+ *  It sits apart from the KPI tiles rather than among them, and that is deliberate:
+ *  it is not one measure of six, it is the one the whole product is judged against,
+ *  and it carries two things a tile cannot hold — the split between escapes the flow
+ *  book INTENDED and escapes that mean the machine failed, and an honest note about
+ *  how much evidence the number rests on.
+ *
+ *  It names the leaking steps rather than only the total, because a rate with no
+ *  road is a count you cannot act on. Nothing here is a link: the reading knows which
+ *  STEP leaks, not which case to open, and a control whose only feedback is
+ *  invisible is the fault this band exists to avoid. */
+function EscapeBand({ escape }: { escape: ReturnType<typeof readEscape> }) {
+  const pct = (n: number) => `${(n * 100).toFixed(1)}%`;
+  const leaks = escape.byStep.filter((l) => l.unplanned > 0).slice(0, 4);
+  return (
+    <div className="card">
+      <h3>Escape rate</h3>
+      {escape.rate === null ? (
+        <>
+          <p className="num-lg">NOT MEASURED</p>
+          <p className="fine">
+            No step has been reached yet. This reads as <em>not measured</em> rather than 0%,
+            because a rate over no work would look like perfect automation on a system that has
+            done nothing.
+          </p>
+        </>
+      ) : (
+        <>
+          <p className="num-lg">{pct(escape.rate)}</p>
+          <p className="fine">
+            {escape.escaped} of {escape.stepsReached} steps reached a person —{' '}
+            <strong>{escape.designed} by design</strong> (a judgment the flow book means to keep
+            human) and <strong>{escape.unplanned} unplanned</strong> (a step marked automatic that
+            somebody had to touch anyway). The second number is the one to drive down; the first is
+            the ceiling the flow book set before any case was worked.
+          </p>
+        </>
+      )}
+      {escape.unmeasured > 0 && (
+        <p className="fine">
+          {escape.unmeasured} reached step{escape.unmeasured === 1 ? '' : 's'} declare no mode in
+          the catalog and are excluded from the figures above — a denominator padded with unknowns
+          is how a rate flatters itself.
+        </p>
+      )}
+      {escape.inheritedSteps > 0 && (
+        <p className="fine">
+          Resting on {escape.judgments} independent judgment{escape.judgments === 1 ? '' : 's'}:{' '}
+          {escape.inheritedSteps} step{escape.inheritedSteps === 1 ? '' : 's'} inherit their
+          classification from a catalog row they share with another, so the step count overstates
+          the evidence.
+        </p>
+      )}
+      {leaks.length > 0 && (
+        <>
+          <h4>Where it leaks</h4>
+          <ul className="fine">
+            {leaks.map((l) => (
+              <li key={l.key}>
+                <code>{l.key}</code> — {l.unplanned} of {l.reached} reached
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
   );
 }
 

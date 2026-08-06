@@ -47,6 +47,14 @@ aliases:
 
 ## Backlinks
 
+### Modules
+
+- [[src/LedgerView.tsx]] — *imported by this file*
+
+### Surfaces
+
+- [[LedgerView]] — *imported by this view*
+
 ### Invariants that enforce it
 
 *These roads come from a shared source FILE, not from a semantic claim: the test file imports the module. Read it as "stands near", never as "proves".*

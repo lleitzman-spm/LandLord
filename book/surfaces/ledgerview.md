@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Derived from the tree — the code is there to be read.*
 
-React view in `src/LedgerView.tsx` — 1197 lines.
+React view in `src/LedgerView.tsx` — 1272 lines.
 
 ## Where it lives
 
@@ -36,6 +36,7 @@ React view in `src/LedgerView.tsx` — 1197 lines.
 - [[src/detail.ts]] — *imported by this view*
 - [[src/domain/caselabel.ts]] — *imported by this view*
 - [[src/domain/catalog.ts]] — *imported by this view*
+- [[src/domain/escape.ts]] — *imported by this view*
 - [[src/domain/events.ts]] — *imported by this view*
 - [[src/domain/flows.ts]] — *imported by this view*
 - [[src/domain/states.ts]] — *imported by this view*
