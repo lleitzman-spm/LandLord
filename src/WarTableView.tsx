@@ -100,7 +100,7 @@ import {
 } from './components';
 import LedgerView from './LedgerView';
 import { CommandPalette } from './CommandPalette';
-import { GO_KEYS, isTyping, type Command } from './keys';
+import { GO_KEYS, isTyping, MOD_K, type Command } from './keys';
 import CensusView from './CensusView';
 import FiefDetail from './FiefView';
 import CrownView from './CrownView';
@@ -357,7 +357,7 @@ export default function WarTableView({
   const [seedIn, setSeedIn] = useState('the-first-muster');
   const [mustering, setMustering] = useState(false);
   const [clerksWorking, setClerksWorking] = useState(false);
-  /** The palette — the one door that lists every other (⌘K, `/`, or `?`). */
+  /** The palette — the one door that lists every other (⌘K / Ctrl+K, `/`, or `?`). */
   const [paletteOpen, setPaletteOpen] = useState(false);
   /** Whether the Council stands beside the board (`c`). It used to be a
    *  permanent 322px column — 19% of a 1440x900 screen and 23% of a 1280x800
@@ -1292,11 +1292,11 @@ export default function WarTableView({
           <button
             className="wt-palbtn"
             onClick={() => setPaletteOpen(true)}
-            title="Every surface and every act, in one list — ⌘K, / or ?"
+            title={`Every surface and every act, in one list — ${MOD_K}, / or ?`}
           >
             <span aria-hidden="true">☰</span>
             <span className="wt-lbl">Go</span>
-            <kbd>⌘K</kbd>
+            <kbd>{MOD_K}</kbd>
           </button>
           {/* THE DENSITY TOGGLE MOVED TO THE PALETTE (`d`). It is set once and
               then left alone for a whole session — the weakest claim on standing

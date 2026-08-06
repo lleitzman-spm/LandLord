@@ -53,6 +53,36 @@ export const GO_KEYS: Readonly<Record<string, string>> = {
   r: 'marches',
 };
 
+/** The name of the "hold this and press another" key, on THIS machine.
+ *
+ *  The handler has always accepted either — `e.metaKey || e.ctrlKey` — so the
+ *  behaviour was never Mac-only. The LABELS were: a board that says `⌘K` to
+ *  someone on Windows is telling them to press a key their keyboard does not
+ *  have, and the one door that reaches every other door is the worst possible
+ *  place to do that.
+ *
+ *  Read once, at module load: a keyboard does not change platform mid-session,
+ *  and every caller renders this into static text.
+ *
+ *  `userAgentData.platform` is the modern reading and `navigator.platform` is
+ *  deprecated but still the only answer in several browsers, so try both before
+ *  falling back to the user-agent string. Anything unrecognised gets `Ctrl` —
+ *  the commoner keyboard, and the safer guess when we genuinely do not know. */
+function readModifierName(): string {
+  if (typeof navigator === 'undefined') return 'Ctrl';
+  const nav = navigator as Navigator & { userAgentData?: { platform?: string } };
+  const stated = nav.userAgentData?.platform || nav.platform || nav.userAgent || '';
+  return /mac|iphone|ipad|ipod/i.test(stated) ? '⌘' : 'Ctrl';
+}
+
+/** `⌘` on an Apple keyboard, `Ctrl` everywhere else. */
+export const MOD_KEY: string = readModifierName();
+
+/** The palette's shortcut as it should be written on THIS machine — `⌘K` or
+ *  `Ctrl+K`. Apple keycaps are written closed-up by convention; everywhere else
+ *  takes the `+`. */
+export const MOD_K: string = MOD_KEY === '⌘' ? '⌘K' : `${MOD_KEY}+K`;
+
 /** True when a keystroke belongs to whatever the player is typing into, and so
  *  is none of our business. Without this, typing a muster's seed named
  *  "the-grand-muster" would fire `g`, `r`, `n` and `b` as it went. */

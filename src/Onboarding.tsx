@@ -7,6 +7,7 @@
 // it renders correctly wherever it is mounted).
 
 import { useEffect, useRef, useState } from 'react';
+import { MOD_K } from './keys';
 
 const ONBOARDED_KEY = 'landlord.onboarded.v1';
 
@@ -132,7 +133,7 @@ export default function OnboardingOverlay() {
             <p className="wt-onb-lede">Getting around:</p>
             <dl className="wt-onb-gloss">
               <div className="wt-onb-row">
-                <dt>☰ Go — or ⌘K</dt>
+                <dt>☰ Go — or {MOD_K}</dt>
                 <dd>
                   Every surface and every act in one searchable list, each shown beside its own
                   shortcut. Press <b>g</b> then a letter to jump straight there — <b>g&nbsp;l</b>{' '}

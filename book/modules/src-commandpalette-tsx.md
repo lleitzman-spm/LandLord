@@ -25,7 +25,7 @@ aliases:
 > THE PALETTE — one door to every surface and every act.
 > 
 > This is what replaces a rail of nine glyphs and a footer of five buttons. It
-> opens on ⌘K (Ctrl+K) or `/`, filters as you type, and runs on Enter.
+> opens on ⌘K / Ctrl+K or `/`, filters as you type, and runs on Enter.
 > 
 > It also TEACHES: every command shows its own key beside it, so the player who
 > reaches the Ledger by searching sees `g l` written next to it and reaches it

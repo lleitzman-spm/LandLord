@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Derived from the tree — the code is there to be read.*
 
-React view in `src/Onboarding.tsx` — 179 lines.
+React view in `src/Onboarding.tsx` — 180 lines.
 
 ## Where it lives
 
@@ -34,6 +34,7 @@ React view in `src/Onboarding.tsx` — 179 lines.
 
 ## Modules
 
+- [[src/keys.ts]] — *imported by this view*
 - [[src/Onboarding.tsx]] — *the same file `src/Onboarding.tsx`, seen as a module rather than a surface; the same file, read as code*
 
 ## Backlinks

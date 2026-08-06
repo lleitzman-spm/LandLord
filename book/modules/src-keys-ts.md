@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-104 lines · 5 exported symbols.
+134 lines · 7 exported symbols.
 
 ## What the file says of itself
 
@@ -37,19 +37,21 @@ aliases:
 
 ## Shape
 
-- **Lines:** 104
-- **Exported symbols (5):** `Command`, `GO_KEYS`, `fuzzyScore`, `isTyping`, `matchCommands`
+- **Lines:** 134
+- **Exported symbols (7):** `Command`, `GO_KEYS`, `MOD_K`, `MOD_KEY`, `fuzzyScore`, `isTyping`, `matchCommands`
 
 ## Backlinks
 
 ### Modules
 
 - [[src/CommandPalette.tsx]] — *imported by this file*
+- [[src/Onboarding.tsx]] — *imported by this file*
 - [[src/WarTableView.tsx]] — *imported by this file*
 
 ### Surfaces
 
 - [[CommandPalette]] — *imported by this view*
+- [[Onboarding]] — *imported by this view*
 - [[WarTableView]] — *imported by this view*
 
 ### Invariants that enforce it
