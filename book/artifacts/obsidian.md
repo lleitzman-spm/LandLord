@@ -20,7 +20,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-Opens the repository as an Obsidian vault: wikilinks (never markdown links, matching the 8,697 the compiler emits), the graph coloured by shelf, and node_modules kept out of the index. Per-machine UI state is gitignored; shared settings are not.
+Opens the repository as an Obsidian vault: wikilinks (never markdown links, matching the wikilinks the compiler emits) and node_modules kept out of the index, plus a graph coloured by shelf. Deliberately only app.json and graph.json — Obsidian does not publish these schemas, so anything that could fight a user setting (which core plugins are on, which theme) is left for Obsidian to generate.
 
 ## The source, verbatim
 
