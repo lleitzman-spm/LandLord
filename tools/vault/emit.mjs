@@ -35,6 +35,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { edgeInWords } from './flowbook.mjs';
 import {
   REPO,
   BOOK,
@@ -248,9 +249,114 @@ function renderNode(node, byId, link) {
   return out.join('\n') + '\n';
 }
 
+/** A FLOW PAGE DRAWS ITS CASCADE. Every other page in the Book describes a thing;
+ *  this one has to show a shape, and a list of fields is not a shape. Everything
+ *  below is read back out of the flow's own declaration — the same object the
+ *  running application walks — so the picture cannot drift from the machine.
+ *
+ *  The timing column is the reason this page has to exist at all. A step written
+ *  `edge: { after: -14, before: -7 }` means "between fourteen and seven days BEFORE
+ *  the event", and a negative day offset is the single most misreadable thing in the
+ *  flow book. Nobody should have to know that to read their own workflow. */
+function renderFlowExtra(node) {
+  const t = (node.extra || {}).flow;
+  if (!t || !Array.isArray(t.steps)) return '';
+  const out = [];
+  const steps = t.steps;
+  const label = (s) => `[[${t.title || t.key}: ${s.key}]]`;
+  const hands = (node.extra || {}).handLabels || {};
+  const hand = (h) => `[[${hands[h] || h}]]`;
+
+  out.push('## The cascade\n');
+  out.push(`**Trigger — ${escapeCell(t.trigger)}.** ${steps.length} steps, ${new Set(steps.map((s) => s.holder)).size} hand(s), ${new Set(steps.map((s) => s.board)).size} board(s).\n`);
+  out.push('```text');
+  steps.forEach((s, i) => {
+    const mark = i === 0 ? '▶' : i === steps.length - 1 ? '■' : '·';
+    out.push(`${mark} ${s.key}   [${s.board}]  — ${s.holder}`);
+    if (i < steps.length - 1) {
+      const n = steps[i + 1];
+      const hand = s.holder !== n.holder ? `   ⇢ handover ${s.holder} → ${n.holder}` : '';
+      out.push(`   └─▶ ${edgeInWords(n.edge, n.slaDays, n.repeatEveryDays)}${hand}`);
+    }
+  });
+  out.push('```\n');
+  out.push('*▶ where a case enters  ·  ■ where it comes to rest*\n');
+
+  out.push('## Every step\n');
+  out.push('| # | step | board | held by | when it may start | breached after | what it is |', '|---:|---|---|---|---|---|---|');
+  steps.forEach((s, i) => {
+    out.push(
+      `| ${i + 1} | ${label(s)} | ${escapeCell(s.board)} | ${hand(s.holder)} | ${escapeCell(edgeInWords(s.edge, undefined, s.repeatEveryDays))} ` +
+        `| ${s.slaDays === undefined ? '*no SLA*' : `${s.slaDays} day${s.slaDays === 1 ? '' : 's'}`} | ${escapeCell(s.note || s.condition || '—')} |`,
+    );
+  });
+  out.push('');
+
+  // A handover is where work is dropped in the real world — every one of them is a
+  // moment the case stops being somebody's problem and starts being somebody else's.
+  const handovers = steps.slice(1).filter((s, i) => steps[i].holder !== s.holder);
+  if (handovers.length) {
+    out.push('## Where it changes hands\n');
+    out.push(
+      `*${handovers.length} handover${handovers.length === 1 ? '' : 's'} in this flow. Each one is a moment the case stops being somebody's problem and starts being somebody else's — which is where work is actually dropped.*\n`,
+    );
+    steps.slice(1).forEach((s, i) => {
+      if (steps[i].holder === s.holder) return;
+      out.push(`- **${escapeCell(steps[i].holder)} → ${escapeCell(s.holder)}** at ${label(s)}${s.slaDays !== undefined ? ` — ${s.slaDays} day SLA` : ' — *no SLA on the receiving step*'}`);
+    });
+    out.push('');
+  }
+  return out.join('\n');
+}
+
+function escapeCell(s) {
+  return String(s ?? '—').replace(/\|/g, '\\|');
+}
+
 function renderExtra(node) {
   const e = node.extra || {};
   const out = [];
+  if (node.type === 'flow') return renderFlowExtra(node);
+  if (node.type === 'place' || node.type === 'transition' || node.type === 'guard') {
+    if (e.timing) out.push(`## When\n\n${e.timing}\n`);
+    const s = e.step;
+    if (s) {
+      out.push('## The step\n');
+      out.push(`- **Board:** ${escapeCell(s.board)}`);
+      out.push(`- **Held by:** [[${escapeCell(e.holderLabel || s.holder)}]]`);
+      out.push(`- **Task type:** \`${escapeCell(s.catalogRow)}\``);
+      if (s.slaDays !== undefined) out.push(`- **Breached after:** ${s.slaDays} day${s.slaDays === 1 ? '' : 's'} past its edge`);
+      if (s.repeatEveryDays) out.push(`- **Repeats:** every ${s.repeatEveryDays} days${s.condition ? ` ${escapeCell(s.condition)}` : ''}`);
+      if (s.condition) out.push(`- **Condition:** ${escapeCell(s.condition)}`);
+      out.push('');
+    }
+    if (e.handover) out.push(`## It changes hands here\n\n**${escapeCell(e.handover)}** — a moment the case stops being one person's problem and becomes another's.\n`);
+    return out.join('\n');
+  }
+  if (node.type === 'task') {
+    const r = e.row || {};
+    out.push('## The task type\n');
+    out.push(`- **Key:** \`${escapeCell(r.key)}\``);
+    if (r.class) out.push(`- **Class:** ${escapeCell(r.class)}`);
+    if (r.mode) out.push(`- **Mode:** ${escapeCell(r.mode)}${r.mode === 'human' ? ' — a judgement the machine must never cross' : ''}`);
+    if (r.domain) out.push(`- **Domain:** ${escapeCell(r.domain)}`);
+    if (r.note) out.push(`- **Note:** ${escapeCell(r.note)}`);
+    out.push('');
+    return out.join('\n');
+  }
+  if (node.type === 'hand') {
+    if (e.isQueue) {
+      out.push(
+        '> **This is a QUEUE, not a person.** A role nobody holds yet — it reads as the holder until a setting maps it to somebody. Every step below is work with no name against it.\n',
+      );
+    } else if (e.person) {
+      out.push('## The hand\n');
+      out.push(`- **Id:** \`${escapeCell(e.person.id)}\``);
+      if (e.person.pledge) out.push(`- **Pledge:** ${escapeCell(e.person.pledge)}`);
+      out.push('');
+    }
+    return out.join('\n');
+  }
   if (node.type === 'module') {
     if (e.adopted) {
       out.push(

@@ -35,7 +35,7 @@ Loaded config: a trigger and a set of steps, each naming a catalog row, a holder
 
 ## Modules
 
-- [[src/domain/flows.ts]] — *names the exported symbol `FlowTemplate`; the same file `src/domain/flows.ts`, seen as a module rather than a entity*
+- [[src/domain/flows.ts]] — *names the exported symbol `FlowTemplate`*
 - [[src/operator-core.ts]] — *names the exported symbol `FlowTemplate`*
 
 ## Backlinks
@@ -49,10 +49,6 @@ Loaded config: a trigger and a set of steps, each naming a catalog row, a holder
 
 - [[CatalogRow]] — *declared in `knowledge/entities.json`*
 - [[FlowStep]] — *declared in `knowledge/entities.json`*
-
-### Modules
-
-- [[src/domain/flows.ts]] — *the same file `src/domain/flows.ts`, seen as a entity rather than a module*
 
 ### artifact
 

@@ -35,13 +35,11 @@ One step of a flow: a catalog row, a holder, a board, a timing edge, an optional
 
 ## Modules
 
-- [[src/domain/flows.ts]] — *names the exported symbol `FlowStep`; the same file `src/domain/flows.ts`, seen as a module rather than a entity*
+- [[src/domain/flows.ts]] — *names the exported symbol `FlowStep`*
 
 ## Backlinks
 
-### Modules
-
-- [[src/domain/flows.ts]] — *the same file `src/domain/flows.ts`, seen as a entity rather than a module*
+*Nothing in the Book points here. An orphan page is worse than a missing one — it exists, it is correct, and no reader will ever reach it. `npm run book:lint` counts these.*
 
 ---
 

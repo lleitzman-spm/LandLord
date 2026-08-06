@@ -454,6 +454,62 @@ function checkResolvedTables(pages) {
   return { offenders };
 }
 
+/** THE CASCADE MUST AGREE WITH ITS OWN CLOCK.
+ *
+ *  A flow declares its steps in order, and each step declares WHEN it may start.
+ *  Those are two independent statements about the same thing, and until the
+ *  operational graph existed nothing had ever compared them. This does: walk each
+ *  flow in declared order and flag a step whose earliest start is BEFORE the step it
+ *  comes after.
+ *
+ *  It found real ones on its first run. `move-out-relay` puts `deposit-accounting` at
+ *  days 21–30 and then `deposit-transfer` — the very next step — at days 10–12. Read
+ *  in order, that is a case moving backwards in time.
+ *
+ *  WARNING, not fatal, and the reason is itself the finding: `TimingEdge` carries no
+ *  ANCHOR. A positive offset counts forward from the trigger and a negative one counts
+ *  back from the event, so a flow legitimately mixing "day 3 after notice" with "seven
+ *  days before the vacate date" trips this without being wrong. The check cannot be
+ *  made exact until the model says which clock each edge hangs off — and naming the
+ *  pairs is how a reader discovers that question exists at all. */
+function checkCascadeOrder(graph) {
+  const flows = graph.nodes.filter((n) => n.type === 'flow');
+  let backwards = 0;
+  let mixed = 0;
+  const start = (s) => {
+    const e = (s && s.edge) || {};
+    return e.after !== undefined ? e.after : e.before !== undefined ? e.before : null;
+  };
+  for (const f of flows) {
+    const t = (f.extra || {}).flow;
+    const steps = t && Array.isArray(t.steps) ? t.steps : [];
+    const signs = new Set(
+      steps.map(start).filter((v) => v !== null).map((v) => (v < 0 ? 'back-from-event' : 'forward-from-trigger')),
+    );
+    if (signs.size > 1) {
+      mixed++;
+      warn(
+        'cascade',
+        `${f.id} mixes offsets counted FORWARD from its trigger with offsets counted BACK from its event, and \`TimingEdge\` carries no anchor field to tell them apart — every reading of this flow has to guess which clock a step hangs off`,
+      );
+    }
+    for (let i = 1; i < steps.length; i++) {
+      const prev = start(steps[i - 1]);
+      const cur = start(steps[i]);
+      if (prev === null || cur === null) continue;
+      if (prev < 0 !== cur < 0) continue; // different clocks — the warning above covers it
+      if (cur < prev) {
+        backwards++;
+        warn(
+          'cascade',
+          `${f.id}: step ${i + 1} \`${steps[i].key}\` may start at ${cur} but \`${steps[i - 1].key}\` before it starts at ${prev} — the declared order runs backwards against the clock`,
+        );
+      }
+    }
+  }
+  return { flows: flows.length, backwards, mixed };
+}
+
 function main() {
   const graph = buildGraph();
   const pages = loadBookPages();
@@ -469,6 +525,7 @@ function main() {
   const standing = checkStanding(graph);
   const literals = checkLiterals(graph);
   const resolved = checkResolvedTables(pages);
+  const cascade = checkCascadeOrder(graph);
 
   for (const b of graph.brokenKnowledge) fatal('knowledge', `unreadable: ${b}`);
   for (const u of graph.unresolvedLinks) {
@@ -492,6 +549,11 @@ function main() {
   );
   console.log(`  literals in guards ${literals.sites} site(s) across ${literals.files} file(s) — WARNING, this repo predates the rule`);
 
+  console.log(
+    cascade.flows === 0
+      ? '  cascades         no flows mined — the operational graph is not built'
+      : `  cascades         ${cascade.flows} flow(s)  ·  ${cascade.backwards} step(s) running backwards against the clock, ${cascade.mixed} flow(s) mixing two unanchored clocks`,
+  );
   const groups = {};
   for (const f of findings.fatal) (groups[f.check] = groups[f.check] || []).push(f.msg);
   const wgroups = {};

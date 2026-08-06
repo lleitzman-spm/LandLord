@@ -37,11 +37,6 @@ aliases:
 - **Lines:** 1035
 - **Exported symbols (22):** `FOUNDING_FLOWS`, `FlowBook`, `FlowInstance`, `FlowParams`, `FlowReading`, `FlowStep`, `FlowTemplate`, `HolderRef`, `StepReading`, `TimingEdge`, `approveStep`, `completeStep`, `edgeLine`, `flowsAtFounding`, `fullParams`, `handStep`, `instantiateFlow`, `overrideStep`, `paramsOf`, `proposeStep`, `readFlow`, `readFlows`
 
-## Entities
-
-- [[FlowStep]] — *the same file `src/domain/flows.ts`, seen as a entity rather than a module*
-- [[FlowTemplate]] — *the same file `src/domain/flows.ts`, seen as a entity rather than a module*
-
 ## Modules
 
 - [[src/domain/events.ts]] — *imported by this file*
@@ -60,8 +55,8 @@ aliases:
 ### Entities
 
 - [[CatalogRow]] — *names the exported symbol `FlowTemplate`*
-- [[FlowStep]] — *names the exported symbol `FlowStep`; the same file `src/domain/flows.ts`, seen as a module rather than a entity*
-- [[FlowTemplate]] — *names the exported symbol `FlowTemplate`; the same file `src/domain/flows.ts`, seen as a module rather than a entity*
+- [[FlowStep]] — *names the exported symbol `FlowStep`*
+- [[FlowTemplate]] — *names the exported symbol `FlowTemplate`*
 
 ### Modules
 
@@ -344,6 +339,157 @@ aliases:
 - [[unionById keeps both sides, remote first, dedupes by id]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[unions money and record books by id too (no owner/grant append lost)]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[with no game standing, upkeep falls back to the treasury rolls]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+
+### flow
+
+- [[Lease renewal]] — *declared in this module*
+- [[Move-out → re-list relay]] — *declared in this module*
+- [[Owner onboarding]] — *declared in this module*
+- [[Vendor dispatch]] — *declared in this module*
+- [[Violation / notice]] — *declared in this module*
+
+### guard
+
+- [[when agreement may start]] — *declared in this module*
+- [[when assign-vendor may start]] — *declared in this module*
+- [[when classify may start]] — *declared in this module*
+- [[when close may start]] — *declared in this module*
+- [[when confirm-date may start]] — *declared in this module*
+- [[when confirm-work may start]] — *declared in this module*
+- [[when countersign may start]] — *declared in this module*
+- [[when cure-window may start]] — *declared in this module*
+- [[when decide may start]] — *declared in this module*
+- [[when deposit-accounting may start]] — *declared in this module*
+- [[when deposit-transfer may start]] — *declared in this module*
+- [[when dispatch may start]] — *declared in this module*
+- [[when draft-notice may start]] — *declared in this module*
+- [[when draft-offer may start]] — *declared in this module*
+- [[when final-walk may start]] — *declared in this module*
+- [[when first-report may start]] — *declared in this module*
+- [[when go-live may start]] — *declared in this module*
+- [[when identify may start]] — *declared in this module*
+- [[when invoice-in may start]] — *declared in this module*
+- [[when list-unit may start]] — *declared in this module*
+- [[when lockbox may start]] — *declared in this module*
+- [[when make-ready may start]] — *declared in this module*
+- [[when move-out-inspection may start]] — *declared in this module*
+- [[when owner-reserve may start]] — *declared in this module*
+- [[when owner-window may start]] — *declared in this module*
+- [[when pay-vendor may start]] — *declared in this module*
+- [[when post-fee may start]] — *declared in this module*
+- [[when post-to-accounting may start]] — *declared in this module*
+- [[when pre-inspection may start]] — *declared in this module*
+- [[when price may start]] — *declared in this module*
+- [[when record may start]] — *declared in this module*
+- [[when send-offer may start]] — *declared in this module*
+- [[when serve may start]] — *declared in this module*
+- [[when set-up-records may start]] — *declared in this module*
+- [[when show-and-screen may start]] — *declared in this module*
+- [[when tenant-response may start]] — *declared in this module*
+- [[when turn-scope may start]] — *declared in this module*
+- [[when turn-work may start]] — *declared in this module*
+- [[when verify-insurance may start]] — *declared in this module*
+- [[when walkthrough may start]] — *declared in this module*
+- [[when weekly-price-drop may start]] — *declared in this module*
+
+### hand
+
+- [[lp-queue]] — *declared in this module*
+- [[pm-desk]] — *declared in this module*
+- [[va-desk]] — *declared in this module*
+
+### place
+
+- [[Lease renewal: countersign]] — *declared in this module*
+- [[Lease renewal: draft-offer]] — *declared in this module*
+- [[Lease renewal: open-window]] — *declared in this module*
+- [[Lease renewal: owner-window]] — *declared in this module*
+- [[Lease renewal: post-fee]] — *declared in this module*
+- [[Lease renewal: price]] — *declared in this module*
+- [[Lease renewal: record]] — *declared in this module*
+- [[Lease renewal: send-offer]] — *declared in this module*
+- [[Lease renewal: tenant-response]] — *declared in this module*
+- [[Move-out → re-list relay: confirm-date]] — *declared in this module*
+- [[Move-out → re-list relay: deposit-accounting]] — *declared in this module*
+- [[Move-out → re-list relay: deposit-transfer]] — *declared in this module*
+- [[Move-out → re-list relay: final-walk]] — *declared in this module*
+- [[Move-out → re-list relay: list-unit]] — *declared in this module*
+- [[Move-out → re-list relay: log-notice]] — *declared in this module*
+- [[Move-out → re-list relay: move-out-inspection]] — *declared in this module*
+- [[Move-out → re-list relay: owner-reserve]] — *declared in this module*
+- [[Move-out → re-list relay: pre-inspection]] — *declared in this module*
+- [[Move-out → re-list relay: show-and-screen]] — *declared in this module*
+- [[Move-out → re-list relay: turn-scope]] — *declared in this module*
+- [[Move-out → re-list relay: turn-work]] — *declared in this module*
+- [[Move-out → re-list relay: weekly-price-drop]] — *declared in this module*
+- [[Owner onboarding: agreement]] — *declared in this module*
+- [[Owner onboarding: first-report]] — *declared in this module*
+- [[Owner onboarding: go-live]] — *declared in this module*
+- [[Owner onboarding: intake]] — *declared in this module*
+- [[Owner onboarding: lockbox]] — *declared in this module*
+- [[Owner onboarding: make-ready]] — *declared in this module*
+- [[Owner onboarding: set-up-records]] — *declared in this module*
+- [[Owner onboarding: verify-insurance]] — *declared in this module*
+- [[Owner onboarding: walkthrough]] — *declared in this module*
+- [[Vendor dispatch: assign-vendor]] — *declared in this module*
+- [[Vendor dispatch: confirm-work]] — *declared in this module*
+- [[Vendor dispatch: dispatch]] — *declared in this module*
+- [[Vendor dispatch: identify]] — *declared in this module*
+- [[Vendor dispatch: invoice-in]] — *declared in this module*
+- [[Vendor dispatch: pay-vendor]] — *declared in this module*
+- [[Vendor dispatch: post-to-accounting]] — *declared in this module*
+- [[Vendor dispatch: report]] — *declared in this module*
+- [[Violation / notice: classify]] — *declared in this module*
+- [[Violation / notice: close]] — *declared in this module*
+- [[Violation / notice: cure-window]] — *declared in this module*
+- [[Violation / notice: decide]] — *declared in this module*
+- [[Violation / notice: draft-notice]] — *declared in this module*
+- [[Violation / notice: receive]] — *declared in this module*
+- [[Violation / notice: serve]] — *declared in this module*
+
+### transition
+
+- [[agreement → set-up-records]] — *declared in this module*
+- [[assign-vendor → dispatch]] — *declared in this module*
+- [[classify → decide]] — *declared in this module*
+- [[confirm-date → pre-inspection]] — *declared in this module*
+- [[confirm-work → pay-vendor]] — *declared in this module*
+- [[countersign → post-fee]] — *declared in this module*
+- [[cure-window → close]] — *declared in this module*
+- [[decide → draft-notice]] — *declared in this module*
+- [[deposit-accounting → deposit-transfer]] — *declared in this module*
+- [[deposit-transfer → final-walk]] — *declared in this module*
+- [[dispatch → invoice-in]] — *declared in this module*
+- [[draft-notice → serve]] — *declared in this module*
+- [[draft-offer → send-offer]] — *declared in this module*
+- [[final-walk → list-unit]] — *declared in this module*
+- [[first-report → go-live]] — *declared in this module*
+- [[identify → assign-vendor]] — *declared in this module*
+- [[intake → agreement]] — *declared in this module*
+- [[invoice-in → confirm-work]] — *declared in this module*
+- [[list-unit → show-and-screen]] — *declared in this module*
+- [[lockbox → first-report]] — *declared in this module*
+- [[log-notice → confirm-date]] — *declared in this module*
+- [[make-ready → lockbox]] — *declared in this module*
+- [[move-out-inspection → turn-scope]] — *declared in this module*
+- [[open-window → price]] — *declared in this module*
+- [[owner-reserve → turn-work]] — *declared in this module*
+- [[owner-window → tenant-response]] — *declared in this module*
+- [[pay-vendor → post-to-accounting]] — *declared in this module*
+- [[post-fee → record]] — *declared in this module*
+- [[pre-inspection → move-out-inspection]] — *declared in this module*
+- [[price → draft-offer]] — *declared in this module*
+- [[receive → classify]] — *declared in this module*
+- [[report → identify]] — *declared in this module*
+- [[send-offer → owner-window]] — *declared in this module*
+- [[serve → cure-window]] — *declared in this module*
+- [[set-up-records → walkthrough]] — *declared in this module*
+- [[show-and-screen → weekly-price-drop]] — *declared in this module*
+- [[tenant-response → countersign]] — *declared in this module*
+- [[turn-scope → owner-reserve]] — *declared in this module*
+- [[turn-work → deposit-accounting]] — *declared in this module*
+- [[verify-insurance → make-ready]] — *declared in this module*
+- [[walkthrough → verify-insurance]] — *declared in this module*
 
 ## Documents that cite this source
 

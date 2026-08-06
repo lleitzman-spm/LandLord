@@ -36,10 +36,6 @@ aliases:
 - **Lines:** 693
 - **Exported symbols (38):** `CLASS_LABEL`, `CLASS_ORDER`, `Catalog`, `CatalogClass`, `CatalogGroup`, `CatalogMode`, `CatalogRow`, `DomainGroup`, `FOUNDING_CATALOG`, `MODE_MARK`, `PRIORITY_LABEL`, `PRIORITY_MARK`, `PRIORITY_ORDER`, `SLA_LABEL`, `SLA_ORDER`, `STATUS_LABEL`, `STATUS_MARK`, `STATUS_ORDER`, `SlaBand`, `StatusGroup`, `WO_TYPE_LABEL`, `WO_TYPE_ORDER`, `WoPriority`, `WoStatus`, `WoType`, `WoTypeGroup`, `catalogAtFounding`, `domainsOf`, `findRow`, `flowKeyFor`, `rowsByClass`, `rowsByDomain`, `rowsByStatus`, `rowsByWoType`, `slaOf`, `statusOf`, `systemsOf`, `titleOf`
 
-## Entities
-
-- [[CatalogRow]] — *the same file `src/domain/catalog.ts`, seen as a entity rather than a module*
-
 ## Backlinks
 
 ### Writs that specify it
@@ -52,7 +48,7 @@ aliases:
 
 ### Entities
 
-- [[CatalogRow]] — *names the exported symbol `CatalogRow`; the same file `src/domain/catalog.ts`, seen as a module rather than a entity*
+- [[CatalogRow]] — *names the exported symbol `CatalogRow`*
 - [[The catalog tree — domain, system, leaf]] — *declared in `knowledge/entities.json`*
 
 ### Modules
@@ -303,6 +299,61 @@ aliases:
 - [[unionById keeps both sides, remote first, dedupes by id]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[unions money and record books by id too (no owner/grant append lost)]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[with no game standing, upkeep falls back to the treasury rolls]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+
+### task
+
+- [[Active leak]] — *declared in this module*
+- [[Batch the make-ready]] — *declared in this module*
+- [[Chase the tenant to sign]] — *declared in this module*
+- [[Classify the notice]] — *declared in this module*
+- [[Close the violation]] — *declared in this module*
+- [[Confirm the vacate date]] — *declared in this module*
+- [[Countersign the renewal]] — *declared in this module*
+- [[Decide the violation]] — *declared in this module*
+- [[Delinquency follow-up]] — *declared in this module*
+- [[Draft the cure notice]] — *declared in this module*
+- [[Draft the renewal offer]] — *declared in this module*
+- [[Drop the vacancy price]] — *declared in this module*
+- [[Habitability alarm]] — *declared in this module*
+- [[Handle a violation or notice]] — *declared in this module*
+- [[Hang the lockbox]] — *declared in this module*
+- [[Intake a new-owner lead]] — *declared in this module*
+- [[Itemize the deposit accounting]] — *declared in this module*
+- [[List a vacant unit]] — *declared in this module*
+- [[List and syndicate]] — *declared in this module*
+- [[Log a tenant notice]] — *declared in this module*
+- [[No cooling]] — *declared in this module*
+- [[No heating]] — *declared in this module*
+- [[Onboard a won property]] — *declared in this module*
+- [[Owner authorization window]] — *declared in this module*
+- [[Post monthly rent]] — *declared in this module*
+- [[Post the renewal fee]] — *declared in this module*
+- [[Reconcile the trust account]] — *declared in this module*
+- [[Record the renewal]] — *declared in this module*
+- [[Refrigerant leak]] — *declared in this module*
+- [[Refrigerator down]] — *declared in this module*
+- [[Request the owner reserve]] — *declared in this module*
+- [[Routine HVAC service]] — *declared in this module*
+- [[Schedule the pre-inspection]] — *declared in this module*
+- [[Scope and price the turn]] — *declared in this module*
+- [[Send the first owner report]] — *declared in this module*
+- [[Send the owner statement]] — *declared in this module*
+- [[Send the renewal offer]] — *declared in this module*
+- [[Serve the notice]] — *declared in this module*
+- [[Set the renewal rent]] — *declared in this module*
+- [[Set up the records]] — *declared in this module*
+- [[Show and screen applicants]] — *declared in this module*
+- [[Sign the management agreement]] — *declared in this module*
+- [[Thermostat fault]] — *declared in this module*
+- [[Transfer the deposit]] — *declared in this module*
+- [[Triage a work order]] — *declared in this module*
+- [[Verify owner insurance]] — *declared in this module*
+- [[Verify rent-ready (final walk)]] — *declared in this module*
+- [[Walk the move-out inspection]] — *declared in this module*
+- [[Walk the property]] — *declared in this module*
+- [[Work a lease renewal]] — *declared in this module*
+- [[Work the cure window]] — *declared in this module*
+- [[Work the turn to rent-ready]] — *declared in this module*
 
 ## Documents that cite this source
 

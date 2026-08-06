@@ -61,6 +61,8 @@ export function isIdentifierShaped(s) {
 }
 
 /** The kinds of page the Book holds, and the shelf each one stands on. */
+import { flowBookNodes } from './flowbook.mjs';
+
 export const TYPE_DIRS = {
   law: 'laws',
   act: 'acts',
@@ -71,6 +73,15 @@ export const TYPE_DIRS = {
   decision: 'decisions',
   surface: 'surfaces',
   entity: 'entities',
+  // ── the operational graph, mined from `src/domain/flows.ts` ──────────────
+  // The manifest has declared an `operational` KIND since the beginning and the
+  // Book never had a page of it. These are the game's — the firm's — verbs.
+  task: 'tasks',
+  hand: 'hands',
+  flow: 'flows',
+  place: 'places',
+  transition: 'transitions',
+  guard: 'guards',
   term: 'terms',
   artifact: 'artifacts',
   map: 'maps',
@@ -860,6 +871,7 @@ export function buildGraph() {
     ...invariantNodes(),
     ...writNodes(declByPath),
     ...surfaceNodes(),
+    ...flowBookNodes().nodes,
   ];
   // Two hands may mint the same id; the mined record wins, being the deliberate one.
   const byId = new Map();

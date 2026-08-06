@@ -44,6 +44,12 @@ aliases:
 
 - [[src/domain/types.ts]] — *imported by this file*
 
+## hand
+
+- [[Alys]] — *the same file `src/domain/census.ts`, seen as a hand rather than a module*
+- [[Mabel]] — *the same file `src/domain/census.ts`, seen as a hand rather than a module*
+- [[Osric]] — *the same file `src/domain/census.ts`, seen as a hand rather than a module*
+
 ## Backlinks
 
 ### Entities
@@ -70,6 +76,12 @@ aliases:
 - [[the scribe names an office-holder a CHANCELLOR, not a lord]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the two readings AGREE about who heads an office]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the whole realm reading carries no office among its fiefs]] — *imported by the test FILE (shared source, not a claim about this one test)*
+
+### hand
+
+- [[Alys]] — *declared in this module; the same file `src/domain/census.ts`, seen as a module rather than a hand*
+- [[Mabel]] — *declared in this module; the same file `src/domain/census.ts`, seen as a module rather than a hand*
+- [[Osric]] — *declared in this module; the same file `src/domain/census.ts`, seen as a module rather than a hand*
 
 ---
 

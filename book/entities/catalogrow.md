@@ -35,7 +35,7 @@ A task-type row: key, title, class, mode, domain/system facets, and an optional 
 
 ## Modules
 
-- [[src/domain/catalog.ts]] — *names the exported symbol `CatalogRow`; the same file `src/domain/catalog.ts`, seen as a module rather than a entity*
+- [[src/domain/catalog.ts]] — *names the exported symbol `CatalogRow`*
 - [[src/domain/flows.ts]] — *names the exported symbol `FlowTemplate`*
 - [[src/operator-core.ts]] — *names the exported symbol `CatalogRow`; names the exported symbol `FlowTemplate`*
 
@@ -51,10 +51,6 @@ A task-type row: key, title, class, mode, domain/system facets, and an optional 
 ### Entities
 
 - [[FlowTemplate]] — *declared in `knowledge/entities.json`*
-
-### Modules
-
-- [[src/domain/catalog.ts]] — *the same file `src/domain/catalog.ts`, seen as a entity rather than a module*
 
 ---
 
