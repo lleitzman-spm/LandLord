@@ -34,6 +34,7 @@ import type { CaseReading, EventLog } from './domain/events';
 import { ageInDays, casesByCatalogRow, clerkProposals, outcomes, queues, readCases } from './domain/events';
 import { readFlows } from './domain/flows';
 import type { FlowReading } from './domain/flows';
+import { readEscape } from './domain/escape';
 import {
   coin,
   upkeepForPerson,
@@ -450,6 +451,12 @@ export default function WarTableView({
   // ── The readings — folded fresh, nothing stored ───────────────────────────
   const realm = readRealm(kingdom, log, now, seed, treasury.ledger, economy.book, economy.money);
   const throne = readThrone(kingdom, log, now);
+  // The escape rate rides the ribbon because it is the number the whole product
+  // is built against, and it lived on a surface with no standing door: the
+  // Ledger was reachable from the command bar, from a proposal count that only
+  // exists when clerks have parked something, and from a toast that dismisses
+  // itself. Three roads, none of them there when you are not already looking.
+  const escape = readEscape(flows.flows, catalog.rows, log);
   const untriaged = readCases(log)
     .filter((c) => c.status !== 'done' && c.caseId.includes(' · intake · '))
     .sort((a, b) => (ageInDays(b, now) ?? 0) - (ageInDays(a, now) ?? 0));
@@ -1139,6 +1146,55 @@ export default function WarTableView({
             <div className="wt-bar">
               <span className="wt-fill-green" style={{ width: `${steadyPct}%` }} />
             </div>
+          </button>
+
+          {/* THE ESCAPE RATE — and the Ledger's standing door. Two faults, one fix.
+              THE ROAD. The Ledger held the only reading of the number this whole
+              product is judged against, and every road to it was conditional: the
+              command bar (which you must already know to press), a proposal count
+              that only exists once a clerk has parked something, and a toast that
+              dismisses itself. Three roads, none of them there when you are not
+              already looking. Every other surface on the ribbon — the coffers, the
+              debt, the patrons, the clock — is a standing reading that is also its
+              own door. The Ledger was the one that wasn't.
+              WHY IT IS A READOUT AND NOT A GAUGE. The other four wear a bar. This
+              one deliberately does not, and the reason is in src/domain/escape.ts:
+              the reading SETS NO TARGET, because inventing a completion criterion
+              is how a measure stops being falsifiable. A bar draws a scale with a
+              good end and a bad end — it would put a target on the page that the
+              measure itself refuses to name. So the number stands bare.
+              (It also happens to fit, which a full gauge did not: measured at
+              1366px, a fourth gauge here wrapped the ribbon 62px → 115px. That is
+              a happy coincidence, not the argument.)
+              NOT MEASURED IS NOT ZERO. With nothing worked it reads "—", never
+              "0%": a rate over no work would look like perfect automation on a
+              system that has done nothing.
+              WHAT IT COST, MEASURED. One row at 1366px and up, unchanged at 62px.
+              The ribbon's slack is now 2px, so this is the last thing that fits —
+              the next addition wraps it, and the honest fix then is to take the
+              space from something, not to shave this. At 1280px the palette button
+              drops to a second row where before it held down to 1200px: one
+              breakpoint of headroom, spent knowingly on the one reading the whole
+              product is judged against. */}
+          <button
+            className="wt-gauge wt-gauge-btn wt-readout"
+            onClick={() => setPanel({ kind: 'ledger' })}
+            title={
+              escape.rate === null
+                ? 'No step has been worked yet, so no share of the work has reached a person — the rate is NOT MEASURED, which is not the same as zero. Enter the Ledger.'
+                : `${escape.escaped} of ${escape.stepsReached} steps reached a person — ${escape.designed} by design, ${escape.unplanned} unplanned. Enter the Ledger.`
+            }
+          >
+            {/* The same words the band on the Ledger wears. One name for one
+                thing — a reading that says one thing and opens a panel that says
+                another is two readings as far as anyone can tell. */}
+            <span className="wt-lbl">Escape rate</span>
+            <span
+              className={`wt-val wt-num ${escape.rate === null ? 'wt-val-none' : escape.unplanned > 0 ? 'bad' : 'warn'}`}
+            >
+              {escape.rate === null ? '—' : `${Math.round(escape.rate * 100)}%`}
+              {escape.unplanned > 0 && <span className="wt-val-sub"> {escape.unplanned}⚠</span>}
+            </span>
           </button>
 
           {/* WHAT THE GAME WANTS FROM YOU. This sentence already existed — but

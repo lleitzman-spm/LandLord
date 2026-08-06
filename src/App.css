@@ -882,6 +882,25 @@ button.grand:disabled {
   height: 100%;
   border-radius: 6px;
 }
+/* THE READOUT — a ribbon reading with no bar. The escape rate wears this and
+   nothing else does yet. It is not a smaller gauge: it is a reading that must
+   NOT draw a scale, because the measure names no target (src/domain/escape.ts)
+   and a bar would invent one. Label over value, and it sizes to its own words
+   so it fits the slack the four gauges leave. */
+.wt-readout {
+  min-width: 0;
+  gap: 2px;
+}
+.wt-readout .wt-val {
+  line-height: 1.05;
+}
+/* NOT MEASURED WEARS NO COLOUR. good/warn/bad all say something about how the
+   reading is doing; an unmeasured quantity is not doing well or badly, and
+   dressing the em-dash in green would be the same lie as filling a bar to
+   zero. It stays the dim ink of a label. */
+.wt-val-none {
+  color: var(--wt-ink-dim);
+}
 .wt-fill-gold {
   background: linear-gradient(90deg, #8f6f2a, var(--wt-gold-br));
 }
