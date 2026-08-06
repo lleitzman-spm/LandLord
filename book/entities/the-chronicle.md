@@ -44,6 +44,7 @@ The kingdom's mutable record books bound into one volume — the event log and e
 
 ### Writs that specify it
 
+- [[Handoff — where things stand]] — *this writ names "The chronicle" literally*
 - [[The Kingdom — Canon]] — *this writ names "The chronicle" literally*
 - [[Writ — the flow engine (the operator's spine)]] — *this writ names "The chronicle" literally*
 - [[Writ — the operator's hands (swing two, part one)]] — *this writ names "The chronicle" literally*

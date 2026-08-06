@@ -37,8 +37,13 @@ aliases:
 - Next candidates
 - What needs a human
 
+## Entities
+
+- [[The chronicle]] — *this writ names "The chronicle" literally*
+
 ## Modules
 
+- [[src/domain/escape.ts]] — *this writ names the exported symbol `EscapeReading`*
 - [[src/domain/flows.ts]] — *this writ names the exported symbol `failStep`; this writ names the exported symbol `FlowReading`; +3 more*
 - [[src/operator-core.ts]] — *this writ names the exported symbol `FlowReading`; this writ names the exported symbol `readFlow`*
 

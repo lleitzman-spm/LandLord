@@ -47,6 +47,10 @@ aliases:
 
 ## Backlinks
 
+### Writs that specify it
+
+- [[Handoff — where things stand]] — *this writ names the exported symbol `EscapeReading`*
+
 ### Modules
 
 - [[src/LedgerView.tsx]] — *imported by this file*

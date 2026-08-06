@@ -128,6 +128,42 @@ All green: `npm run build`, **437 tests**, `npm run book:lint` exit 0 with
   in the engine says so yet. `FlowReading.failures` counts rework separately in
   the meantime.
 
+**2026-08-06, third pass — the sibling was checked, and it had built the same layer.**
+All green: `npm run build`, **442 tests**, `npm run book:lint` exit 0 with 1,042 quotes.
+
+- **A failure route grew two axes.** `onFail` was a step key; it is now
+  `{ to, detects, endsAt }`. `detects` is `validation | absence | judgment` —
+  whether a machine could ever have caught it, with `judgment` the floor under
+  the escape rate. `endsAt` is `origin | operator`, and **only `operator` is an
+  escape**. New FATAL: a `judgment` route whose remedy sits on an `auto` catalog
+  row asserts two things that cannot both be true.
+
+- **The axes were not invented here.** A read of the sibling project found it had
+  reached the same layer **thirty-five minutes earlier the same day**, from the
+  opposite direction — drawn out of real procedure rather than out of an engine —
+  and landed on the same two axes with the same values and the same judgment
+  rule. Adopting them means the two projects' escape numbers are one number
+  instead of two wearing one word. **Only the shape crossed**: no instance, no
+  evidence, no figure.
+
+- **It cost nothing because nothing was routed.** Widening the field migrated
+  zero declarations. The earlier refusal to route the book by guesswork — which
+  read as work left undone — is exactly what made the correction free.
+
+- **The escape rate can now see rework.** The blind spot recorded above is
+  closed: counting a `failed` event as human attention no longer requires
+  assuming a person was involved, because `endsAt: 'operator'` declares it.
+  `EscapeReading.escalated` counts per failure, not per step. It is **not folded
+  into the rate** — different units; a blended number would answer neither
+  question.
+
+- **Found while driving it, and worth knowing:** a route added in code does not
+  reach a running game. The chronicle stores its own copy of the flow book and
+  the app reads that, so the first drive counted 0 escalations from 2 real
+  `failed` events. Correct behaviour, but it means routes will need the same
+  deployment path as the catalog — the same surface as the standing
+  "deploy the muster" question.
+
 ## Next candidates
 
 Unclaimed and roughly ordered by how much they unblock:
