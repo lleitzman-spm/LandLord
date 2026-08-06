@@ -58,6 +58,7 @@ aliases:
 - [[src/domain/chronicle.ts]] — *imported by this file*
 - [[src/domain/consequences.ts]] — *imported by this file*
 - [[src/domain/docket.ts]] — *imported by this file*
+- [[src/domain/escape.ts]] — *imported by this file*
 - [[src/domain/flows.ts]] — *imported by this file*
 - [[src/domain/guilds.ts]] — *imported by this file*
 - [[src/domain/pods.ts]] — *imported by this file*
@@ -79,6 +80,7 @@ aliases:
 
 *These roads come from a shared source FILE, not from a semantic claim: the test file imports the module. Read it as "stands near", never as "proves".*
 
+- [[`awaiting` is NOT an escape — it means parked on a clock, not on a person]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a base-blind merge is unchanged — it still takes the writing session]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a batch that repeats an id inside itself opens one case, not two]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a case with no estateId folds to null (byte-identical to before)]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -88,12 +90,16 @@ aliases:
 - [[a craft left headless IS brought before the court]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a CRISIS outranks a fresh matter, and held COIN outranks a bare wait]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a fully-worked vendor-dispatch folds to done and reaches settlement]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a human touching an AUTO step is an unplanned escape — the machine failed]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a loaded estate roster flips isFoundingChronicle to non-founding]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a MIDDLE step hands on and closes NOTHING]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a muster deployed on the remote side is adopted, not clobbered by a stale local]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a re-observed condition with a NEW id does not open a second case]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a revoked grant struck on the remote side stays struck]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a spend on the higher-cap estate CLEARS; the same spend on an unlisted estate GATES]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a step never reached cannot escape — an idle system is not an automated one]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a step the catalog marks human is a DESIGNED escape, not a failure]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a step with no declared mode is NOT MEASURED and never joins a total]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a struck money event stays struck through the merge]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a target-anchored step with NO target date is unknown, never overdue]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[act five is met by holding the watch with no door in crisis]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -103,7 +109,9 @@ aliases:
 - [[act three is met by getting the boxes onto real desks]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[act two is met by WALKING a cascade to done]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an ancient trifle never outranks today’s crisis — age does not compound forever]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[an auto step nobody touched is not an escape at all]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an empty array is valid — the revert-to-founding shape]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[and it says how few independent judgments that rests on]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[approving the final step records that the case is DONE]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[caps what one court hears, keeping the heaviest and still every kind]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[carries the originating event id onto the opening record]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -132,10 +140,12 @@ aliases:
 - [[is ordered heaviest FIRST — the docket never rises]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[is SOLVENT at rest, with a margin, and the Crown’s own coin is not gone]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[KEEPS a setting the other session loaded, when the base carried none]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[names WHICH step leaks, not just that one does]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[no ONE kind starves the rest — the standing debts are always heard]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[no step note leaks a literal {token} when rendered with full params]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[nothing dealt is STALE — the clock starts clean]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[once every step is done, the condition may open a fresh case]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[one step worked over many events counts once, not once per event]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[opens a case on the flow the signal names]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[overruling the final step closes it too]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[reads a well-formed roster, trimming and keeping order]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -156,6 +166,7 @@ aliases:
 - [[the case READS as done once the last step is ratified]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the case spine feeds the gate end-to-end: readCase(estateId) → spendGate]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the fallback (no base) CANNOT honor a strike — it resurrects (documents the limit)]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[the founding flow book budgets most of its steps to a person]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the grand muster is UNCHANGED by the campaign’s knobs — a GOLDEN fingerprint]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the move-out relay also folds clean to done]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the step IS anchored to the target date, not left to default]] — *imported by the test FILE (shared source, not a claim about this one test)*
