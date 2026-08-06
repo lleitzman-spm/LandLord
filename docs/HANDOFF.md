@@ -38,20 +38,76 @@ yours rather than forcing your copy over live work.
 
 ## State of play
 
-Nothing in flight. See `README.md` § *Maturity* for the standing known-weak
-list, and `docs/OPEN-QUESTIONS.md` for decisions that are genuinely open.
+**2026-08-06 — the operational graph, and every governing number made first-class.**
+All green: `npm run build`, 413 tests, `node tools/leakcheck.mjs` 0 findings,
+`npm run book` 1,106 pages / 4,315 roads, `npm run book:lint` exit 0 with 1,013
+quotes re-verified against disk.
+
+What landed, and the check that stands under each:
+
+- **The operational graph exists.** `src/domain/flows.ts` held five real
+  workflows and nothing mined them; the manifest had declared an `operational`
+  kind since the beginning with nothing under it but whole directories. Now
+  5 flows · 46 places · 41 transitions · 41 guards, plus the two knowledge
+  shelves they consume (52 catalog tasks, 6 hands — **three of which are queues,
+  not people**, which is a finding, not a blank). Read by evaluating the real
+  module, not by regex, so a step renamed in code renames its page.
+
+- **A live bug, found by that graph and proven before it was touched.**
+  `readFlow` measured every day-offset from the day a case OPENED, but
+  `pre-inspection` is written against the tenant's last day. Every move-out case
+  carried a step marked BREACHED from day zero, permanently, unclearably.
+  `TimingEdge.anchor` fixes it; a target-anchored step with no known date now
+  reads **no due date and no breach** — unknown is not overdue. Five regression
+  tests, verified by removing the anchor and watching three fail.
+
+- **Two more of the same error.** `move-out-inspection` is the inspection AT
+  move-out; `deposit-accounting` and `deposit-transfer` run from SURRENDER, not
+  notice — anchoring them to the notice date started the statutory window early.
+  All three moved to the target clock.
+
+- **116 governing numbers left the code.** Every SLA, day offset, calendar edge
+  and repeat interval now lives in `knowledge/facts.json`, typed
+  (`duration-threshold` · `calendar-deadline` · `cadence` · `day-offset`) and
+  carrying its anchor. `flows.ts` holds none of them; `withTiming()` joins the
+  two at load. **The refactor was proven behaviour-preserving by hashing the
+  resolved flow book before and after** — identical. A fatal lint keeps it true.
+
+Corrections made to this repo's own instruments, worth knowing about:
+
+- The cascade check compared steps ACROSS boards. A cascade is not one line —
+  it runs parallel tracks, and a deposit step is not "after" a leasing step
+  because it sits lower in the array. It compares within a track now.
+- The compiler's orphan count did not exclude the contents page while the lint
+  did, so the two reported 0 and 70 for the same question. Same rule, both places.
+- Orphans are now **classified, not manufactured**: eight pieces of repo
+  furniture are declared expected with reasons. The obvious fix — every source
+  document linking what was mined from it — is a trap that makes every mined page
+  un-orphanable; it was tried and removed in the sibling repo.
 
 ## Next candidates
 
 Unclaimed and roughly ordered by how much they unblock:
 
-1. **Write-loss surfacing.** Writes are whole-document upserts and last writer
+1. **Multi-tenancy.** One deployment serves one book. Per-identity vault rows are
+   a sandbox, not tenant isolation, and nothing should describe them as such
+   until they are. This is the gap between "a working app" and "software anyone
+   else can use", and `docs/OPEN-QUESTIONS.md` names it too.
+2. **Write-loss surfacing.** Writes are whole-document upserts and last writer
    wins. A losing write should say so in the interface; today it can be silent.
-2. **Multi-tenancy.** One deployment serves one book. Per-identity vault rows
-   are a sandbox, not tenant isolation, and nothing should describe them as
-   such until they are.
-3. **The Great Book's sources.** The compiler (`tools/vault/*`, `npm run book`)
-   crosses; its mined sources (`knowledge/*.json`) do not, and must be re-mined
-   in this repository from these now-clean files. Until they exist, `npm run
-   book` has nothing to compile.
-4. **Clerk fleet on non-simulated data.** Proven on the war game only.
+3. **Clerk fleet on non-simulated data.** Proven on the war game only.
+4. **Twenty orphan pages** — decisions and laws nothing in the Book cites. Not
+   cosmetic: an uncited decision is one nobody can find, which is how a thing
+   gets built twice.
+
+**Retired from this list 2026-08-06:** "The Great Book's sources must be re-mined
+— until they exist, `npm run book` has nothing to compile." They exist and it
+compiles 1,106 pages. That line was stale in exactly the way this file's own
+discipline warns about, which is why it is named here rather than quietly deleted.
+
+## What needs a human
+
+Four of the five entries in `docs/OPEN-QUESTIONS.md` are domain decisions no
+amount of reading the tree will settle — fee shapes, the spend gate's default
+when urgency is unknown, whether "artisan" is a pledge or a relationship, and
+trust-accounting rules that vary by jurisdiction.

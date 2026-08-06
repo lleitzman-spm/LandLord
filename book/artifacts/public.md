@@ -40,7 +40,6 @@ Static assets served as-is — the baked fantasy-relief.bin terrain, the favicon
 
 *These name this FILE by its path. That is a citation of the source, not a claim about any one idea inside it — do not read a path citation as agreement, dependence or implementation.*
 
-- [[Handoff — where things stand]]
 - [[Writ — The Realm Map (the illuminated map, come alive)]]
 - [[Writ — the task-language, the consequences, and the Regent's seat]]
 

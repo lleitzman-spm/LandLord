@@ -35,6 +35,12 @@ aliases:
 - LANES — who is working on what
 - State of play
 - Next candidates
+- What needs a human
+
+## Modules
+
+- [[src/domain/flows.ts]] — *this writ names the exported symbol `readFlow`; this writ names the exported symbol `TimingEdge`*
+- [[src/operator-core.ts]] — *this writ names the exported symbol `readFlow`*
 
 ## artifact
 
@@ -58,16 +64,9 @@ aliases:
 
 *Files this page names by path. Again: a citation of the file, nothing more.*
 
-- [[data/]]
-- [[docs/]]
 - [[docs/OPEN-QUESTIONS.md]]
-- [[harness/]]
 - [[Open questions]]
-- [[public/]]
-- [[README.md]]
-- [[src/]]
-- [[test/]]
-- [[tools/]]
+- [[src/domain/flows.ts]]
 
 ---
 
