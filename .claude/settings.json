@@ -8,7 +8,7 @@
             "shell": "bash",
             "timeout": 10,
             "statusMessage": "Checking for session report",
-            "command": "b=../SPM-Optimization; [ -d \"$b\" ] || exit 0; d=$(date +%F); ls \"$b/corpus/sessions/landlord/$d-session-\"*.md >/dev/null 2>&1 || printf '{\"decision\":\"block\",\"reason\":\"No session report exists for %s in the knowledge store. Before ending, write ../SPM-Optimization/corpus/sessions/landlord/%s-session-N.md (N = next unused number for today). Write what this session LEARNED, not what it did: rules established, corrections issued against earlier claims, and what is still owed by a human. Then stop again.\"}' \"$d\" \"$d\""
+            "command": "b=../SPM-Optimization; [ -d \"$b\" ] || exit 0; d=$(date +%F); ls \"$b/corpus/sessions/landlord/$d-session-\"*.md >/dev/null 2>&1 || printf '{\"systemMessage\":\"Nothing banked today (%s) for landlord. Run /bank to write this session into the knowledge store.\"}' \"$d\""
           }
         ]
       }
