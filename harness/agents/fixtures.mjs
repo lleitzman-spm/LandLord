@@ -32,6 +32,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
+import { invoiceFor } from '../vendors.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const BOOK = JSON.parse(readFileSync(resolve(HERE, 'fixtures/founding-book.json'), 'utf8'));
@@ -95,28 +96,48 @@ export function vendorCommitmentFixture(core, {
 }
 
 /** Stage 3 — dispatch already done, the vendor's invoice already in from the
- *  world; the case sits at `pay-vendor`, exactly where Mira's judgment
- *  starts. `quoteCents` is what the vendor was authorized to bill — it drives
- *  the clerk's own read, via the note Milo would have written
+ *  world; the case sits at `pay-vendor`, exactly where Mira's judgment starts.
+ *
+ *  `quoteCents` is what the vendor was authorized to bill, and it reaches the
+ *  clerk the way production does — through the note Milo would have written
  *  (`authorizedQuoteCents` in `clerks.mjs` reads it back with the same
- *  `/quoted \$([\d,]+)/` pattern). `invoiceCents` decorates a `noted` event
- *  with the world's own words for the trace to show, but Mira's clerk does
- *  NOT read that note — `clerks.mjs` derives the actual bill itself
- *  (`invoiceFor(quoteCents, caseId)`, a deterministic working-fluid stand-in
- *  for the real vendor bill), matching production exactly. Passing an
- *  `invoiceCents` that disagrees with that derivation is honest, not a bug:
- *  the real world's invoice and the clerk's own reconciliation input can
- *  differ today, and closing that gap is real invoice ingestion, not a
- *  fixture's job. */
+ *  `/quoted \$([\d,]+)/` pattern).
+ *
+ *  THE INVOICE IS NOT A PARAMETER, and an earlier draft's `invoiceCents` was
+ *  removed rather than kept: `clerks.mjs:674` derives the bill itself with
+ *  `invoiceFor(quoteCents, caseId)` and never reads the record, so the
+ *  parameter was inert — no value of it could change a verdict. Worse, its
+ *  default wrote a figure into the case record that contradicted the one the
+ *  clerk actually reconciled. The `noted` event now carries the SAME derived
+ *  figure the clerk will read, so the record and the judgment agree.
+ *
+ *  `subject` is what steers the verdict, because `invoiceFor`'s drift is a
+ *  hash of the caseId (`vendors.mjs:66-93`) — most jobs bill near the quote,
+ *  about one in three runs over. A fixed subject therefore pinned every
+ *  settlement fixture to one branch and made Mira's over-ceiling HARD RAIL —
+ *  the fix for `docs/WRIT-THE-GATE.md` finding 3 — unreachable through the
+ *  rig. `OVERRUN_SUBJECT` below is a measured subject that lands on the
+ *  overrun branch, so the refusal path can actually be exercised.
+ *
+ *  ONE MORE THING THE RAIL ACTUALLY REQUIRES, measured while wiring this: an
+ *  overrun alone does not hold. The authorized ceiling is
+ *  `max(quote, NTE cap)` (`reconcileSpend`), so a $214 invoice against a $180
+ *  quote still sits under the $350 house cap and CLEARS — correctly. To reach
+ *  `needs-owner-approval` the quote must itself be above the cap and the
+ *  invoice must then overrun it (e.g. `quoteCents: 40000` with
+ *  `OVERRUN_SUBJECT` → a $474 invoice against a $400 ceiling). */
+export const OVERRUN_SUBJECT = '2 Anvil Court — no cooling';
+
 export function settlementFixture(core, {
   trade = 'HVAC',
   urgency = 'urgent',
   vendor = 'Ser Emrick the Bellows-smith',
   quoteCents = 18000,
-  invoiceCents = 24700,
+  subject = '14 Cobble Row — no heat, furnace will not ignite',
   now = '2026-08-07T09:00:00.000Z',
 } = {}) {
-  const base = vendorCommitmentFixture(core, { trade, urgency, now });
+  const base = vendorCommitmentFixture(core, { trade, urgency, subject, now });
+  const invoiceCents = invoiceFor(quoteCents, base.caseId);
   const tpl = vendorDispatchTpl();
   const id = ids('fx-settle');
   const params = core.fullParams(tpl, { trade, urgency });

@@ -107,10 +107,17 @@ async function runOne(name) {
   console.log(`    note:  ${last.note ?? '(none)'}`);
   if (last.kind === 'proposed') {
     console.log(`\n  ${agent.name} STOPS HERE — parked "awaiting" the King's word.`);
-    console.log(
-      `  ${agent.name}'s belt has no tool that could cross this (refuses: [${agent.refuses.join(', ')}]) —`,
-    );
-    console.log('  the next event on this case can only be a HUMAN\'s approved/overridden.');
+    // Precisely what holds, and precisely what does not. An earlier draft said
+    // "her belt has no tool that could cross this", offering the `refuses`
+    // list as the reason. That was FALSE twice over: `refuses` is a
+    // declaration nothing reads at runtime, and `open:cascade` grants
+    // `completeStep`, which was proved to walk a case straight past this
+    // commitment. Saying so here rather than in a comment nobody runs.
+    console.log('  What holds: no agent can RATIFY. `approveStep`/`overrideStep` are absent from');
+    console.log('  every belt by construction, so the approved/overridden mark is the King\'s alone.');
+    console.log('  What does NOT hold: an agent granted `open:cascade` can still ADVANCE a cascade');
+    console.log('  (`completeStep` bounds-checks only). Every `done` it writes is stamped');
+    console.log(`  actor: agent:${agent.seat}, so its advances are legible — not prevented.`);
   } else {
     console.log(`\n  ${agent.name} did not stop at a judgment on this fixture — see the trace above.`);
   }

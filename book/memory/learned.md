@@ -13,6 +13,26 @@ aliases:
 
 ← [[00 MEMORY]]
 
+## The session that read the gate writ then re-shipped its central fault — 2026-08-07
+
+A session spent its first hour reading `docs/WRIT-THE-GATE.md`, whose finding 2 is *"it is not
+unused — which is worse than unused, because a gate that is read reads as protection. Nothing
+branches on it."* It then built a capability rig and put **three** of exactly that in it: a belt tag
+(`read:trade-roster`) that bound functions nothing read, a freeze one level too shallow to freeze
+anything that mattered, and a printed reassurance to the operator — *"no tool could cross this"* —
+that was false, proved by driving the agent's own scoped core straight past the commitment.
+
+Reading a failure mode does not inoculate you against it. The writ describes a shape that is
+**cheap to build by accident**, and the accident is not committed at the moment you write the
+decorative line — it is committed at the moment you *believe your own manifest instead of running
+it*. All three survived a green build, a green suite, and a hand-written test file specifically
+about capability enforcement, because every one of those checks read the same table the code did.
+
+What actually caught them: a reviewer with no stake in the design, asked to prove the claims false
+rather than confirm them, who instrumented the running agent instead of reading the source. **The
+check has to come from outside the assumption.** A test written by the author of a guard tends to
+test the guard's own vocabulary.
+
 ## A belt's manifest is a claim, and only running the agent through it checks it — 2026-08-07
 
 `harness/agents/roster.mjs` declared Mace's belt as `['read:work', 'read:catalog',

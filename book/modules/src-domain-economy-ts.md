@@ -43,7 +43,7 @@ aliases:
 
 ### Writs that specify it
 
-- [[Handoff — where things stand]] — *this writ names the exported symbol `settlementGate`; this writ names the exported symbol `spendGate`; +1 more*
+- [[Handoff — where things stand]] — *this writ names the exported symbol `coinCents`; this writ names the exported symbol `settlementGate`; +2 more*
 - [[Open questions]] — *this writ names the exported symbol `estimateSpendCents`; this writ names the exported symbol `spendGate`*
 - [[The Kingdom — Canon]] — *this writ names the exported symbol `BudgetLine`; this writ names the exported symbol `EARNED_FEE_LIMIT_DAYS`; +9 more*
 - [[Writ — the economy pillar, re-expressed as chronicle readings]] — *this writ names the exported symbol `EconomyBook`; this writ names the exported symbol `feeAmount`; +8 more*
@@ -114,8 +114,10 @@ aliases:
 
 *These roads come from a shared source FILE, not from a semantic claim: the test file imports the module. Read it as "stands near", never as "proves".*
 
+- [[a `done` written through a granted completeStep is stamped with the seat]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a bare census is never dry — there is nothing to be broke with]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a base-blind merge is unchanged — it still takes the writing session]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[a belt tag that grants nothing is DECLARED as such, never left looking like a grant]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a bill above the cap that a HUMAN ratified]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a bill above the cap that NOBODY ratified]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a bill nobody priced]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -191,6 +193,7 @@ aliases:
 - [[all three failing at once names all three]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[an absent catalog shelf adopts the founding rows]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[an absent economySetting normalizes through untouched, and economyOf is a true no-op]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[an agent CAN still advance a cascade — the belt makes it legible, not impossible]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an agent with no wired judgment refuses to run rather than pretend to]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an ancient trifle never outranks today’s crisis — age does not compound forever]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an ANSWERED edict is never late, however long the day is gone]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -208,10 +211,13 @@ aliases:
 - [[an owed edict PRESSES as its day nears]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[an unclassified estimate stops, and says WHY it stopped]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an UNFUNDED owner settles soundly via the shortfall topup]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[an unknown belt tag is refused at deploy, not silently ignored]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an urgency band this table does not know has no estimate either]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[and CLEARS an invoice that stays inside it — both verdicts are reachable]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[and it stops REGARDLESS of the cap — the old default did not]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[any bill where the deployment set no cap — ungated, and it says so]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[appendEvents on a memory backing never touches disk]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[appendEvents on a seedless chronicle refuses, not just readLog]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[at the cap settles; one cent over does not]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[balances within both books (the bridge)]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[both books balance over the whole dealt money log]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -246,6 +252,7 @@ aliases:
 - [[every metro of the joined book reads its standing, marches first]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[every MoneyKind balances within each book (double-entry)]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[every MoneyKind produces postings — none falls through to default:]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[every named agent carries a belt SUFFICIENT for the clerk that runs it]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[every named box and cascade actually LANDS on the board]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[every office an act leaves headless stands in the census]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[every realm names a sovereign — a realm with no law is not a realm]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -279,6 +286,7 @@ aliases:
 - [[Mace: a raw complaint in, an identified cascade proposed, and she stops there]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[memoryBacking never requires a war-game seed]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[Milo: a vendor-commitment case in, a reasoned quote proposed, and he stops there]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[Mira HOLDS an invoice that overruns its authorized ceiling]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[Mira: a settlement case in, a pay/hold recommendation proposed, and she stops there]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[MOVES the owner’s statement — it is their money]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[mtm %→flat : a flat-basis override splits 50/50 on the entered premium]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -325,6 +333,7 @@ aliases:
 - [[renames a GL account code and name by role]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[renewal flat→% : a new_rent-basis override yields a percentage of new rent via feeAmount]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[returns the seeded harrow-c estate's own cap]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[run refuses rather than inventing a clock when the backing carries none]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[scalars overwrite; an unknown top-level field on the patch is ignored]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[seats all three Crown offices with their Chancellors]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[settling a real WO onto a live grand muster keeps the whole chronicle sound]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -336,6 +345,7 @@ aliases:
 - [[tenant billed the WHOLE fee, owner keeps its share, firm earns its cut — sound with NO funding]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the book reaches ONE door in two hundred — the finding, said as a number]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[THE BUG, pinned: a dealt grand muster runs red but is NOT broke]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[the capability table is DEEP frozen — its arrays cannot be widened]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the case spine feeds the gate end-to-end: readCase(estateId) → spendGate]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the coffers ARE dry when the Crown’s own banks run out]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the control reads a SHIRE — all three clauses hold]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -359,6 +369,7 @@ aliases:
 - [[the reading and the VIEW’s contract are the same shape — the firewall holds]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the reading counts the metro’s own doors, knights and fees]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[the reconciliation’s detail follows its own verdict]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[the record and the judgment name the SAME invoice figure]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the scene is PURE — the same records fold the same map, twice]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the shapes stay what they say they are]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[the THE_REGENT role resolves against the census it is dealt into]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*

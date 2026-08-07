@@ -38,10 +38,25 @@ yours rather than forcing your copy over live work.
 
 ## State of play
 
-**2026-08-07 (later still) — the agent rig, a viewer, fixtures, and the M
-family driven through all three.** All green: `npm run build`, **493 tests**
-(was 461), `leakcheck` 1,458 files / 0 findings, `npm run book` 1,192 pages,
-`npm run book:lint` exit 0 (0 dangling, 1,098 quotes re-verified).
+**2026-08-07 (later still) — the agent rig, a viewer, fixtures, the M family,
+and then an adversarial review that found six real defects in all of it.**
+All green: `npm run build`, **504 tests**, `leakcheck` **1,484** files / 0
+findings, `npm run book` 1,203 pages, `npm run book:lint` exit 0 (0 dangling,
+1,109 quotes re-verified). *Every figure here was read off a clean tree with
+nothing unstaged, because the count moves as generated pages are added — see
+below.*
+
+*Three figures in the first draft of this entry were wrong and are corrected
+here: it claimed 493 tests "(was 461)" — 461 was two commits stale, and the
+rig's own file held 15 tests, not the 27 the commit message claimed (27 was
+`rig.test.ts` and `roster.test.ts` counted together). It claimed leakcheck
+scanned 1,458 files while its own commit message said 1,473. Recorded rather
+than quietly fixed, because a session that miscounts its own evidence is the
+thing this file's discipline exists to catch — and it happened a THIRD time
+while writing this correction, when 1,473 went stale the moment the
+regenerated Book pages were staged. The lesson is mechanical, not moral:
+`leakcheck` counts TRACKED files, so its number is only true for the exact
+staged state it was run against. Read it last, off a clean tree.*
 
 The four-item build order from the session brief, in order built:
 
@@ -54,6 +69,14 @@ The four-item build order from the session brief, in order built:
   agent, ever grants `approveStep`/`overrideStep`/`settlementMoney`/
   `vendorSettlementMoney` — the names are absent from the table itself, the
   same defence the money door already stood on, now covering the ratchet too.
+  **What that boundary does NOT cover, since an unstated limit is how a gate
+  becomes decoration:** the belt scopes the DOMAIN CORE only —
+  `harness/clerks.mjs:21-23` reaches `vendors.mjs`/`leasing.mjs`/
+  `safe-evidence.mjs` by static import, around `ctx.core`. All three verified
+  pure reference/compute (no write, no event, no network, no money door), so
+  the bypass widens what an agent may READ, never what it may DO. And an agent
+  granted `open:cascade` **can still advance a cascade** — `completeStep`
+  bounds-checks only. It cannot RATIFY, which is the guarantee that holds.
   **The weld named in the brief is cut**: `fleet.mjs`'s
   `if (!doc.wargame?.seed) process.exit(1)` used to mean an agent could not
   exist at all without a live disk chronicle carrying a standing War Game.
@@ -70,7 +93,7 @@ The four-item build order from the session brief, in order built:
   [Mace|Milo|Mira|all]`). One work order in, the agent's manifest card, its
   reasoning trace, and exactly where it stops. **Driven both ways, not just
   unit-tested**: with `MOONSHOT_API_KEY` set, real Tier-1 brain calls (`[brain
-  t1]` in the trace, e.g. Milo pricing an emergency HVAC call at $800 against a
+  t1]` in the trace, e.g. Milo pricing an *urgent* HVAC call at $800 against a
   $350 house cap — "needs-owner-approval"); with the key unset, every agent
   fell straight to its deterministic Tier-0 path (`[heuristic]`) with no crash
   and no hang. `git status --short data/chronicle.json` stayed empty across
@@ -118,13 +141,78 @@ engine; only a belt-scoped `core` could ever have caught this gap.
   not through `rig.mjs`'s backings. Migrating them is real work (the live,
   deployed entry points), not done here.
 - Only Mace/Milo/Mira are wired into `rig.mjs`'s `JUDGMENT_FACTORIES`. The
-  other seven named agents (Rhys, Ross, Tess, Lena, Dara, Bea, Nell) have
-  clerk factories in the harness already (`res-desk.mjs`, `viol-desk.mjs`,
-  `turn-desk.mjs`, `bd-desk.mjs`, `col-desk.mjs`, `acct-desk.mjs`) but are not
-  yet reachable through the rig — adding one is one line per seat, the same
-  shape as `brain-doctrine.mjs`'s own registry.
+  other seven named agents have clerk factories already — six in their own
+  desk modules (`res-desk.mjs`, `viol-desk.mjs`, `turn-desk.mjs`,
+  `bd-desk.mjs`, `col-desk.mjs`, `acct-desk.mjs`) and Lena's as
+  `makeLeasingClerk` in `clerks.mjs:848` — but are not yet reachable through
+  the rig. **It is NOT "one line per seat", as the first draft of this entry
+  claimed**: four of the seven (Rhys, Ross, Tess, Nell) carried belts that
+  omitted `read:economy` while their own modules read `core.coinCents` on the
+  first line of `run()`, so each would have thrown the moment it was deployed.
+  Belts fixed; a static sufficiency scan in `test/rig.test.ts` now catches the
+  class, proved by reintroducing the bug on Nell and watching it fail.
 - Everything Phase-2/3/4/5/6 of `docs/WRIT-THE-KNIGHTHOOD.md` still open
   below is unchanged by this session.
+
+**AN ADVERSARIAL REVIEW OF THE RIG FOUND SIX REAL DEFECTS IN IT. All six are
+fixed; each was re-verified against the bytes before it was believed, and the
+worst of them was the rig's own central safety claim.**
+
+1. **The claim "no agent can cross the stop" was FALSE.** `open:cascade` grants
+   `completeStep`, which bounds-checks and nothing else, so a granted agent
+   walks a case straight past a commitment. Proved by driving Mace's own
+   scoped core past `assign-vendor` — `next` moved from step 3 to step 4,
+   status `awaiting`, no ratification anywhere. The viewer PRINTED that false
+   reassurance to the operator, citing the `refuses` list, which nothing reads
+   at runtime. **`completeStep` still has to be granted** (Mace legitimately
+   completes `report` and `identify`; the audited sweep needs it), so the fix
+   is not a refusal but honesty plus legibility: the rig now stamps every
+   `done` an agent writes with `actor: 'agent:<seat>'`, and the viewer states
+   exactly what holds (no ratification, ever) and what does not (advancing).
+   **That stamp closes standing HIGH finding #2** — "an agent-completed step is
+   indistinguishable from a human's" — for rig-deployed agents.
+2. **A belt tag that enforced nothing.** `read:trade-roster` bound vendor
+   functions onto the scoped core; nothing ever read them, because
+   `clerks.mjs:21` imports them directly. Stripping the tag was measured to
+   change nothing. This is `docs/WRIT-THE-GATE.md` finding 2 re-shipped by the
+   session that had just read it. The grant is deleted; the tag stays, now
+   declared inert in `DECLARATIVE_TAGS` with a test pinning it both ways.
+3. **The enforcement table's freeze was one level too shallow.** `Object.freeze`
+   on the object left every array mutable, so any importer could
+   `.push('approveStep')` and widen every belt in the process. Deep-frozen.
+4. **Four agents carried belts insufficient for their own clerks** (Rhys, Ross,
+   Tess, Nell — all read `core.coinCents` without `read:economy`). The same
+   class of bug this session had already found on Mace and written up as a
+   lesson learned while four more instances sat open. Fixed, and now caught by
+   a static scan rather than by a lesson.
+5. **Mira's hard rail was unreachable through the rig.** `settlementFixture`
+   had a constant subject, and `invoiceFor`'s drift is a hash of the caseId, so
+   every settlement fixture landed on the same within-ceiling branch — no
+   setting of any parameter could produce `needs-owner-approval`. The one
+   parameter that looked like it would (`invoiceCents`) was inert: the clerk
+   derives the bill itself and never reads the record, and the default wrote a
+   figure into the case that contradicted the one the clerk reconciled. The
+   param is gone, the record now carries the derived figure, and `subject`
+   steers the verdict. Both verdicts are tested. *Worth knowing:* the ceiling
+   is `max(quote, cap)`, so an overrun alone does not hold — the quote must
+   also exceed the NTE cap.
+6. **`fileBacking` guarded the read path only.** `appendEvents` re-read and
+   wrote with no seed check, so calling it directly could write to a seedless
+   chronicle on real disk. Both doors now go through one guarded read.
+
+Three smaller ones fixed in the same pass: `run()` defaulted a missing clock to
+1970 (now refuses — an invented clock reads as an aging of twenty thousand days,
+not as an error); `deploy()` accepted unknown belt tags silently (a typo now
+refuses at deploy, where the name is still in front of the reader); and
+`memoryBacking.readLog()` handed back its internal document by reference, so
+isolation was one-way.
+
+**Still true and NOT fixed:** a belt violation surfaces as a TypeError naming a
+domain function, not as a `BeltRefusal` beside the existing `BackingRefusal`. It
+fails closed — verified nothing is appended on the throw — but it satisfies
+WRIT-THE-GATE's property 3 and not its property 2. And `rig.mjs`'s own `run()`
+applies no identity guard; the viewer and `fleet.mjs` both wrap in
+`runGuardedModelWork`, but a direct caller of `run()` gets none.
 
 **2026-08-07 (later) — the gate grew hands. Three refusals now exist where there
 were none.** All green: `npm run build`, **461 tests** (was 442), `leakcheck`

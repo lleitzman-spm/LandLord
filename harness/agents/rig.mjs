@@ -34,12 +34,45 @@
 // implement; it is not itself that backing, and nothing here pretends
 // otherwise.
 //
-// CAPABILITY BY CONSTRUCTION. `deploy()` never hands ANY agent `approveStep`
-// or `overrideStep` — those names are simply absent from the vocabulary this
-// file knows, on every tag, so no belt can ever spell the ratchet into
-// existence. That is the same defence the money door already stands on
-// (`roster.mjs`: "the operator's belt has no money door, so no clerk can
-// reach one"), now applied to ratification too.
+// CAPABILITY BY CONSTRUCTION, AND EXACTLY WHAT IT COVERS. `deploy()` never
+// hands ANY agent `approveStep` or `overrideStep` — those names are simply
+// absent from the vocabulary this file knows, on every tag, so no belt can
+// spell the ratchet into existence. That is the same defence the money door
+// already stands on (`roster.mjs`), now applied to ratification too.
+//
+// WHAT THE BELT DOES NOT COVER, stated here because an unstated boundary is
+// how a gate becomes decoration (`docs/WRIT-THE-GATE.md`, finding 2 — "a gate
+// that is read reads as protection"). Two limits, both measured, neither
+// glossed:
+//
+//   1. THE BELT SCOPES THE DOMAIN CORE ONLY. `harness/clerks.mjs:21-23`
+//      reaches `vendors.mjs`, `leasing.mjs` and `safe-evidence.mjs` by STATIC
+//      IMPORT, entirely around `ctx.core`. Verified 2026-08-07 that all three
+//      are pure reference/compute — no file write, no event, no network, no
+//      money function — so the bypass widens what an agent may READ, never
+//      what it may DO. Every writer and every money reading lives in the
+//      domain core and IS scoped. A capability added to those modules later
+//      would be ungoverned by construction; that is the standing hazard.
+//
+//   2. AN AGENT CAN STILL ADVANCE A CASCADE. `open:cascade` grants
+//      `completeStep`, and it must — Mace legitimately completes `report` and
+//      `identify`, and the audited auto-sweep completes the steps the book
+//      declares need no person. `completeStep` bounds-checks and nothing else
+//      (`src/domain/flows.ts:961`), so a granted agent CAN walk a case past a
+//      commitment step. It cannot RATIFY one (no `approved`/`overridden`
+//      exists to emit), which is the guarantee that actually holds — but "it
+//      cannot cross" was claimed here in an earlier draft of this file and was
+//      FALSE, proved by driving Mace's own scoped core past `assign-vendor`.
+//
+//      What this rig does about it: every `done` an agent writes through its
+//      granted `completeStep` is STAMPED `actor: 'agent:<seat>'` (see
+//      `scopedCore`). That is the standing HIGH finding #2 in
+//      `docs/HANDOFF.md` — "an agent-completed step is indistinguishable from
+//      a human's" — closed for rig-deployed agents. It does not stop the
+//      advance; it makes the advance legible, which is WRIT-THE-GATE's
+//      property 2 (a different record) rather than its property 1 (a refusal
+//      at the writer). The refusal at the writer belongs in `flows.ts` and is
+//      not this file's to invent.
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -57,25 +90,27 @@ export class BackingRefusal extends Error {}
  *  disk state, not scattered through every caller that used to guard it
  *  itself. */
 export function fileBacking(path = resolve(process.cwd(), 'data/chronicle.json')) {
+  const REFUSAL =
+    'No standing War Game. Deploy one first (the footer "Deploy the grand muster" / ' +
+    '"Deploy a game") — the file backing works only on simulated wg/<seed> data ' +
+    '(docs/WRIT-THE-GATE.md: no real data reaches the fleet until a runtime refusal exists).';
+  /** Read the document and refuse it if no game stands. BOTH doors go through
+   *  here — an earlier draft guarded only `readLog`, which left
+   *  `appendEvents` able to write to a seedless chronicle on real disk if it
+   *  were ever called on its own. The write is the door that matters more. */
+  const readGuarded = () => {
+    const doc = JSON.parse(readFileSync(path, 'utf8'));
+    doc.events ??= [];
+    if (!doc.wargame?.seed) throw new BackingRefusal(REFUSAL);
+    return doc;
+  };
   return {
     kind: 'file',
     describe: () => `disk chronicle (${path})`,
-    readLog() {
-      const doc = JSON.parse(readFileSync(path, 'utf8'));
-      doc.events ??= [];
-      if (!doc.wargame?.seed) {
-        throw new BackingRefusal(
-          'No standing War Game. Deploy one first (the footer "Deploy the grand muster" / ' +
-            '"Deploy a game") — the file backing works only on simulated wg/<seed> data ' +
-            '(docs/WRIT-THE-GATE.md: no real data reaches the fleet until a runtime refusal exists).',
-        );
-      }
-      return doc;
-    },
+    readLog: readGuarded,
     appendEvents(events) {
       if (!Array.isArray(events) || !events.length) return null;
-      const doc = JSON.parse(readFileSync(path, 'utf8'));
-      doc.events ??= [];
+      const doc = readGuarded();
       doc.events = [...doc.events, ...events];
       writeFileSync(path, JSON.stringify(doc, null, 2) + '\n');
       return doc.events.length;
@@ -96,8 +131,11 @@ export function memoryBacking(seedDoc) {
   return {
     kind: 'memory',
     describe: () => `in-memory fixture (${doc.events.length} event(s))`,
+    /** Cloned on the way OUT as well as in. The constructor already cloned the
+     *  seed doc, but handing back the internal object left isolation one-way:
+     *  a clerk that mutated a returned event mutated the backing. */
     readLog() {
-      return doc;
+      return structuredClone(doc);
     },
     appendEvents(events) {
       if (!Array.isArray(events) || !events.length) return null;
@@ -159,18 +197,56 @@ export const CAPABILITY_CORE_FNS = Object.freeze({
   propose: ['proposeStep'],
 });
 
-/** The harness-side (not core-engine) capability: the vendor roster reference
- *  data (`vendors.mjs`). Not part of the pure domain, so it is granted
- *  separately from the table above rather than folded into it. */
-const TRADE_ROSTER_FNS = ['rosterFor', 'rosterTrade', 'clampFeeCents', 'invoiceFor'];
+// DEEP-frozen, not shallow. `Object.freeze` on the table alone leaves every
+// array inside it mutable, and this table IS the enforcement — so a shallow
+// freeze means any module importing this file could `.push('approveStep')`
+// onto a tag and widen every belt in the process. Measured on the first
+// draft of this file, which froze the object and not its arrays.
+for (const names of Object.values(CAPABILITY_CORE_FNS)) Object.freeze(names);
 
-function scopedCore(core, belt) {
+/** Belt tags that are DECLARATIVE — they describe what an agent reads, and
+ *  grant no core function, because the thing they name is reached by static
+ *  import in `harness/clerks.mjs` rather than through `ctx.core`.
+ *
+ *  `read:trade-roster` is the only one. It is kept on Milo's and Tess's
+ *  manifests because it is TRUE (they do read the trade roster) and listed
+ *  here because it is NOT ENFORCED — an earlier draft of this file bound
+ *  vendor functions onto the scoped core for it, and nothing ever read them:
+ *  `clerks.mjs:21` imports `rosterFor`/`rosterTrade`/`invoiceFor` directly
+ *  and calls them at `:463`, `:466`, `:674`. Stripping the tag from a belt
+ *  was measured to change nothing about what the agent could reach. That
+ *  grant is deleted rather than left looking like protection; the tag stays,
+ *  declared honestly as description. A test pins this both ways. */
+export const DECLARATIVE_TAGS = Object.freeze(['read:trade-roster']);
+
+/** Every tag any belt may carry — enforced tags plus declared-inert ones. A
+ *  tag outside this set is a typo, and `deploy` refuses it rather than
+ *  silently granting nothing and surfacing later as a TypeError deep in a
+ *  clerk's run. */
+export const KNOWN_TAGS = Object.freeze([...Object.keys(CAPABILITY_CORE_FNS), ...DECLARATIVE_TAGS]);
+
+/** Stamp an agent's own answer with its seat, so an agent-written `done` is
+ *  never mistaken for the operator's. `completeStep` returns `[done, next
+ *  hand]`; only the `done` is an ACT by anyone — the hand is the cascade
+ *  moving — so only the `done` is stamped. `answerStep` sets no actor and its
+ *  opts carry no field for one (`src/domain/flows.ts:961`), which is why this
+ *  is done here on the way out rather than passed in. */
+function stampActor(events, seat) {
+  for (const e of events) if (e.kind === 'done' && e.actor == null) e.actor = `agent:${seat}`;
+  return events;
+}
+
+function scopedCore(core, belt, seat) {
   const granted = new Set(belt);
   const out = {};
   for (const [tag, names] of Object.entries(CAPABILITY_CORE_FNS)) {
     if (!granted.has(tag)) continue;
     for (const name of names) {
-      if (name in core) out[name] = core[name];
+      if (!(name in core)) continue;
+      out[name] =
+        name === 'completeStep'
+          ? (...args) => stampActor(core.completeStep(...args), seat)
+          : core[name];
     }
   }
   return out;
@@ -183,15 +259,20 @@ function scopedCore(core, belt) {
  *  agent runs the SAME judgment code the fleet already proved. The rig
  *  changes how an agent is BUILT and WHERE it reads/writes; it does not
  *  reinvent what it decides. */
-export function deploy(agent, backing, { core, complete, brainFor, vendors } = {}) {
+export function deploy(agent, backing, { core, complete, brainFor } = {}) {
   if (!backing || typeof backing.readLog !== 'function' || typeof backing.appendEvents !== 'function') {
     throw new Error(`deploy(${agent.name}): backing must implement readLog()/appendEvents()`);
   }
   if (!core) throw new Error(`deploy(${agent.name}): no core engine supplied`);
-  const bound = scopedCore(core, agent.belt);
-  if (agent.belt.includes('read:trade-roster') && vendors) {
-    for (const name of TRADE_ROSTER_FNS) if (vendors[name]) bound[name] = vendors[name];
+  // A tag nothing knows is a typo, and a typo that silently grants nothing
+  // reappears as `undefined is not a function` halfway through a run. Refuse
+  // it here, where the name is still in front of the reader.
+  for (const tag of agent.belt) {
+    if (!KNOWN_TAGS.includes(tag)) {
+      throw new Error(`deploy(${agent.name}): unknown belt tag "${tag}" — known tags: ${KNOWN_TAGS.join(', ')}`);
+    }
   }
+  const bound = scopedCore(core, agent.belt, agent.seat);
   return {
     agent,
     backing,
@@ -228,16 +309,26 @@ export function judgmentKnown(agent) {
  *  records }`; any produced events are appended through the backing (so a
  *  memory-backed run never touches disk, and a file-backed one behaves
  *  exactly as `fleet.mjs` already does for this one seat). */
-export async function run(agent, backing, { core, complete, brainFor, vendors, now, cap, taken } = {}) {
+export async function run(agent, backing, { core, complete, brainFor, now, cap, taken } = {}) {
   const key = `${agent.seat}/${agent.task}`;
   const factory = JUDGMENT_FACTORIES[key];
   if (!factory) throw new Error(`run(${agent.name}): no judgment wired for ${key} yet — see JUDGMENT_FACTORIES`);
-  const { ctx } = deploy(agent, backing, { core, complete, brainFor, vendors });
+  const { ctx } = deploy(agent, backing, { core, complete, brainFor });
   const doc = backing.readLog();
+  // The clock is never invented. A memory backing carries no `wargame`, so an
+  // earlier draft's `?? new Date(0)` fallback silently ran every such agent at
+  // 1970 — which reads as an aging of twenty thousand days, not as an error.
+  const at = now ?? doc.wargame?.now;
+  if (!at) {
+    throw new Error(
+      `run(${agent.name}): no clock — pass \`now\`, or use a backing whose document carries \`wargame.now\`. ` +
+        'Aging is measured against this instant; defaulting it would silently date every reading.',
+    );
+  }
   const clerk = factory(ctx);
   const out = await clerk.run({
     doc,
-    now: now ?? doc.wargame?.now ?? new Date(0).toISOString(),
+    now: at,
     taken: taken ?? new Set(),
     ...(cap != null ? { cap } : {}),
   });

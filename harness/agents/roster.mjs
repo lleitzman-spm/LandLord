@@ -128,7 +128,11 @@ export const ROSTER = [
     seat: 'res-desk',
     task: 'triage',
     judgment: 'Triage what a resident reports — what it is, how urgent, whose desk.',
-    belt: ['read:work', 'read:catalog', 'propose'],
+    // `read:economy` is not decoration: res-desk.mjs:154 / viol-desk.mjs:157
+    // read `core.coinCents` on the first line of their run. Without the tag a
+    // belt-scoped deploy throws mid-run. Found by a static sufficiency scan
+    // (test/rig.test.ts), not by running them — they are not yet wired.
+    belt: ['read:work', 'read:catalog', 'read:economy', 'propose'],
     refuses: ['ratify', 'move-coin', 'reach-identity', 'speak-outward'],
     envelope: { enforced: false, realtime: false },
     skill: null,
@@ -140,7 +144,11 @@ export const ROSTER = [
     seat: 'viol-desk',
     task: 'classify',
     judgment: 'Classify a breach and grade it against the standard that governs it.',
-    belt: ['read:work', 'read:catalog', 'propose'],
+    // `read:economy` is not decoration: res-desk.mjs:154 / viol-desk.mjs:157
+    // read `core.coinCents` on the first line of their run. Without the tag a
+    // belt-scoped deploy throws mid-run. Found by a static sufficiency scan
+    // (test/rig.test.ts), not by running them — they are not yet wired.
+    belt: ['read:work', 'read:catalog', 'read:economy', 'propose'],
     refuses: ['ratify', 'move-coin', 'reach-identity', 'speak-outward'],
     envelope: { enforced: false, realtime: false },
     skill: null,
@@ -154,7 +162,8 @@ export const ROSTER = [
     seat: 'turn-desk',
     task: 'scope',
     judgment: 'Scope a turn — what the door needs before it can be let again.',
-    belt: ['read:work', 'read:trade-roster', 'propose'],
+    // `read:economy` — turn-desk.mjs:165 reads `core.coinCents`. See Rhys.
+    belt: ['read:work', 'read:trade-roster', 'read:economy', 'propose'],
     refuses: ['ratify', 'move-coin', 'reach-identity'],
     envelope: { enforced: false, realtime: false },
     skill: null,
@@ -202,7 +211,8 @@ export const ROSTER = [
     seat: 'bd-desk',
     task: 'qualify',
     judgment: 'Qualify an incoming owner — is this a book the Crown should keep.',
-    belt: ['read:work', 'propose'],
+    // `read:economy` — bd-desk.mjs:142 reads `core.coinCents`. See Rhys.
+    belt: ['read:work', 'read:economy', 'propose'],
     refuses: ['ratify', 'move-coin', 'reach-identity'],
     envelope: { enforced: false, realtime: false },
     skill: null,
