@@ -1,0 +1,1049 @@
+{
+  "catalog": [
+    {
+      "key": "rent-post",
+      "title": "Post monthly rent",
+      "class": "run",
+      "mode": "auto",
+      "domain": "collections"
+    },
+    {
+      "key": "delinquency",
+      "title": "Delinquency follow-up",
+      "class": "run",
+      "mode": "human",
+      "domain": "collections"
+    },
+    {
+      "key": "work-order",
+      "title": "Triage a work order",
+      "class": "run",
+      "mode": "human",
+      "domain": "maintenance",
+      "note": "Raw intake \u2014 walk it down the tree (system \u2192 leaf) to put it in motion."
+    },
+    {
+      "key": "owner-statement",
+      "title": "Send the owner statement",
+      "class": "run",
+      "mode": "auto",
+      "domain": "owner-accounting"
+    },
+    {
+      "key": "lead-intake",
+      "title": "Intake a new-owner lead",
+      "class": "acq",
+      "mode": "auto",
+      "domain": "leasing"
+    },
+    {
+      "key": "list-unit",
+      "title": "List a vacant unit",
+      "class": "acq",
+      "mode": "human",
+      "domain": "leasing"
+    },
+    {
+      "key": "notice-received",
+      "title": "Log a tenant notice",
+      "class": "run",
+      "mode": "human",
+      "domain": "move-out"
+    },
+    {
+      "key": "confirm-vacate-date",
+      "title": "Confirm the vacate date",
+      "class": "run",
+      "mode": "human",
+      "domain": "move-out"
+    },
+    {
+      "key": "schedule-pre-inspection",
+      "title": "Schedule the pre-inspection",
+      "class": "run",
+      "mode": "human",
+      "domain": "move-out"
+    },
+    {
+      "key": "move-out-inspection",
+      "title": "Walk the move-out inspection",
+      "class": "run",
+      "mode": "human",
+      "domain": "move-out"
+    },
+    {
+      "key": "scope-the-turn",
+      "title": "Scope and price the turn",
+      "class": "run",
+      "mode": "human",
+      "domain": "move-out",
+      "woType": "unit-turn",
+      "priority": "normal",
+      "status": "new",
+      "slaBand": "7-day"
+    },
+    {
+      "key": "work-the-turn",
+      "title": "Work the turn to rent-ready",
+      "class": "run",
+      "mode": "human",
+      "domain": "move-out",
+      "woType": "unit-turn",
+      "priority": "normal",
+      "status": "in-progress",
+      "slaBand": "7-day"
+    },
+    {
+      "key": "deposit-accounting",
+      "title": "Itemize the deposit accounting",
+      "class": "run",
+      "mode": "human",
+      "domain": "move-out"
+    },
+    {
+      "key": "transfer-the-deposit",
+      "title": "Transfer the deposit",
+      "class": "run",
+      "mode": "human",
+      "domain": "move-out"
+    },
+    {
+      "key": "owner-reserve",
+      "title": "Request the owner reserve",
+      "class": "run",
+      "mode": "human",
+      "domain": "move-out",
+      "note": "A money step \u2014 only inside the open window of the circuit."
+    },
+    {
+      "key": "final-walk",
+      "title": "Verify rent-ready (final walk)",
+      "class": "acq",
+      "mode": "human",
+      "domain": "leasing"
+    },
+    {
+      "key": "show-and-screen",
+      "title": "Show and screen applicants",
+      "class": "acq",
+      "mode": "human",
+      "domain": "leasing"
+    },
+    {
+      "key": "vacancy-price-drop",
+      "title": "Drop the vacancy price",
+      "class": "acq",
+      "mode": "auto",
+      "domain": "leasing",
+      "note": "The weekly loop \u2014 repeats until leased."
+    },
+    {
+      "key": "reconcile",
+      "title": "Reconcile the trust account",
+      "class": "firm",
+      "mode": "human",
+      "domain": "compliance"
+    },
+    {
+      "key": "violation-notice",
+      "title": "Handle a violation or notice",
+      "class": "firm",
+      "mode": "human",
+      "domain": "compliance",
+      "system": "violations",
+      "completes": "violation-notice",
+      "note": "HOA / owner / vendor notice \u2014 classify, decide, serve, follow to cure."
+    },
+    {
+      "key": "renewal",
+      "title": "Work a lease renewal",
+      "class": "firm",
+      "mode": "human",
+      "domain": "renewals",
+      "completes": "lease-renewal",
+      "note": "The T-90 renewal cadence."
+    },
+    {
+      "key": "owner-onboarding",
+      "title": "Onboard a won property",
+      "class": "acq",
+      "mode": "human",
+      "domain": "onboarding",
+      "completes": "owner-onboarding",
+      "note": "A property won \u2014 intake, agreement, setup, walkthrough, go-live."
+    },
+    {
+      "key": "violation.classify",
+      "title": "Classify the notice",
+      "class": "firm",
+      "mode": "auto",
+      "domain": "compliance",
+      "system": "violations"
+    },
+    {
+      "key": "violation.decide",
+      "title": "Decide the violation",
+      "class": "firm",
+      "mode": "human",
+      "domain": "compliance",
+      "system": "violations"
+    },
+    {
+      "key": "violation.draft",
+      "title": "Draft the cure notice",
+      "class": "firm",
+      "mode": "auto",
+      "domain": "compliance",
+      "system": "violations"
+    },
+    {
+      "key": "violation.serve",
+      "title": "Serve the notice",
+      "class": "firm",
+      "mode": "human",
+      "domain": "compliance",
+      "system": "violations"
+    },
+    {
+      "key": "violation.cure",
+      "title": "Work the cure window",
+      "class": "firm",
+      "mode": "human",
+      "domain": "compliance",
+      "system": "violations"
+    },
+    {
+      "key": "violation.close",
+      "title": "Close the violation",
+      "class": "firm",
+      "mode": "human",
+      "domain": "compliance",
+      "system": "violations"
+    },
+    {
+      "key": "renewal.price",
+      "title": "Set the renewal rent",
+      "class": "firm",
+      "mode": "human",
+      "domain": "renewals"
+    },
+    {
+      "key": "renewal.draft-offer",
+      "title": "Draft the renewal offer",
+      "class": "firm",
+      "mode": "auto",
+      "domain": "renewals"
+    },
+    {
+      "key": "renewal.send-offer",
+      "title": "Send the renewal offer",
+      "class": "firm",
+      "mode": "auto",
+      "domain": "renewals"
+    },
+    {
+      "key": "renewal.owner-window",
+      "title": "Owner authorization window",
+      "class": "firm",
+      "mode": "human",
+      "domain": "renewals"
+    },
+    {
+      "key": "renewal.tenant-response",
+      "title": "Chase the tenant to sign",
+      "class": "firm",
+      "mode": "auto",
+      "domain": "renewals"
+    },
+    {
+      "key": "renewal.countersign",
+      "title": "Countersign the renewal",
+      "class": "firm",
+      "mode": "human",
+      "domain": "renewals"
+    },
+    {
+      "key": "renewal.fee",
+      "title": "Post the renewal fee",
+      "class": "firm",
+      "mode": "auto",
+      "domain": "renewals"
+    },
+    {
+      "key": "renewal.record",
+      "title": "Record the renewal",
+      "class": "firm",
+      "mode": "auto",
+      "domain": "renewals"
+    },
+    {
+      "key": "onboarding.agreement",
+      "title": "Sign the management agreement",
+      "class": "acq",
+      "mode": "human",
+      "domain": "onboarding"
+    },
+    {
+      "key": "onboarding.setup",
+      "title": "Set up the records",
+      "class": "acq",
+      "mode": "auto",
+      "domain": "onboarding"
+    },
+    {
+      "key": "onboarding.walkthrough",
+      "title": "Walk the property",
+      "class": "acq",
+      "mode": "human",
+      "domain": "onboarding"
+    },
+    {
+      "key": "onboarding.insurance",
+      "title": "Verify owner insurance",
+      "class": "acq",
+      "mode": "auto",
+      "domain": "onboarding"
+    },
+    {
+      "key": "onboarding.make-ready",
+      "title": "Batch the make-ready",
+      "class": "acq",
+      "mode": "human",
+      "domain": "onboarding",
+      "woType": "unit-turn",
+      "priority": "normal",
+      "status": "scheduled",
+      "slaBand": "scheduled"
+    },
+    {
+      "key": "onboarding.lockbox",
+      "title": "Hang the lockbox",
+      "class": "acq",
+      "mode": "human",
+      "domain": "onboarding"
+    },
+    {
+      "key": "onboarding.report",
+      "title": "Send the first owner report",
+      "class": "acq",
+      "mode": "auto",
+      "domain": "onboarding"
+    },
+    {
+      "key": "onboarding.go-live",
+      "title": "List and syndicate",
+      "class": "acq",
+      "mode": "auto",
+      "domain": "onboarding"
+    },
+    {
+      "key": "maintenance.hvac.no-cooling",
+      "title": "No cooling",
+      "class": "run",
+      "mode": "human",
+      "domain": "maintenance",
+      "system": "hvac",
+      "woType": "resident",
+      "priority": "urgent",
+      "status": "new",
+      "slaBand": "same-day",
+      "completes": "vendor-dispatch",
+      "params": {
+        "trade": "HVAC",
+        "urgency": "emergency"
+      }
+    },
+    {
+      "key": "maintenance.hvac.no-heating",
+      "title": "No heating",
+      "class": "run",
+      "mode": "human",
+      "domain": "maintenance",
+      "system": "hvac",
+      "woType": "resident",
+      "priority": "urgent",
+      "status": "assigned",
+      "slaBand": "same-day",
+      "completes": "vendor-dispatch",
+      "params": {
+        "trade": "HVAC",
+        "urgency": "emergency"
+      }
+    },
+    {
+      "key": "maintenance.hvac.refrigerant-leak",
+      "title": "Refrigerant leak",
+      "class": "run",
+      "mode": "human",
+      "domain": "maintenance",
+      "system": "hvac",
+      "woType": "resident",
+      "priority": "urgent",
+      "status": "scheduled",
+      "slaBand": "same-day",
+      "completes": "vendor-dispatch",
+      "params": {
+        "trade": "HVAC",
+        "urgency": "urgent"
+      }
+    },
+    {
+      "key": "maintenance.hvac.thermostat",
+      "title": "Thermostat fault",
+      "class": "run",
+      "mode": "human",
+      "domain": "maintenance",
+      "system": "hvac",
+      "woType": "resident",
+      "priority": "normal",
+      "status": "in-progress",
+      "slaBand": "3-day",
+      "completes": "vendor-dispatch",
+      "params": {
+        "trade": "HVAC",
+        "urgency": "routine"
+      }
+    },
+    {
+      "key": "maintenance.hvac.routine-service",
+      "title": "Routine HVAC service",
+      "class": "run",
+      "mode": "human",
+      "domain": "maintenance",
+      "system": "hvac",
+      "woType": "internal",
+      "priority": "low",
+      "status": "on-hold",
+      "slaBand": "7-day",
+      "completes": "vendor-dispatch",
+      "params": {
+        "trade": "HVAC",
+        "urgency": "routine"
+      }
+    },
+    {
+      "key": "maintenance.plumbing.leak",
+      "title": "Active leak",
+      "class": "run",
+      "mode": "human",
+      "domain": "maintenance",
+      "system": "plumbing",
+      "woType": "resident",
+      "priority": "urgent",
+      "status": "completed",
+      "slaBand": "same-day",
+      "completes": "vendor-dispatch",
+      "params": {
+        "trade": "plumbing",
+        "urgency": "emergency"
+      }
+    },
+    {
+      "key": "maintenance.appliance.refrigerator",
+      "title": "Refrigerator down",
+      "class": "run",
+      "mode": "human",
+      "domain": "maintenance",
+      "system": "appliance",
+      "woType": "resident",
+      "priority": "urgent",
+      "status": "canceled",
+      "slaBand": "same-day",
+      "completes": "vendor-dispatch",
+      "params": {
+        "trade": "appliance",
+        "urgency": "urgent"
+      }
+    },
+    {
+      "key": "maintenance.escalation.habitability",
+      "title": "Habitability alarm",
+      "class": "run",
+      "mode": "human",
+      "domain": "maintenance",
+      "system": "escalation",
+      "woType": "resident",
+      "priority": "urgent",
+      "status": "new",
+      "slaBand": "same-day",
+      "note": "The rising tide \u2014 a neglected crisis come due. Work it before the Patron recalls the estate."
+    }
+  ],
+  "flows": [
+    {
+      "key": "move-out-relay",
+      "title": "Move-out \u2192 re-list relay",
+      "trigger": "A tenant gives notice",
+      "steps": [
+        {
+          "key": "log-notice",
+          "catalogRow": "notice-received",
+          "holder": "pm-desk",
+          "board": "Move-Out",
+          "note": "Notice logged and acknowledged; the clock starts.",
+          "edge": {
+            "after": 0
+          },
+          "slaDays": 1
+        },
+        {
+          "key": "confirm-date",
+          "catalogRow": "confirm-vacate-date",
+          "holder": "pm-desk",
+          "board": "Move-Out",
+          "note": "Vacate date confirmed in writing with the tenant.",
+          "edge": {
+            "after": 1
+          },
+          "slaDays": 2
+        },
+        {
+          "key": "pre-inspection",
+          "catalogRow": "schedule-pre-inspection",
+          "holder": "alys",
+          "board": "Move-Out",
+          "note": "Walk the unit before the tenant leaves; scope the turn.",
+          "edge": {
+            "after": -14,
+            "before": -7,
+            "anchor": "target"
+          }
+        },
+        {
+          "key": "move-out-inspection",
+          "catalogRow": "move-out-inspection",
+          "holder": "alys",
+          "board": "Move-Out",
+          "note": "Document condition against the deposit.",
+          "edge": {
+            "after": 0,
+            "before": 2,
+            "anchor": "target"
+          },
+          "slaDays": 2
+        },
+        {
+          "key": "turn-scope",
+          "catalogRow": "scope-the-turn",
+          "holder": "va-desk",
+          "board": "Move-Out",
+          "note": "Bids gathered, the turn scoped and priced.",
+          "edge": {
+            "after": 1,
+            "before": 3
+          },
+          "slaDays": 2
+        },
+        {
+          "key": "owner-reserve",
+          "catalogRow": "owner-reserve",
+          "holder": "lp-queue",
+          "board": "Deposit Transfer",
+          "note": "A ~$750 owner reserve, requested only inside the open window.",
+          "edge": {
+            "after": 3,
+            "before": 10,
+            "onOrAfterDayOfMonth": 15,
+            "beforeDayOfMonth": 10
+          },
+          "slaDays": 5
+        },
+        {
+          "key": "turn-work",
+          "catalogRow": "work-the-turn",
+          "holder": "va-desk",
+          "board": "Move-Out",
+          "note": "The turn itself: vendors dispatched, unit made ready.",
+          "edge": {
+            "after": 3,
+            "before": 10
+          },
+          "slaDays": 7
+        },
+        {
+          "key": "deposit-accounting",
+          "catalogRow": "deposit-accounting",
+          "holder": "alys",
+          "board": "Deposit Transfer",
+          "note": "Deductions itemized and sent inside the statutory window.",
+          "edge": {
+            "after": 2,
+            "before": 21,
+            "anchor": "target"
+          },
+          "slaDays": 3
+        },
+        {
+          "key": "deposit-transfer",
+          "catalogRow": "transfer-the-deposit",
+          "holder": "lp-queue",
+          "board": "Deposit Transfer",
+          "note": "What is owed moves: refund out, damages to the owner.",
+          "edge": {
+            "after": 21,
+            "before": 30,
+            "anchor": "target"
+          },
+          "slaDays": 5
+        },
+        {
+          "key": "final-walk",
+          "catalogRow": "final-walk",
+          "holder": "osric",
+          "board": "Leasing",
+          "note": "Rent-ready verified before the listing goes live.",
+          "edge": {
+            "after": 10,
+            "before": 12
+          }
+        },
+        {
+          "key": "list-unit",
+          "catalogRow": "list-unit",
+          "holder": "osric",
+          "board": "Leasing",
+          "note": "Photos, price, syndication \u2014 the unit is on the market.",
+          "edge": {
+            "after": 12
+          },
+          "slaDays": 2
+        },
+        {
+          "key": "show-and-screen",
+          "catalogRow": "show-and-screen",
+          "holder": "osric",
+          "board": "Leasing",
+          "note": "Showings worked, applicants screened.",
+          "edge": {
+            "after": 12,
+            "before": 40
+          }
+        },
+        {
+          "key": "weekly-price-drop",
+          "catalogRow": "vacancy-price-drop",
+          "holder": "osric",
+          "board": "Leasing",
+          "condition": "until leased",
+          "note": "The vacancy loop: $25 off the ask each week it sits.",
+          "edge": {
+            "after": 19
+          },
+          "repeatEveryDays": 7
+        }
+      ]
+    },
+    {
+      "key": "vendor-dispatch",
+      "title": "Vendor dispatch",
+      "trigger": "A work order is reported",
+      "steps": [
+        {
+          "key": "report",
+          "catalogRow": "work-order",
+          "holder": "pm-desk",
+          "board": "Intake",
+          "note": "The report logged \u2014 what broke, which door, how it reached us.",
+          "edge": {
+            "after": 0
+          },
+          "slaDays": 1
+        },
+        {
+          "key": "identify",
+          "catalogRow": "work-order",
+          "holder": "mabel",
+          "board": "Intake",
+          "note": "Walked down the tree to a leaf \u2014 a {trade} call, {urgency} priority.",
+          "edge": {
+            "after": 0
+          },
+          "slaDays": 1
+        },
+        {
+          "key": "assign-vendor",
+          "catalogRow": "work-order",
+          "holder": "va-desk",
+          "board": "Dispatch",
+          "note": "A artisan of the {trade} trade chosen for a {urgency} call.",
+          "edge": {
+            "after": 0,
+            "before": 1
+          },
+          "slaDays": 1
+        },
+        {
+          "key": "dispatch",
+          "catalogRow": "work-order",
+          "holder": "va-desk",
+          "board": "Dispatch",
+          "note": "The {trade} artisan dispatched \u2014 {urgency} window, tenant notified.",
+          "edge": {
+            "after": 0,
+            "before": 1
+          },
+          "slaDays": 1
+        },
+        {
+          "key": "invoice-in",
+          "catalogRow": "work-order",
+          "holder": "lp-queue",
+          "board": "Settlement",
+          "note": "The {trade} artisan's invoice received and matched to the work.",
+          "edge": {
+            "after": 1,
+            "before": 7
+          },
+          "slaDays": 5
+        },
+        {
+          "key": "confirm-work",
+          "catalogRow": "work-order",
+          "holder": "mabel",
+          "board": "Dispatch",
+          "note": "The fix confirmed with the tenant \u2014 the {trade} work holds.",
+          "edge": {
+            "after": 1,
+            "before": 7
+          },
+          "slaDays": 3
+        },
+        {
+          "key": "pay-vendor",
+          "catalogRow": "work-order",
+          "holder": "lp-queue",
+          "board": "Settlement",
+          "note": "The artisan paid \u2014 only inside the open window of the circuit.",
+          "edge": {
+            "after": 3,
+            "before": 10,
+            "onOrAfterDayOfMonth": 15,
+            "beforeDayOfMonth": 10
+          },
+          "slaDays": 5
+        },
+        {
+          "key": "post-to-accounting",
+          "catalogRow": "work-order",
+          "holder": "lp-queue",
+          "board": "Settlement",
+          "note": "The cost posted to the door and its owner \u2014 the ledger balanced.",
+          "edge": {
+            "after": 3,
+            "before": 14
+          },
+          "slaDays": 5
+        }
+      ]
+    },
+    {
+      "key": "violation-notice",
+      "title": "Violation / notice",
+      "trigger": "A violation or notice arrives",
+      "steps": [
+        {
+          "key": "receive",
+          "catalogRow": "violation-notice",
+          "holder": "pm-desk",
+          "board": "Intake",
+          "note": "The notice logged \u2014 HOA, owner, or vendor; what, which door, from whom.",
+          "edge": {
+            "after": 0
+          }
+        },
+        {
+          "key": "classify",
+          "catalogRow": "violation.classify",
+          "holder": "va-desk",
+          "board": "Intake",
+          "note": "Classified by kind and severity \u2014 the {violation} named.",
+          "edge": {
+            "after": 0
+          }
+        },
+        {
+          "key": "decide",
+          "catalogRow": "violation.decide",
+          "holder": "mabel",
+          "board": "Judgment",
+          "note": "The call a human makes: cure, waive, or send the {violation} up the ladder.",
+          "edge": {
+            "after": 1
+          },
+          "slaDays": 2
+        },
+        {
+          "key": "draft-notice",
+          "catalogRow": "violation.draft",
+          "holder": "va-desk",
+          "board": "Notice",
+          "note": "The cure notice drafted from the template \u2014 the {days}-day window stated.",
+          "edge": {
+            "after": 1,
+            "before": 3
+          },
+          "slaDays": 2
+        },
+        {
+          "key": "serve",
+          "catalogRow": "violation.serve",
+          "holder": "pm-desk",
+          "board": "Notice",
+          "note": "Served and recorded \u2014 the legal gate kept, the clock on record.",
+          "edge": {
+            "after": 2,
+            "before": 4
+          },
+          "slaDays": 2
+        },
+        {
+          "key": "cure-window",
+          "catalogRow": "violation.cure",
+          "holder": "mabel",
+          "board": "Follow-up",
+          "condition": "until cured",
+          "note": "The cure period worked \u2014 reminded each week it stands open.",
+          "edge": {
+            "after": 3
+          },
+          "repeatEveryDays": 7
+        },
+        {
+          "key": "close",
+          "catalogRow": "violation.close",
+          "holder": "pm-desk",
+          "board": "Close",
+          "note": "The outcome recorded and the case closed \u2014 cured, or handed up the ladder.",
+          "edge": {
+            "after": 10
+          },
+          "slaDays": 3
+        }
+      ]
+    },
+    {
+      "key": "lease-renewal",
+      "title": "Lease renewal",
+      "trigger": "A lease nears its term (T-90)",
+      "steps": [
+        {
+          "key": "open-window",
+          "catalogRow": "renewal",
+          "holder": "lp-queue",
+          "board": "Renewal",
+          "note": "The T-90 window opens \u2014 the term in sight, the file pulled.",
+          "edge": {
+            "after": 0
+          }
+        },
+        {
+          "key": "price",
+          "catalogRow": "renewal.price",
+          "holder": "osric",
+          "board": "Pricing",
+          "note": "The rent call a human makes \u2014 hold, raise by {increase}, or let the door go.",
+          "edge": {
+            "after": 1
+          },
+          "slaDays": 3
+        },
+        {
+          "key": "draft-offer",
+          "catalogRow": "renewal.draft-offer",
+          "holder": "lp-queue",
+          "board": "Offer",
+          "note": "The renewal offer drafted at the set {rent} \u2014 the packet staged.",
+          "edge": {
+            "after": 2,
+            "before": 5
+          },
+          "slaDays": 2
+        },
+        {
+          "key": "send-offer",
+          "catalogRow": "renewal.send-offer",
+          "holder": "lp-queue",
+          "board": "Offer",
+          "note": "The offer sent to the tenant \u2014 the term and the {rent} on the table.",
+          "edge": {
+            "after": 3,
+            "before": 6
+          },
+          "slaDays": 1
+        },
+        {
+          "key": "owner-window",
+          "catalogRow": "renewal.owner-window",
+          "holder": "lp-queue",
+          "board": "Owner",
+          "condition": "until the owner answers",
+          "note": "The owner's window \u2014 an unanswered window is an absence, never a consent.",
+          "edge": {
+            "after": 3,
+            "before": 10
+          },
+          "slaDays": 7
+        },
+        {
+          "key": "tenant-response",
+          "catalogRow": "renewal.tenant-response",
+          "holder": "lp-queue",
+          "board": "Offer",
+          "condition": "until signed",
+          "note": "The tenant chased each week \u2014 signed, or the term runs month-to-month.",
+          "edge": {
+            "after": 6
+          },
+          "repeatEveryDays": 7
+        },
+        {
+          "key": "countersign",
+          "catalogRow": "renewal.countersign",
+          "holder": "osric",
+          "board": "Execution",
+          "note": "The broker's signature \u2014 the one hand the machine never holds.",
+          "edge": {
+            "after": 20,
+            "before": 30
+          },
+          "slaDays": 2
+        },
+        {
+          "key": "post-fee",
+          "catalogRow": "renewal.fee",
+          "holder": "lp-queue",
+          "board": "Settlement",
+          "note": "The renewal fee posted \u2014 only inside the open window of the circuit.",
+          "edge": {
+            "after": 20,
+            "before": 30,
+            "onOrAfterDayOfMonth": 15,
+            "beforeDayOfMonth": 10
+          },
+          "slaDays": 5
+        },
+        {
+          "key": "record",
+          "catalogRow": "renewal.record",
+          "holder": "lp-queue",
+          "board": "Close",
+          "note": "Filed and notified \u2014 unsigned rolls to month-to-month with the premium.",
+          "edge": {
+            "after": 25
+          },
+          "slaDays": 2
+        }
+      ]
+    },
+    {
+      "key": "owner-onboarding",
+      "title": "Owner onboarding",
+      "trigger": "A new owner's property is won",
+      "steps": [
+        {
+          "key": "intake",
+          "catalogRow": "owner-onboarding",
+          "holder": "pm-desk",
+          "board": "Intake",
+          "note": "The owner intake logged \u2014 the property, the doors, the terms sought.",
+          "edge": {
+            "after": 0
+          }
+        },
+        {
+          "key": "agreement",
+          "catalogRow": "onboarding.agreement",
+          "holder": "osric",
+          "board": "Agreement",
+          "note": "The management agreement \u2014 a signature and a judgment, kept human.",
+          "edge": {
+            "after": 1
+          },
+          "slaDays": 3
+        },
+        {
+          "key": "set-up-records",
+          "catalogRow": "onboarding.setup",
+          "holder": "va-desk",
+          "board": "Setup",
+          "note": "Records opened and defaults set in the system of record.",
+          "edge": {
+            "after": 2,
+            "before": 5
+          },
+          "slaDays": 3
+        },
+        {
+          "key": "walkthrough",
+          "catalogRow": "onboarding.walkthrough",
+          "holder": "alys",
+          "board": "Onsite",
+          "note": "The property walked \u2014 the onsite judgment the machine can't make.",
+          "edge": {
+            "after": 2,
+            "before": 7
+          },
+          "slaDays": 4
+        },
+        {
+          "key": "verify-insurance",
+          "catalogRow": "onboarding.insurance",
+          "holder": "va-desk",
+          "board": "Compliance",
+          "note": "Owner insurance verified and on file \u2014 the coverage gate.",
+          "edge": {
+            "after": 3,
+            "before": 8
+          },
+          "slaDays": 5
+        },
+        {
+          "key": "make-ready",
+          "catalogRow": "onboarding.make-ready",
+          "holder": "va-desk",
+          "board": "Make-Ready",
+          "condition": "if the door stands vacant",
+          "note": "The make-ready batched \u2014 only where a door comes empty.",
+          "edge": {
+            "after": 5
+          }
+        },
+        {
+          "key": "lockbox",
+          "catalogRow": "onboarding.lockbox",
+          "holder": "alys",
+          "board": "Onsite",
+          "note": "Keys logged and the lockbox hung \u2014 the physical leg.",
+          "edge": {
+            "after": 5,
+            "before": 9
+          },
+          "slaDays": 3
+        },
+        {
+          "key": "first-report",
+          "catalogRow": "onboarding.report",
+          "holder": "pm-desk",
+          "board": "Report",
+          "note": "The first owner report sent \u2014 the relationship opened on the books.",
+          "edge": {
+            "after": 7,
+            "before": 12
+          },
+          "slaDays": 3
+        },
+        {
+          "key": "go-live",
+          "catalogRow": "onboarding.go-live",
+          "holder": "osric",
+          "board": "Leasing",
+          "condition": "if the door stands vacant",
+          "note": "Built and syndicated \u2014 the vacant door goes to market.",
+          "edge": {
+            "after": 10
+          }
+        }
+      ]
+    }
+  ]
+}

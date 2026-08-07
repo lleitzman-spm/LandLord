@@ -48,14 +48,15 @@ aliases:
 
 - [[src/CommandPalette.tsx]] — *this writ names the exported symbol `CommandPalette`*
 - [[src/domain/catalog.ts]] — *this writ names the exported symbol `catalogAtFounding`*
-- [[src/domain/economy.ts]] — *this writ names the exported symbol `spendGate`*
+- [[src/domain/economy.ts]] — *this writ names the exported symbol `settlementGate`; this writ names the exported symbol `spendGate`; +1 more*
+- [[src/domain/economySetting.ts]] — *this writ names the exported symbol `applyEconomySetting`*
 - [[src/domain/escape.ts]] — *this writ names the exported symbol `EscapeReading`; this writ names the exported symbol `readEscape`*
-- [[src/domain/flows.ts]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `awaitsOutside`; +10 more*
+- [[src/domain/flows.ts]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `awaitsOutside`; +12 more*
 - [[src/domain/guilds.ts]] — *this writ names the exported symbol `SEAT_GUILD`*
 - [[src/domain/pods.ts]] — *this writ names the exported symbol `commissionCaseId`; this writ names the exported symbol `knightsOf`; +1 more*
 - [[src/domain/realm.ts]] — *this writ names the exported symbol `readRealm`*
 - [[src/LedgerView.tsx]] — *this writ names the exported symbol `LedgerView`*
-- [[src/operator-core.ts]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `awaitsOutside`; +8 more*
+- [[src/operator-core.ts]] — *this writ names the exported symbol `applyEconomySetting`; this writ names the exported symbol `approveStep`; +12 more*
 
 ## artifact
 

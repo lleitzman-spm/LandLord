@@ -52,7 +52,7 @@ aliases:
 
 ### Writs that specify it
 
-- [[Handoff — where things stand]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `awaitsOutside`; +8 more*
+- [[Handoff — where things stand]] — *this writ names the exported symbol `applyEconomySetting`; this writ names the exported symbol `approveStep`; +12 more*
 - [[Open questions]] — *this writ names the exported symbol `estimateSpendCents`; this writ names the exported symbol `spendGate`*
 - [[The Kingdom — Canon]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `CatalogRow`; +15 more*
 - [[The PM Task-and-Process Library (reference)]] — *this writ names the exported symbol `CatalogRow`; this writ names the exported symbol `domainsOf`; +6 more*

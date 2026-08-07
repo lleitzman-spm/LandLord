@@ -38,6 +38,94 @@ yours rather than forcing your copy over live work.
 
 ## State of play
 
+**2026-08-07 (later still) — the agent rig, a viewer, fixtures, and the M
+family driven through all three.** All green: `npm run build`, **493 tests**
+(was 461), `leakcheck` 1,458 files / 0 findings, `npm run book` 1,192 pages,
+`npm run book:lint` exit 0 (0 dangling, 1,098 quotes re-verified).
+
+The four-item build order from the session brief, in order built:
+
+- **THE RIG** (`harness/agents/rig.mjs`). `buildAgent(spec)` turns a
+  `roster.mjs` entry into a frozen descriptor that touches no file, no shell,
+  no war-game seed. Only `deploy(agent, backing, {core, complete, brainFor})`
+  binds a backing and hands the agent a `core` **scoped to exactly the
+  capability tags its belt declares** (`CAPABILITY_CORE_FNS`) — the first time
+  any clerk's access has been narrower than the whole engine. No tag, on any
+  agent, ever grants `approveStep`/`overrideStep`/`settlementMoney`/
+  `vendorSettlementMoney` — the names are absent from the table itself, the
+  same defence the money door already stood on, now covering the ratchet too.
+  **The weld named in the brief is cut**: `fleet.mjs`'s
+  `if (!doc.wargame?.seed) process.exit(1)` used to mean an agent could not
+  exist at all without a live disk chronicle carrying a standing War Game.
+  That check now belongs to `fileBacking()` — the ONE backing that can reach
+  real disk state — as a `BackingRefusal`, and a second backing,
+  `memoryBacking(doc)`, satisfies the identical two-function interface
+  (`readLog()`/`appendEvents(events)`) with no war-game requirement, because
+  it never risks the live simulator. **`fleet.mjs` and `worker.ts` are
+  UNCHANGED** — they keep their own inline checks (CLI exit / HTTP 409) rather
+  than being migrated onto the rig's backing today; that migration is real
+  and still open, named below, not silently done.
+
+- **THE VIEWER** (`harness/viewer.mjs`, `./harness/run.sh viewer.mjs
+  [Mace|Milo|Mira|all]`). One work order in, the agent's manifest card, its
+  reasoning trace, and exactly where it stops. **Driven both ways, not just
+  unit-tested**: with `MOONSHOT_API_KEY` set, real Tier-1 brain calls (`[brain
+  t1]` in the trace, e.g. Milo pricing an emergency HVAC call at $800 against a
+  $350 house cap — "needs-owner-approval"); with the key unset, every agent
+  fell straight to its deterministic Tier-0 path (`[heuristic]`) with no crash
+  and no hang. `git status --short data/chronicle.json` stayed empty across
+  both runs — `memoryBacking()` never touches disk, so nothing needed
+  restoring after.
+
+- **FIXTURES** (`harness/agents/fixtures.mjs` +
+  `agents/fixtures/founding-book.json`). Three stages of ONE work order —
+  raw intake (before Mace) → the vendor-dispatch commitment (before Milo) →
+  settlement (before Mira) — each built by calling the REAL flow engine
+  (`instantiateFlow`/`completeStep`), never a hand-typed event array, off a
+  **frozen snapshot** of the founding catalog + flow book rather than the
+  live, mutable `data/chronicle.json` (the exact trap `book/memory/learned.md`
+  already names: "a generated page is not where a running game reads its
+  rules").
+
+- **THE FIRST FAMILY** — Mace, Milo, Mira, run through the rig unchanged from
+  the fleet's own judgment code (`clerks.mjs`'s `makeIntakeClerk`/
+  `makeVendorClerk`/`makePriceClerk`, reused by reference, not reimplemented).
+  Their rail ran end to end on the viewer: Mace identified a furnace complaint
+  as `maintenance.hvac.no-heating` and proposed engaging an HVAC artisan;
+  Milo (a separate, dedicated commitment fixture — see below) reasoned Ser
+  Emrick the Bellows-smith at $800, over the $350 cap, "the owner's word is
+  needed"; Mira reconciled a settlement fixture's invoice at $175 against a
+  $350 ceiling, "clear to pay." Every terminal event: `kind: proposed`,
+  `actor: agent:<seat>` — never `approved`/`overridden`.
+
+**A real finding from driving Mace, not from reading her.** Her belt was
+declared `['read:work', 'read:catalog', 'open:cascade']` and passed every
+existing test — `roster.test.ts` checks shape, not sufficiency. The first
+time anything actually scoped her `core` to that belt (this session's rig),
+she threw: `core.applyEconomySetting is not a function`. Her `run()`
+(`makeIntakeClerk`) does not stop at "identified" — it stops at the first
+COMMITMENT with a `proposed`, reading the spend gate first — so her belt
+needed `propose` AND `read:economy`, not just `open:cascade`. Both added,
+with the reasoning kept in the roster's own comment and in
+`book/memory/learned.md` ("A belt's manifest is a claim, and only running the
+agent through it checks it"). **Nothing about her observable behavior via
+`fleet.mjs` changed** — the fleet has always handed every clerk the whole
+engine; only a belt-scoped `core` could ever have caught this gap.
+
+**What this session did NOT do, named so nobody assumes it did:**
+
+- `fleet.mjs` and `worker.ts` still read/write the chronicle their own way,
+  not through `rig.mjs`'s backings. Migrating them is real work (the live,
+  deployed entry points), not done here.
+- Only Mace/Milo/Mira are wired into `rig.mjs`'s `JUDGMENT_FACTORIES`. The
+  other seven named agents (Rhys, Ross, Tess, Lena, Dara, Bea, Nell) have
+  clerk factories in the harness already (`res-desk.mjs`, `viol-desk.mjs`,
+  `turn-desk.mjs`, `bd-desk.mjs`, `col-desk.mjs`, `acct-desk.mjs`) but are not
+  yet reachable through the rig — adding one is one line per seat, the same
+  shape as `brain-doctrine.mjs`'s own registry.
+- Everything Phase-2/3/4/5/6 of `docs/WRIT-THE-KNIGHTHOOD.md` still open
+  below is unchanged by this session.
+
 **2026-08-07 (later) — the gate grew hands. Three refusals now exist where there
 were none.** All green: `npm run build`, **461 tests** (was 442), `leakcheck`
 1,427 files / 0 findings.
@@ -396,28 +484,36 @@ All green: `npm run build`, **442 tests**, `npm run book:lint` exit 0 with 1,042
 
 ## Next candidates
 
-Reordered 2026-08-07 by the knighthood amendment. **Items 1–3 are Phase 2 of
-`docs/WRIT-THE-KNIGHTHOOD.md` and must go in this order** — the safe order and the
-natural order are opposites (see the state-of-play entry).
+**Retired from this list 2026-08-07 (third session):** the OLD items 1–3 below
+(strike `silence is authorization`, make `mode` operative, make one refusal
+real) are **already done** — see the "the gate grew hands" state-of-play entry
+above, checked again against the bytes just now (`flows.ts:551` carries
+`// STRUCK 2026-08-07`; `makeAdvanceClerk` in `clerks.mjs` calls
+`core.mayRunUnattended` and completes swept steps; `settlementGate` guards
+`settlementMoney`). This list had not been updated when that work landed —
+the exact staleness this file's own discipline warns about ("Two sessions in a
+row have now found a 'next candidate' already done"). Renumbered below.
 
-1. **Strike `silence is authorization`** (`flows.ts:551`). Must precede item 2.
-2. **Make `mode` operative.** A shared `modeOf(step, catalog)`; the advance clerk
-   **completes** an `auto` step instead of proposing it, sweeping consecutive auto
-   runs. Guess-free — the 13 declarations already exist, and all 13 sit on
-   advance-clerk seats. This is what stops a propose-only fleet from piling up.
-3. **Make one refusal real.** `spendGate`'s over-ceiling branch emits a *different
-   event*, not sadder prose; route the writer through the fiduciary invariant. This
-   is the entry condition for real data — see `docs/WRIT-THE-GATE.md`.
-4. **Two defects that make the governing number lie.** `readEscape` is not
+1. **The agent rig, a viewer, and fixtures** — **done this session**
+   (`harness/agents/rig.mjs`, `viewer.mjs`, `agents/fixtures.mjs`; see the
+   state-of-play entry above). Two follow-ons it opened, real and not done:
+   - **Migrate `fleet.mjs`/`worker.ts` onto the rig's backings.** Both still
+     read/write the chronicle their own way; the rig sits alongside them,
+     proven only on Mace/Milo/Mira through the viewer and tests.
+   - **Wire the other seven named agents into `rig.mjs`'s
+     `JUDGMENT_FACTORIES`.** Their clerk factories already exist
+     (`res-desk.mjs`, `viol-desk.mjs`, `turn-desk.mjs`, `bd-desk.mjs`,
+     `col-desk.mjs`, `acct-desk.mjs`); only Mace/Milo/Mira are reachable
+     through the rig today.
+2. **Two defects that make the governing number lie.** `readEscape` is not
    seed-scoped, so pre-muster and hand-worked cases mix into a muster's rate; and
    `readFlows` (`flows.ts:1301`) never passes `targetAt0` to `readFlow`, so the four
    `anchor:'target'` steps of the move-out relay can never breach — silently undoing
    half of the anchor fix from 2026-08-06.
-5. **The Regent** — the orchestrator that replaces the 14-poller roster with
-   dispatch. Blocked on 1–3: a clock over a propose-only fleet produces `awaiting`
-   and nothing else. Its measure is **queue depth the human can clear**, never
+3. **The Regent** — the orchestrator that replaces the 14-poller roster with
+   dispatch. Its measure is **queue depth the human can clear**, never
    throughput.
-6. **Segregate the multi-person-firm model** to an archive branch (guilds, pods,
+4. **Segregate the multi-person-firm model** to an archive branch (guilds, pods,
    tenure, the map). Deliberately LAST — deleting rendering code is the cheapest and
    least urgent thing here. `src/domain/realm.ts` is a **rewrite, not a delete**: its
    `debt` reading is the objective and must be re-cut against desks. The economy
@@ -425,17 +521,21 @@ natural order are opposites (see the state-of-play entry).
 
 Older, still standing:
 
-7. **Multi-tenancy.** One deployment serves one book. Per-identity vault rows are
+5. **Multi-tenancy.** One deployment serves one book. Per-identity vault rows are
    a sandbox, not tenant isolation, and nothing should describe them as such
    until they are. This is the gap between "a working app" and "software anyone
    else can use", and `docs/OPEN-QUESTIONS.md` names it too.
-8. **Clerk fleet on non-simulated data.** Proven on the war game only, and now
-   formally **gated on item 3** — no real data until one runtime refusal exists.
-9. **Twenty-one orphan pages** — decisions and laws nothing in the Book cites. Not
+6. **Clerk fleet on non-simulated data.** Proven on the war game only. The
+   entry condition (one runtime refusal) is met (`settlementGate`), but **not
+   yet observed refusing in the running app** — see `docs/WRIT-THE-GATE.md`'s
+   own "honest limits" note.
+7. **Orphan pages** — decisions and laws nothing in the Book cites. Not
    cosmetic: an uncited decision is one nobody can find, which is how a thing
-   gets built twice. (Measured 2026-08-07: 21 unreachable + 8 declared-expected.
-   The 2026-08-07 amendment added **21 backlink lines and removed none**, so this
-   count is inherited, not grown.)
+   gets built twice. (Measured 2026-08-07, this session: 33 unreachable + 8
+   declared-expected, up from 21+8 — this session's own test-mined invariant
+   pages, e.g. `book/invariants/mace-a-raw-complaint-in-*`, are orphaned the
+   same way every prior test file's mined pages already were. `book:lint`
+   still exits 0; this is WARN, not fatal.)
 
 **Retired from this list 2026-08-06:** "The Great Book's sources must be re-mined
 — until they exist, `npm run book` has nothing to compile." They exist and it

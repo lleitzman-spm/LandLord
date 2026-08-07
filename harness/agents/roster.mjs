@@ -76,7 +76,21 @@ export const ROSTER = [
     seat: 'mabel',
     task: 'identify',
     judgment: 'Read a raw complaint and walk it down the tree to the leaf that names it.',
-    belt: ['read:work', 'read:catalog', 'open:cascade'],
+    // TWO tags widened past the original manifest, both found by DRIVING her
+    // (harness/viewer.mjs), not by reading her judgment's one-line summary:
+    //   · `propose` — her run (clerks.mjs `makeIntakeClerk`) does not stop at
+    //     "identified". It opens the cascade, advances report + identify, and
+    //     STOPS at the first commitment with a proposal (KINGDOM.md, swing
+    //     four: "It STOPS at the first commitment... emits proposed with
+    //     actor agent:mabel"). `open:cascade` alone could open and advance a
+    //     cascade but had no tool to leave it parked for the King.
+    //   · `read:economy` — that same proposal reads the spend gate first
+    //     (`spendGateFor` in clerks.mjs, so her note says "over/under the NTE
+    //     cap" rather than nothing). Omitting the tag did not just make the
+    //     note plainer; it threw (`core.applyEconomySetting is not a
+    //     function`) the first time she was actually run through a
+    //     capability-scoped belt instead of the fleet's unscoped `core`.
+    belt: ['read:work', 'read:catalog', 'open:cascade', 'read:economy', 'propose'],
     refuses: ['ratify', 'move-coin', 'reach-identity'],
     envelope: { enforced: false, realtime: false },
     skill: null,

@@ -73,6 +73,58 @@ git checkout -- data/chronicle.json     # working fluid — restore after a test
   `kimi-k2.7-code`, `kimi-k2.7-code-highspeed` (code-tuned — likely the cheaper
   right brain for a *builder*; try once the loop works).
 
+## The agent rig — construction separate from deployment
+
+`harness/agents/rig.mjs` is the seam WRIT-THE-KNIGHTHOOD's "agents are built
+like game assets" cashes out to: `buildAgent(spec)` turns a `roster.mjs`
+entry into a plain, frozen descriptor that touches no file, no shell, no
+war-game seed — only `deploy(agent, backing, {...})` binds a **backing** and
+hands the agent a **belt** scoped to exactly the capability tags its manifest
+declares (`CAPABILITY_CORE_FNS`). No belt, on any tag, ever grants
+`approveStep`/`overrideStep`/a money door — those names are simply absent
+from the vocabulary, the same defence the money door already stood on.
+
+Two backings satisfy the one interface (`readLog()` / `appendEvents(events)`,
+`operator-tools.mjs`'s own shape):
+
+- `fileBacking()` — `data/chronicle.json` on disk, the live simulator.
+  Refuses to open a document with no standing War Game (the check
+  `fleet.mjs` used to `process.exit(1)` on now belongs to the one backing
+  that can reach real disk state).
+- `memoryBacking(doc)` — an in-process document. No disk, no war-game
+  requirement — for fixtures, the viewer, and tests. A live-graph backing
+  ("the operating records ... live elsewhere") is future, behind the data
+  gate (`docs/WRIT-THE-GATE.md`); this is the seam it would implement.
+
+`run(agent, backing, {...})` deploys and lets the agent do its one bounded
+pass through the SAME judgment code the fleet already runs
+(`harness/clerks.mjs`) — the rig changes how an agent is built and where it
+reads/writes, not what it decides.
+
+## The viewer — one work order in, watch it reason
+
+```
+./harness/run.sh viewer.mjs [Mace|Milo|Mira|all]
+```
+
+A standalone runner: no React, no board. It deploys a named agent against a
+`memoryBacking()` seeded from a fixture (`harness/agents/fixtures.mjs`),
+prints the agent's manifest card, its reasoning trace, and exactly where it
+stops — the last event it wrote, and why no further event can follow it
+without a human. Nothing it does touches `data/chronicle.json`. Works with
+`MOONSHOT_API_KEY` unset (every named agent falls back to its deterministic
+Tier-0 path) or set (real brain calls, same as the fleet).
+
+## Fixtures — realistically-shaped work orders
+
+`harness/agents/fixtures.mjs` builds three stages of ONE work order's life —
+`rawIntakeFixture()` (before Mace), `vendorCommitmentFixture()` (before
+Milo), `settlementFixture()` (before Mira) — through the REAL flow engine
+(`instantiateFlow`/`completeStep`), never a hand-typed event array, off a
+frozen snapshot of the founding catalog + flow book
+(`fixtures/founding-book.json`) rather than the live, mutable
+`data/chronicle.json`.
+
 ## Built so far
 
 - `config.mjs` — brain + endpoint from env (key never in git).
@@ -82,3 +134,9 @@ git checkout -- data/chronicle.json     # working fluid — restore after a test
   stale reads) + `run.mjs` (CLI: `./harness/run.sh run.mjs "a task" [--budget N]`).
 - **Operator:** `operator-tools.mjs` (readLog/appendEvents) + `operate.mjs`
   (Mabel's clerk), on the bundled `dist-operator/operator-core.mjs`.
+- **The fleet:** `agents/roster.mjs` (ten named agents, four axes) +
+  `brain-doctrine.mjs` (which brain per seat) + `clerks.mjs`/`run-fleet.mjs`
+  (the judgments) + `fleet.mjs` (the live runner, `data/chronicle.json`).
+- **The rig:** `agents/rig.mjs` (construction/deployment, capability-scoped
+  belts, two backings) + `agents/fixtures.mjs` (realistic work orders) +
+  `viewer.mjs` (a standalone runner — see above).
