@@ -149,6 +149,7 @@ aliases:
 - [[deals the scenario’s doors and knights]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[deploy refuses a backing that does not implement the interface]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[distinct signals on the same subject open distinct cases]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[does NOT re-wrap an already-guarded transport — that would swallow the caller's poison flag]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[drops non-string params, which is how a nested record would arrive]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[each judgment's declared `requires` matches what its clerk module actually reads]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[emits ONLY an opening and the hand to step one — never an approval or a completion]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -233,6 +234,7 @@ aliases:
 - [[the step IS anchored to the target date, not left to default]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the THE_REGENT role resolves against the census it is dealt into]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the two that cannot be driven refuse with the REASON, not a missing wire]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[the wrap it installs really does block a leaking payload]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the writing session keeps its own board change when it is the one that moved it]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[threads the estate through so the spend gate reads a per-estate cap]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[two fresh ids for the same condition in ONE batch open exactly one case]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -244,6 +246,7 @@ aliases:
 - [[with a target date ahead, it is due relative to THAT date]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[with no routes declared the count is zero and the rate is unchanged]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[with the target date past, it breaches like any other step]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[wraps an UNGUARDED transport, so a direct caller of deploy/run still gets the boundary]] — *imported by the test FILE (shared source, not a claim about this one test)*
 
 ## Documents that cite this source
 

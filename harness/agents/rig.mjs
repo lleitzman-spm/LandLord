@@ -81,6 +81,7 @@ import { makeResidentClerk } from '../res-desk.mjs';
 import { makeTurnoverClerk } from '../turn-desk.mjs';
 import { makeBdrClerk } from '../bd-desk.mjs';
 import { makeAccountingClerk } from '../acct-desk.mjs';
+import { guardComplete, isIdentityGuarded } from '../../src/domain/contextGuard.mjs';
 
 // ── A refusal is a distinct thing from a bug ────────────────────────────────
 export class BackingRefusal extends Error {}
@@ -276,7 +277,7 @@ function scopedCore(core, belt, seat) {
  *  agent runs the SAME judgment code the fleet already proved. The rig
  *  changes how an agent is BUILT and WHERE it reads/writes; it does not
  *  reinvent what it decides. */
-export function deploy(agent, backing, { core, complete, brainFor } = {}) {
+export function deploy(agent, backing, { core, complete, brainFor, onBlocked } = {}) {
   if (!backing || typeof backing.readLog !== 'function' || typeof backing.appendEvents !== 'function') {
     throw new Error(`deploy(${agent.name}): backing must implement readLog()/appendEvents()`);
   }
@@ -290,12 +291,25 @@ export function deploy(agent, backing, { core, complete, brainFor } = {}) {
     }
   }
   const bound = scopedCore(core, agent.belt, agent.seat);
+  // EVERY agent's manifest refuses `reach-identity`, and that was a declaration
+  // nothing enforced for a direct caller: the viewer and `fleet.mjs` each wrap
+  // their own transport, but `deploy` took whatever it was handed. It belongs
+  // here, beside the belt — both answer "what may this agent touch".
+  //
+  // Wrapping ONLY what is unguarded is deliberate, not an optimisation. An
+  // unconditional wrap would catch the first leak in the OUTER guard and throw
+  // before the inner one ran, so a caller's `onBlocked` — the poison flag that
+  // makes `runGuardedModelWork` discard an entire run rather than keep its
+  // plausible fallback events — would never fire. Defence added carelessly
+  // would have removed a defence.
+  const guardedComplete =
+    complete && !isIdentityGuarded(complete) ? guardComplete(complete, { onBlocked }) : complete;
   return {
     agent,
     backing,
     ctx: {
       core: Object.freeze(bound),
-      complete,
+      complete: guardedComplete,
       brainFor: brainFor ?? (() => ({ tier: 0, model: null, fallback: 'tool' })),
     },
   };
@@ -355,7 +369,7 @@ export function beltShortfall(agent) {
  *  records }`; any produced events are appended through the backing (so a
  *  memory-backed run never touches disk, and a file-backed one behaves
  *  exactly as `fleet.mjs` already does for this one seat). */
-export async function run(agent, backing, { core, complete, brainFor, now, cap, taken } = {}) {
+export async function run(agent, backing, { core, complete, brainFor, now, cap, taken, onBlocked } = {}) {
   const key = `${agent.seat}/${agent.task}`;
   const entry = JUDGMENT_FACTORIES[key];
   if (!entry) {
@@ -375,7 +389,7 @@ export async function run(agent, backing, { core, complete, brainFor, now, cap, 
         `Declared belt: [${agent.belt.join(', ')}].`,
     );
   }
-  const { ctx } = deploy(agent, backing, { core, complete, brainFor });
+  const { ctx } = deploy(agent, backing, { core, complete, brainFor, onBlocked });
   const doc = backing.readLog();
   // The clock is never invented. A memory backing carries no `wargame`, so an
   // earlier draft's `?? new Date(0)` fallback silently ran every such agent at

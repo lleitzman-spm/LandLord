@@ -239,6 +239,7 @@ aliases:
 - [[deploy refuses a backing that does not implement the interface]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[does NOT break the trust reconciliation]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[does not raise a FALSE compliance flag]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[does NOT re-wrap an already-guarded transport — that would swallow the caller's poison flag]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[doors the hierarchy cannot place count toward NO metro’s standing]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[draws the Crown at the head, with its wards beneath it]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[each judgment's declared `requires` matches what its clerk module actually reads]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -387,6 +388,7 @@ aliases:
 - [[the two-arg spendGate call (the harness shape) behaves exactly as before]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the UPKEEP BOOK is the monthly rate — the money log is only the fallback]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[the whole founding book, mustered, rolls up to the counts the shelf reads]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[the wrap it installs really does block a leaking payload]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the writing session keeps its own board change when it is the one that moved it]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[tribute per door comes from the economy management fee rule (not a hardcode)]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[two proposals answered on ONE case count as two]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -397,6 +399,7 @@ aliases:
 - [[unionById keeps both sides, remote first, dedupes by id]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[unions money and record books by id too (no owner/grant append lost)]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[with no game standing, upkeep falls back to the treasury rolls]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[wraps an UNGUARDED transport, so a direct caller of deploy/run still gets the boundary]] — *imported by the test FILE (shared source, not a claim about this one test)*
 
 ## Documents that cite this source
 

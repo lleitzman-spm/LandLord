@@ -84,10 +84,10 @@ The four-item build order from the session brief, in order built:
   real disk state — as a `BackingRefusal`, and a second backing,
   `memoryBacking(doc)`, satisfies the identical two-function interface
   (`readLog()`/`appendEvents(events)`) with no war-game requirement, because
-  it never risks the live simulator. **`fleet.mjs` and `worker.ts` are
-  UNCHANGED** — they keep their own inline checks (CLI exit / HTTP 409) rather
-  than being migrated onto the rig's backing today; that migration is real
-  and still open, named below, not silently done.
+  it never risks the live simulator. ~~**`fleet.mjs` and `worker.ts` are
+  UNCHANGED**~~ — *superseded the same day: `fleet.mjs` and `operate.mjs` were
+  migrated onto `fileBacking()` and `operator-tools.mjs` retired; `worker.ts`
+  deliberately was not, and the reason is in the final entry above.*
 
 - **THE VIEWER** (`harness/viewer.mjs`, `./harness/run.sh viewer.mjs
   [Mace|Milo|Mira|all]`). One work order in, the agent's manifest card, its
@@ -199,10 +199,54 @@ refuses at deploy, where the name is still in front of the reader); and
 `memoryBacking.readLog()` handed back its internal document by reference, so
 isolation was one-way.
 
-**Still true and NOT fixed:** `rig.mjs`'s own `run()` applies no identity
-guard; the viewer and `fleet.mjs` both wrap in `runGuardedModelWork`, but a
-direct caller of `run()` gets none. *(The `BeltRefusal` gap listed here is now
-closed — see the entry below.)*
+*(Both gaps listed here — the `BeltRefusal` and the missing identity guard —
+are now closed. See the entries below.)*
+
+**2026-08-07 (final) — the identity boundary enforced where capability is
+bound, and the runners moved onto the rig.** All green: `npm run build`,
+**518 tests**, `leakcheck` 0 findings, `book:lint` exit 0.
+
+- **`deploy()` now guarantees the identity boundary**, not just the belt. Every
+  manifest refuses `reach-identity`; nothing enforced it for a direct caller,
+  because the viewer and `fleet.mjs` each wrapped their own transport while
+  `deploy` took whatever it was handed. It belongs beside the belt — both
+  answer *what may this agent touch*. `guardComplete` now marks what it wraps
+  (`isIdentityGuarded`) so the rig can tell.
+
+  **The conditional wrap is the whole design, and an unconditional one would
+  have removed a defence.** An outer guard catches the FIRST leak and throws
+  before the inner guard runs, so a caller's `onBlocked` — the poison flag that
+  makes `runGuardedModelWork` discard a whole run rather than keep its
+  plausible fallback events — would never fire. There is a test on reference
+  identity for exactly this, proved by making the wrap unconditional and
+  watching it fail.
+
+- **Worth knowing, and it invalidated a test before it was written:** a real
+  Mace run leaks nothing to catch, because `safe-evidence.mjs` collapses a
+  complaint to a controlled token first — *"call resident 555-0123 ssn
+  123-45-6789 about no heat"* reaches the brain as **`no-heating`**. The guard
+  is defence in depth behind that de-identification, so an end-to-end test of
+  it sees nothing happen. The test that proves it real uses a hand-built
+  payload and asserts the forwarded `onBlocked` fires.
+
+- **`fleet.mjs` and `operate.mjs` migrated onto `fileBacking()`.** They had
+  carried two hand-copies of the same "is a game standing" guard — two chances
+  to drift. Now one refusal in one place; both still exit non-zero with the
+  same message, checked by running them. `harness/operator-tools.mjs` was
+  **retired** — it had no importers left, no `knowledge/` record and no Book
+  page, so the deletion is clean.
+
+- **`worker.ts` was deliberately NOT migrated, and this is a finding rather
+  than a shortfall.** Its write path is `commitAppend` — a compare-and-set with
+  up to four retries that replays the batch onto a fresh read — which is
+  strictly richer than `appendEvents(events)`. Flattening it would either lose
+  the CAS or force the backing interface to grow a commit concept invented for
+  one caller. **And the replay is itself standing HIGH finding #1** ("the vault
+  replays an ADVANCING batch"), so migrating onto it would bake a known-open
+  defect into the rig's abstraction. *One small thing does improve it: because
+  the rig now stamps agent `done` events with `agent:<seat>`, a replayed `done`
+  is at least attributable — which makes finding #1 more diagnosable without
+  fixing it.*
 
 **2026-08-07 (last) — eight of the ten agents wired, driven, and the belt
 learned to refuse.** All green: `npm run build`, **515 tests**, `leakcheck`

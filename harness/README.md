@@ -7,7 +7,7 @@ by environment (`MOONSHOT_MODEL`), the key never touches git.
 
 The **same body serves two roles**: the **builder** (the K3 file/shell belt —
 `tools.mjs` + `loop.mjs` + `run.mjs`) and the **operator** (swing four — a small
-domain belt, `operator-tools.mjs` + `operate.mjs`). The operator is not the
+domain belt via the rig's backings + `operate.mjs`). The operator is not the
 builder: it reads the event log and appends events, nothing more.
 
 ## Running it
@@ -50,8 +50,12 @@ git checkout -- data/chronicle.json     # working fluid — restore after a test
   bundles it so the raw-Node harness can `import` it (no tsx; the domain's
   extensionless imports won't strip-type). The agent grips EXACTLY the app's
   primitives, so `readFlows` renders its work identically to a human's.
-- `operator-tools.mjs` — the two-tool belt: `readLog()` / `appendEvents(events)`,
-  operating directly on `data/chronicle.json` (the file the vite plugin serves).
+- the two-tool belt — `readLog()` / `appendEvents(events)` on
+  `data/chronicle.json` (the file the vite plugin serves), now supplied by
+  `agents/rig.mjs`'s `fileBacking()`. The standalone `operator-tools.mjs` that
+  used to hold it was retired once `fleet.mjs` and `operate.mjs` both moved to
+  the backing: they had carried two hand-copies of the same "is a game
+  standing" guard, which is two chances to drift.
 - `operate.mjs` — the loop. Brain: a cheap Kimi (`kimi-k2.7-code-highspeed` by
   default; a non-k3 `MOONSHOT_MODEL` overrides). Not k3, not Fable — the
   bounded-procedural lane.
@@ -85,7 +89,7 @@ declares (`CAPABILITY_CORE_FNS`). No belt, on any tag, ever grants
 from the vocabulary, the same defence the money door already stood on.
 
 Two backings satisfy the one interface (`readLog()` / `appendEvents(events)`,
-`operator-tools.mjs`'s own shape):
+the shape `operator-tools.mjs` settled on before it was retired into it):
 
 - `fileBacking()` — `data/chronicle.json` on disk, the live simulator.
   Refuses to open a document with no standing War Game (the check
@@ -156,8 +160,9 @@ match looks reachable and then finds no work.
 - `selftest.mjs` — proves the brain answers (`./harness/run.sh selftest.mjs`).
 - **Builder:** `tools.mjs` (file/shell belt) + `loop.mjs` (agent loop, trims
   stale reads) + `run.mjs` (CLI: `./harness/run.sh run.mjs "a task" [--budget N]`).
-- **Operator:** `operator-tools.mjs` (readLog/appendEvents) + `operate.mjs`
-  (Mabel's clerk), on the bundled `dist-operator/operator-core.mjs`.
+- **Operator:** `operate.mjs` (Mabel's clerk) on the bundled
+  `dist-operator/operator-core.mjs`, reading and writing through the rig's
+  `fileBacking()`.
 - **The fleet:** `agents/roster.mjs` (ten named agents, four axes) +
   `brain-doctrine.mjs` (which brain per seat) + `clerks.mjs`/`run-fleet.mjs`
   (the judgments) + `fleet.mjs` (the live runner, `data/chronicle.json`).

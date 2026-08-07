@@ -39,6 +39,10 @@ aliases:
 
 ## Backlinks
 
+### Writs that specify it
+
+- [[Handoff — where things stand]] — *this writ names the exported symbol `commitAppend`*
+
 ### Entities
 
 - [[The vault]] — *declared in `knowledge/entities.json`*

@@ -96,6 +96,7 @@ aliases:
 - [[buildAgent touches no I/O and needs no backing]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[counts each kind of override, and the house cap as one]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[deploy refuses a backing that does not implement the interface]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[does NOT re-wrap an already-guarded transport — that would swallow the caller's poison flag]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[each judgment's declared `requires` matches what its clerk module actually reads]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[every named agent carries a belt SUFFICIENT for the clerk that runs it]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[every roster agent deploys to a core with no ratify/pay tool present]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -130,7 +131,9 @@ aliases:
 - [[the M family judgments are all known to this rig]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the record and the judgment name the SAME invoice figure]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the two that cannot be driven refuse with the REASON, not a missing wire]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[the wrap it installs really does block a leaking payload]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[undefined LEAVES a field; null on a brand-new rule just means absent]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[wraps an UNGUARDED transport, so a direct caller of deploy/run still gets the boundary]] — *imported by the test FILE (shared source, not a claim about this one test)*
 
 ---
 

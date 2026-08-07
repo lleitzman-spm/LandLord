@@ -19,6 +19,8 @@ import * as events from '../src/domain/events';
 import * as economy from '../src/domain/economy';
 import * as economySetting from '../src/domain/economySetting';
 import { mkdtempSync, writeFileSync, readFileSync } from 'node:fs';
+// @ts-expect-error — plain ESM.
+import { guardComplete, isIdentityGuarded } from '../src/domain/contextGuard.mjs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -403,6 +405,54 @@ describe('a belt too narrow for its judgment is REFUSED, not discovered mid-run'
         expect(spec.belt, `${spec.name} needs ${tag} (from ${file}) but does not declare it`).toContain(tag);
       }
     }
+  });
+});
+
+describe('the rig guarantees the identity boundary it declares', () => {
+  it('wraps an UNGUARDED transport, so a direct caller of deploy/run still gets the boundary', () => {
+    const raw = async () => { throw new Error('offline'); };
+    expect(isIdentityGuarded(raw)).toBe(false);
+    const agent = buildAgent(agentNamed('Mace'));
+    const backing = memoryBacking({ catalog: [], flows: [], events: [] });
+    const { ctx } = deploy(agent, backing, { core, complete: raw, brainFor });
+    expect(ctx.complete, 'the raw transport was handed straight through').not.toBe(raw);
+    expect(isIdentityGuarded(ctx.complete)).toBe(true);
+  });
+
+  it('does NOT re-wrap an already-guarded transport — that would swallow the caller\'s poison flag', () => {
+    // The subtle one, and the reason this is a conditional wrap rather than an
+    // unconditional one. An outer guard catches the FIRST leak and throws
+    // before the inner guard runs, so `runGuardedModelWork`'s onBlocked never
+    // fires and a blocked run keeps its fallback events as though nothing had
+    // happened. Identity of the reference is the check: same function in, same
+    // function out.
+    const guarded = guardComplete(async () => { throw new Error('offline'); }, { onBlocked: () => {} });
+    const agent = buildAgent(agentNamed('Mace'));
+    const backing = memoryBacking({ catalog: [], flows: [], events: [] });
+    const { ctx } = deploy(agent, backing, { core, complete: guarded, brainFor });
+    expect(ctx.complete, 'an already-guarded transport was wrapped a second time').toBe(guarded);
+  });
+
+  it("the wrap it installs really does block a leaking payload", async () => {
+    // Proves the wrapper is the real boundary and not a marker: a payload that
+    // carries an identifier is refused, and the onBlocked the rig forwarded
+    // fires. (Note this takes a HAND-BUILT payload. In a real Mace run nothing
+    // leaks, because `safe-evidence.mjs` collapses the complaint to a
+    // controlled token — "call resident 555-0123 ssn 123-45-6789 about no
+    // heat" reaches the brain as "no-heating". The guard is defence in depth
+    // behind that, which is why a naive end-to-end test of it sees nothing.)
+    let blocked = 0;
+    const agent = buildAgent(agentNamed('Mace'));
+    const backing = memoryBacking({ catalog: [], flows: [], events: [] });
+    const { ctx } = deploy(agent, backing, {
+      core, brainFor,
+      complete: async () => ({ message: { content: 'ok' } }),
+      onBlocked: () => { blocked += 1; },
+    });
+    await expect(
+      ctx.complete({ messages: [{ role: 'user', content: 'resident ssn 123-45-6789' }] }),
+    ).rejects.toThrow();
+    expect(blocked, 'the rig did not forward onBlocked to the guard it installed').toBe(1);
   });
 });
 
