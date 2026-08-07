@@ -1,0 +1,70 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-operator
+dist-ssr
+*.local
+
+# Throwaway working files — verify scripts, dev logs, screenshots (CLAUDE.md:
+# "Data is working fluid"; the scratchpad is the machine's bench, never shipped)
+scratchpad/
+
+# The vault key never enters git (the walls ruling)
+.env
+.env.*
+!.env.example
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+data/court-roll.json
+
+# The relief bake tool's downloaded tile cache — refetchable, never committed
+tools/.tile-cache/
+
+# The baked scene data — regenerate with tools/bake-table-scene.mjs
+public/table-scene.json
+
+# The war-game dealer bundle — built by npm run build:wargame
+dist-wargame/
+
+# The rendered Great Book — 6MB and regenerable with `npm run book:html`.
+# Kept out of git so a stale render can never be mistaken for the current one.
+renders/
+
+# Render output from the art/measure tools — regenerate, never commit
+art-*.png
+
+# Machine-local agent harness settings
+# (glob, not `.claude/`, so the exception below can re-include a single file)
+.claude/*
+# ...except the shared session-report hook, which is repo policy, not machine state.
+!.claude/settings.json
+
+# Obsidian — the Book opens as a vault. Shared: link format and graph colours,
+# which are facts about this repository. Not shared: per-machine UI state,
+# installed plugins, theme — and workspace.json rewrites itself on every pane
+# you move.
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache
+.obsidian/plugins/
+.obsidian/themes/
+.obsidian/snippets/
+.trash/
