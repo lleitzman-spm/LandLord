@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-4665 lines · 1 exported symbol.
+4680 lines · 1 exported symbol.
 
 ## What the file says of itself
 
@@ -36,7 +36,7 @@ aliases:
 
 ## Shape
 
-- **Lines:** 4665
+- **Lines:** 4680
 - **Exported symbols (1):** `WarTableView`
 - **Assets it pulls in (no page, so no road):** `src/realm/realm.css`
 

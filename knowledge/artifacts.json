@@ -368,38 +368,6 @@
       ]
     },
     {
-      "id": "artifact:realm-preview-html",
-      "type": "artifact",
-      "label": "realm-preview.html",
-      "standing": "built",
-      "path": "realm-preview.html",
-      "kind": "tool",
-      "summary": "A standalone dev harness page that serves realm-preview.tsx directly, without the main app shell.",
-      "source_path": "realm-preview.html",
-      "source_line": 1,
-      "quote": "<title>Realm</title>",
-      "links": [],
-      "tags": [
-        "artifact-manifest"
-      ]
-    },
-    {
-      "id": "artifact:realm-preview-tsx",
-      "type": "artifact",
-      "label": "realm-preview.tsx",
-      "standing": "built",
-      "path": "realm-preview.tsx",
-      "kind": "tool",
-      "summary": "Mounts RealmView standalone against a canned scene fixture, chosen by a ?scene= query param.",
-      "source_path": "realm-preview.tsx",
-      "source_line": 2,
-      "quote": "import RealmView from './src/realm/RealmView';",
-      "links": [],
-      "tags": [
-        "artifact-manifest"
-      ]
-    },
-    {
       "id": "artifact:src-dir",
       "type": "artifact",
       "label": "src/",

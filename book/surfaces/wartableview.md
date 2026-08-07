@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Derived from the tree — the code is there to be read.*
 
-React view in `src/WarTableView.tsx` — 4665 lines.
+React view in `src/WarTableView.tsx` — 4680 lines.
 
 ## Where it lives
 

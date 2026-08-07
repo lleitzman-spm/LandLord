@@ -120,16 +120,28 @@ Fixed same-day:
 
 **Open, ranked — none of these is speculative; each names a file:line:**
 
-1. **HIGH — the vault replays an ADVANCING batch.** `src/server/vault.ts:119-132`
-   justifies replay-on-conflict because the fleet's output was pure append and a
-   duplicate `proposed` is a no-op. That is no longer true. A concurrent human
-   ratification can be overwritten by a replayed `done`, marking a step nobody
-   saw as complete.
+1. ~~**HIGH — the vault replays an ADVANCING batch.**~~ **CLOSED 2026-08-07.**
+   `commitAppend` now classifies the batch (`replaySafe`, `ADVANCING_KINDS`): a
+   batch carrying `done`/`failed`/`approved`/`overridden` is never replayed onto
+   a document that moved, and returns `conflict` without even re-reading. Mixed
+   batches refuse WHOLE — the sweep completes consecutive steps, so keeping some
+   and dropping others leaves a half-advanced cascade, which is worse than a
+   clean failure. Unknown event shapes count as advancing (fail closed). The
+   no-conflict path is untouched: attempt one always writes onto the base the job
+   read. Five tests in `test/commit-append.test.ts`.
 2. **HIGH — an agent-completed step is indistinguishable from a human's.**
    `completeStep`→`answerStep` sets no `actor`, and the engine's own comment says
    a human act carries none. Every swept `done` now reads as the operator's.
-3. **MEDIUM-HIGH — the fleet toast counts sweeps as proposals** and offers a road
-   to an empty Ledger (`run-fleet.mjs:70` vs `events.ts:264-270`). A dead button.
+   **This is now the top open finding**, and it is the natural pair to the
+   refusal above: the vault can tell an advancing batch from a parking one, but
+   the LOG still cannot tell who advanced it.
+3. ~~**MEDIUM-HIGH — the fleet toast counts sweeps as proposals**~~ **CLOSED
+   2026-08-07.** `runFleet` returns two counts read off the EVENT KINDS, never
+   off `records.length`: `proposals` (parked on a human) and `swept` (carried
+   through). Threaded through the Worker, the dev seam, the store and the toast.
+   The road to the Ledger is drawn on `proposals` alone, so a run that parks
+   nothing no longer summons the human to an empty room; a run that parks some
+   and sweeps some now says both numbers.
 4. **MEDIUM — `mayRunUnattended` is wired into 1 of 11 clerks**, and
    `harness/res-desk.mjs:65` still proposes an `auto` step; the intake clerk
    completes two `human` steps unconditionally.
@@ -139,7 +151,13 @@ Fixed same-day:
    "Mark done" renders unconditionally.
 7. **MEDIUM — the refusal leaves no distinguishable record**, which is the writ's
    own property 2 unmet.
-8. **LOW ×4** — dead `overridden` Approve branch; the sweep's audit line names the
+8. **LOW ×4** — ~~dead `overridden` Approve branch~~ (**CLOSED, and the finding
+   was overstated**: driving it showed `readFlow` counts `overridden` among the
+   ACTED kinds (`flows.ts:1378`), so the ball always moved past such a step and
+   `inHand` never held on one. It was unreachable code asserting a rule the
+   domain contradicts, not a button a human could press. Removed anyway — with
+   the writer now refusing outright it was a standing invitation to make it
+   reachable); the sweep's audit line names the
    catalog row not the step; and **fixing finding 4 (the calendar window) would
    silently arm unattended owner disbursement**, because that clause in
    `awaitsOutside` is the only thing currently barring it. That coupling needs a

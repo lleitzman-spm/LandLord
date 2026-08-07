@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-1446 lines · 15 exported symbols.
+1448 lines · 15 exported symbols.
 
 ## What the file says of itself
 
@@ -32,7 +32,7 @@ aliases:
 
 ## Shape
 
-- **Lines:** 1446
+- **Lines:** 1448
 - **Exported symbols (15):** `CatalogActions`, `CensusActions`, `ChronicleStore`, `CourtActions`, `EconomyActions`, `EstateActions`, `EventsActions`, `FlowsActions`, `MarchesActions`, `Persistence`, `RegentActions`, `SaveStatus`, `TreasuryActions`, `WargameActions`, `useChronicle`
 - **Assets it pulls in (no page, so no road):** `data/library/pm-setting.json`
 

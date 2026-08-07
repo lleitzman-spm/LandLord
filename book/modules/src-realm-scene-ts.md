@@ -48,11 +48,7 @@ aliases:
 ### Modules
 
 - [[src/domain/realmScene.ts]] — *imported by this file*
-- [[src/realm/Building.tsx]] — *imported by this file*
 - [[src/realm/Chrome.tsx]] — *imported by this file*
-- [[src/realm/GuildHalls.tsx]] — *imported by this file*
-- [[src/realm/Roads.tsx]] — *imported by this file*
-- [[src/realm/Town.tsx]] — *imported by this file*
 - [[src/table/FlatMapView.tsx]] — *imported by this file*
 - [[src/table/tableScene.ts]] — *imported by this file*
 - [[src/WarTableView.tsx]] — *imported by this file*

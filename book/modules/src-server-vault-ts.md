@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-174 lines · 10 exported symbols.
+228 lines · 12 exported symbols.
 
 ## What the file says of itself
 
@@ -34,8 +34,8 @@ aliases:
 
 ## Shape
 
-- **Lines:** 174
-- **Exported symbols (10):** `AppendDoc`, `CANONICAL_DOC_ID`, `CasResult`, `VaultRead`, `commitAppend`, `revFilter`, `revOf`, `vaultCasWrite`, `vaultRead`, `vaultReadDoc`
+- **Lines:** 228
+- **Exported symbols (12):** `ADVANCING_KINDS`, `AppendDoc`, `CANONICAL_DOC_ID`, `CasResult`, `VaultRead`, `commitAppend`, `replaySafe`, `revFilter`, `revOf`, `vaultCasWrite`, `vaultRead`, `vaultReadDoc`
 
 ## Backlinks
 
@@ -54,6 +54,8 @@ aliases:
 
 - [[a lost create race yields conflict (POST 409, then PATCH matches 0 rows)]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a real insert failure (not a duplicate) is an error, not a conflict]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[an advancing batch still commits straight through when nothing moved]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[an event of unknown shape is treated as advancing — the guard fails closed]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an unreadable vault is an error, not a silent loss]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[bootstraps a document that has no events book yet]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[commits straight through when nothing moved]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -64,6 +66,8 @@ aliases:
 - [[gives up honestly if the vault never stops moving]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[keeps replaying while the vault keeps moving, and never re-reasons]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[ok returns the doc, absent on zero rows, error on refusal]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[refuses a MIXED batch whole — a half-advanced cascade is worse than none]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[REFUSES to replay a batch that completed a step, and never re-reads]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[REPLAYS onto the fresh doc when the board wrote mid-run — losing neither]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[reports conflict when the row moved (empty representation)]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[reports error on a refused write]] — *imported by the test FILE (shared source, not a claim about this one test)*

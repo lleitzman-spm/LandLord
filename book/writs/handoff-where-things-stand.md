@@ -83,7 +83,6 @@ aliases:
 - [[CLAUDE.md]]
 - [[docs/OPEN-QUESTIONS.md]]
 - [[Open questions]]
-- [[realm-preview.tsx]]
 - [[src/domain/escape.ts]]
 - [[src/domain/flows.ts]]
 - [[src/domain/guilds.ts]]
