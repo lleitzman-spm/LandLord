@@ -104,3 +104,72 @@ describe("escape rate — the design's own ceiling, and its evidence", () => {
     expect(c.judgments).toBeLessThan(c.stepsReached);
   });
 });
+
+// ── SCOPING TO THE STANDING MUSTER ──────────────────────────────────────────
+// Unscoped, this reading mixed a war game's cases with every pre-muster and
+// hand-worked case in the chronicle, and called the average an operation's
+// escape rate. Two populations, one number.
+describe('the escape rate is scoped to the muster it is about', () => {
+  const at = '2026-08-07T00:00:00.000Z';
+  const cased = (caseId: string, kind: string, row: string, holder = 'desk'): KingdomEvent =>
+    ({ id: `${caseId}-${kind}-${row}`, at, caseId, kind, catalogRow: row, holder }) as KingdomEvent;
+
+  it('a hand-worked case does not count against a muster', () => {
+    const log = [
+      // Pre-muster: a person touched an `auto` step — an unplanned escape.
+      cased('C1', 'handed', 'auto-row'),
+      cased('C1', 'approved', 'auto-row'),
+      // The muster's own case: reached, untouched by a human.
+      cased('wg/s1 · turn · 12 Elm Row, unit 2', 'handed', 'auto-row'),
+    ];
+    const whole = readEscape(FLOWS, CAT, log);
+    expect(whole.stepsReached).toBe(2);
+    expect(whole.unplanned).toBe(1);
+
+    const muster = readEscape(FLOWS, CAT, log, 's1');
+    expect(muster.stepsReached).toBe(1);
+    expect(muster.unplanned).toBe(0);
+  });
+
+  it('one muster does not count another muster’s work', () => {
+    const log = [
+      cased('wg/s1 · turn · 1 A St, unit 1', 'handed', 'auto-row'),
+      cased('wg/s2 · turn · 2 B St, unit 2', 'handed', 'auto-row'),
+      cased('wg/s2 · turn · 3 C St, unit 3', 'handed', 'auto-row'),
+    ];
+    expect(readEscape(FLOWS, CAT, log, 's1').stepsReached).toBe(1);
+    expect(readEscape(FLOWS, CAT, log, 's2').stepsReached).toBe(2);
+  });
+
+  it('A RELAY CASE IS MATCHED — the mark is INFIXED, not a prefix', () => {
+    // THE test. `instantiateFlow` names a flow case `<template>: <subject>`, so a
+    // war relay reads `move-out-relay: wg/s1 · …` and the mark sits in the
+    // MIDDLE. A `startsWith` implementation scores ZERO flow cases — exactly the
+    // ones this reading measures — and fails silently, because a rate of null
+    // reads as "nothing has happened yet" rather than as a bug.
+    const log = [
+      cased('move-out-relay: wg/s1 · relay · 12 Elm Row, unit 2 — Alys', 'handed', 'auto-row'),
+      cased('move-out-relay: wg/s1 · relay · 12 Elm Row, unit 2 — Alys', 'approved', 'auto-row'),
+    ];
+    const r = readEscape(FLOWS, CAT, log, 's1');
+    expect(r.stepsReached).toBe(1);
+    expect(r.unplanned).toBe(1);
+  });
+
+  it('no seed is the reading it always was — byte for byte', () => {
+    const log = [cased('C1', 'handed', 'auto-row'), cased('wg/s1 · x · 1 A St, unit 1', 'approved', 'human-row', 'alys')];
+    expect(readEscape(FLOWS, CAT, log, null)).toEqual(readEscape(FLOWS, CAT, log));
+    expect(readEscape(FLOWS, CAT, log, undefined)).toEqual(readEscape(FLOWS, CAT, log));
+  });
+
+  it('the seen-map key survives — the separator is a NUL byte, not a space', () => {
+    // `escape.ts` keys its dedup map on `caseId + \x00 + catalogRow`. A space
+    // there would collide `"a b" + "c"` with `"a" + "b c"`. Two cases whose
+    // concatenations would merge under a space must still count as two.
+    const log = [
+      cased('wg/s1 · a b', 'handed', 'auto-row'),
+      cased('wg/s1 · a', 'handed', 'auto-row'),
+    ];
+    expect(readEscape(FLOWS, CAT, log, 's1').stepsReached).toBe(2);
+  });
+});

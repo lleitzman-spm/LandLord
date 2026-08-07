@@ -56,6 +56,7 @@ aliases:
 
 ### Writs that specify it
 
+- [[Handoff — where things stand]] — *this writ names the exported symbol `readRealm`*
 - [[The Kingdom — Canon]] — *this writ names the exported symbol `readRealm`*
 - [[Writ — the Land: pods, knights, owners, and guilds (the realm remodeled)]] — *this writ names the exported symbol `readRealm`*
 - [[Writ — the War Table (the front-end direction)]] — *this writ names the exported symbol `readRealm`; this writ names the exported symbol `RealmReading`*

@@ -39,16 +39,22 @@ aliases:
 
 ## Entities
 
+- [[FOUNDING_GUILDS still names Crown offices, not outside trades]] — *this writ names `entity:founding-guilds-naming-drift` literally*
 - [[The chronicle]] — *this writ names "The chronicle" literally*
+- [[The clerk fleet]] — *this writ names "The clerk fleet" literally*
+- [[The event log]] — *this writ names "The event log" literally*
 
 ## Modules
 
 - [[src/CommandPalette.tsx]] — *this writ names the exported symbol `CommandPalette`*
 - [[src/domain/economy.ts]] — *this writ names the exported symbol `spendGate`*
 - [[src/domain/escape.ts]] — *this writ names the exported symbol `EscapeReading`; this writ names the exported symbol `readEscape`*
-- [[src/domain/flows.ts]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `failStep`; +6 more*
+- [[src/domain/flows.ts]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `awaitsOutside`; +7 more*
+- [[src/domain/guilds.ts]] — *this writ names the exported symbol `SEAT_GUILD`*
+- [[src/domain/pods.ts]] — *this writ names the exported symbol `commissionCaseId`; this writ names the exported symbol `knightsOf`; +1 more*
+- [[src/domain/realm.ts]] — *this writ names the exported symbol `readRealm`*
 - [[src/LedgerView.tsx]] — *this writ names the exported symbol `LedgerView`*
-- [[src/operator-core.ts]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `FlowReading`; +4 more*
+- [[src/operator-core.ts]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `awaitsOutside`; +5 more*
 
 ## artifact
 
@@ -76,8 +82,10 @@ aliases:
 - [[CLAUDE.md]]
 - [[docs/OPEN-QUESTIONS.md]]
 - [[Open questions]]
+- [[realm-preview.tsx]]
 - [[src/domain/escape.ts]]
 - [[src/domain/flows.ts]]
+- [[src/domain/guilds.ts]]
 - [[src/domain/realm.ts]]
 - [[The sibling boundary — who owns the process model]]
 - [[Writ — The Gate: the money law is written and nothing enforces it]]

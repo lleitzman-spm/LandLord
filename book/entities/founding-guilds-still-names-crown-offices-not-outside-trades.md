@@ -44,6 +44,11 @@ The code's Guild/GuildReading/FOUNDING_GUILDS types now hold the three Crown off
 
 ## Backlinks
 
+### Writs that specify it
+
+- [[Handoff — where things stand]] — *this writ names `entity:founding-guilds-naming-drift` literally*
+- [[Writ — The Knighthood: one seat, a Regent that is an agent, and the fief as a desk]] — *this writ names `entity:founding-guilds-naming-drift` literally*
+
 ### Modules
 
 - [[src/domain/guilds.ts]] — *the same file `src/domain/guilds.ts`, seen as a entity rather than a module*

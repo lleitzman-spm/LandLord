@@ -147,7 +147,23 @@ const sorted = (m: Map<string, EscapeLine>): EscapeLine[] =>
  *  `catalog` decides whether a step is meant to be human; `flows` maps a catalog row
  *  back to the flow it belongs to, so a leak can be named per flow rather than only
  *  in aggregate. A total tells you there is a problem; `byStep` tells you where. */
-export function readEscape(flows: FlowBook, catalog: CatalogRow[], log: KingdomEvent[]): EscapeReading {
+export function readEscape(
+  flows: FlowBook,
+  catalog: CatalogRow[],
+  log: KingdomEvent[],
+  /** The standing muster's seed, or null/omitted for the whole book.
+   *
+   *  WHY THIS EXISTS. Unscoped, this reading mixed a war game's cases with every
+   *  pre-muster and hand-worked case in the chronicle — so the one number the
+   *  product is judged against was measuring two populations at once and calling
+   *  the average an operation's escape rate.
+   *
+   *  Optional and trailing on purpose: the unscoped reading is still a real
+   *  reading (a deployment with no game has only the one population), and every
+   *  existing caller keeps compiling. `readDesignedCeiling` takes no log at all
+   *  and is structurally incapable of being affected. */
+  seed?: string | null,
+): EscapeReading {
   const modeOf = new Map(catalog.map((r) => [r.key, r.mode]));
   const flowOfRow = new Map<string, string>();
   for (const t of flows) for (const s of t.steps) if (!flowOfRow.has(s.catalogRow)) flowOfRow.set(s.catalogRow, t.key);
@@ -160,8 +176,24 @@ export function readEscape(flows: FlowBook, catalog: CatalogRow[], log: KingdomE
   // guess which route was in force.
   const escalatingRow = new Set<string>();
   for (const t of flows) for (const s of t.steps) if (s.onFail?.endsAt === 'operator') escalatingRow.add(s.catalogRow);
+  // The muster's own cases, or the whole book. The mark is `wg/<seed> · ` and it
+  // is matched with INCLUDES, never startsWith: `instantiateFlow` names a flow
+  // case `<template>: <subject>`, so a war relay carries the mark INFIXED
+  // (`move-out-relay: wg/s1 · …`). A startsWith here would score zero flow cases
+  // — precisely the ones this reading measures — and would fail silently, as a
+  // rate of `null` reads like "nothing has happened yet" rather than like a bug.
+  //
+  // The literal mirrors `consequences.ts`'s `severities()` rather than importing
+  // `WAR_MARK`, deliberately: this module's three imports are all `import type`,
+  // so it carries no runtime dependency at all, and pulling in the whole
+  // proving-ground module for one three-character constant would trade that away.
+  // If the mark ever changes, it changes in both places — they are named here so
+  // the pair is findable.
+  const mark = seed ? `wg/${seed} · ` : null;
+  const scoped = mark ? log.filter((e) => e.caseId.includes(mark)) : log;
+
   let escalated = 0;
-  for (const e of log) if (e.kind === 'failed' && e.catalogRow && escalatingRow.has(e.catalogRow)) escalated += 1;
+  for (const e of scoped) if (e.kind === 'failed' && e.catalogRow && escalatingRow.has(e.catalogRow)) escalated += 1;
 
   // One entry per (case, step). A step worked over five events is one step reached,
   // not five — otherwise a chatty step outweighs a costly one.
@@ -171,7 +203,7 @@ export function readEscape(flows: FlowBook, catalog: CatalogRow[], log: KingdomE
     touched: boolean;
   }
   const seen = new Map<string, Seen>();
-  for (const e of log) {
+  for (const e of scoped) {
     if (!e.catalogRow || e.kind === 'opened') continue;
     const id = `${e.caseId} ${e.catalogRow}`;
     const prev = seen.get(id);

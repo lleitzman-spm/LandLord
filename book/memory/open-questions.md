@@ -45,9 +45,23 @@ this went public, because it carried the seat map — and it can now be restored
 
 *Left standing on purpose:* the ruling names a destination, not a migration. Nothing has moved yet.
 
-## `escape.ts` reads as binary to `file`
+## ~~`escape.ts` reads as binary to `file`~~ — DIAGNOSED WRONG, corrected 2026-08-07
 
-`tools/leakcheck.mjs` flags `src/domain/escape.ts` for human review as binary content. It is valid
-UTF-8 and always has been; `file` is defeated by the density of typography in the header comment.
-Harmless, but it will keep flagging until someone thins the comment or the check learns to decode
-before it judges.
+The old entry said the file was valid UTF-8 and that `file` was "defeated by the density of
+typography in the header comment." **That was wrong, and it was wrong twice — [[learned]] carried
+the same mistaken diagnosis.**
+
+`src/domain/escape.ts` contains a **literal NUL byte**, at offset 9312, line 176:
+
+    const id = `${e.caseId}\x00${e.catalogRow}`;
+
+It is a deliberate delimiter — a separator that cannot occur inside a case id, so the dedup map
+cannot collide `"a b" + "c"` with `"a" + "b c"`. It is the only control byte in the file.
+
+So `file` was RIGHT and the scanner is behaving correctly; there is nothing to fix in either. What
+needed fixing was the note. **Two sessions asserted a cause without opening the bytes** — in a
+repository whose own standing rule is *verify claims against the bytes*, about the one file its
+hygiene scanner keeps pointing at.
+
+The live hazard now is the opposite of the one recorded: **do not let an editor "clean" line 176.**
+Retyping it as a space silently reintroduces the collision.

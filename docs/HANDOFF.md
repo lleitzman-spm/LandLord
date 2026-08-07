@@ -38,6 +38,90 @@ yours rather than forcing your copy over live work.
 
 ## State of play
 
+**2026-08-07 (later) — the gate grew hands. Three refusals now exist where there
+were none.** All green: `npm run build`, **461 tests** (was 442), `leakcheck`
+1,427 files / 0 findings.
+
+Phase 2 of `docs/WRIT-THE-KNIGHTHOOD.md`, in the order the ordering ruling fixed:
+
+- **`silence is authorization` is struck** and `renewal.owner-window` is now
+  `human`. The designed escape ceiling rose 33 → 34, which is the honest
+  direction: a budget that got cheaper by mislabelling a judgment was not a
+  better budget.
+
+- **`mode` is operative.** The advance clerk COMPLETES an `auto` step and sweeps
+  consecutive ones on its seat, instead of proposing all 13 to a human and
+  booking an unplanned escape for each. **The guard was the real design problem:**
+  reusing the existing `stepWaits` would have left **1 of 13** steps runnable
+  instead of 8 — it conflates a DEADLINE (`slaDays`) with a DEPENDENCY, and would
+  have silently cancelled the feature while every test of it in isolation still
+  passed. `awaitsOutside` is the new predicate. Driven end to end: a lease
+  renewal runs `draft-offer → send-offer` in one sweep, **stops dead at
+  `owner-window`**, later runs `record` — nine human touches become six.
+
+- **A ratification can be refused.** `refusesRatification` moved the guard from
+  `canRatify` in the Ledger — a JSX render condition — to where the event is
+  minted. Driven in Chromium: a legitimate Approve still lands `approved` +
+  `awaiting`, 0 console errors. *The stat tiles do not move across that click and
+  that is CORRECT* (both cases still open; step 2 takes step 1's place) — I
+  checked the event log before believing the counters.
+
+- **The settlement gate.** Findings 2/3 are about proposals, and chasing them
+  found worse: `settlementMoney` — where coin actually moves — **consulted no
+  ceiling of any kind.** Now: *coin above the owner-approval cap may not settle
+  unless a HUMAN ratified the case.* The second half is free, because no clerk
+  may emit `approved`/`overridden`, so the presence of one is proof a person
+  looked. Same principle as the struck condition: silence is not authorization.
+
+- **The fiduciary invariant left the test shelf** (finding 1) and now guards
+  `settlementMoney`. The test is "does this batch INTRODUCE a breach", not "is
+  the book sound" — refusing every write because of an older fault would strand
+  the ledger on somebody else's mistake.
+
+**Not claimed:** the settlement gate has **not been observed refusing in the
+running app**, only in unit tests — it cannot be reached by the fleet today,
+since all eight vendor-dispatch steps share one `human` catalog row. A guard
+built ahead of its door, which is the right order, but a green suite is not
+evidence it has bitten. **Finding 4 stands** (the calendar window is still never
+compared to a date), and `readEscape` is still unscoped by seed.
+
+- **The escape rate is scoped to its muster.** `readEscape` took an optional
+  trailing `seed`; both surfaces pass it. Unscoped it averaged a game's cases
+  with every pre-muster and hand-worked one — two populations, one number. The
+  mark is matched with **`.includes`, never `.startsWith`**: a flow case is named
+  `<template>: <subject>`, so a war relay carries the mark **infixed**, and a
+  prefix match would score zero flow cases — precisely the ones this measures —
+  and fail *silently*, because a rate of `null` reads as "nothing has happened
+  yet". There is a test named for exactly that.
+
+**A verified strike list exists for Phase 5, and it CORRECTED this session's own
+writ before anything was deleted:**
+
+- **`src/domain/guilds.ts` must NOT be struck.** It is the Crown Offices plus
+  `SEAT_GUILD` — a **holder → office map over the clerk fleet's own desks**
+  (`turn-desk`, `acct-desk`, `res-desk`, `bd-desk`, `col-desk`, `viol-desk`, and
+  the three queues). That is the desk model the amendment defines. The file says
+  so itself, and `knowledge/entities.json` already carries it as
+  `entity:founding-guilds-naming-drift`, standing **contested**. **Rename it;
+  never delete it.**
+- **Four functions in `pods.ts`** (`commissionCaseId`, `placementCaseId`,
+  `placements`, `knightsOf`) are the war-game **case-id grammar Reset keys off**.
+  They move; they do not die.
+- **`tenure.ts` + `tenureMuster.ts` are already dead** — 966 lines, zero
+  production importers, held alive by one test file (**−50 tests** when they go).
+- **`src/realm/` is largely orphaned**, and `realm-preview.tsx` imports a file
+  that was **never committed**. Wave 0 is a zero-breakage deletion.
+- **`throne.ts` is clean** — no pods, no guilds — and is already the desk-shaped
+  instrument the re-cut of `readRealm.debt` should build on.
+- Worst-case blast radius if struck naively: **≈141 of 461 tests**. Deleting
+  without retiring the matching `knowledge/*.json` records is a **FATAL** Book
+  lint (a `module:` edge whose target is gone).
+
+**Corrected from the plan:** `readFlows` not passing `targetAt0` is **not** a
+defect. Nothing records a case's target date, so there is nothing to pass, and a
+case with no target correctly reads *no due date* rather than a wrong one.
+Wiring it means recording the date first — a feature, not a fix.
+
 **2026-08-07 — the knighthood: LandLord is the agent layer, a fief is a desk, and
 the money gate turns out not to refuse.** All green: `npm run build`, **442 tests**,
 `leakcheck` 1,412 files / 0 findings, `npm run book` 1,141 pages / 4,472 roads,

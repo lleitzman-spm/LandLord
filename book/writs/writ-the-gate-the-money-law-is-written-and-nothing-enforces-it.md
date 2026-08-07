@@ -38,16 +38,17 @@ aliases:
   - 4. The calendar window is decorative
   - 5. The only guard before a ratification is a render condition
 - The sixth, which is ours and is the sharp one
+- What has been built since — 2026-08-07
 - The standing rule
 - What a refusal has to look like
 - What is NOT claimed here
 
 ## Modules
 
-- [[src/domain/economy.ts]] — *this writ names the exported symbol `spendGate`*
-- [[src/domain/flows.ts]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `proposeStep`*
+- [[src/domain/economy.ts]] — *this writ names the exported symbol `settlementGate`; this writ names the exported symbol `spendGate`*
+- [[src/domain/flows.ts]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `overrideStep`; +1 more*
 - [[src/LedgerView.tsx]] — *this writ names the exported symbol `LedgerView`*
-- [[src/operator-core.ts]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `proposeStep`; +1 more*
+- [[src/operator-core.ts]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `overrideStep`; +2 more*
 
 ## Backlinks
 

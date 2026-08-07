@@ -45,6 +45,15 @@ aliases:
 
 - [[The system hunts delegation debt]] — *this writ names "The system hunts delegation debt" literally*
 
+## Entities
+
+- [[FOUNDING_GUILDS still names Crown offices, not outside trades]] — *this writ names `entity:founding-guilds-naming-drift` literally*
+
+## Modules
+
+- [[src/domain/guilds.ts]] — *this writ names the exported symbol `GuildReading`; this writ names the exported symbol `SEAT_GUILD`*
+- [[src/domain/pods.ts]] — *this writ names the exported symbol `commissionCaseId`; this writ names the exported symbol `knightsOf`; +1 more*
+
 ## Backlinks
 
 *Nothing in the Book points here. An orphan page is worse than a missing one — it exists, it is correct, and no reader will ever reach it. `npm run book:lint` counts these.*
@@ -65,6 +74,7 @@ aliases:
 - [[docs/KINGDOM.md]]
 - [[docs/WRIT-THE-BROKERAGE.md]]
 - [[src/domain/escape.ts]]
+- [[src/domain/guilds.ts]]
 - [[The Kingdom — Canon]]
 - [[The sibling boundary — who owns the process model]]
 - [[Writ — The Brokerage: offices, guilds, fiefs, and the line of answer]]

@@ -52,7 +52,9 @@ aliases:
 
 ### Writs that specify it
 
+- [[Handoff — where things stand]] — *this writ names the exported symbol `SEAT_GUILD`*
 - [[The Kingdom — Canon]] — *this writ names the exported symbol `readGuilds`*
+- [[Writ — The Knighthood: one seat, a Regent that is an agent, and the fief as a desk]] — *this writ names the exported symbol `GuildReading`; this writ names the exported symbol `SEAT_GUILD`*
 - [[Writ — the Land: pods, knights, owners, and guilds (the realm remodeled)]] — *this writ names the exported symbol `FOUNDING_GUILDS`; this writ names the exported symbol `GuildReading`; +3 more*
 - [[Writ — the Muster Library and the Intro Campaign]] — *this writ names the exported symbol `keepOf`*
 
@@ -171,7 +173,9 @@ aliases:
 
 *These name this FILE by its path. That is a citation of the source, not a claim about any one idea inside it — do not read a path citation as agreement, dependence or implementation.*
 
+- [[Handoff — where things stand]]
 - [[The Kingdom — Canon]]
+- [[Writ — The Knighthood: one seat, a Regent that is an agent, and the fief as a desk]]
 - [[Writ — the Land: pods, knights, owners, and guilds (the realm remodeled)]]
 
 ---

@@ -36,6 +36,7 @@ Mounts RealmView standalone against a canned scene fixture, chosen by a ?scene= 
 
 *These name this FILE by its path. That is a citation of the source, not a claim about any one idea inside it — do not read a path citation as agreement, dependence or implementation.*
 
+- [[Handoff — where things stand]]
 - [[realm-preview.html]]
 
 ---

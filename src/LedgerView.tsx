@@ -162,6 +162,10 @@ interface Props {
   /** A flow case a road asked the Ledger to open and scroll to (law 6: the
    *  reading was a road to the step in hand). */
   focusCase?: string;
+  /** The standing muster's seed, or null. The escape rate is scoped to it —
+   *  unscoped, a game's cases and every pre-muster and hand-worked case are
+   *  averaged into one number, which is two populations wearing one rate. */
+  seed?: string | null;
 }
 
 /** A hand named on the Ledger — a door to that person when the census knows
@@ -178,7 +182,7 @@ function Hand({ kingdom, holder }: { kingdom: Kingdom; holder: string | null | u
   );
 }
 
-export default function LedgerView({ events, catalog, flows, kingdom, now, focusCase }: Props) {
+export default function LedgerView({ events, catalog, flows, kingdom, now, focusCase, seed }: Props) {
   const nav = useNav();
   const detail = useDetail();
   const log = events.log;
@@ -192,7 +196,7 @@ export default function LedgerView({ events, catalog, flows, kingdom, now, focus
   const feed = [...log].sort((a, b) => (a.at < b.at ? 1 : -1)); // newest first
   const parked = clerkProposals(log).filter((p) => p.awaiting);
   const live = readFlows(flows.flows, log, now);
-  const escape = readEscape(flows.flows, catalog.rows, log);
+  const escape = readEscape(flows.flows, catalog.rows, log, seed);
   // Which case the cascade list opens on. It arrives from a road outside the
   // Ledger (nav.goToLedger(caseId)) but must also be settable from INSIDE it —
   // a proposal you can read and cannot open is information with no road to the

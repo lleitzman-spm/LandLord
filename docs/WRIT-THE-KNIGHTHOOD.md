@@ -134,9 +134,32 @@ MEASURED rather than 0% over no work.
 
 Each of these modelled a company with an org chart. A single seat has none.
 
+> **CORRECTED 2026-08-07, before anything was deleted.** A verified dependency
+> sweep found the first row of this table WRONG, and wrong in the expensive
+> direction. **`src/domain/guilds.ts` is not "guilds" and must not be struck.**
+> Its own header says so (*"the TYPES below still read Guild/GuildReading
+> deliberately: the rename is in progress"*), and `knowledge/entities.json`
+> already carries the correction as `entity:founding-guilds-naming-drift`,
+> standing **contested**. The file is the **Crown Offices** plus `SEAT_GUILD`
+> (`guilds.ts:61-85`) — a **holder → office map over the agent fleet's own clerk
+> desks** (`turn-desk`, `acct-desk`, `res-desk`, `bd-desk`, `col-desk`,
+> `viol-desk`, and the three queues). That is *precisely what this writ defines a
+> desk to be*. It is the closest thing in the tree to the model being built.
+> **Rename it (`offices.ts`, `SEAT_OFFICE`); do not delete it.**
+>
+> Two more mislabels found the same way, recorded so nobody re-makes them:
+> **four functions in `pods.ts`** (`commissionCaseId`, `placementCaseId`,
+> `placements`, `knightsOf`) are the war-game **case-id grammar that Reset keys
+> off** — records, not org shape. They **move**, they do not die. And
+> `docket.ts`'s `kind: 'guild'` arm is the Court's **routing tag**, not modelling.
+>
+> The lesson is the one this repo keeps relearning: **a name is not evidence.**
+> Three of the seven rows below were argued from a word rather than from the
+> bytes under it.
+
 | Struck | Why |
 |---|---|
-| **Guilds** | A cross-cutting function needs departments to cut across. There are none. |
+| ~~**Guilds**~~ | **WRONG — see the correction above. This is the Crown Offices and the desk map. Rename, never strike.** |
 | **Pods** | A partner's book of owners. There are no partners. |
 | **Knights as equity partners** | The word is kept; the meaning is now an agent holding a desk. |
 | **Patrons as a knight's book** | Owners belong to the graph. The agent layer holds no owner records. |

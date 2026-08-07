@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-1395 lines · 56 exported symbols.
+1545 lines · 60 exported symbols.
 
 ## What the file says of itself
 
@@ -36,8 +36,8 @@ aliases:
 
 ## Shape
 
-- **Lines:** 1395
-- **Exported symbols (56):** `AcctType`, `BankId`, `BankRec`, `BankRecs`, `Book`, `BridgeCheck`, `BudgetLine`, `BudgetVsActual`, `BudgetVsActualLine`, `Compliance`, `ComplianceCheck`, `CorporateCoffers`, `EARNED_FEE_LIMIT_DAYS`, `EconomyBook`, `FOUNDING_ECONOMY`, `FeeKind`, `FeeRule`, `LedgerAccount`, `MoneyEvent`, `MoneyKind`, `MoneyLog`, `OwnerStatement`, `PnL`, `PnLLine`, `Posting`, `Side`, `Solvency`, `SpendDisposition`, `SpendGate`, `SpendReconciliation`, `balanceOf`, `booksBalance`, `bridgeCheck`, `coinCents`, `economyAtFounding`, `estimateSpendCents`, `feeAmount`, `feeRuleFor`, `lateFeeSplit`, `mtmSplit`, `needsOwnerApproval`, `ownersInLog`, `postingsFor`, `readBankRecs`, `readBudgetVsActual`, `readCompliance`, `readCorporateCoffers`, `readOwnerStatement`, `readPnL`, `readPostings`, `readSolvency`, `reconcileSpend`, `sampleLedger`, `spendCapFor`, `spendGate`, `vendorSettlementMoney`
+- **Lines:** 1545
+- **Exported symbols (60):** `AcctType`, `BankId`, `BankRec`, `BankRecs`, `Book`, `BridgeCheck`, `BudgetLine`, `BudgetVsActual`, `BudgetVsActualLine`, `Compliance`, `ComplianceCheck`, `CorporateCoffers`, `EARNED_FEE_LIMIT_DAYS`, `EconomyBook`, `FOUNDING_ECONOMY`, `FeeKind`, `FeeRule`, `LedgerAccount`, `MoneyEvent`, `MoneyKind`, `MoneyLog`, `OwnerStatement`, `PnL`, `PnLLine`, `Posting`, `SettlementGate`, `Side`, `Solvency`, `SpendDisposition`, `SpendGate`, `SpendReconciliation`, `TRUST_CASH_ROLES`, `balanceOf`, `booksBalance`, `bridgeCheck`, `coinCents`, `economyAtFounding`, `estimateSpendCents`, `feeAmount`, `feeRuleFor`, `fiduciaryViolationsAt`, `lateFeeSplit`, `mtmSplit`, `needsOwnerApproval`, `ownersInLog`, `postingsFor`, `readBankRecs`, `readBudgetVsActual`, `readCompliance`, `readCorporateCoffers`, `readOwnerStatement`, `readPnL`, `readPostings`, `readSolvency`, `reconcileSpend`, `sampleLedger`, `settlementGate`, `spendCapFor`, `spendGate`, `vendorSettlementMoney`
 
 ## Backlinks
 
@@ -47,7 +47,7 @@ aliases:
 - [[Open questions]] — *this writ names the exported symbol `estimateSpendCents`; this writ names the exported symbol `spendGate`*
 - [[The Kingdom — Canon]] — *this writ names the exported symbol `BudgetLine`; this writ names the exported symbol `EARNED_FEE_LIMIT_DAYS`; +9 more*
 - [[Writ — the economy pillar, re-expressed as chronicle readings]] — *this writ names the exported symbol `EconomyBook`; this writ names the exported symbol `feeAmount`; +8 more*
-- [[Writ — The Gate: the money law is written and nothing enforces it]] — *this writ names the exported symbol `spendGate`*
+- [[Writ — The Gate: the money law is written and nothing enforces it]] — *this writ names the exported symbol `settlementGate`; this writ names the exported symbol `spendGate`*
 
 ### Facts it depends on
 
@@ -116,6 +116,10 @@ aliases:
 
 - [[a bare census is never dry — there is nothing to be broke with]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a base-blind merge is unchanged — it still takes the writing session]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[a bill above the cap that a HUMAN ratified]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a bill above the cap that NOBODY ratified]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a bill nobody priced]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a bill within the cap, ratified or not — that is what a cap IS]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a book cut over the muster places EVERY door — the join is sound]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a case with no estateId folds to null (byte-identical to before)]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a cash-complete sample month is sound]] — *reached by the test FILE through its helper `test/invariants.ts` (shared source, not a claim about this one test)*
@@ -196,6 +200,7 @@ aliases:
 - [[an estate with a higher cap (harrow-c) clears a spend the house cap would gate]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an estate with no override still reads the house cap]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an estate with no override still reads the house cap (invariant)]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[an estate's own cap governs over the house cap]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an estate's own NTE governs the settlement ceiling where it has one]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an id-keyed array merges by id, not by index]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an owed edict PRESSES as its day nears]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -203,6 +208,8 @@ aliases:
 - [[an UNFUNDED owner settles soundly via the shortfall topup]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an urgency band this table does not know has no estimate either]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[and it stops REGARDLESS of the cap — the old default did not]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[any bill where the deployment set no cap — ungated, and it says so]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[at the cap settles; one cent over does not]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[balances within both books (the bridge)]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[both books balance over the whole dealt money log]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[but two fiefs under one lord IS a plurality]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*

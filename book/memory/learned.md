@@ -75,8 +75,20 @@ one-operator/ten-thousand-door bar and used the word *escape* for different quan
 steps here, a count of operator-terminated repairs there. Same word, same bar, different number.
 Reconciled at `endsAt`.
 
-## `file` is not a decoder — 2026-08-06
+## ~~`file` is not a decoder~~ — the diagnosis was wrong — 2026-08-06, corrected 2026-08-07
 
-A leak check reported a `.ts` source as binary needing human review. It was valid UTF-8 with a dense
-run of em-dashes and middots in its header. Any check that classifies before it decodes will do this,
-and the cost is a reviewer's attention spent on nothing.
+This said a leak check flagged a `.ts` source as binary because it was "valid UTF-8 with a dense run
+of em-dashes and middots in its header," and concluded the cost was a reviewer's attention spent on
+nothing.
+
+**The file contains a literal NUL byte** (`src/domain/escape.ts:176`, offset 9312) — a deliberate
+map-key delimiter. `file` classified it correctly. The reviewer's attention was not spent on nothing;
+it was spent on the one real control byte in the tree, which is exactly what that column is for.
+
+Nothing was broken by the wrong diagnosis, and that is the point worth keeping: **a plausible
+explanation that is never checked survives, gets written down, and is then cited.** It took a third
+session actually running `open(...,'rb').read().find(b'\x00')` to find out — one line, against a
+note that had already been ratified twice.
+
+The general form: **when you explain away a tool's warning, check the bytes before you write the
+explanation down.** An unchecked explanation is more durable than the warning it dismisses.

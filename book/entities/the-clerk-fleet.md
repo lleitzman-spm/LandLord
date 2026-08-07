@@ -46,6 +46,7 @@ One agent per seat, each a bounded task and a run that works through the real fl
 
 ### Writs that specify it
 
+- [[Handoff — where things stand]] — *this writ names "The clerk fleet" literally*
 - [[The Kingdom — Canon]] — *this writ names "The clerk fleet" literally*
 
 ### Entities

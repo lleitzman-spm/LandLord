@@ -456,7 +456,10 @@ export default function WarTableView({
   // Ledger was reachable from the command bar, from a proposal count that only
   // exists when clerks have parked something, and from a toast that dismisses
   // itself. Three roads, none of them there when you are not already looking.
-  const escape = readEscape(flows.flows, catalog.rows, log);
+  // Scoped to the standing muster: unscoped this mixed a game's cases with every
+  // pre-muster and hand-worked one, so the number the product is judged against
+  // was averaging two populations. `seed` is null with no game — the whole book.
+  const escape = readEscape(flows.flows, catalog.rows, log, seed);
   const untriaged = readCases(log)
     .filter((c) => c.status !== 'done' && c.caseId.includes(' · intake · '))
     .sort((a, b) => (ageInDays(b, now) ?? 0) - (ageInDays(a, now) ?? 0));
@@ -1942,6 +1945,7 @@ export default function WarTableView({
             kingdom={kingdom}
             now={now}
             focusCase={panel.focusCase}
+            seed={seed}
           />
         </PanelShell>
       )}
