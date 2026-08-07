@@ -15,7 +15,7 @@
 
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
-import { readLog, appendEvents } from './operator-tools.mjs';
+import { fileBacking, BackingRefusal } from './agents/rig.mjs';
 import { makeComplete } from './moonshot.mjs';
 import { brainFor } from './brain-doctrine.mjs';
 import { makeIntakeClerk } from './clerks.mjs';
@@ -29,13 +29,17 @@ const core = await import(pathToFileURL(CORE).href).catch((err) => {
 
 async function main() {
   const count = Math.max(1, Number(process.argv[2]) || 1);
-  const doc = readLog();
-  if (!doc.wargame?.seed) {
-    console.error(
-      'No standing War Game. Deploy one first (the footer "Deploy the grand muster" / "Deploy a game"),\n' +
-        'then run the operator — it works only on simulated wg/<seed> data.',
-    );
-    process.exit(1);
+  // Through the rig's file backing — one guard, one message, one place.
+  const backing = fileBacking();
+  let doc;
+  try {
+    doc = backing.readLog();
+  } catch (err) {
+    if (err instanceof BackingRefusal) {
+      console.error(err.message);
+      process.exit(1);
+    }
+    throw err;
   }
   const now = doc.wargame.now;
   let clerk;
@@ -56,7 +60,7 @@ async function main() {
     return;
   }
   for (const r of records) console.log(`  ✓ ${r}`);
-  const total = appendEvents(events);
+  const total = backing.appendEvents(events);
   console.log(`\nAppended ${events.length} event(s); the log now holds ${total}.`);
   console.log('Open the Ledger/Seat: the WO reads identified and advanced, a proposal by "Mabel\'s clerk"');
   console.log("sits awaiting — the Regent approves and the cascade moves, or overrides and it holds.");

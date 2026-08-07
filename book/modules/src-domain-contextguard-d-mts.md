@@ -18,12 +18,12 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-31 lines · 7 exported symbols.
+36 lines · 9 exported symbols.
 
 ## Shape
 
-- **Lines:** 31
-- **Exported symbols (7):** `IdentityFinding`, `IdentityKind`, `IdentityLeakError`, `assertNoIdentity`, `findIdentity`, `findPersistentIdentity`, `guardComplete`
+- **Lines:** 36
+- **Exported symbols (9):** `IDENTITY_GUARDED`, `IdentityFinding`, `IdentityKind`, `IdentityLeakError`, `assertNoIdentity`, `findIdentity`, `findPersistentIdentity`, `guardComplete`, `isIdentityGuarded`
 
 ## Modules
 
@@ -31,7 +31,9 @@ aliases:
 
 ## Backlinks
 
-*Nothing in the Book points here. An orphan page is worse than a missing one — it exists, it is correct, and no reader will ever reach it. `npm run book:lint` counts these.*
+### Writs that specify it
+
+- [[Handoff — where things stand]] — *this writ names the exported symbol `guardComplete`; this writ names the exported symbol `isIdentityGuarded`*
 
 ---
 

@@ -16,7 +16,7 @@
 
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
-import { readLog, appendEvents } from './operator-tools.mjs';
+import { fileBacking, BackingRefusal } from './agents/rig.mjs';
 import { makeComplete } from './moonshot.mjs';
 import { brainFor } from './brain-doctrine.mjs';
 import { runFleet } from './run-fleet.mjs';
@@ -30,13 +30,22 @@ const core = await import(pathToFileURL(CORE).href).catch((err) => {
 });
 
 async function main() {
-  const doc = readLog();
-  if (!doc.wargame?.seed) {
-    console.error(
-      'No standing War Game. Deploy one first (the footer "Deploy the grand muster" / "Deploy a game"),\n' +
-        'then run the fleet — it works only on simulated wg/<seed> data.',
-    );
-    process.exit(1);
+  // The chronicle now arrives through the RIG's file backing rather than a
+  // direct read, so the "is a game standing" refusal lives in ONE place
+  // (`fileBacking`) instead of being restated by every caller — this file and
+  // `operate.mjs` carried two copies of the same guard, which is two chances
+  // for them to drift apart. Behaviour at this door is unchanged: the same
+  // message, the same non-zero exit.
+  const backing = fileBacking();
+  let doc;
+  try {
+    doc = backing.readLog();
+  } catch (err) {
+    if (err instanceof BackingRefusal) {
+      console.error(err.message);
+      process.exit(1);
+    }
+    throw err;
   }
   const now = doc.wargame.now;
 
@@ -57,7 +66,7 @@ async function main() {
     console.error('Model context refused; the entire fleet run was discarded and no event was appended.');
     return;
   }
-  const { events, perClerk, proposals } = guardedRun.result;
+  const { events, perClerk, proposals, swept } = guardedRun.result;
 
   console.log(`The clerk fleet · game ${doc.wargame.seed} @ ${now} · ${perClerk.length} clerks\n`);
   for (const c of perClerk) {
@@ -72,8 +81,13 @@ async function main() {
     console.log('The fleet found nothing to do. (Deploy a fresh muster, or the work is already proposed.)');
     return;
   }
-  const total = appendEvents(events);
-  console.log(`Appended ${events.length} event(s) — ${proposals} proposal(s) parked; the log now holds ${total}.`);
+  const total = backing.appendEvents(events);
+  // Both outcomes, for the same reason the board says both: a run that parked
+  // two and carried nine is a very different run from one that parked two.
+  const carried = swept > 0 ? `, ${swept} step(s) carried through unattended` : '';
+  console.log(
+    `Appended ${events.length} event(s) — ${proposals} proposal(s) parked${carried}; the log now holds ${total}.`,
+  );
   console.log('Open the Ledger/Seat: each proposal reads by its clerk, awaiting the Regent\'s Approve/Override.');
   meter.report(proposals);
 }

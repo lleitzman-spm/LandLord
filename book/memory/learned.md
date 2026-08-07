@@ -13,6 +13,43 @@ aliases:
 
 ← [[00 MEMORY]]
 
+## The session that read the gate writ then re-shipped its central fault — 2026-08-07
+
+A session spent its first hour reading `docs/WRIT-THE-GATE.md`, whose finding 2 is *"it is not
+unused — which is worse than unused, because a gate that is read reads as protection. Nothing
+branches on it."* It then built a capability rig and put **three** of exactly that in it: a belt tag
+(`read:trade-roster`) that bound functions nothing read, a freeze one level too shallow to freeze
+anything that mattered, and a printed reassurance to the operator — *"no tool could cross this"* —
+that was false, proved by driving the agent's own scoped core straight past the commitment.
+
+Reading a failure mode does not inoculate you against it. The writ describes a shape that is
+**cheap to build by accident**, and the accident is not committed at the moment you write the
+decorative line — it is committed at the moment you *believe your own manifest instead of running
+it*. All three survived a green build, a green suite, and a hand-written test file specifically
+about capability enforcement, because every one of those checks read the same table the code did.
+
+What actually caught them: a reviewer with no stake in the design, asked to prove the claims false
+rather than confirm them, who instrumented the running agent instead of reading the source. **The
+check has to come from outside the assumption.** A test written by the author of a guard tends to
+test the guard's own vocabulary.
+
+## A belt's manifest is a claim, and only running the agent through it checks it — 2026-08-07
+
+`harness/agents/roster.mjs` declared Mace's belt as `['read:work', 'read:catalog',
+'open:cascade']` — a manifest that read as complete and passed every existing test
+(`roster.test.ts` checks shape, not sufficiency). It was wrong twice over, and
+neither gap showed until the agent rig (`harness/agents/rig.mjs`) actually scoped
+her `core` to those tags and *ran* her: her clerk (`clerks.mjs` `makeIntakeClerk`)
+stops at a `proposed` commitment, which needs `propose`; and that proposal reads
+the spend gate first, which needs `read:economy` (`core.applyEconomySetting is not
+a function`, thrown mid-run — nothing before this session had ever restricted her
+`core` to her declared belt, so the gap was invisible to every prior check).
+
+The general shape: a capability manifest is only as honest as the narrowest thing
+that has ever tried to exercise it. **Verify claims against the bytes** now has a
+second reading: verify a capability declaration by constructing the narrowest
+thing that would fail if it were wrong, not by reading the declaration and nodding.
+
 ## The safe order and the natural order were opposites — 2026-08-07
 
 The founding flow book declares 13 of its 46 steps `auto`, and the fleet proposes every one of them
