@@ -5,7 +5,7 @@
 // real-shaped work without a live War Game, a browser, or a chronicle on
 // disk — the whole point of separating construction from deployment.
 //
-//   usage: ./harness/run.sh viewer.mjs [Mace|Milo|Mira|all]
+//   usage: ./harness/run.sh viewer.mjs [Mace|Milo|Mira|Lena|Rhys|Tess|Nell|Bea|all]
 //
 // Every run uses `memoryBacking()` — nothing here ever touches
 // data/chronicle.json, so nothing here ever needs `git checkout --` after.
@@ -18,12 +18,11 @@
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
 import { ROSTER, agentNamed } from './agents/roster.mjs';
-import { buildAgent, memoryBacking, run, judgmentKnown } from './agents/rig.mjs';
-import { FIXTURES } from './agents/fixtures.mjs';
+import { buildAgent, memoryBacking, run, judgmentKnown, beltShortfall, NEEDS_LOADED_BOOK } from './agents/rig.mjs';
+import { rawIntakeFixture, vendorCommitmentFixture, settlementFixture, atStepFixture } from './agents/fixtures.mjs';
 import { brainFor } from './brain-doctrine.mjs';
 import { makeComplete } from './moonshot.mjs';
 import { runGuardedModelWork } from './run-guard.mjs';
-import * as vendors from './vendors.mjs';
 
 const CORE = resolve(process.cwd(), 'dist-operator/operator-core.mjs');
 const core = await import(pathToFileURL(CORE).href).catch((err) => {
@@ -38,7 +37,20 @@ const NOW = '2026-08-07T09:00:00.000Z';
  *  another named agent means adding a line here plus a builder in
  *  fixtures.mjs — the same one-line-per-seat shape brain-doctrine.mjs and
  *  rig.mjs's JUDGMENT_FACTORIES already use. */
-const DEMO_FIXTURE = { Mace: 'mace/raw-intake', Milo: 'milo/vendor-commitment', Mira: 'mira/settlement' };
+const DEMO_FIXTURE = {
+  Mace: () => rawIntakeFixture({ now: NOW }),
+  Milo: (c) => vendorCommitmentFixture(c, { now: NOW }),
+  Mira: (c) => settlementFixture(c, { now: NOW }),
+  // The five reachable past the M family. Each parks a case at the exact step
+  // its clerk's own COMMITMENTS map names, walked there through the real
+  // engine — see `atStepFixture`. The flow/step pairs were verified against
+  // `fixtures/founding-book.json` (holder included, not just the step key).
+  Lena: (c) => atStepFixture(c, { flowKey: 'lease-renewal', stepKey: 'price', subject: '14 Cobble Row — lease expires in 90 days', now: NOW }),
+  Rhys: (c) => atStepFixture(c, { flowKey: 'violation-notice', stepKey: 'classify', subject: '9 Mill Lane — noise complaint from the neighbour', now: NOW }),
+  Tess: (c) => atStepFixture(c, { flowKey: 'move-out-relay', stepKey: 'turn-scope', subject: '2 Anvil Court — tenant surrendered the keys', now: NOW }),
+  Nell: (c) => atStepFixture(c, { flowKey: 'owner-onboarding', stepKey: 'intake', subject: 'a four-door book offered to the Crown', now: NOW }),
+  Bea: (c) => atStepFixture(c, { flowKey: 'move-out-relay', stepKey: 'deposit-accounting', subject: '7 Tanner Way — deposit to reconcile', now: NOW }),
+};
 
 function rule(label) {
   console.log(`\n${'─'.repeat(78)}\n${label}\n${'─'.repeat(78)}`);
@@ -68,19 +80,35 @@ async function runOne(name) {
   printCard(agent);
 
   if (!judgmentKnown(agent)) {
-    console.log(`\n  (this rig has no judgment wired for ${agent.seat}/${agent.task} yet — see rig.mjs)`);
+    const grammar = NEEDS_LOADED_BOOK[`${agent.seat}/${agent.task}`];
+    if (grammar) {
+      console.log(`\n  CANNOT BE DRIVEN HERE — ${agent.name} grips ${grammar}, which is not in the`);
+      console.log('  founding book this repo ships. It needs a loaded grand-muster library to have');
+      console.log('  anything to work on. That is an absent BOOK, not a missing wire.');
+    } else {
+      console.log(`\n  (this rig has no judgment wired for ${agent.seat}/${agent.task} yet — see rig.mjs)`);
+    }
+    return;
+  }
+  const short = beltShortfall(agent);
+  if (short.length) {
+    console.log(`\n  BELT REFUSAL — ${agent.name}'s belt is missing [${short.join(', ')}] for this judgment.`);
     return;
   }
 
-  const fixtureKey = DEMO_FIXTURE[agent.name];
-  const doc = FIXTURES[fixtureKey](core, { now: NOW });
+  const build = DEMO_FIXTURE[agent.name];
+  if (!build) {
+    console.log(`\n  (no fixture wired for ${agent.name} in this viewer)`);
+    return;
+  }
+  const doc = build(core);
   const backing = memoryBacking(doc);
   rule(`${agent.name} — deployed against ${backing.describe()}`);
   const caseId = doc.caseId ?? doc.events[0]?.caseId;
   console.log(`  work order: ${caseId}`);
 
   const guarded = await runGuardedModelWork(makeComplete, (complete) =>
-    run(agent, backing, { core, complete, brainFor, vendors, now: NOW }),
+    run(agent, backing, { core, complete, brainFor, now: NOW }),
   );
 
   if (guarded.status === 'blocked') {

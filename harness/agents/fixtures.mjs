@@ -156,6 +156,31 @@ export function settlementFixture(core, {
   return { catalog: BOOK.catalog, flows: BOOK.flows, events, caseId: base.caseId, quoteCents, invoiceCents };
 }
 
+/** A case parked at ONE named step of any founding flow — the general form of
+ *  the three hand-written stages above, and how every agent past the M family
+ *  gets a fixture without a bespoke builder each.
+ *
+ *  It walks the REAL engine: instantiate the flow, then `completeStep` every
+ *  step BEFORE the target, so the case folds to exactly the step named and the
+ *  reading is the engine's own rather than a hand-placed event. Throws if the
+ *  flow or the step is not in the founding book, rather than returning a
+ *  fixture that quietly parks somewhere else — a fixture that lands on the
+ *  wrong step tests the wrong judgment and still goes green. */
+export function atStepFixture(core, { flowKey, stepKey, subject, params = {}, now = '2026-08-07T09:00:00.000Z' }) {
+  const tpl = BOOK.flows.find((f) => f.key === flowKey);
+  if (!tpl) throw new Error(`atStepFixture: the founding book has no flow "${flowKey}"`);
+  const target = tpl.steps.findIndex((s) => s.key === stepKey);
+  if (target < 0) throw new Error(`atStepFixture: flow "${flowKey}" has no step "${stepKey}"`);
+  const id = ids(`fx-${flowKey}`);
+  const full = core.fullParams(tpl, params);
+  const instance = core.instantiateFlow(tpl, subject, { at: now, id }, full);
+  const events = [...instance.events];
+  for (let i = 0; i < target; i++) {
+    events.push(...core.completeStep(tpl, instance.caseId, i, { at: now, id }, full));
+  }
+  return { catalog: BOOK.catalog, flows: BOOK.flows, events, caseId: instance.caseId, stepIndex: target };
+}
+
 /** name → builder, keyed the way the viewer's CLI arg names them. Milo's and
  *  Mira's builders take `core` first (they drive the real engine); the
  *  signature is uniform here (`(core, opts)`) so a caller can loop over this

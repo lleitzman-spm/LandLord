@@ -76,10 +76,27 @@
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { makeIntakeClerk, makeVendorClerk, makePriceClerk } from '../clerks.mjs';
+import { makeIntakeClerk, makeVendorClerk, makePriceClerk, makeLeasingClerk } from '../clerks.mjs';
+import { makeResidentClerk } from '../res-desk.mjs';
+import { makeTurnoverClerk } from '../turn-desk.mjs';
+import { makeBdrClerk } from '../bd-desk.mjs';
+import { makeAccountingClerk } from '../acct-desk.mjs';
 
-// ── A backing's refusal is a distinct thing from a bug ──────────────────────
+// ── A refusal is a distinct thing from a bug ────────────────────────────────
 export class BackingRefusal extends Error {}
+
+/** A belt that cannot carry the judgment it was asked to hold. Named rather
+ *  than left as the `TypeError: core.<something> is not a function` the first
+ *  version produced: that failed CLOSED (nothing was appended, verified) but
+ *  said nothing about capability, so the reader had to work backwards from a
+ *  domain function to the missing tag. `docs/WRIT-THE-GATE.md` property 2 —
+ *  a refusal leaves a different record — applied to the belt. */
+export class BeltRefusal extends Error {}
+
+/** A judgment this repository cannot honestly exercise, because the flow book
+ *  it grips is not one this repo ships. Distinct from "not wired yet": there
+ *  is nothing to wire until a book carrying that grammar is loaded. */
+export class NoSuchGrammar extends Error {}
 
 // ── fileBacking — the live simulator ────────────────────────────────────────
 
@@ -290,16 +307,45 @@ export function deploy(agent, backing, { core, complete, brainFor } = {}) {
 // with a new judgment means adding a line here, exactly as `brain-doctrine.mjs`
 // grows one registry line per seat (`docs/agents/roster.mjs`'s own rule:
 // "you do not name a new agent, you name a new judgment").
+// Each entry declares the tags its clerk actually needs, so a belt too narrow
+// to hold the judgment is refused BEFORE the run rather than discovered as a
+// TypeError partway through it. The declaration is not taken on trust:
+// `test/rig.test.ts` scans each clerk module's real `core.<fn>` references and
+// fails if `requires` drifts from the bytes.
 const JUDGMENT_FACTORIES = {
-  'mabel/identify': makeIntakeClerk,
-  'va-desk/assign-vendor': makeVendorClerk,
-  'lp-queue/approve-pay': makePriceClerk,
+  'mabel/identify': { make: makeIntakeClerk, requires: ['read:work', 'read:catalog', 'open:cascade', 'read:economy', 'propose'] },
+  'va-desk/assign-vendor': { make: makeVendorClerk, requires: ['read:work', 'read:economy', 'propose'] },
+  'lp-queue/approve-pay': { make: makePriceClerk, requires: ['read:work', 'read:economy', 'propose'] },
+  'osric/price-lease': { make: makeLeasingClerk, requires: ['read:work', 'read:economy', 'propose'] },
+  'res-desk/triage': { make: makeResidentClerk, requires: ['read:work', 'read:economy', 'propose'] },
+  'turn-desk/scope': { make: makeTurnoverClerk, requires: ['read:work', 'read:economy', 'propose'] },
+  'bd-desk/qualify': { make: makeBdrClerk, requires: ['read:economy', 'propose'] },
+  'acct-desk/reconcile': { make: makeAccountingClerk, requires: ['read:economy', 'propose'] },
 };
+
+/** The judgments that exist as clerks but grip a grammar this repository does
+ *  not ship. Verified against `agents/fixtures/founding-book.json` — every
+ *  commitment these two declare lives in the ~160-step grand-muster library,
+ *  which is loaded at deploy time and is not in this tree. They are listed
+ *  rather than omitted so the refusal can say WHY, and so nobody reads their
+ *  absence from the registry above as an oversight. */
+export const NEEDS_LOADED_BOOK = Object.freeze({
+  'viol-desk/classify': 'lease-violation/verify',
+  'col-desk/assess': 'collections-ladder/assess-late',
+});
 
 /** judgmentKnown — whether the rig can run this agent's judgment today (so a
  *  caller can ask before it asks, rather than catching the throw). */
 export function judgmentKnown(agent) {
   return `${agent.seat}/${agent.task}` in JUDGMENT_FACTORIES;
+}
+
+/** The tags an agent's belt is missing for its own judgment, or `[]`. Exposed
+ *  so a caller (the viewer, a test, a future fleet) can ask without running. */
+export function beltShortfall(agent) {
+  const entry = JUDGMENT_FACTORIES[`${agent.seat}/${agent.task}`];
+  if (!entry) return [];
+  return entry.requires.filter((tag) => !agent.belt.includes(tag));
 }
 
 /** run — deploy an agent against a backing and let it do its one bounded
@@ -311,8 +357,24 @@ export function judgmentKnown(agent) {
  *  exactly as `fleet.mjs` already does for this one seat). */
 export async function run(agent, backing, { core, complete, brainFor, now, cap, taken } = {}) {
   const key = `${agent.seat}/${agent.task}`;
-  const factory = JUDGMENT_FACTORIES[key];
-  if (!factory) throw new Error(`run(${agent.name}): no judgment wired for ${key} yet — see JUDGMENT_FACTORIES`);
+  const entry = JUDGMENT_FACTORIES[key];
+  if (!entry) {
+    const grammar = NEEDS_LOADED_BOOK[key];
+    if (grammar) {
+      throw new NoSuchGrammar(
+        `run(${agent.name}): ${key} grips ${grammar}, which is not in the founding book this repo ships. ` +
+          'It needs a loaded grand-muster library to have anything to work on — this is not a missing wire.',
+      );
+    }
+    throw new Error(`run(${agent.name}): no judgment wired for ${key} yet — see JUDGMENT_FACTORIES`);
+  }
+  const missing = beltShortfall(agent);
+  if (missing.length) {
+    throw new BeltRefusal(
+      `run(${agent.name}): belt cannot hold ${key} — missing [${missing.join(', ')}]. ` +
+        `Declared belt: [${agent.belt.join(', ')}].`,
+    );
+  }
   const { ctx } = deploy(agent, backing, { core, complete, brainFor });
   const doc = backing.readLog();
   // The clock is never invented. A memory backing carries no `wargame`, so an
@@ -325,7 +387,7 @@ export async function run(agent, backing, { core, complete, brainFor, now, cap, 
         'Aging is measured against this instant; defaulting it would silently date every reading.',
     );
   }
-  const clerk = factory(ctx);
+  const clerk = entry.make(ctx);
   const out = await clerk.run({
     doc,
     now: at,

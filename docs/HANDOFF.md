@@ -140,17 +140,9 @@ engine; only a belt-scoped `core` could ever have caught this gap.
 - `fleet.mjs` and `worker.ts` still read/write the chronicle their own way,
   not through `rig.mjs`'s backings. Migrating them is real work (the live,
   deployed entry points), not done here.
-- Only Mace/Milo/Mira are wired into `rig.mjs`'s `JUDGMENT_FACTORIES`. The
-  other seven named agents have clerk factories already — six in their own
-  desk modules (`res-desk.mjs`, `viol-desk.mjs`, `turn-desk.mjs`,
-  `bd-desk.mjs`, `col-desk.mjs`, `acct-desk.mjs`) and Lena's as
-  `makeLeasingClerk` in `clerks.mjs:848` — but are not yet reachable through
-  the rig. **It is NOT "one line per seat", as the first draft of this entry
-  claimed**: four of the seven (Rhys, Ross, Tess, Nell) carried belts that
-  omitted `read:economy` while their own modules read `core.coinCents` on the
-  first line of `run()`, so each would have thrown the moment it was deployed.
-  Belts fixed; a static sufficiency scan in `test/rig.test.ts` now catches the
-  class, proved by reintroducing the bug on Nell and watching it fail.
+- ~~Only Mace/Milo/Mira are wired.~~ **DONE — eight of ten are now wired and
+  driven** (see the entry below). The remaining two cannot be, and the reason
+  is a missing BOOK rather than a missing wire.
 - Everything Phase-2/3/4/5/6 of `docs/WRIT-THE-KNIGHTHOOD.md` still open
   below is unchanged by this session.
 
@@ -207,12 +199,52 @@ refuses at deploy, where the name is still in front of the reader); and
 `memoryBacking.readLog()` handed back its internal document by reference, so
 isolation was one-way.
 
-**Still true and NOT fixed:** a belt violation surfaces as a TypeError naming a
-domain function, not as a `BeltRefusal` beside the existing `BackingRefusal`. It
-fails closed — verified nothing is appended on the throw — but it satisfies
-WRIT-THE-GATE's property 3 and not its property 2. And `rig.mjs`'s own `run()`
-applies no identity guard; the viewer and `fleet.mjs` both wrap in
-`runGuardedModelWork`, but a direct caller of `run()` gets none.
+**Still true and NOT fixed:** `rig.mjs`'s own `run()` applies no identity
+guard; the viewer and `fleet.mjs` both wrap in `runGuardedModelWork`, but a
+direct caller of `run()` gets none. *(The `BeltRefusal` gap listed here is now
+closed — see the entry below.)*
+
+**2026-08-07 (last) — eight of the ten agents wired, driven, and the belt
+learned to refuse.** All green: `npm run build`, **515 tests**, `leakcheck`
+0 findings, `book:lint` exit 0.
+
+- **`BeltRefusal` closes the gap the previous entry left open.** A belt too
+  narrow for its judgment is now refused BEFORE the run, naming the missing
+  tag — not discovered as a `TypeError` on some domain function partway
+  through. Each judgment declares its `requires`, and **the declaration is not
+  trusted**: a test scans each clerk module's real `core.<fn>` references and
+  fails if `requires` drifts from the bytes. `NoSuchGrammar` is its sibling for
+  a judgment whose flow book this repo does not ship.
+
+- **Five more agents wired and driven with live brains** — Lena
+  (`lease-renewal/price`), Rhys (`violation-notice/classify`), Tess
+  (`move-out-relay/turn-scope`), Nell (`owner-onboarding/intake`), Bea
+  (`move-out-relay/deposit-accounting`). Each parks at the exact commitment its
+  own `COMMITMENTS` map names, every one stopping at `proposed` with an
+  `agent:<seat>` actor. Observed, not inferred: Lena raised a rent to
+  $1,721/mo earning a $275 renewal fee (escalated to Tier 2); Bea proposed a
+  partial deposit deduction — of $1,647 held, $763 to deductions and $884
+  refunded — with "no coin moves until ratified" in its own note.
+
+- **`atStepFixture` replaced five bespoke builders.** It walks the real engine
+  to park a case at any named step of any founding flow, and **refuses** a flow
+  or step the book lacks rather than parking somewhere else quietly. Proved to
+  bite twice: on a nonexistent step, and on a real step held by the right seat
+  that is nonetheless not that agent's commitment (`lease-renewal/countersign`
+  for Lena) — the case where a weaker fixture would find no work and still go
+  green.
+
+- **Ross and Dara are NOT wired, and that is a finding, not a gap.** Their only
+  commitments (`lease-violation/verify`, `collections-ladder/assess-late`) live
+  in the ~160-step grand-muster library, which is loaded at deploy time and is
+  not in this tree. They refuse with `NoSuchGrammar` naming the grammar, and a
+  test pins that those flows really are absent from the founding book — so if a
+  future book adds them, the test fails and they get wired instead of excused.
+
+- **The reachability check had to include the HOLDER, not just the step key.**
+  Every desk clerk gates on `r.next.step.holder === commit.holder`. A first pass
+  that matched step keys alone would have called agents reachable whose holder
+  the founding book seats differently.
 
 **2026-08-07 (later) — the gate grew hands. Three refusals now exist where there
 were none.** All green: `npm run build`, **461 tests** (was 442), `leakcheck`

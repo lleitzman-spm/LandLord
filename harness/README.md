@@ -98,13 +98,26 @@ Two backings satisfy the one interface (`readLog()` / `appendEvents(events)`,
 
 `run(agent, backing, {...})` deploys and lets the agent do its one bounded
 pass through the SAME judgment code the fleet already runs
-(`harness/clerks.mjs`) — the rig changes how an agent is built and where it
-reads/writes, not what it decides.
+(`harness/clerks.mjs` and the desk modules) — the rig changes how an agent is
+built and where it reads/writes, not what it decides.
+
+**Three refusals, each naming its own cause.** `BackingRefusal` (no standing
+War Game on the file backing), `BeltRefusal` (the belt is too narrow for the
+judgment — named before the run, rather than surfacing as a `TypeError` on
+some domain function partway through), and `NoSuchGrammar` (the judgment grips
+a flow book this repo does not ship). Each judgment declares the tags it
+`requires`, and `test/rig.test.ts` scans the clerk modules to fail if that
+declaration ever drifts from what the code actually reads.
+
+**Eight of the ten named agents are wired and driven.** Ross and Dara are not:
+their only commitments live in the grand-muster library loaded at deploy time,
+not in the founding book, so there is nothing here for them to work on. They
+refuse with the reason rather than appearing merely unimplemented.
 
 ## The viewer — one work order in, watch it reason
 
 ```
-./harness/run.sh viewer.mjs [Mace|Milo|Mira|all]
+./harness/run.sh viewer.mjs [Mace|Milo|Mira|Lena|Rhys|Tess|Nell|Bea|all]
 ```
 
 A standalone runner: no React, no board. It deploys a named agent against a
@@ -119,11 +132,22 @@ Tier-0 path) or set (real brain calls, same as the fleet).
 
 `harness/agents/fixtures.mjs` builds three stages of ONE work order's life —
 `rawIntakeFixture()` (before Mace), `vendorCommitmentFixture()` (before
-Milo), `settlementFixture()` (before Mira) — through the REAL flow engine
+Milo), `settlementFixture()` (before Mira) — plus **`atStepFixture()`**, the
+general form that parks a case at any named step of any founding flow, which
+is how every agent past the M family gets a fixture without a bespoke builder.
+It **refuses** a flow or step the book does not have, because a fixture that
+quietly lands on the wrong step tests the wrong judgment and still goes green.
+
+All of it runs through the REAL flow engine
 (`instantiateFlow`/`completeStep`), never a hand-typed event array, off a
 frozen snapshot of the founding catalog + flow book
 (`fixtures/founding-book.json`) rather than the live, mutable
 `data/chronicle.json`.
+
+One thing worth knowing when adding a fixture: the desk clerks gate on
+`step.holder === commit.holder`, so a fixture must match the **holder** the
+founding book seats that step with, not merely the step key. A step-key-only
+match looks reachable and then finds no work.
 
 ## Built so far
 

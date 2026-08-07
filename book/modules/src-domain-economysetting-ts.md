@@ -71,6 +71,7 @@ aliases:
 
 *These roads come from a shared source FILE, not from a semantic claim: the test file imports the module. Read it as "stands near", never as "proves".*
 
+- [[${name} works a real ${flowKey}/${stepKey} case and stops at a proposal]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a `done` written through a granted completeStep is stamped with the seat]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a belt tag that grants nothing is DECLARED as such, never left looking like a grant]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a deployed agent's core carries only functions its belt tags grant]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -88,13 +89,17 @@ aliases:
 - [[an id-keyed array merges by id, not by index]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an unknown belt tag is refused at deploy, not silently ignored]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[and CLEARS an invoice that stays inside it — both verdicts are reachable]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[and the grammars they need really are absent from the founding book]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[appendEvents on a memory backing never touches disk]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[appendEvents on a seedless chronicle refuses, not just readLog]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[atStepFixture refuses to park on a step the book does not have]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[buildAgent touches no I/O and needs no backing]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[counts each kind of override, and the house cap as one]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[deploy refuses a backing that does not implement the interface]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[each judgment's declared `requires` matches what its clerk module actually reads]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[every named agent carries a belt SUFFICIENT for the clerk that runs it]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[every roster agent deploys to a core with no ratify/pay tool present]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[every roster agent with a wired judgment has a sufficient belt]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[every roster entry constructs cleanly]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[fileBacking refuses a doc with no standing War Game]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[ignores a GL patch naming a role the chart does not have (leash: never invents an account)]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -119,10 +124,12 @@ aliases:
 - [[renames a GL account code and name by role]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[renewal flat→% : a new_rent-basis override yields a percentage of new rent via feeAmount]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[run refuses rather than inventing a clock when the backing carries none]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[run refuses with a BeltRefusal naming the missing tag]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[scalars overwrite; an unknown top-level field on the patch is ignored]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the capability table is DEEP frozen — its arrays cannot be widened]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the M family judgments are all known to this rig]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the record and the judgment name the SAME invoice figure]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[the two that cannot be driven refuse with the REASON, not a missing wire]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[undefined LEAVES a field; null on a brand-new rule just means absent]] — *imported by the test FILE (shared source, not a claim about this one test)*
 
 ---

@@ -81,6 +81,7 @@ aliases:
 *These roads come from a shared source FILE, not from a semantic claim: the test file imports the module. Read it as "stands near", never as "proves".*
 
 - [[`awaiting` is NOT an escape — it means parked on a clock, not on a person]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[${name} works a real ${flowKey}/${stepKey} case and stops at a proposal]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a `done` written through a granted completeStep is stamped with the seat]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a base-blind merge is unchanged — it still takes the writing session]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a batch that repeats an id inside itself opens one case, not two]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -135,9 +136,11 @@ aliases:
 - [[and CLEARS an invoice that stays inside it — both verdicts are reachable]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[and it says how few independent judgments that rests on]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[and the gate opens for a real, useful number of steps]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[and the grammars they need really are absent from the founding book]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[appendEvents on a memory backing never touches disk]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[appendEvents on a seedless chronicle refuses, not just readLog]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[approving the final step records that the case is DONE]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[atStepFixture refuses to park on a step the book does not have]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[buildAgent touches no I/O and needs no backing]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[caps what one court hears, keeping the heaviest and still every kind]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[carries the originating event id onto the opening record]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -147,6 +150,7 @@ aliases:
 - [[deploy refuses a backing that does not implement the interface]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[distinct signals on the same subject open distinct cases]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[drops non-string params, which is how a nested record would arrive]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[each judgment's declared `requires` matches what its clerk module actually reads]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[emits ONLY an opening and the hand to step one — never an approval or a completion]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[estateLabel resolves a slug to its label, falling back to the raw slug]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[every agreed signal names a flow and a reason — no silent entries]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -159,6 +163,7 @@ aliases:
 - [[every office an act leaves headless stands in the census]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[every other step still counts from the open date, unchanged]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[every roster agent deploys to a core with no ratify/pay tool present]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[every roster agent with a wired judgment has a sufficient belt]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[every roster entry constructs cleanly]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[every seat an act names resolves]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[every step of every named flow resolves — row, holder and key]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -206,6 +211,7 @@ aliases:
 - [[routes the over-limit spend signal a firm asked for]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[routing the same batch twice opens nothing the second time]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[run refuses rather than inventing a clock when the backing carries none]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[run refuses with a BeltRefusal naming the missing tag]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[skips a known signal whose flow this chronicle does not carry]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[skips a malformed row rather than opening a case with a hole in it]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[skips a signal it has never agreed on, and says so]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -226,6 +232,7 @@ aliases:
 - [[the seen-map key survives — the separator is a NUL byte, not a space]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the step IS anchored to the target date, not left to default]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the THE_REGENT role resolves against the census it is dealt into]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[the two that cannot be driven refuse with the REASON, not a missing wire]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the writing session keeps its own board change when it is the one that moved it]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[threads the estate through so the spend gate reads a per-estate cap]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[two fresh ids for the same condition in ONE batch open exactly one case]] — *imported by the test FILE (shared source, not a claim about this one test)*
