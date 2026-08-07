@@ -129,12 +129,16 @@ Fixed same-day:
    clean failure. Unknown event shapes count as advancing (fail closed). The
    no-conflict path is untouched: attempt one always writes onto the base the job
    read. Five tests in `test/commit-append.test.ts`.
-2. **HIGH — an agent-completed step is indistinguishable from a human's.**
-   `completeStep`→`answerStep` sets no `actor`, and the engine's own comment says
-   a human act carries none. Every swept `done` now reads as the operator's.
-   **This is now the top open finding**, and it is the natural pair to the
-   refusal above: the vault can tell an advancing batch from a parking one, but
-   the LOG still cannot tell who advanced it.
+2. ~~**HIGH — an agent-completed step is indistinguishable from a human's.**~~
+   **CLOSED 2026-08-07.** `actor` is stampable on any answering act; the clerks
+   stamp `agent:<seat>`, the grammar `proposeStep` already used, so one reading
+   recognises both. Absence keeps its old meaning (the operator), so no
+   historical event was reinterpreted. The hand-off to the next step is NOT
+   stamped — nobody acted, the ball moved — and the human ratchet stays
+   unstamped. Four tests in `test/flows.test.ts`.
+   **NOT YET DONE:** nothing READS the stamp. `readEscape` still cannot separate
+   swept from worked, which was half the reason this mattered; the field now
+   exists for that fold to be written against.
 3. ~~**MEDIUM-HIGH — the fleet toast counts sweeps as proposals**~~ **CLOSED
    2026-08-07.** `runFleet` returns two counts read off the EVENT KINDS, never
    off `records.length`: `proposals` (parked on a human) and `swept` (carried

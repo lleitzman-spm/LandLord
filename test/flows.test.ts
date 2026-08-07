@@ -322,3 +322,58 @@ describe('the automation gate', () => {
     expect(open.length).toBe(8);
   });
 });
+
+// ── Who advanced the step ───────────────────────────────────────────────────
+//
+// "A human act carries no actor" was sound while `done` could only BE a human
+// act. The sweep ended that: a clerk completes an `auto` step through this same
+// writer, and an unstamped completion made the machine's work read as the
+// operator's own hand — on the audit ledger, and in the ESCAPE RATE, which is
+// folded from this log and is the one number the product is judged by. A fold
+// that cannot tell a swept step from a worked one would have flattered it in
+// the direction nobody thinks to question.
+describe('an advanced step says whose hand it was', () => {
+  const tpl = FOUNDING_FLOWS[0];
+  const opts = { at: '2026-08-07T00:00:00.000Z', id: () => 'e1' };
+
+  it('a clerk’s completion carries its seat, in the same grammar a proposal uses', () => {
+    const [done] = completeStep(tpl, 'c-1', 0, { ...opts, actor: 'agent:va-desk' });
+    expect(done.kind).toBe('done');
+    expect(done.actor).toBe('agent:va-desk');
+    // The SAME grammar as proposeStep, so one reading recognises both — a
+    // second convention for machine authorship is a second thing to get wrong.
+    const proposed = proposeStep(tpl, 'c-1', 0, 'agent:va-desk', opts)!;
+    expect(proposed.actor).toBe(done.actor);
+  });
+
+  it('an UNSTAMPED completion still means the operator — the old meaning holds', () => {
+    // The whole log written before this existed is unstamped. If absence had
+    // been given a new meaning, every historical human act would have become
+    // unattributed in one commit.
+    const [done] = completeStep(tpl, 'c-1', 0, opts);
+    expect(done).not.toHaveProperty('actor');
+  });
+
+  it('the hand-off to the next step is NOT stamped — nobody acted, the ball moved', () => {
+    const events = completeStep(tpl, 'c-1', 0, { ...opts, actor: 'agent:va-desk' });
+    // The hand is `handed`, or `awaiting` when the next step waits on something
+    // outside the machine (`stepWaits`) — either way it is the ball moving.
+    const handed = events.find((e) => e.kind === 'handed' || e.kind === 'awaiting');
+    expect(handed, 'this template should hand a next step').toBeTruthy();
+    expect(handed).not.toHaveProperty('actor');
+  });
+
+  it('the human ratchet stays unstamped — approve and override are the operator’s', () => {
+    // Nothing here should let an agent wear a ratification. The refusal is in
+    // the writer (`refusesRatification`); this pins the ATTRIBUTION half.
+    const log: KingdomEvent[] = [];
+    const inst = instantiateFlow(tpl, 'a subject', opts);
+    log.push(...inst.events);
+    const parked = proposeStep(tpl, inst.caseId, 0, 'agent:va-desk', opts)!;
+    log.push(parked);
+    const ratified = approveStep(tpl, inst.caseId, 0, { ...opts, log });
+    expect(ratified.length).toBeGreaterThan(0);
+    expect(ratified[0].kind).toBe('approved');
+    expect(ratified[0]).not.toHaveProperty('actor');
+  });
+});

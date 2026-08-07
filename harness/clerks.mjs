@@ -302,8 +302,8 @@ export function makeIntakeClerk(ctx) {
           actor: `agent:${seat}`,
           note: `Identified as ${leaf.title} — put in motion as a ${tpl.title}.`,
         });
-        events.push(...core.completeStep(tpl, caseId, 0, { at, id, note: 'Report logged from the tenant intake.' }, params));
-        events.push(...core.completeStep(tpl, caseId, 1, { at, id, note: `Identified as ${leaf.title}.` }, params));
+        events.push(...core.completeStep(tpl, caseId, 0, { at, id, actor: `agent:${seat}`, note: 'Report logged from the tenant intake.' }, params));
+        events.push(...core.completeStep(tpl, caseId, 1, { at, id, actor: `agent:${seat}`, note: `Identified as ${leaf.title}.` }, params));
         const trade = params.trade ?? 'the trade';
         const urgency = params.urgency ?? 'routine';
         const gate = spendGateFor(core, doc, tpl, 2, params, estateId);
@@ -1053,7 +1053,16 @@ export function makeAdvanceClerk(ctx, seat) {
           while (index < r.template.steps.length) {
             const s = r.template.steps[index];
             if (s.holder !== seat || !core.mayRunUnattended(s, modeOf)) break;
-            const done = core.completeStep(r.template, r.caseId, index, { at, id }, params);
+            // STAMPED. An unattended completion says whose hand it was, in the
+            // same `agent:<seat>` grammar a proposal uses — otherwise the sweep
+            // reads as the operator's own work and flatters the escape rate.
+            const done = core.completeStep(
+              r.template,
+              r.caseId,
+              index,
+              { at, id, actor: `agent:${seat}` },
+              params,
+            );
             if (!done.length) break;
             events.push(...done);
             ran.push(core.titleOf(doc.catalog, s.catalogRow) || s.key);

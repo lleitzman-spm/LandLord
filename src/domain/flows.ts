@@ -908,6 +908,24 @@ export function fullParams(tpl: FlowTemplate, leaf?: FlowParams): FlowParams {
 // `overridden` below is the answer to it. The template is the plan and the log
 // is the truth: advancing hands the next TEMPLATE step, never a pre-emitted
 // future one.
+//
+// AMENDED 2026-08-07. "A human act carries no actor" was a sound convention
+// while `done` could only BE a human act — absence of an actor meant the
+// operator, because nothing else could reach the writer. The sweep ended that:
+// an advance clerk now completes a step the book declared `auto`, through this
+// same `completeStep`, and an unstamped `done` made the machine's work
+// indistinguishable from the operator's own hand.
+//
+// That is not a cosmetic gap. The escape rate is the governing number of this
+// product, and it is READ off the log; a fold that cannot tell a swept step from
+// a worked one cannot measure the thing the kingdom exists to drive down, and
+// would have flattered it in exactly the direction nobody would question. It
+// also breaks the audit ledger's plainest promise — that you can ask who did a
+// thing and get an answer.
+//
+// So `actor` is now stampable on any answering act, and absence keeps its
+// meaning: no actor is the operator. The clerks stamp `agent:<seat>`, the same
+// grammar `proposeStep` has always used, so one reading recognises both.
 
 /** One appended event answering the step in hand — the shared spine of the
  *  helpers below. Carries the step's catalog row and holder so the fold reads
@@ -917,11 +935,11 @@ function answerStep(
   caseId: string,
   index: number,
   kind: EventKind,
-  opts: { at: string; id: () => string; note?: string },
+  opts: { at: string; id: () => string; note?: string; actor?: string },
 ): KingdomEvent {
   const s = tpl.steps[index];
   const line = opts.note?.trim() ? ` — ${opts.note.trim()}` : '';
-  return {
+  const ev: KingdomEvent = {
     id: opts.id(),
     at: opts.at,
     caseId,
@@ -930,6 +948,11 @@ function answerStep(
     holder: s.holder,
     note: `Step ${index + 1}/${tpl.steps.length} · ${kind}${line}`,
   };
+  // Set only when named. An absent `actor` still means the operator's own hand,
+  // so every event written before this existed keeps the meaning it was written
+  // with — and a stamped empty string would be a third state nobody reads.
+  if (opts.actor) ev.actor = opts.actor;
+  return ev;
 }
 
 /** An operator agent's proposal on the step in hand (swing four): the clerk did
@@ -962,7 +985,7 @@ export function completeStep(
   tpl: FlowTemplate,
   caseId: string,
   index: number,
-  opts: { at: string; id: () => string; note?: string },
+  opts: { at: string; id: () => string; note?: string; actor?: string },
   params?: FlowParams,
 ): KingdomEvent[] {
   if (index < 0 || index >= tpl.steps.length) return [];
