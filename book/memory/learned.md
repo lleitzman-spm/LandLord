@@ -13,6 +13,29 @@ aliases:
 
 ← [[00 MEMORY]]
 
+## A negative claim from a scoped search is not a finding — 2026-08-07
+
+`docs/KINGDOM.md` says the vault keeps an append-only `chronicle_history` recording every write. A
+session grepped `src/` and `src/worker.ts`, found nothing writing it, and concluded **the
+constitution was asserting a safety net the tree did not build.** That conclusion was written into
+`docs/OPEN-QUESTIONS.md`, into `docs/HANDOFF.md`, and into a commit message — as a finding, with
+confidence — before anyone looked in `supabase/`.
+
+The table is real. `supabase/migrations/20260722_chronicle_history_identity.sql` defines an `AFTER`
+trigger on `chronicle` that inserts the whole document on every write. The canon was right the whole
+time. **The application code does not write it because a database trigger does**, which is precisely
+the kind of place a scoped grep does not reach.
+
+The general form, and it is the inverse of the one already on this shelf: an unchecked explanation is
+durable, and **an unchecked NEGATIVE is worse**, because "X does not exist" reads as a discovery
+rather than an absence of looking. Presence can be proved by one hit; absence cannot be proved by one
+search. Before writing down that something is missing, say out loud where it WOULD live if it
+existed — schema, migrations, infrastructure, another repository — and look there.
+
+It also came within one question of doing real damage: the operator had made an automation ruling
+conditional on that audit trail, and was told the trail did not exist. The correct answer was that
+their condition was already met.
+
 ## The session that read the gate writ then re-shipped its central fault — 2026-08-07
 
 A session spent its first hour reading `docs/WRIT-THE-GATE.md`, whose finding 2 is *"it is not

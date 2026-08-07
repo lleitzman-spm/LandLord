@@ -254,14 +254,19 @@ verified by `flowsAtFounding` reading true and by the fleet actually sweeping
 `flows.test.ts` (8 → 13 steps the gate opens for) pin these numbers so they
 cannot drift silently; each now carries the ruling that moved it.
 
-**RAISED BY THE RULING, AND IT NEEDS ONE:** the auto verdicts were given on the
-condition that the log is *"fully auditable"* and makes everything unwindable.
-**Unwinding works** (`strike` is wired, and readings fold from events).
-**Auditing does not:** `strike` DELETES rather than appending a reversal, so the
-log forgets its own corrections, and `KINGDOM.md:540` claims a
-`chronicle_history` recording every write that **no code in this tree
-implements**. Both predate the ruling; neither should be inherited silently.
-Written up in `docs/OPEN-QUESTIONS.md`.
+**RAISED BY THE RULING — and then the raiser was WRONG, corrected same day.**
+The auto verdicts were given on the condition that the log is *"fully
+auditable"* and makes everything unwindable. Checked, and the condition HOLDS:
+unwinding works (`strike` is wired, readings fold from events), and the vault's
+append-only `chronicle_history` is **real** — an `AFTER` trigger writing the
+whole document on every write (`supabase/migrations/`). This entry first claimed
+that table was canon-asserted and unimplemented. **That was false**, and it was
+published here, in `OPEN-QUESTIONS.md` and in a commit message before it was
+checked properly: the search was `src/`, and the answer lives in `supabase/`.
+**A negative claim from a scoped search is not a finding.** What survives is
+minor — `strike` removes an event rather than appending a reversal, so the
+DOCUMENT does not record its own correction even though the vault retains every
+version. Not a blocker. See `docs/OPEN-QUESTIONS.md`.
 
 **2026-08-07 (last) — the remaining four findings closed, and the scoping rule
 that hid two of them corrected.** All green: `npm run build`, **527 tests**,

@@ -12,36 +12,33 @@ would settle it.
 
 
 
-## The log can unwind a mistake but does not record that it did
+## ~~The log can unwind a mistake but does not record that it did~~ — WRONG, and corrected
 
-*Raised 2026-08-07, and it is load-bearing.* Five `vendor-dispatch` steps were
-moved to `auto` on the operator's ruling, given explicitly on the condition:
-*"as long as there is a fully auditable LOG. The log makes everything
-unwindable."* Checked against the bytes, that condition is half met.
+*Raised and RETRACTED 2026-08-07, the same session.* This entry claimed the
+vault's append-only `chronicle_history` (`docs/KINGDOM.md`) was asserted by the
+canon and implemented nowhere. **That was false.** It is a real table with an
+`AFTER` trigger on `chronicle` — `supabase/migrations/20260722_chronicle_history_identity.sql`
+— inserting the WHOLE document on every write. The canon was accurate; the
+finding was the error.
 
-**Unwinding works.** `strike(eventId)` is wired to a button in the Ledger
-(`LedgerView.tsx`), and because every reading is folded from events, removing a
-`done` genuinely un-completes the step. Agent acts now carry
-`actor: agent:<seat>`, so the machine's work is distinguishable from a person's.
+The mistake was mechanical and worth naming: the search was `src/` and
+`src/worker.ts`, and the answer lives in `supabase/`. **A negative claim built
+from a scoped search is not a finding** — absence of evidence inside the
+boundary you happened to grep is not evidence of absence. See [[learned]].
 
-**The audit does not.** Two gaps:
+**What survives, much reduced.** `strike(eventId)` removes an event from the
+document rather than appending a reversal, so the DOCUMENT does not record that
+a correction happened — you reconstruct it by diffing versions in
+`chronicle_history`. That is against the letter of "the event log is
+append-only; a correction is a reversing event, never an edit", and it is worth
+tidying one day. It is NOT a blocker on anything, and it does not weaken the
+condition the auto verdicts were given under: every struck event remains
+recoverable from the vault's history.
 
-1. **`strike` deletes rather than reverses** — `events.filter(e => e.id !== id)`.
-   After an unwind the log reads as though the step was never completed. It does
-   not record that the system did it and a human undid it. This contradicts the
-   kingdom's own law that the event log is append-only and *"a correction is a
-   reversing event, never an edit."*
-2. **`KINGDOM.md:540` claims the vault keeps an append-only `chronicle_history`
-   "that records every write."** Nothing in `src/server/` or `src/worker.ts`
-   writes one. So there is no second book to recover a struck event from either.
-   The constitution asserts a safety net this tree does not build.
-
-Neither gap was created by the auto ruling; both predate it. But the ruling
-rests on them, so it should be made deliberately rather than inherited.
-
-**The question is which:** make `strike` append a reversal (a real change to how
-every reading folds), implement `chronicle_history`, or amend the canon to stop
-claiming it. All three are defensible; guessing between them is not.
+One genuine caveat, stated because it is real: the history lives in the VAULT.
+A machine running on `data/chronicle.json` with no vault key has no history
+table — there, git is the courier and git history plays the same part, which is
+what `KINGDOM.md` already says.
 
 ## A reasoning clerk sits on a catalog row the book marks `auto`
 

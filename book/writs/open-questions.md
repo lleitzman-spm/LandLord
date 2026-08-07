@@ -31,7 +31,7 @@ aliases:
 
 ## Outline
 
-- The log can unwind a mistake but does not record that it did
+- ~~The log can unwind a mistake but does not record that it did~~ — WRONG, and corrected
 - A reasoning clerk sits on a catalog row the book marks `auto`
 - Fee terms that are currently one shape, and probably need to be many
 - ~~The spend gate's default when urgency is unknown~~ — SETTLED 2026-08-06
@@ -55,7 +55,6 @@ aliases:
 
 - [[src/domain/economy.ts]] — *this writ names the exported symbol `estimateSpendCents`; this writ names the exported symbol `spendGate`*
 - [[src/domain/flows.ts]] — *this writ names the exported symbol `mayRunUnattended`*
-- [[src/LedgerView.tsx]] — *this writ names the exported symbol `LedgerView`*
 - [[src/operator-core.ts]] — *this writ names the exported symbol `estimateSpendCents`; this writ names the exported symbol `spendGate`*
 
 ## artifact
@@ -87,7 +86,9 @@ aliases:
 *Files this page names by path. Again: a citation of the file, nothing more.*
 
 - [[CLAUDE.md]]
+- [[docs/KINGDOM.md]]
 - [[src/worker.ts]]
+- [[The Kingdom — Canon]]
 
 ---
 

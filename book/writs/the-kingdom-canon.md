@@ -127,6 +127,7 @@ aliases:
 
 *These name this FILE by its path. That is a citation of the source, not a claim about any one idea inside it — do not read a path citation as agreement, dependence or implementation.*
 
+- [[Open questions]]
 - [[The PM Task-and-Process Library (reference)]]
 - [[Writ — the economy pillar, re-expressed as chronicle readings]]
 - [[Writ — the first War Game (the proving ground)]]
