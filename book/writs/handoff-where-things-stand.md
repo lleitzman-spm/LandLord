@@ -47,14 +47,15 @@ aliases:
 ## Modules
 
 - [[src/CommandPalette.tsx]] — *this writ names the exported symbol `CommandPalette`*
+- [[src/domain/catalog.ts]] — *this writ names the exported symbol `catalogAtFounding`*
 - [[src/domain/economy.ts]] — *this writ names the exported symbol `spendGate`*
 - [[src/domain/escape.ts]] — *this writ names the exported symbol `EscapeReading`; this writ names the exported symbol `readEscape`*
-- [[src/domain/flows.ts]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `awaitsOutside`; +7 more*
+- [[src/domain/flows.ts]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `awaitsOutside`; +10 more*
 - [[src/domain/guilds.ts]] — *this writ names the exported symbol `SEAT_GUILD`*
 - [[src/domain/pods.ts]] — *this writ names the exported symbol `commissionCaseId`; this writ names the exported symbol `knightsOf`; +1 more*
 - [[src/domain/realm.ts]] — *this writ names the exported symbol `readRealm`*
 - [[src/LedgerView.tsx]] — *this writ names the exported symbol `LedgerView`*
-- [[src/operator-core.ts]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `awaitsOutside`; +5 more*
+- [[src/operator-core.ts]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `awaitsOutside`; +8 more*
 
 ## artifact
 
@@ -87,6 +88,7 @@ aliases:
 - [[src/domain/flows.ts]]
 - [[src/domain/guilds.ts]]
 - [[src/domain/realm.ts]]
+- [[src/server/vault.ts]]
 - [[The sibling boundary — who owns the process model]]
 - [[Writ — The Gate: the money law is written and nothing enforces it]]
 - [[Writ — The Knighthood: one seat, a Regent that is an agent, and the fief as a desk]]

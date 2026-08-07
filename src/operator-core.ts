@@ -32,11 +32,12 @@ export {
   // it so a clerk can SAY which of the two reasons it stopped for.
   mayRunUnattended,
   awaitsOutside,
+  flowsAtFounding,
 } from './domain/flows';
 export type { FlowBook, FlowTemplate, FlowParams, FlowInstance, FlowReading } from './domain/flows';
 
 // ── The catalog (the task-language the agent reads) ─────────────────────────
-export { findRow, rowsByDomain, titleOf, flowKeyFor, domainsOf, systemsOf } from './domain/catalog';
+export { findRow, rowsByDomain, titleOf, flowKeyFor, domainsOf, systemsOf, catalogAtFounding } from './domain/catalog';
 export type { Catalog, CatalogRow, DomainGroup } from './domain/catalog';
 
 // ── The event log (the queue the agent works off) ───────────────────────────

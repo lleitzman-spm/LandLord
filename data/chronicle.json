@@ -457,7 +457,7 @@
       "key": "renewal.owner-window",
       "title": "Owner authorization window",
       "class": "firm",
-      "mode": "auto",
+      "mode": "human",
       "domain": "renewals"
     },
     {
@@ -692,152 +692,156 @@
           "catalogRow": "notice-received",
           "holder": "pm-desk",
           "board": "Move-Out",
+          "note": "Notice logged and acknowledged; the clock starts.",
           "edge": {
             "after": 0
           },
-          "slaDays": 1,
-          "note": "Notice logged and acknowledged; the clock starts."
+          "slaDays": 1
         },
         {
           "key": "confirm-date",
           "catalogRow": "confirm-vacate-date",
           "holder": "pm-desk",
           "board": "Move-Out",
+          "note": "Vacate date confirmed in writing with the tenant.",
           "edge": {
             "after": 1
           },
-          "slaDays": 2,
-          "note": "Vacate date confirmed in writing with the tenant."
+          "slaDays": 2
         },
         {
           "key": "pre-inspection",
           "catalogRow": "schedule-pre-inspection",
           "holder": "alys",
           "board": "Move-Out",
+          "note": "Walk the unit before the tenant leaves; scope the turn.",
           "edge": {
             "after": -14,
-            "before": -7
-          },
-          "note": "Walk the unit before the tenant leaves; scope the turn."
+            "before": -7,
+            "anchor": "target"
+          }
         },
         {
           "key": "move-out-inspection",
           "catalogRow": "move-out-inspection",
           "holder": "alys",
           "board": "Move-Out",
+          "note": "Document condition against the deposit.",
           "edge": {
             "after": 0,
-            "before": 2
+            "before": 2,
+            "anchor": "target"
           },
-          "slaDays": 2,
-          "note": "Document condition against the deposit."
+          "slaDays": 2
         },
         {
           "key": "turn-scope",
           "catalogRow": "scope-the-turn",
           "holder": "va-desk",
           "board": "Move-Out",
+          "note": "Bids gathered, the turn scoped and priced.",
           "edge": {
             "after": 1,
             "before": 3
           },
-          "slaDays": 2,
-          "note": "Bids gathered, the turn scoped and priced."
+          "slaDays": 2
         },
         {
           "key": "owner-reserve",
           "catalogRow": "owner-reserve",
           "holder": "lp-queue",
           "board": "Deposit Transfer",
+          "note": "A ~$750 owner reserve, requested only inside the open window.",
           "edge": {
             "after": 3,
             "before": 10,
             "onOrAfterDayOfMonth": 15,
             "beforeDayOfMonth": 10
           },
-          "slaDays": 5,
-          "note": "A ~$750 owner reserve, requested only inside the open window."
+          "slaDays": 5
         },
         {
           "key": "turn-work",
           "catalogRow": "work-the-turn",
           "holder": "va-desk",
           "board": "Move-Out",
+          "note": "The turn itself: vendors dispatched, unit made ready.",
           "edge": {
             "after": 3,
             "before": 10
           },
-          "slaDays": 7,
-          "note": "The turn itself: vendors dispatched, unit made ready."
+          "slaDays": 7
         },
         {
           "key": "deposit-accounting",
           "catalogRow": "deposit-accounting",
           "holder": "alys",
           "board": "Deposit Transfer",
+          "note": "Deductions itemized and sent inside the statutory window.",
           "edge": {
             "after": 2,
-            "before": 21
+            "before": 21,
+            "anchor": "target"
           },
-          "slaDays": 3,
-          "note": "Deductions itemized and sent inside the statutory window."
+          "slaDays": 3
         },
         {
           "key": "deposit-transfer",
           "catalogRow": "transfer-the-deposit",
           "holder": "lp-queue",
           "board": "Deposit Transfer",
+          "note": "What is owed moves: refund out, damages to the owner.",
           "edge": {
             "after": 21,
-            "before": 30
+            "before": 30,
+            "anchor": "target"
           },
-          "slaDays": 5,
-          "note": "What is owed moves: refund out, damages to the owner."
+          "slaDays": 5
         },
         {
           "key": "final-walk",
           "catalogRow": "final-walk",
           "holder": "osric",
           "board": "Leasing",
+          "note": "Rent-ready verified before the listing goes live.",
           "edge": {
             "after": 10,
             "before": 12
-          },
-          "note": "Rent-ready verified before the listing goes live."
+          }
         },
         {
           "key": "list-unit",
           "catalogRow": "list-unit",
           "holder": "osric",
           "board": "Leasing",
+          "note": "Photos, price, syndication — the unit is on the market.",
           "edge": {
             "after": 12
           },
-          "slaDays": 2,
-          "note": "Photos, price, syndication — the unit is on the market."
+          "slaDays": 2
         },
         {
           "key": "show-and-screen",
           "catalogRow": "show-and-screen",
           "holder": "osric",
           "board": "Leasing",
+          "note": "Showings worked, applicants screened.",
           "edge": {
             "after": 12,
             "before": 40
-          },
-          "note": "Showings worked, applicants screened."
+          }
         },
         {
           "key": "weekly-price-drop",
           "catalogRow": "vacancy-price-drop",
           "holder": "osric",
           "board": "Leasing",
+          "condition": "until leased",
+          "note": "The vacancy loop: $25 off the ask each week it sits.",
           "edge": {
             "after": 19
           },
-          "repeatEveryDays": 7,
-          "condition": "until leased",
-          "note": "The vacancy loop: $25 off the ask each week it sits."
+          "repeatEveryDays": 7
         }
       ]
     },
@@ -851,96 +855,96 @@
           "catalogRow": "work-order",
           "holder": "pm-desk",
           "board": "Intake",
+          "note": "The report logged — what broke, which door, how it reached us.",
           "edge": {
             "after": 0
           },
-          "slaDays": 1,
-          "note": "The report logged — what broke, which door, how it reached us."
+          "slaDays": 1
         },
         {
           "key": "identify",
           "catalogRow": "work-order",
           "holder": "mabel",
           "board": "Intake",
+          "note": "Walked down the tree to a leaf — a {trade} call, {urgency} priority.",
           "edge": {
             "after": 0
           },
-          "slaDays": 1,
-          "note": "Walked down the tree to a leaf — a {trade} call, {urgency} priority."
+          "slaDays": 1
         },
         {
           "key": "assign-vendor",
           "catalogRow": "work-order",
           "holder": "va-desk",
           "board": "Dispatch",
+          "note": "A artisan of the {trade} trade chosen for a {urgency} call.",
           "edge": {
             "after": 0,
             "before": 1
           },
-          "slaDays": 1,
-          "note": "A artisan of the {trade} trade chosen for a {urgency} call."
+          "slaDays": 1
         },
         {
           "key": "dispatch",
           "catalogRow": "work-order",
           "holder": "va-desk",
           "board": "Dispatch",
+          "note": "The {trade} artisan dispatched — {urgency} window, tenant notified.",
           "edge": {
             "after": 0,
             "before": 1
           },
-          "slaDays": 1,
-          "note": "The {trade} artisan dispatched — {urgency} window, tenant notified."
+          "slaDays": 1
         },
         {
           "key": "invoice-in",
           "catalogRow": "work-order",
           "holder": "lp-queue",
           "board": "Settlement",
+          "note": "The {trade} artisan's invoice received and matched to the work.",
           "edge": {
             "after": 1,
             "before": 7
           },
-          "slaDays": 5,
-          "note": "The {trade} artisan's invoice received and matched to the work."
+          "slaDays": 5
         },
         {
           "key": "confirm-work",
           "catalogRow": "work-order",
           "holder": "mabel",
           "board": "Dispatch",
+          "note": "The fix confirmed with the tenant — the {trade} work holds.",
           "edge": {
             "after": 1,
             "before": 7
           },
-          "slaDays": 3,
-          "note": "The fix confirmed with the tenant — the {trade} work holds."
+          "slaDays": 3
         },
         {
           "key": "pay-vendor",
           "catalogRow": "work-order",
           "holder": "lp-queue",
           "board": "Settlement",
+          "note": "The artisan paid — only inside the open window of the circuit.",
           "edge": {
             "after": 3,
             "before": 10,
             "onOrAfterDayOfMonth": 15,
             "beforeDayOfMonth": 10
           },
-          "slaDays": 5,
-          "note": "The artisan paid — only inside the open window of the circuit."
+          "slaDays": 5
         },
         {
           "key": "post-to-accounting",
           "catalogRow": "work-order",
           "holder": "lp-queue",
           "board": "Settlement",
+          "note": "The cost posted to the door and its owner — the ledger balanced.",
           "edge": {
             "after": 3,
             "before": 14
           },
-          "slaDays": 5,
-          "note": "The cost posted to the door and its owner — the ledger balanced."
+          "slaDays": 5
         }
       ]
     },
@@ -954,78 +958,78 @@
           "catalogRow": "violation-notice",
           "holder": "pm-desk",
           "board": "Intake",
+          "note": "The notice logged — HOA, owner, or vendor; what, which door, from whom.",
           "edge": {
             "after": 0
-          },
-          "note": "The notice logged — HOA, owner, or vendor; what, which door, from whom."
+          }
         },
         {
           "key": "classify",
           "catalogRow": "violation.classify",
           "holder": "va-desk",
           "board": "Intake",
+          "note": "Classified by kind and severity — the {violation} named.",
           "edge": {
             "after": 0
-          },
-          "note": "Classified by kind and severity — the {violation} named."
+          }
         },
         {
           "key": "decide",
           "catalogRow": "violation.decide",
           "holder": "mabel",
           "board": "Judgment",
+          "note": "The call a human makes: cure, waive, or send the {violation} up the ladder.",
           "edge": {
             "after": 1
           },
-          "slaDays": 2,
-          "note": "The call a human makes: cure, waive, or send the {violation} up the ladder."
+          "slaDays": 2
         },
         {
           "key": "draft-notice",
           "catalogRow": "violation.draft",
           "holder": "va-desk",
           "board": "Notice",
+          "note": "The cure notice drafted from the template — the {days}-day window stated.",
           "edge": {
             "after": 1,
             "before": 3
           },
-          "slaDays": 2,
-          "note": "The cure notice drafted from the template — the {days}-day window stated."
+          "slaDays": 2
         },
         {
           "key": "serve",
           "catalogRow": "violation.serve",
           "holder": "pm-desk",
           "board": "Notice",
+          "note": "Served and recorded — the legal gate kept, the clock on record.",
           "edge": {
             "after": 2,
             "before": 4
           },
-          "slaDays": 2,
-          "note": "Served and recorded — the legal gate kept, the clock on record."
+          "slaDays": 2
         },
         {
           "key": "cure-window",
           "catalogRow": "violation.cure",
           "holder": "mabel",
           "board": "Follow-up",
+          "condition": "until cured",
+          "note": "The cure period worked — reminded each week it stands open.",
           "edge": {
             "after": 3
           },
-          "repeatEveryDays": 7,
-          "condition": "until cured",
-          "note": "The cure period worked — reminded each week it stands open."
+          "repeatEveryDays": 7
         },
         {
           "key": "close",
           "catalogRow": "violation.close",
           "holder": "pm-desk",
           "board": "Close",
+          "note": "The outcome recorded and the case closed — cured, or handed up the ladder.",
           "edge": {
             "after": 10
           },
-          "slaDays": 3,
-          "note": "The outcome recorded and the case closed — cured, or handed up the ladder."
+          "slaDays": 3
         }
       ]
     },
@@ -1039,107 +1043,107 @@
           "catalogRow": "renewal",
           "holder": "lp-queue",
           "board": "Renewal",
+          "note": "The T-90 window opens — the term in sight, the file pulled.",
           "edge": {
             "after": 0
-          },
-          "note": "The T-90 window opens — the term in sight, the file pulled."
+          }
         },
         {
           "key": "price",
           "catalogRow": "renewal.price",
           "holder": "osric",
           "board": "Pricing",
+          "note": "The rent call a human makes — hold, raise by {increase}, or let the door go.",
           "edge": {
             "after": 1
           },
-          "slaDays": 3,
-          "note": "The rent call a human makes — hold, raise by {increase}, or let the door go."
+          "slaDays": 3
         },
         {
           "key": "draft-offer",
           "catalogRow": "renewal.draft-offer",
           "holder": "lp-queue",
           "board": "Offer",
+          "note": "The renewal offer drafted at the set {rent} — the packet staged.",
           "edge": {
             "after": 2,
             "before": 5
           },
-          "slaDays": 2,
-          "note": "The renewal offer drafted at the set {rent} — the packet staged."
+          "slaDays": 2
         },
         {
           "key": "send-offer",
           "catalogRow": "renewal.send-offer",
           "holder": "lp-queue",
           "board": "Offer",
+          "note": "The offer sent to the tenant — the term and the {rent} on the table.",
           "edge": {
             "after": 3,
             "before": 6
           },
-          "slaDays": 1,
-          "note": "The offer sent to the tenant — the term and the {rent} on the table."
+          "slaDays": 1
         },
         {
           "key": "owner-window",
           "catalogRow": "renewal.owner-window",
           "holder": "lp-queue",
           "board": "Owner",
+          "condition": "until the owner answers",
+          "note": "The owner's window — an unanswered window is an absence, never a consent.",
           "edge": {
             "after": 3,
             "before": 10
           },
-          "slaDays": 7,
-          "condition": "silence is authorization",
-          "note": "The owner's window — silence past it stands as consent."
+          "slaDays": 7
         },
         {
           "key": "tenant-response",
           "catalogRow": "renewal.tenant-response",
           "holder": "lp-queue",
           "board": "Offer",
+          "condition": "until signed",
+          "note": "The tenant chased each week — signed, or the term runs month-to-month.",
           "edge": {
             "after": 6
           },
-          "repeatEveryDays": 7,
-          "condition": "until signed",
-          "note": "The tenant chased each week — signed, or the term runs month-to-month."
+          "repeatEveryDays": 7
         },
         {
           "key": "countersign",
           "catalogRow": "renewal.countersign",
           "holder": "osric",
           "board": "Execution",
+          "note": "The broker's signature — the one hand the machine never holds.",
           "edge": {
             "after": 20,
             "before": 30
           },
-          "slaDays": 2,
-          "note": "The broker's signature — the one hand the machine never holds."
+          "slaDays": 2
         },
         {
           "key": "post-fee",
           "catalogRow": "renewal.fee",
           "holder": "lp-queue",
           "board": "Settlement",
+          "note": "The renewal fee posted — only inside the open window of the circuit.",
           "edge": {
             "after": 20,
             "before": 30,
             "onOrAfterDayOfMonth": 15,
             "beforeDayOfMonth": 10
           },
-          "slaDays": 5,
-          "note": "The renewal fee posted — only inside the open window of the circuit."
+          "slaDays": 5
         },
         {
           "key": "record",
           "catalogRow": "renewal.record",
           "holder": "lp-queue",
           "board": "Close",
+          "note": "Filed and notified — unsigned rolls to month-to-month with the premium.",
           "edge": {
             "after": 25
           },
-          "slaDays": 2,
-          "note": "Filed and notified — unsigned rolls to month-to-month with the premium."
+          "slaDays": 2
         }
       ]
     },
@@ -1153,103 +1157,103 @@
           "catalogRow": "owner-onboarding",
           "holder": "pm-desk",
           "board": "Intake",
+          "note": "The owner intake logged — the property, the doors, the terms sought.",
           "edge": {
             "after": 0
-          },
-          "note": "The owner intake logged — the property, the doors, the terms sought."
+          }
         },
         {
           "key": "agreement",
           "catalogRow": "onboarding.agreement",
           "holder": "osric",
           "board": "Agreement",
+          "note": "The management agreement — a signature and a judgment, kept human.",
           "edge": {
             "after": 1
           },
-          "slaDays": 3,
-          "note": "The management agreement — a signature and a judgment, kept human."
+          "slaDays": 3
         },
         {
           "key": "set-up-records",
           "catalogRow": "onboarding.setup",
           "holder": "va-desk",
           "board": "Setup",
+          "note": "Records opened and defaults set in the system of record.",
           "edge": {
             "after": 2,
             "before": 5
           },
-          "slaDays": 3,
-          "note": "Records opened and defaults set in the system of record."
+          "slaDays": 3
         },
         {
           "key": "walkthrough",
           "catalogRow": "onboarding.walkthrough",
           "holder": "alys",
           "board": "Onsite",
+          "note": "The property walked — the onsite judgment the machine can't make.",
           "edge": {
             "after": 2,
             "before": 7
           },
-          "slaDays": 4,
-          "note": "The property walked — the onsite judgment the machine can't make."
+          "slaDays": 4
         },
         {
           "key": "verify-insurance",
           "catalogRow": "onboarding.insurance",
           "holder": "va-desk",
           "board": "Compliance",
+          "note": "Owner insurance verified and on file — the coverage gate.",
           "edge": {
             "after": 3,
             "before": 8
           },
-          "slaDays": 5,
-          "note": "Owner insurance verified and on file — the coverage gate."
+          "slaDays": 5
         },
         {
           "key": "make-ready",
           "catalogRow": "onboarding.make-ready",
           "holder": "va-desk",
           "board": "Make-Ready",
+          "condition": "if the door stands vacant",
+          "note": "The make-ready batched — only where a door comes empty.",
           "edge": {
             "after": 5
-          },
-          "condition": "if the door stands vacant",
-          "note": "The make-ready batched — only where a door comes empty."
+          }
         },
         {
           "key": "lockbox",
           "catalogRow": "onboarding.lockbox",
           "holder": "alys",
           "board": "Onsite",
+          "note": "Keys logged and the lockbox hung — the physical leg.",
           "edge": {
             "after": 5,
             "before": 9
           },
-          "slaDays": 3,
-          "note": "Keys logged and the lockbox hung — the physical leg."
+          "slaDays": 3
         },
         {
           "key": "first-report",
           "catalogRow": "onboarding.report",
           "holder": "pm-desk",
           "board": "Report",
+          "note": "The first owner report sent — the relationship opened on the books.",
           "edge": {
             "after": 7,
             "before": 12
           },
-          "slaDays": 3,
-          "note": "The first owner report sent — the relationship opened on the books."
+          "slaDays": 3
         },
         {
           "key": "go-live",
           "catalogRow": "onboarding.go-live",
           "holder": "osric",
           "board": "Leasing",
+          "condition": "if the door stands vacant",
+          "note": "Built and syndicated — the vacant door goes to market.",
           "edge": {
             "after": 10
-          },
-          "condition": "if the door stands vacant",
-          "note": "Built and syndicated — the vacant door goes to market."
+          }
         }
       ]
     }

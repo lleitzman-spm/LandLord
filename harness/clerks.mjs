@@ -1001,6 +1001,32 @@ export function makeAdvanceClerk(ctx, seat) {
       // the CATALOG ROW, so this map is the lookup `mayRunUnattended` wants.
       const modeOf = new Map((doc.catalog ?? []).map((row) => [row.key, row.mode]));
 
+      // THE SWEEP RUNS ONLY AGAINST AN AUDITED BOOK.
+      //
+      // `mode: 'auto'` is a claim, and the claim is only as good as the hand that
+      // wrote it. The FOUNDING books were read step by step before the sweep was
+      // switched on. The grand muster's loaded library was not: `deployGrand`
+      // swaps in a ~160-step book whose `mode` was authored to mean "a PM shop
+      // could in principle automate this", which is NOT a grant of authority to
+      // assert the work happened. Left ungated, this clerk was measured
+      // completing — unattended, on that book — a statutory deposit disposition
+      // and refund, a late-fee assessment, a rent posting, and a SHOWING, which
+      // asserts a physical event occurred that nobody observed.
+      //
+      // `awaitsOutside` cannot catch those: none of them carries a condition, a
+      // repeat or a window. Nothing structural distinguishes them. The only
+      // honest guard is provenance — so the sweep is refused on any book this
+      // repository has not read, and such a book falls back to proposing, which
+      // is exactly the old behaviour and safe by construction.
+      //
+      // To widen it: audit the loaded book's `auto` rows one at a time, the way
+      // the founding thirteen were, and say so here. Do not relax the check.
+      const audited =
+        typeof core.flowsAtFounding === 'function' &&
+        typeof core.catalogAtFounding === 'function' &&
+        core.flowsAtFounding(doc.flows) &&
+        core.catalogAtFounding(doc.catalog);
+
       for (let i = 0; i < cap && i < targets.length; i++) {
         const r = targets[i];
         const at = now;
@@ -1021,7 +1047,7 @@ export function makeAdvanceClerk(ctx, seat) {
         // leave a cascade parked mid-stride for no reason. It stops at a seat
         // boundary by design: a clerk works its own desk, and the neighbouring
         // desk's clerk takes it from there.
-        if (core.mayRunUnattended(r.next.step, modeOf)) {
+        if (audited && core.mayRunUnattended(r.next.step, modeOf)) {
           let index = r.next.index - 1;
           const ran = [];
           while (index < r.template.steps.length) {

@@ -40,6 +40,7 @@ aliases:
 
 ### Writs that specify it
 
+- [[Handoff — where things stand]] — *this writ names the exported symbol `catalogAtFounding`*
 - [[The Kingdom — Canon]] — *this writ names the exported symbol `CatalogRow`*
 - [[The PM Task-and-Process Library (reference)]] — *this writ names the exported symbol `CatalogRow`; this writ names the exported symbol `domainsOf`; +3 more*
 - [[Writ — the flow engine (the operator's spine)]] — *this writ names the exported symbol `FOUNDING_CATALOG`*

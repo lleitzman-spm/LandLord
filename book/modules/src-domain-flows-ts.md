@@ -46,7 +46,7 @@ aliases:
 
 ### Writs that specify it
 
-- [[Handoff — where things stand]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `awaitsOutside`; +7 more*
+- [[Handoff — where things stand]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `awaitsOutside`; +10 more*
 - [[The Kingdom — Canon]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `completeStep`; +6 more*
 - [[The PM Task-and-Process Library (reference)]] — *this writ names the exported symbol `FlowTemplate`; this writ names the exported symbol `instantiateFlow`; +1 more*
 - [[Writ — the flow engine (the operator's spine)]] — *this writ names the exported symbol `FOUNDING_FLOWS`*

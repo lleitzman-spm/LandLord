@@ -94,6 +94,57 @@ compared to a date), and `readEscape` is still unscoped by seed.
   and fail *silently*, because a rate of `null` reads as "nothing has happened
   yet". There is a test named for exactly that.
 
+**AN ADVERSARIAL REVIEW OF THE SAME DAY'S WORK FOUND TWELVE THINGS. Two were
+dangerous and are fixed; ten are open and listed here because they are real.**
+
+Fixed same-day:
+
+- **The sweep was armed against a book nobody audited.** `mayRunUnattended` was
+  measured on the FOUNDING books, but `modeOf` reads `doc.catalog`, and
+  `deployGrand` swaps in a ~160-step library whose `mode` was authored to mean
+  *"a PM shop could in principle automate this"* — not a grant of authority to
+  assert the work happened. Driven against it, the clerk completed **unattended**
+  a statutory deposit disposition and refund, a late-fee assessment, a rent
+  posting, and a **showing** (asserting a physical event nobody observed).
+  `awaitsOutside` cannot catch these — none carries a condition, repeat or
+  window. The sweep is now gated on `flowsAtFounding && catalogAtFounding`;
+  an unaudited book falls back to proposing. **To widen it, audit the loaded
+  book's `auto` rows one at a time. Do not relax the check.**
+- **The mode flip had not reached the running app.** `data/chronicle.json`
+  carries its own catalog and flow shelves, so the stored doc still read
+  `mode: "auto"` and `condition: "silence is authorization"`. The browser drive
+  could not tell which guard held — and it was the stale condition, not the mode
+  flip. **This is exactly the hazard `book/memory/learned.md` already records**
+  ("a generated page is not where a running game reads its rules") and it was
+  walked into anyway. The books are now deployed to the stored chronicle.
+
+**Open, ranked — none of these is speculative; each names a file:line:**
+
+1. **HIGH — the vault replays an ADVANCING batch.** `src/server/vault.ts:119-132`
+   justifies replay-on-conflict because the fleet's output was pure append and a
+   duplicate `proposed` is a no-op. That is no longer true. A concurrent human
+   ratification can be overwritten by a replayed `done`, marking a step nobody
+   saw as complete.
+2. **HIGH — an agent-completed step is indistinguishable from a human's.**
+   `completeStep`→`answerStep` sets no `actor`, and the engine's own comment says
+   a human act carries none. Every swept `done` now reads as the operator's.
+3. **MEDIUM-HIGH — the fleet toast counts sweeps as proposals** and offers a road
+   to an empty Ledger (`run-fleet.mjs:70` vs `events.ts:264-270`). A dead button.
+4. **MEDIUM — `mayRunUnattended` is wired into 1 of 11 clerks**, and
+   `harness/res-desk.mjs:65` still proposes an `auto` step; the intake clerk
+   completes two `human` steps unconditionally.
+5. **MEDIUM — the ratification guard is TOCTOU through `handFlow`**, which reads
+   the render snapshot and writes through `mutate`.
+6. **MEDIUM — `completeStep` is now the loose door**: bounds-checked only, and
+   "Mark done" renders unconditionally.
+7. **MEDIUM — the refusal leaves no distinguishable record**, which is the writ's
+   own property 2 unmet.
+8. **LOW ×4** — dead `overridden` Approve branch; the sweep's audit line names the
+   catalog row not the step; and **fixing finding 4 (the calendar window) would
+   silently arm unattended owner disbursement**, because that clause in
+   `awaitsOutside` is the only thing currently barring it. That coupling needs a
+   second gate before finding 4 is touched.
+
 **A verified strike list exists for Phase 5, and it CORRECTED this session's own
 writ before anything was deleted:**
 

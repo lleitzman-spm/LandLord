@@ -76,7 +76,7 @@ aliases:
 - [[src/domain/throne.ts]] — *this writ names the exported symbol `readThrone`*
 - [[src/domain/wargame.ts]] — *this writ names the exported symbol `dealtGame`*
 - [[src/LedgerView.tsx]] — *this writ names the exported symbol `LedgerView`*
-- [[src/operator-core.ts]] — *this writ names the exported symbol `readFlow`*
+- [[src/operator-core.ts]] — *this writ names the exported symbol `catalogAtFounding`; this writ names the exported symbol `flowsAtFounding`; +1 more*
 - [[src/wargame-core.ts]] — *this writ names the exported symbol `dealtGame`; this writ names the exported symbol `normalizeChronicle`*
 
 ## artifact

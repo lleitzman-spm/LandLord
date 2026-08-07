@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-89 lines · 78 exported symbols.
+90 lines · 80 exported symbols.
 
 ## What the file says of itself
 
@@ -36,8 +36,8 @@ aliases:
 
 ## Shape
 
-- **Lines:** 89
-- **Exported symbols (78):** `BankId`, `BankRec`, `BankRecs`, `CaseReading`, `Catalog`, `CatalogRow`, `DomainGroup`, `EconomyBook`, `EconomySettingPatch`, `EventKind`, `EventLog`, `FOUNDING_ECONOMY`, `FeeRule`, `FlowBook`, `FlowInstance`, `FlowParams`, `FlowReading`, `FlowTemplate`, `IdentityFinding`, `IdentityLeakError`, `KingdomEvent`, `LedgerAccount`, `MoneyEvent`, `MoneyKind`, `MoneyLog`, `Posting`, `SpendDisposition`, `SpendGate`, `SpendReconciliation`, `ageInDays`, `applyEconomySetting`, `approveStep`, `assertNoIdentity`, `awaitingHuman`, `awaitsOutside`, `balanceOf`, `booksBalance`, `bridgeCheck`, `coinCents`, `completeStep`, `domainsOf`, `estimateSpendCents`, `feeAmount`, `feeRuleFor`, `findIdentity`, `findRow`, `flowKeyFor`, `fullParams`, `guardComplete`, `handStep`, `instantiateFlow`, `lateFeeSplit`, `mtmSplit`, `needsOwnerApproval`, `overrideStep`, `paramsOf`, `postingsFor`, `proposeStep`, `queues`, `readBankRecs`, `readBudgetVsActual`, `readCase`, `readCases`, `readCompliance`, `readCorporateCoffers`, `readFlow`, `readFlows`, `readOwnerStatement`, `readPnL`, `readPostings`, `readSolvency`, `reconcileSpend`, `rowsByDomain`, `spendCapFor`, `spendGate`, `systemsOf`, `titleOf`, `vendorSettlementMoney`
+- **Lines:** 90
+- **Exported symbols (80):** `BankId`, `BankRec`, `BankRecs`, `CaseReading`, `Catalog`, `CatalogRow`, `DomainGroup`, `EconomyBook`, `EconomySettingPatch`, `EventKind`, `EventLog`, `FOUNDING_ECONOMY`, `FeeRule`, `FlowBook`, `FlowInstance`, `FlowParams`, `FlowReading`, `FlowTemplate`, `IdentityFinding`, `IdentityLeakError`, `KingdomEvent`, `LedgerAccount`, `MoneyEvent`, `MoneyKind`, `MoneyLog`, `Posting`, `SpendDisposition`, `SpendGate`, `SpendReconciliation`, `ageInDays`, `applyEconomySetting`, `approveStep`, `assertNoIdentity`, `awaitingHuman`, `awaitsOutside`, `balanceOf`, `booksBalance`, `bridgeCheck`, `catalogAtFounding`, `coinCents`, `completeStep`, `domainsOf`, `estimateSpendCents`, `feeAmount`, `feeRuleFor`, `findIdentity`, `findRow`, `flowKeyFor`, `flowsAtFounding`, `fullParams`, `guardComplete`, `handStep`, `instantiateFlow`, `lateFeeSplit`, `mtmSplit`, `needsOwnerApproval`, `overrideStep`, `paramsOf`, `postingsFor`, `proposeStep`, `queues`, `readBankRecs`, `readBudgetVsActual`, `readCase`, `readCases`, `readCompliance`, `readCorporateCoffers`, `readFlow`, `readFlows`, `readOwnerStatement`, `readPnL`, `readPostings`, `readSolvency`, `reconcileSpend`, `rowsByDomain`, `spendCapFor`, `spendGate`, `systemsOf`, `titleOf`, `vendorSettlementMoney`
 
 ## Modules
 
@@ -52,15 +52,15 @@ aliases:
 
 ### Writs that specify it
 
-- [[Handoff — where things stand]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `awaitsOutside`; +5 more*
+- [[Handoff — where things stand]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `awaitsOutside`; +8 more*
 - [[Open questions]] — *this writ names the exported symbol `estimateSpendCents`; this writ names the exported symbol `spendGate`*
 - [[The Kingdom — Canon]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `CatalogRow`; +15 more*
 - [[The PM Task-and-Process Library (reference)]] — *this writ names the exported symbol `CatalogRow`; this writ names the exported symbol `domainsOf`; +6 more*
 - [[Writ — the economy pillar, re-expressed as chronicle readings]] — *this writ names the exported symbol `EconomyBook`; this writ names the exported symbol `feeAmount`; +7 more*
 - [[Writ — The Gate: the money law is written and nothing enforces it]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `overrideStep`; +2 more*
-- [[Writ — the Land: pods, knights, owners, and guilds (the realm remodeled)]] — *this writ names the exported symbol `readFlow`*
+- [[Writ — the Land: pods, knights, owners, and guilds (the realm remodeled)]] — *this writ names the exported symbol `catalogAtFounding`; this writ names the exported symbol `flowsAtFounding`; +1 more*
 - [[Writ — the operator's hands (swing two, part one)]] — *this writ names the exported symbol `handStep`; this writ names the exported symbol `readFlow`*
-- [[Writ — the task-language, the consequences, and the Regent's seat]] — *this writ names the exported symbol `CatalogRow`; this writ names the exported symbol `domainsOf`; +9 more*
+- [[Writ — the task-language, the consequences, and the Regent's seat]] — *this writ names the exported symbol `catalogAtFounding`; this writ names the exported symbol `CatalogRow`; +11 more*
 
 ### Facts it depends on
 
