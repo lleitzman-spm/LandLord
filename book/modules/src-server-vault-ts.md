@@ -39,6 +39,10 @@ aliases:
 
 ## Backlinks
 
+### Writs that specify it
+
+- [[Handoff — where things stand]] — *this writ names the exported symbol `ADVANCING_KINDS`; this writ names the exported symbol `commitAppend`; +1 more*
+
 ### Entities
 
 - [[The vault]] — *declared in `knowledge/entities.json`*
@@ -73,12 +77,6 @@ aliases:
 - [[reports error on a refused write]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[revFilter matches null-or-0 at base 0 (bootstrap), exact past that]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[revOf reads a numeric rev, else 0]] — *imported by the test FILE (shared source, not a claim about this one test)*
-
-## Documents that cite this source
-
-*These name this FILE by its path. That is a citation of the source, not a claim about any one idea inside it — do not read a path citation as agreement, dependence or implementation.*
-
-- [[Handoff — where things stand]]
 
 ---
 

@@ -54,7 +54,6 @@ Panels become objects on the table; the map is the primary interface, not a deco
 ### artifact
 
 - [[docs/WRIT-THE-WAR-TABLE.md]] — *declared in `knowledge/artifacts.json`; the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a artifact*
-- [[table-preview.tsx]] — *declared in `knowledge/artifacts.json`*
 
 ---
 

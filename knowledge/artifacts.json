@@ -402,40 +402,6 @@
       ]
     },
     {
-      "id": "artifact:table-preview-html",
-      "type": "artifact",
-      "label": "table-preview.html",
-      "standing": "built",
-      "path": "table-preview.html",
-      "kind": "tool",
-      "summary": "A standalone dev harness page that serves table-preview.tsx — the War Table proving frame.",
-      "source_path": "table-preview.html",
-      "source_line": 1,
-      "quote": "The War Table — the proving frame",
-      "links": [],
-      "tags": [
-        "artifact-manifest"
-      ]
-    },
-    {
-      "id": "artifact:table-preview-tsx",
-      "type": "artifact",
-      "label": "table-preview.tsx",
-      "standing": "built",
-      "path": "table-preview.tsx",
-      "kind": "tool",
-      "summary": "Mounts WarTableFrame standalone against the loaded relief and working-fluid parcels, for measuring the proving frame's look and cost in isolation.",
-      "source_path": "table-preview.tsx",
-      "source_line": 2,
-      "quote": "The War Table proving frame — standalone preview (WRIT-THE-WAR-TABLE §11).",
-      "links": [
-        "decision:diegetic-war-table"
-      ],
-      "tags": [
-        "artifact-manifest"
-      ]
-    },
-    {
       "id": "artifact:test-dir",
       "type": "artifact",
       "label": "test/",

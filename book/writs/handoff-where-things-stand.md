@@ -56,6 +56,7 @@ aliases:
 - [[src/domain/realm.ts]] — *this writ names the exported symbol `readRealm`*
 - [[src/LedgerView.tsx]] — *this writ names the exported symbol `LedgerView`*
 - [[src/operator-core.ts]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `awaitsOutside`; +8 more*
+- [[src/server/vault.ts]] — *this writ names the exported symbol `ADVANCING_KINDS`; this writ names the exported symbol `commitAppend`; +1 more*
 
 ## artifact
 
@@ -87,7 +88,6 @@ aliases:
 - [[src/domain/flows.ts]]
 - [[src/domain/guilds.ts]]
 - [[src/domain/realm.ts]]
-- [[src/server/vault.ts]]
 - [[The sibling boundary — who owns the process model]]
 - [[Writ — The Gate: the money law is written and nothing enforces it]]
 - [[Writ — The Knighthood: one seat, a Regent that is an agent, and the fief as a desk]]

@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-1422 lines · 30 exported symbols.
+1445 lines · 30 exported symbols.
 
 ## What the file says of itself
 
@@ -34,7 +34,7 @@ aliases:
 
 ## Shape
 
-- **Lines:** 1422
+- **Lines:** 1445
 - **Exported symbols (30):** `FOUNDING_FLOWS`, `FailureDetects`, `FailureEnds`, `FailureRoute`, `FailureRoutes`, `FlowBook`, `FlowInstance`, `FlowParams`, `FlowReading`, `FlowStep`, `FlowTemplate`, `HolderRef`, `StepReading`, `TimingEdge`, `approveStep`, `awaitsOutside`, `completeStep`, `edgeLine`, `failStep`, `flowsAtFounding`, `fullParams`, `handStep`, `instantiateFlow`, `mayRunUnattended`, `overrideStep`, `paramsOf`, `proposeStep`, `readFailureRoutes`, `readFlow`, `readFlows`
 - **Assets it pulls in (no page, so no road):** `knowledge/facts.json`
 
@@ -213,6 +213,7 @@ aliases:
 - [[a chronicle predating the estates shelf migrates to the empty founding book]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a classified estimate is still weighed against the cap, both ways]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a clean founding brings NOTHING — the household is fully staffed]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[a clerk’s completion carries its seat, in the same grammar a proposal uses]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a clerk’s proposal is heard ONCE — never also as a bare waiting case]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a craft left headless IS brought before the court]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a craft standing headless holds it at a march]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -314,6 +315,7 @@ aliases:
 - [[an owed edict PRESSES as its day nears]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[an unclassified estimate stops, and says WHY it stopped]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[an UNFUNDED owner settles soundly via the shortfall topup]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[an UNSTAMPED completion still means the operator — the old meaning holds]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an urgency band this table does not know has no estimate either]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[and it says how few independent judgments that rests on]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[and it stops REGARDLESS of the cap — the old default did not]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -477,8 +479,10 @@ aliases:
 - [[the founding flow book budgets most of its steps to a person]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the founding realm carries an edict of every kind]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[the grand muster is UNCHANGED by the campaign’s knobs — a GOLDEN fingerprint]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[the hand-off to the next step is NOT stamped — nobody acted, the ball moved]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the household’s craft reading satisfies what the standing asks of it]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[the HUD carries only the coffers’ trend, the red month and the fall — no scoreboard]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[the human ratchet stays unstamped — approve and override are the operator’s]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the id hash is stable and well spread — the view places from it]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[the key forgives case, spacing and a tenant suffix — and nothing else]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[the move-out relay also folds clean to done]] — *imported by the test FILE (shared source, not a claim about this one test)*

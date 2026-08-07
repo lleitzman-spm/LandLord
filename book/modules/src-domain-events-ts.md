@@ -87,6 +87,7 @@ aliases:
 - [[a chase LOOP never runs unattended]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a chronicle predating the estates shelf migrates to the empty founding book]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a clean founding brings NOTHING — the household is fully staffed]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a clerk’s completion carries its seat, in the same grammar a proposal uses]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a clerk’s proposal is heard ONCE — never also as a bare waiting case]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a craft left headless IS brought before the court]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a CRISIS outranks a fresh matter, and held COIN outranks a bare wait]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -126,6 +127,7 @@ aliases:
 - [[an auto step nobody touched is not an escape at all]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an empty array is valid — the revert-to-founding shape]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an out-of-range index is no act at all, like every other writer]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[an UNSTAMPED completion still means the operator — the old meaning holds]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[and it says how few independent judgments that rests on]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[and the gate opens for a real, useful number of steps]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[approving the final step records that the case is DONE]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -195,6 +197,8 @@ aliases:
 - [[the founding book declares no failure routes, and says so rather than defaulting]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the founding flow book budgets most of its steps to a person]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the grand muster is UNCHANGED by the campaign’s knobs — a GOLDEN fingerprint]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[the hand-off to the next step is NOT stamped — nobody acted, the ball moved]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[the human ratchet stays unstamped — approve and override are the operator’s]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the move-out relay also folds clean to done]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the owner's window is BOTH human and outside-waiting — belt and braces]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the seen-map key survives — the separator is a NUL byte, not a space]] — *imported by the test FILE (shared source, not a claim about this one test)*

@@ -41,12 +41,7 @@ aliases:
 
 ## Backlinks
 
-### Modules
-
-- [[src/table/sprites.ts]] — *imported by this file*
-- [[src/table/terrainPaint.ts]] — *imported by this file*
-- [[src/table/textures.ts]] — *imported by this file*
-- [[src/table/WarTableFrame.tsx]] — *imported by this file*
+*Nothing in the Book points here. An orphan page is worse than a missing one — it exists, it is correct, and no reader will ever reach it. `npm run book:lint` counts these.*
 
 ---
 
