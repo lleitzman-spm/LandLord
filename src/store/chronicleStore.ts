@@ -33,7 +33,7 @@ import type { TreasuryLedger } from '../domain/treasury';
 import { WAR_HOUSEHOLD, isHouseholdUpkeep } from '../domain/treasury';
 import { INTRO_CAMPAIGN, generateCampaign, vacateOffices } from '../domain/campaign';
 import type { EconomyBook, MoneyEvent, MoneyLog } from '../domain/economy';
-import { estimateSpendCents, sampleLedger, vendorSettlementMoney } from '../domain/economy';
+import { estimateSpendCents, sampleLedger, settlementGate, vendorSettlementMoney } from '../domain/economy';
 import type { PledgeType, TerritoryKind } from '../domain/types';
 import { dealtGame, generateGrandMuster, generateWarGame } from '../domain/wargame';
 import type { WarState } from '../domain/wargame';
@@ -968,6 +968,28 @@ export function useChronicle(): ChronicleStore {
     // Undefined means nothing said what this cost. No money moves on a number
     // nobody produced.
     if (billCents == null || billCents <= 0) return [];
+    // THE SETTLEMENT GATE — the money law's runtime refusal, at the writer.
+    // This is the point where coin actually moves, and until 2026-08-07 it moved
+    // for whatever bill the case named: no ceiling was consulted anywhere on this
+    // path (docs/WRIT-THE-GATE.md). A bill above the owner-approval cap now
+    // settles only if a HUMAN ratified this case — and because no clerk may ever
+    // emit `approved`/`overridden`, the presence of one IS the proof of a person.
+    // A case walked to settlement entirely by machine carries none, so its bill
+    // is capped at what the machine was authorized to spend unattended.
+    const ratified = reading.events.some(
+      (e) => e.kind === 'approved' || e.kind === 'overridden',
+    );
+    const gate = settlementGate(
+      economyOf(chronicle),
+      billCents,
+      ratified,
+      reading.estateId ?? undefined,
+    );
+    // Refusing means NO COIN — and the absence of a `vendor_paid` event is the
+    // different record the writ demands. Held and cleared are told apart by a
+    // reading of the money log, not by a human reading prose off two identical
+    // events, which is the fault this replaces.
+    if (gate.refused) return [];
     const seed = chronicle.wargame?.seed;
     return vendorSettlementMoney(economyOf(chronicle), chronicle.money, {
       caseId,

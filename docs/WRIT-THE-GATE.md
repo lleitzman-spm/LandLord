@@ -108,6 +108,54 @@ the natural order is the one a session reaches for.
 
 ---
 
+## What has been built since — 2026-08-07
+
+Two refusals now exist. Both are at a writer, both leave a different record, both
+fail closed.
+
+**The ratification guard** (`src/domain/flows.ts`, `refusesRatification`) answers
+finding 5. `approveStep`/`overrideStep` take the log and refuse unless the step's
+folded kind is `awaiting` or `proposed`. A button and a script are governed by
+one rule; a replay, a double-click and an agent all get nothing. Driven in
+Chromium — a legitimate Approve still lands `approved` + `awaiting` on the next
+step, so the guard is not a wall.
+
+**The settlement gate** (`src/domain/economy.ts`, `settlementGate`) answers the
+practical half of findings 2 and 3, and it turned out the hole was worse than
+either of them said. Both findings are about *proposals* — a clerk wording a
+note. But a proposal spends nothing. The place coin actually moves is
+`settlementMoney` in the store, and **it consulted no ceiling of any kind**: it
+computed the bill and posted it.
+
+The rule, checkable from records alone:
+
+> **Coin above the owner-approval cap may not settle unless a HUMAN ratified the
+> case.**
+
+The second half is free, and that is what makes the rule worth having: no clerk
+may emit `approved`/`overridden`, and now the writer enforces that too — so the
+mere *presence* of a ratification is proof a person looked. A case walked to
+settlement entirely by machine carries none, and its bill is capped at what the
+machine was authorized to spend unattended. It is the same principle struck out
+of the flow book the same day: **silence is not authorization.** There it was an
+owner's unanswered window; here it is a case nobody ratified.
+
+The refusal's different record is the **absence of a `vendor_paid` event** —
+held and cleared are told apart by a reading of the money log, not by a human
+reading prose off two identical events, which is the fault it replaces.
+
+**Honest limits on this, stated rather than glossed:**
+
+- **The gate has not been observed refusing in the running app**, only in unit
+  tests. It cannot be reached today by the fleet, because all eight
+  vendor-dispatch steps share one catalog row and that row is `human` — so no
+  clerk can sweep a work order to settlement unattended. It is a guard built
+  ahead of the door it guards, which is the correct order, but nobody should
+  read a passing suite as proof it has bitten in anger.
+- **Finding 1 stands.** `assertFiduciarySound` is still reachable only from
+  `test/invariants.ts`. No writer passes through it.
+- **Finding 4 stands.** The calendar window is still never compared to a date.
+
 ## The standing rule
 
 > **No real data reaches the fleet until at least one runtime refusal exists in it.**

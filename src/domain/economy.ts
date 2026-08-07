@@ -1392,3 +1392,102 @@ const usd = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD',
 export function coinCents(cents: number): string {
   return usd.format(Math.round(cents / 100));
 }
+
+// ── THE SETTLEMENT GATE — the money law's first RUNTIME refusal ──────────────
+// Ratified 2026-08-07 (docs/WRIT-THE-GATE.md). Everything the kingdom had said
+// about money until now was said and not enforced: the fiduciary invariant was
+// reachable only from a test, `spendGate` returned a struct that could not fail
+// and was consulted only to WORD a proposal note, and the settlement half of the
+// vendor-dispatch loop posted whatever bill the case named, with no ceiling
+// anywhere in the path. What protected the coin was an AIR GAP — the harness's
+// tool belt simply had no money door. An air gap is surface area, not an
+// invariant: an invariant refuses; surface area merely has not been reached yet.
+//
+// THE RULE, and it is checkable from the records alone — no note parsing, no
+// stored flag, nothing a caller has to remember to pass:
+//
+//   Coin above the owner-approval cap may not settle unless a HUMAN ratified
+//   the case.
+//
+// The second half is free, and that is why this rule is the one worth having.
+// No clerk may emit `approved` or `overridden` — the ratchet is the human's
+// alone, and `approveStep`/`overrideStep` now refuse at the writer as well. So
+// the mere PRESENCE of a ratification on a case is proof a person looked at it.
+// A case walked to settlement entirely by machine carries none, and its bill is
+// therefore capped at what the machine was authorized to spend unattended.
+//
+// This is the same principle the flow book just had struck out of it: SILENCE IS
+// NOT AUTHORIZATION. There it was an owner's unanswered window; here it is a
+// case nobody ratified. Both used to read as a yes.
+
+export interface SettlementGate {
+  billCents: number;
+  /** The owner-approval cap in force for this estate, or null where none is set. */
+  capCents: number | null;
+  /** A human ratified somewhere on this case — the only thing that authorizes
+   *  spending past the cap. */
+  ratified: boolean;
+  /** True when no coin may move. The refusal, not a warning. */
+  refused: boolean;
+  reason: string;
+}
+
+/** Fold the settlement gate. Pure, and deliberately takes `ratified` as a plain
+ *  boolean rather than the log: the caller owns the question "did a person touch
+ *  this", and this module stays free of the event schema.
+ *
+ *  FAILS CLOSED by construction — every path that cannot prove authorization
+ *  refuses. A bill of zero or less is refused too: nothing said what this cost,
+ *  and no coin moves on a number nobody produced. */
+export function settlementGate(
+  economy: EconomyBook,
+  billCents: number,
+  ratified: boolean,
+  estateId?: string,
+): SettlementGate {
+  const cap = spendCapFor(economy, estateId);
+  const capCents = cap ?? null;
+  if (!Number.isFinite(billCents) || billCents <= 0)
+    return {
+      billCents,
+      capCents,
+      ratified,
+      refused: true,
+      reason: 'No bill was named — no coin moves on a number nobody produced.',
+    };
+  // No cap configured is not the same as an unlimited one, but it IS the
+  // deployment's own deliberate choice, and inventing a threshold here would be
+  // exactly the sentinel-wearing-a-dollar-sign this project has already ruled
+  // against. Ungated, and the reason says so out loud.
+  if (capCents == null)
+    return {
+      billCents,
+      capCents,
+      ratified,
+      refused: false,
+      reason: 'No owner-approval cap is set for this estate — the spend is ungated.',
+    };
+  if (billCents <= capCents)
+    return {
+      billCents,
+      capCents,
+      ratified,
+      refused: false,
+      reason: `${coinCents(billCents)} is within the ${coinCents(capCents)} owner-approval cap — it settles on the clerk's own authority.`,
+    };
+  if (ratified)
+    return {
+      billCents,
+      capCents,
+      ratified,
+      refused: false,
+      reason: `${coinCents(billCents)} is above the ${coinCents(capCents)} cap and a human ratified this case — it settles on their word.`,
+    };
+  return {
+    billCents,
+    capCents,
+    ratified,
+    refused: true,
+    reason: `${coinCents(billCents)} is above the ${coinCents(capCents)} owner-approval cap and NOBODY RATIFIED this case — refused. An unratified case is an absence, never a consent.`,
+  };
+}
