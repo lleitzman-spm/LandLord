@@ -450,7 +450,7 @@ describe('the six goals read the board', () => {
     for (const f of flows) {
       const i = f.next!.index - 1;
       doc.events.push(
-        ...approveStep(f.template, f.caseId, i, { at: later(END, 2), id }),
+        ...approveStep(f.template, f.caseId, i, { at: later(END, 2), id, log: doc.events }),
       );
     }
     const r = act.goal(ctxOf(doc, later(END, 2)));
@@ -526,16 +526,23 @@ describe('act four counts what its line says it counts', () => {
     const evs: KingdomEvent[] = [];
     // Two clerk proposals on the same case, each answered.
     for (const step of [0, 1]) {
-      evs.push({
-        id: `p${n++}`,
+      // Built by `proposeStep` rather than hand-rolled. The hand-rolled event
+      // carried no `Step n/N` marker and no holder, so nothing could place it
+      // against a step — which the reading tolerated but the ratification guard
+      // does not, and rightly: an unplaceable proposal is not evidence that any
+      // particular step awaits a human.
+      const proposal = proposeStep(tpl, target.caseId, step, 'agent:va-desk', {
         at: at(step * 2 + 1),
-        caseId: target.caseId,
-        kind: 'proposed',
-        actor: 'agent:va-desk',
+        id: () => `p${n++}`,
         note: 'the clerk reasons',
       });
+      if (proposal) evs.push(proposal);
       evs.push(
-        ...approveStep(tpl, target.caseId, step, { at: at(step * 2 + 2), id: () => `a${n++}` }),
+        ...approveStep(tpl, target.caseId, step, {
+          at: at(step * 2 + 2),
+          id: () => `a${n++}`,
+          log: [...doc.events, ...evs],
+        }),
       );
     }
     const ctx = ctxOf({ ...doc, events: [...doc.events, ...evs] }, later(END, 9));

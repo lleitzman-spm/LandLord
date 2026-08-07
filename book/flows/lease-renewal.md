@@ -60,7 +60,7 @@ Triggered by: A lease nears its term (T-90). 9 steps across 7 board(s), 2 hand(s
 | 2 | [[Lease renewal: price]] | Pricing | [[Osric]] | on or after day 1 | 3 days | The rent call a human makes — hold, raise by {increase}, or let the door go. |
 | 3 | [[Lease renewal: draft-offer]] | Offer | [[lp-queue]] | between day 2 and day 5 | 2 days | The renewal offer drafted at the set {rent} — the packet staged. |
 | 4 | [[Lease renewal: send-offer]] | Offer | [[lp-queue]] | between day 3 and day 6 | 1 day | The offer sent to the tenant — the term and the {rent} on the table. |
-| 5 | [[Lease renewal: owner-window]] | Owner | [[lp-queue]] | between day 3 and day 10 | 7 days | The owner's window — silence past it stands as consent. |
+| 5 | [[Lease renewal: owner-window]] | Owner | [[lp-queue]] | between day 3 and day 10 | 7 days | The owner's window — an unanswered window is an absence, never a consent. |
 | 6 | [[Lease renewal: tenant-response]] | Offer | [[lp-queue]] | on or after day 6, then again every 7 days | *no SLA* | The tenant chased each week — signed, or the term runs month-to-month. |
 | 7 | [[Lease renewal: countersign]] | Execution | [[Osric]] | between day 20 and day 30 | 2 days | The broker's signature — the one hand the machine never holds. |
 | 8 | [[Lease renewal: post-fee]] | Settlement | [[lp-queue]] | between day 20 and day 30, on or after the 15th of the month, before the 10th of the month | 5 days | The renewal fee posted — only inside the open window of the circuit. |

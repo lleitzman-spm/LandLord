@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Derived from the tree — the code is there to be read.*
 
-The owner's window — silence past it stands as consent.
+The owner's window — an unanswered window is an absence, never a consent.
 
 ## The source, verbatim
 
@@ -36,7 +36,7 @@ between day 3 and day 10, and it is BREACHED if it sits 7 days past that
 - **Held by:** [[lp-queue]]
 - **Task type:** `renewal.owner-window`
 - **Breached after:** 7 days past its edge
-- **Condition:** silence is authorization
+- **Condition:** until the owner answers
 
 ## Modules
 

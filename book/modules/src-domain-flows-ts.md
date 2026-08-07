@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-1318 lines · 28 exported symbols.
+1422 lines · 30 exported symbols.
 
 ## What the file says of itself
 
@@ -34,8 +34,8 @@ aliases:
 
 ## Shape
 
-- **Lines:** 1318
-- **Exported symbols (28):** `FOUNDING_FLOWS`, `FailureDetects`, `FailureEnds`, `FailureRoute`, `FailureRoutes`, `FlowBook`, `FlowInstance`, `FlowParams`, `FlowReading`, `FlowStep`, `FlowTemplate`, `HolderRef`, `StepReading`, `TimingEdge`, `approveStep`, `completeStep`, `edgeLine`, `failStep`, `flowsAtFounding`, `fullParams`, `handStep`, `instantiateFlow`, `overrideStep`, `paramsOf`, `proposeStep`, `readFailureRoutes`, `readFlow`, `readFlows`
+- **Lines:** 1422
+- **Exported symbols (30):** `FOUNDING_FLOWS`, `FailureDetects`, `FailureEnds`, `FailureRoute`, `FailureRoutes`, `FlowBook`, `FlowInstance`, `FlowParams`, `FlowReading`, `FlowStep`, `FlowTemplate`, `HolderRef`, `StepReading`, `TimingEdge`, `approveStep`, `awaitsOutside`, `completeStep`, `edgeLine`, `failStep`, `flowsAtFounding`, `fullParams`, `handStep`, `instantiateFlow`, `mayRunUnattended`, `overrideStep`, `paramsOf`, `proposeStep`, `readFailureRoutes`, `readFlow`, `readFlows`
 - **Assets it pulls in (no page, so no road):** `knowledge/facts.json`
 
 ## Modules
@@ -209,6 +209,7 @@ aliases:
 - [[a case with no estateId folds to null (byte-identical to before)]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a cash-complete sample month is sound]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a Chancellor granted ONE fief holds one fief — an office is not land]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[a chase LOOP never runs unattended]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a chronicle predating the estates shelf migrates to the empty founding book]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a classified estimate is still weighed against the cap, both ways]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a clean founding brings NOTHING — the household is fully staffed]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -217,6 +218,7 @@ aliases:
 - [[a craft standing headless holds it at a march]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a crisis on a leased door OUTRANKS its lease — the map shows trouble]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a CRISIS outranks a fresh matter, and held COIN outranks a bare wait]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[a DEADLINE is not a dependency — an SLA step still runs unattended]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a door in no knight’s care is a real state, and reads as debt]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a door the book does not hold reads UNPLACED, and is named]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a door the book holds places cleanly — realm, shire, fee and knight]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -234,6 +236,7 @@ aliases:
 - [[a headless craft holds back EVERY metro, not one — the household is shared]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a headless office reads as headless — never as somebody else’s]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a house mtm rule with no splitBps falls back to the named constant]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[a HUMAN step never runs unattended, however simple it looks]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a human touching an AUTO step is an unplanned escape — the machine failed]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a judgment failure repaired on an `auto` row is a fault — the two claims cannot both hold]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a known band still returns its figure]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -267,6 +270,7 @@ aliases:
 - [[a step never reached cannot escape — an idle system is not an automated one]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a step routed upstream sends the case back to where the bad input entered]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a step the catalog marks human is a DESIGNED escape, not a failure]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a step waiting on an OUTSIDE answer never runs unattended]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a step with no declared mode is NOT MEASURED and never joins a total]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a step with NO route cannot fail — nothing is written at all]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a struck money event stays struck through the merge]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -288,6 +292,7 @@ aliases:
 - [[act three is met by getting the boxes onto real desks]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[act two is met by WALKING a cascade to done]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[all three failing at once names all three]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[ALLOWS the step that genuinely waits — the guard is not a wall]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an absent catalog shelf adopts the founding rows]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[an absent economySetting normalizes through untouched, and economyOf is a true no-op]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[an ancient trifle never outranks today’s crisis — age does not compound forever]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -310,6 +315,7 @@ aliases:
 - [[an urgency band this table does not know has no estimate either]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[and it says how few independent judgments that rests on]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[and it stops REGARDLESS of the cap — the old default did not]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[and the gate opens for a real, useful number of steps]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[approving the final step records that the case is DONE]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[balances within both books (the bridge)]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[both books balance over the whole dealt money log]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -390,6 +396,7 @@ aliases:
 - [[no muster stands ⇒ the land lies UNREVEALED, and no town is drawn]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[no ONE kind starves the rest — the standing debts are always heard]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[no record anywhere in the book stores a standing]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[no step in the whole book that waits on the outside may run unattended]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[no step note leaks a literal {token} when rendered with full params]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[normalizeChronicle is idempotent]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[nothing dealt is STALE — the clock starts clean]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -417,10 +424,14 @@ aliases:
 - [[reads the trade out of a sentence]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[reads undefined when the economy sets no house cap and the estate has no override]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[reconcileById: a strike on one side is not resurrected by the other]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[REFUSES a case it cannot see at all — it fails CLOSED]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[refuses a missing/empty id or label, and a duplicate id]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[refuses a row whose string params carry an identifier]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[refuses a row whose SUBJECT carries an identifier]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[REFUSES a step nobody has reached]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[REFUSES an out-of-range step]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[refuses non-JSON, a non-array, a rowless shape, and unknown fields]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[REFUSES to ratify the same step twice]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[rejects malformed rows and bad number shapes]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[rejects non-JSON, a non-object, and an unknown top-level field]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[renames a GL account code and name by role]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -468,6 +479,7 @@ aliases:
 - [[the key forgives case, spacing and a tenant suffix — and nothing else]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[the move-out relay also folds clean to done]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the muster’s doors decide the standing, not the founding book’s]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[the owner's window is BOTH human and outside-waiting — belt and braces]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the reading and the VIEW’s contract are the same shape — the firewall holds]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[the reading counts the metro’s own doors, knights and fees]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[the scene is PURE — the same records fold the same map, twice]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*

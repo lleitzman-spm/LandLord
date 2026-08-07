@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-84 lines · 77 exported symbols.
+89 lines · 78 exported symbols.
 
 ## What the file says of itself
 
@@ -36,8 +36,8 @@ aliases:
 
 ## Shape
 
-- **Lines:** 84
-- **Exported symbols (77):** `BankId`, `BankRec`, `BankRecs`, `CaseReading`, `Catalog`, `CatalogRow`, `DomainGroup`, `EconomyBook`, `EconomySettingPatch`, `EventKind`, `EventLog`, `FOUNDING_ECONOMY`, `FeeRule`, `FlowBook`, `FlowInstance`, `FlowParams`, `FlowReading`, `FlowTemplate`, `IdentityFinding`, `IdentityLeakError`, `KingdomEvent`, `LedgerAccount`, `MoneyEvent`, `MoneyKind`, `MoneyLog`, `Posting`, `SpendDisposition`, `SpendGate`, `SpendReconciliation`, `ageInDays`, `applyEconomySetting`, `approveStep`, `assertNoIdentity`, `awaitingHuman`, `balanceOf`, `booksBalance`, `bridgeCheck`, `coinCents`, `completeStep`, `domainsOf`, `estimateSpendCents`, `feeAmount`, `feeRuleFor`, `findIdentity`, `findRow`, `flowKeyFor`, `fullParams`, `guardComplete`, `handStep`, `instantiateFlow`, `lateFeeSplit`, `mtmSplit`, `needsOwnerApproval`, `overrideStep`, `paramsOf`, `postingsFor`, `proposeStep`, `queues`, `readBankRecs`, `readBudgetVsActual`, `readCase`, `readCases`, `readCompliance`, `readCorporateCoffers`, `readFlow`, `readFlows`, `readOwnerStatement`, `readPnL`, `readPostings`, `readSolvency`, `reconcileSpend`, `rowsByDomain`, `spendCapFor`, `spendGate`, `systemsOf`, `titleOf`, `vendorSettlementMoney`
+- **Lines:** 89
+- **Exported symbols (78):** `BankId`, `BankRec`, `BankRecs`, `CaseReading`, `Catalog`, `CatalogRow`, `DomainGroup`, `EconomyBook`, `EconomySettingPatch`, `EventKind`, `EventLog`, `FOUNDING_ECONOMY`, `FeeRule`, `FlowBook`, `FlowInstance`, `FlowParams`, `FlowReading`, `FlowTemplate`, `IdentityFinding`, `IdentityLeakError`, `KingdomEvent`, `LedgerAccount`, `MoneyEvent`, `MoneyKind`, `MoneyLog`, `Posting`, `SpendDisposition`, `SpendGate`, `SpendReconciliation`, `ageInDays`, `applyEconomySetting`, `approveStep`, `assertNoIdentity`, `awaitingHuman`, `awaitsOutside`, `balanceOf`, `booksBalance`, `bridgeCheck`, `coinCents`, `completeStep`, `domainsOf`, `estimateSpendCents`, `feeAmount`, `feeRuleFor`, `findIdentity`, `findRow`, `flowKeyFor`, `fullParams`, `guardComplete`, `handStep`, `instantiateFlow`, `lateFeeSplit`, `mtmSplit`, `needsOwnerApproval`, `overrideStep`, `paramsOf`, `postingsFor`, `proposeStep`, `queues`, `readBankRecs`, `readBudgetVsActual`, `readCase`, `readCases`, `readCompliance`, `readCorporateCoffers`, `readFlow`, `readFlows`, `readOwnerStatement`, `readPnL`, `readPostings`, `readSolvency`, `reconcileSpend`, `rowsByDomain`, `spendCapFor`, `spendGate`, `systemsOf`, `titleOf`, `vendorSettlementMoney`
 
 ## Modules
 

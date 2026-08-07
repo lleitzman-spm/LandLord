@@ -26,7 +26,7 @@ import type { ActsBook, CensusBook } from '../domain/court';
 import type { EventKind, KingdomEvent } from '../domain/events';
 import { queues, readCase } from '../domain/events';
 import { commissionCaseId, placementCaseId } from '../domain/pods';
-import type { FlowBook } from '../domain/flows';
+import type { FlowBook, FlowParams, FlowTemplate } from '../domain/flows';
 import { approveStep, completeStep, fullParams, instantiateFlow, overrideStep, paramsOf } from '../domain/flows';
 import type { MarchesLedger } from '../domain/marches';
 import type { TreasuryLedger } from '../domain/treasury';
@@ -903,7 +903,18 @@ export function useChronicle(): ChronicleStore {
     caseId: string,
     index: number,
     note: string | undefined,
-    build: typeof completeStep,
+    // Typed explicitly rather than `typeof completeStep`, because the three
+    // builders no longer share one opts shape: the two RATIFYING writers need
+    // the log to refuse with (docs/WRIT-THE-GATE.md, finding 5) and
+    // `completeStep` does not. Widening here keeps `completeStep` assignable —
+    // a builder may ignore what it is handed, it just may not demand more.
+    build: (
+      tpl: FlowTemplate,
+      caseId: string,
+      index: number,
+      opts: { at: string; id: () => string; note?: string; log: KingdomEvent[] },
+      params?: FlowParams,
+    ) => KingdomEvent[],
   ) => {
     const tpl = chronicle.flows.find((f) => f.key === flowKey);
     if (!tpl) return;
@@ -915,9 +926,16 @@ export function useChronicle(): ChronicleStore {
       tpl,
       caseId,
       index,
-      { at: stamp(), id: () => crypto.randomUUID(), note },
+      // `log` feeds the ratification guard in `approveStep`/`overrideStep` — a
+      // step is ratifiable only while it actually waits on a human's word
+      // (docs/WRIT-THE-GATE.md, finding 5). `completeStep` ignores it. The same
+      // snapshot `paramsOf` reads just above, so both halves of this call see one
+      // consistent view of the book.
+      { at: stamp(), id: () => crypto.randomUUID(), note, log: chronicle.events },
       params,
     );
+    // An empty batch is a REFUSAL as often as it is a no-op now: the guard
+    // returns nothing when a step is not ratifiable, and nothing is written.
     if (!appended.length) return;
     // The vertical slice (WRIT-B): settling a vendor-dispatch WO posts its real
     // money — the vendor paid, the coordination markup earned — so the

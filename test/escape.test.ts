@@ -84,7 +84,13 @@ describe("escape rate — the design's own ceiling, and its evidence", () => {
   it('the founding flow book budgets most of its steps to a person', () => {
     const c = readDesignedCeiling(FOUNDING_FLOWS, FOUNDING_CATALOG);
     expect(c.stepsReached).toBe(46);
-    expect(c.designed).toBe(33);
+    // 34, not 33, since 2026-08-07: `renewal.owner-window` moved from `auto` to
+    // `human` (docs/WRIT-THE-GATE.md). The ceiling RISING is the honest reading
+    // of that change — closing an owner's authorization window when the owner
+    // did not answer is a judgment, and the book previously claimed a machine
+    // could do it. A budget that got cheaper by mislabelling a judgment was not
+    // a better budget.
+    expect(c.designed).toBe(34);
     expect(c.unmeasured).toBe(0);
   });
 

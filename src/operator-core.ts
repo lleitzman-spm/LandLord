@@ -27,6 +27,11 @@ export {
   readFlow,
   fullParams,
   paramsOf,
+  // The automation gate the clerks read: may this step run with no human in it?
+  // `mayRunUnattended` is the whole decision; `awaitsOutside` is exported beside
+  // it so a clerk can SAY which of the two reasons it stopped for.
+  mayRunUnattended,
+  awaitsOutside,
 } from './domain/flows';
 export type { FlowBook, FlowTemplate, FlowParams, FlowInstance, FlowReading } from './domain/flows';
 

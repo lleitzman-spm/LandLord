@@ -997,18 +997,66 @@ export function makeAdvanceClerk(ctx, seat) {
         )
         .sort((a, b) => (a.openedAt ?? '').localeCompare(b.openedAt ?? '')); // oldest first
 
+      // The book's own claim about which steps need no person. `mode` lives on
+      // the CATALOG ROW, so this map is the lookup `mayRunUnattended` wants.
+      const modeOf = new Map((doc.catalog ?? []).map((row) => [row.key, row.mode]));
+
       for (let i = 0; i < cap && i < targets.length; i++) {
         const r = targets[i];
         const at = now;
         const id = () => randomUUID();
+        const params = core.paramsOf(doc.events, r.caseId);
+
+        // ── The auto sweep ────────────────────────────────────────────────
+        // If the book says this step needs no person, DO IT — do not park it on
+        // the Regent's desk. Proposing an `auto` step was the fleet's own worst
+        // habit: `proposed` counts as a human touch, so every one of them booked
+        // an UNPLANNED ESCAPE against the one number the product is judged by,
+        // while adding a click nobody had asked for. A clock over a fleet that
+        // only proposes piles up; it does not progress.
+        //
+        // The sweep runs on while the NEXT step is also unattendable and also
+        // this seat's — consecutive auto runs exist (an offer drafted then sent;
+        // a report filed then the door opened) and stopping between them would
+        // leave a cascade parked mid-stride for no reason. It stops at a seat
+        // boundary by design: a clerk works its own desk, and the neighbouring
+        // desk's clerk takes it from there.
+        if (core.mayRunUnattended(r.next.step, modeOf)) {
+          let index = r.next.index - 1;
+          const ran = [];
+          while (index < r.template.steps.length) {
+            const s = r.template.steps[index];
+            if (s.holder !== seat || !core.mayRunUnattended(s, modeOf)) break;
+            const done = core.completeStep(r.template, r.caseId, index, { at, id }, params);
+            if (!done.length) break;
+            events.push(...done);
+            ran.push(core.titleOf(doc.catalog, s.catalogRow) || s.key);
+            index += 1;
+          }
+          if (ran.length) {
+            taken.add(r.caseId);
+            records.push(
+              `${r.template.title} "${r.subject}" → ran ${ran.length} step(s) unattended: ${ran.join(' → ')}.`,
+            );
+            continue;
+          }
+        }
+
+        // ── Otherwise: propose, and stop ──────────────────────────────────
+        // A judgment, or a step waiting on something outside the machine's
+        // sight. Either way the Regent's word is next, and no clerk crosses the
+        // ratchet.
         const step = r.next.step;
         const what = core.titleOf(doc.catalog, step.catalogRow) || step.key;
-        const params = core.paramsOf(doc.events, r.caseId);
         const gate = spendGateFor(core, doc, r.template, r.next.index - 1, params, estateOf(core, doc, r.caseId));
+        // Say WHICH of the two reasons parked it — a judgment the book means to
+        // stop at reads very differently from an `auto` step held back because it
+        // waits on an answer nobody here can give.
+        const why = core.awaitsOutside(step) ? ' — it waits on an answer from outside' : '';
         const proposal = core.proposeStep(r.template, r.caseId, r.next.index - 1, `agent:${seat}`, {
           at,
           id,
-          note: `Propose to advance ${what} on the ${step.board} board — awaiting the Regent's word.${gate ? ` ${gate.note}` : ''}`,
+          note: `Propose to advance ${what} on the ${step.board} board — awaiting the Regent's word${why}.${gate ? ` ${gate.note}` : ''}`,
         });
         if (!proposal) continue;
         events.push(proposal);
