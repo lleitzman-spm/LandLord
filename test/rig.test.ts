@@ -456,6 +456,67 @@ describe('the rig guarantees the identity boundary it declares', () => {
   });
 });
 
+describe("an agent's own answers are attributable in BOTH paths", () => {
+  it('the fleet path stamps a swept `done`, not only the rig path', async () => {
+    // The rig wraps `completeStep` to stamp; the FLEET hands its clerks the raw
+    // core, so until the stamp moved into the clerks themselves this was closed
+    // only on the path nobody runs in anger. Asserted through the clerk factory
+    // with an UNWRAPPED core — the fleet's own arrangement.
+    const { makeIntakeClerk } = await import('../harness/clerks.mjs');
+    const doc = rawIntakeFixture({ now: '2026-08-07T09:00:00.000Z' });
+    const clerk = makeIntakeClerk({ core, complete: offlineComplete, brainFor });
+    const out = await clerk.run({ doc, now: '2026-08-07T09:00:00.000Z', taken: new Set() });
+    const dones = out.events.filter((e: any) => e.kind === 'done');
+    expect(dones.length).toBeGreaterThan(0);
+    for (const d of dones) expect(d.actor, 'a swept done reads as the operator').toBe('agent:mabel');
+  });
+
+  it('a held invoice and a cleared one are distinguishable by a READING, not by prose', async () => {
+    // WRIT-THE-GATE finding 3. Both branches called proposeStep with identical
+    // arguments and differed only in `note`, so the record could not tell them
+    // apart. Driven through the real clerk on both fixtures.
+    const { makePriceClerk } = await import('../harness/clerks.mjs');
+    const clerk = makePriceClerk({ core, complete: offlineComplete, brainFor });
+    const verdicts: string[] = [];
+    for (const opts of [{ subject: OVERRUN_SUBJECT, quoteCents: 40000 }, { quoteCents: 18000 }]) {
+      const doc = settlementFixture(core, { ...opts, now: '2026-08-07T09:00:00.000Z' });
+      const out = await clerk.run({ doc, now: '2026-08-07T09:00:00.000Z', taken: new Set() });
+      verdicts.push(out.events[0].params.settlement);
+    }
+    expect(verdicts).toEqual(['hold-for-owner', 'clear-to-pay']);
+  });
+});
+
+describe('a reasoning clerk on an `auto` catalog row is a contradiction — surfaced, not guessed', () => {
+  it('lists every named agent whose commitment the book says needs no person', () => {
+    // Standing finding #4's live half. A reasoning clerk exists BECAUSE the
+    // judgment needs a brain; a row marked `auto` says no person is needed.
+    // Both cannot be true, and the book does not say which is wrong — so this
+    // REPORTS rather than flips. Flipping a mode moves the escape ceiling (the
+    // governing number) and needs a deployment path to running chronicles, so
+    // it is a ruling, not a refactor: docs/OPEN-QUESTIONS.md carries it.
+    //
+    // The assertion is on the KNOWN set, so a NEW contradiction fails the suite
+    // while the recorded one does not pretend to be resolved.
+    const book = JSON.parse(readFileSync(join(__dirname, '..', 'harness', 'agents', 'fixtures', 'founding-book.json'), 'utf8'));
+    const mode = new Map<string, string>(book.catalog.map((r: any) => [r.key, r.mode]));
+    const commitments: Record<string, [string, string]> = {
+      Rhys: ['violation-notice', 'classify'],
+      Tess: ['move-out-relay', 'turn-scope'],
+      Nell: ['owner-onboarding', 'intake'],
+      Bea: ['move-out-relay', 'deposit-accounting'],
+      Lena: ['lease-renewal', 'price'],
+    };
+    const found: string[] = [];
+    for (const [who, [flowKey, stepKey]] of Object.entries(commitments)) {
+      const step = book.flows.find((f: any) => f.key === flowKey).steps.find((s: any) => s.key === stepKey);
+      if (mode.get(step.catalogRow) === 'auto') found.push(`${who}:${flowKey}/${stepKey}`);
+    }
+    expect(found, 'a NEW reasoning-clerk-on-auto-row contradiction appeared — rule on it, do not widen this list')
+      .toEqual(['Rhys:violation-notice/classify']);
+  });
+});
+
 describe('a backing refuses on the WRITE path too', () => {
   it('appendEvents on a seedless chronicle refuses, not just readLog', () => {
     const dir = mkdtempSync(join(tmpdir(), 'rig-write-'));

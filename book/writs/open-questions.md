@@ -31,6 +31,7 @@ aliases:
 
 ## Outline
 
+- A reasoning clerk sits on a catalog row the book marks `auto`
 - Fee terms that are currently one shape, and probably need to be many
 - ~~The spend gate's default when urgency is unknown~~ — SETTLED 2026-08-06
 - Whether "artisan" should be a pledge or a relationship — ANSWERED, NOT YET BUILT
@@ -48,6 +49,7 @@ aliases:
 ## Modules
 
 - [[src/domain/economy.ts]] — *this writ names the exported symbol `estimateSpendCents`; this writ names the exported symbol `spendGate`*
+- [[src/domain/flows.ts]] — *this writ names the exported symbol `mayRunUnattended`*
 - [[src/operator-core.ts]] — *this writ names the exported symbol `estimateSpendCents`; this writ names the exported symbol `spendGate`*
 
 ## artifact

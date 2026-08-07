@@ -50,6 +50,7 @@ aliases:
 - [[a `done` written through a granted completeStep is stamped with the seat]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a belt tag that grants nothing is DECLARED as such, never left looking like a grant]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a deployed agent's core carries only functions its belt tags grant]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a held invoice and a cleared one are distinguishable by a READING, not by prose]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an agent CAN still advance a cascade — the belt makes it legible, not impossible]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an agent with no wired judgment refuses to run rather than pretend to]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an unknown belt tag is refused at deploy, not silently ignored]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -67,6 +68,7 @@ aliases:
 - [[every roster agent with a wired judgment has a sufficient belt]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[every roster entry constructs cleanly]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[fileBacking refuses a doc with no standing War Game]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[lists every named agent whose commitment the book says needs no person]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[Mace: a raw complaint in, an identified cascade proposed, and she stops there]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[memoryBacking never requires a war-game seed]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[Milo: a vendor-commitment case in, a reasoned quote proposed, and he stops there]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -77,6 +79,7 @@ aliases:
 - [[run refuses rather than inventing a clock when the backing carries none]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[run refuses with a BeltRefusal naming the missing tag]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the capability table is DEEP frozen — its arrays cannot be widened]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[the fleet path stamps a swept `done`, not only the rig path]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the M family judgments are all known to this rig]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the record and the judgment name the SAME invoice figure]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the two that cannot be driven refuse with the REASON, not a missing wire]] — *imported by the test FILE (shared source, not a claim about this one test)*

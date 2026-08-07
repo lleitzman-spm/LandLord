@@ -202,6 +202,46 @@ isolation was one-way.
 *(Both gaps listed here — the `BeltRefusal` and the missing identity guard —
 are now closed. See the entries below.)*
 
+**2026-08-07 (closing) — four more of the standing findings, and the one that
+must not be guessed.** All green: `npm run build`, **521 tests**, `leakcheck` 0
+findings, `book:lint` exit 0.
+
+- **Finding #2 closed on the path that actually runs.** The rig stamped agent
+  `done` events; the FLEET hands its clerks the raw core, so the fix covered
+  only the path nobody runs in anger. The stamp moved into the clerks
+  themselves via `harness/agents/actor.mjs` — its own module because
+  `rig.mjs` imports `clerks.mjs`, so the reverse would be a cycle. One source,
+  both paths. Proved by removing the stamp and watching the test fail.
+
+- **Finding #7 closed — `WRIT-THE-GATE` finding 3's last half.** The price
+  clerk's hold and clear branches called `proposeStep` with identical arguments
+  and differed only in `note`, so an invoice that overran its authorized ceiling
+  and one comfortably under it were indistinguishable in the only thing that
+  survives a run. The proposal now carries
+  `params.settlement = hold-for-owner | clear-to-pay` plus the two figures, so a
+  READING tells them apart rather than a human reading prose.
+
+- **Finding #8 (the sweep's audit line) closed.** It named the catalog ROW, and
+  all eight vendor-dispatch steps share one row — so a line built from the row
+  title repeated the same words for every step swept. It names the step now.
+
+- **Finding #4 is SURFACED, not fixed, and that is the point.**
+  `violation-notice/classify` sits on an `auto` catalog row while Rhys — a
+  Tier-1 reasoning clerk — proposes it to a human. Both cannot be true. But
+  `mode` is what `mayRunUnattended` reads, so flipping it moves the escape
+  ceiling (the governing number) and needs a deployment path to chronicles that
+  store their own catalog: a ruling, not a refactor, exactly like the
+  `silence is authorization` strike. It is written up in
+  `docs/OPEN-QUESTIONS.md`, and `test/rig.test.ts` pins the KNOWN set so a NEW
+  contradiction fails the suite while this one does not pretend to be resolved.
+
+**Out of scope by the session's own brief (`harness/` and `src/domain/` only),
+named so nobody reads the silence as done:** finding #1 (the vault replays an
+advancing batch — `src/server/vault.ts`, and the same CAS/replay path this
+session declined to migrate onto), and findings #3, #5, #6, which are all React
+surface (`LedgerView.tsx`'s dead toast road, the `handFlow` TOCTOU, and
+"Mark done" rendering unconditionally). Each is real; none is this lane's.
+
 **2026-08-07 (final) — the identity boundary enforced where capability is
 bound, and the runners moved onto the rig.** All green: `npm run build`,
 **518 tests**, `leakcheck` 0 findings, `book:lint` exit 0.

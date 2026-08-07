@@ -76,6 +76,7 @@ aliases:
 - [[a belt tag that grants nothing is DECLARED as such, never left looking like a grant]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a deployed agent's core carries only functions its belt tags grant]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a GL-rename + fee-rate + mtm-split patch stays sound over a dealt month]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a held invoice and a cleared one are distinguishable by a READING, not by prose]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a null/absent patch is a no-op — returns base unchanged (same reference)]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a present economySetting (even a no-op patch) means the chronicle is no longer "at founding"]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a present economySetting rides the raw record untouched; economyOf folds it in]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -105,6 +106,7 @@ aliases:
 - [[fileBacking refuses a doc with no standing War Game]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[ignores a GL patch naming a role the chart does not have (leash: never invents an account)]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[is null for an absent patch (founding, no setting)]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[lists every named agent whose commitment the book says needs no person]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[Mace: a raw complaint in, an identified cascade proposed, and she stops there]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[memoryBacking never requires a war-game seed]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[Milo: a vendor-commitment case in, a reasoned quote proposed, and he stops there]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -128,6 +130,7 @@ aliases:
 - [[run refuses with a BeltRefusal naming the missing tag]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[scalars overwrite; an unknown top-level field on the patch is ignored]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the capability table is DEEP frozen — its arrays cannot be widened]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[the fleet path stamps a swept `done`, not only the rig path]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the M family judgments are all known to this rig]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the record and the judgment name the SAME invoice figure]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the two that cannot be driven refuse with the REASON, not a missing wire]] — *imported by the test FILE (shared source, not a claim about this one test)*

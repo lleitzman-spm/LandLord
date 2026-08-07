@@ -99,6 +99,7 @@ aliases:
 - [[a failure that is redone still leaves a mark — the count, not the latest kind]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a fully-worked vendor-dispatch folds to done and reaches settlement]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a hand-worked case does not count against a muster]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a held invoice and a cleared one are distinguishable by a READING, not by prose]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a HUMAN step never runs unattended, however simple it looks]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a human touching an AUTO step is an unplanned escape — the machine failed]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a judgment failure repaired on an `auto` row is a fault — the two claims cannot both hold]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -178,6 +179,7 @@ aliases:
 - [[is ordered heaviest FIRST — the docket never rises]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[is SOLVENT at rest, with a margin, and the Crown’s own coin is not gone]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[KEEPS a setting the other session loaded, when the base carried none]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[lists every named agent whose commitment the book says needs no person]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[Mace: a raw complaint in, an identified cascade proposed, and she stops there]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[memoryBacking never requires a war-game seed]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[Milo: a vendor-commitment case in, a reasoned quote proposed, and he stops there]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -223,6 +225,7 @@ aliases:
 - [[the case spine feeds the gate end-to-end: readCase(estateId) → spendGate]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the escape count is not folded into the rate]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the fallback (no base) CANNOT honor a strike — it resurrects (documents the limit)]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[the fleet path stamps a swept `done`, not only the rig path]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the founding book declares no failure routes, and says so rather than defaulting]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the founding flow book budgets most of its steps to a person]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the grand muster is UNCHANGED by the campaign’s knobs — a GOLDEN fingerprint]] — *imported by the test FILE (shared source, not a claim about this one test)*

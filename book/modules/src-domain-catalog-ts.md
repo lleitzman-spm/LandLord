@@ -108,6 +108,7 @@ aliases:
 - [[a hand-worked case does not count against a muster]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a headless craft holds back EVERY metro, not one — the household is shared]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a headless office reads as headless — never as somebody else’s]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[a held invoice and a cleared one are distinguishable by a READING, not by prose]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a house mtm rule with no splitBps falls back to the named constant]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a HUMAN step never runs unattended, however simple it looks]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a human touching an AUTO step is an unplanned escape — the machine failed]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -254,6 +255,7 @@ aliases:
 - [[is SOLVENT at rest, with a margin, and the Crown’s own coin is not gone]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[KEEPS a setting the other session loaded, when the base carried none]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[lateness is READ from the day against the clock, never stored]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[lists every named agent whose commitment the book says needs no person]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[Mace: a raw complaint in, an identified cascade proposed, and she stops there]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[memoryBacking never requires a war-game seed]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[Milo: a vendor-commitment case in, a reasoned quote proposed, and he stops there]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -335,6 +337,7 @@ aliases:
 - [[the fallback (no base) CANNOT honor a strike — it resurrects (documents the limit)]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[the fee bridge ties]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[the Fee shape itself holds only id, realm, name and patron]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[the fleet path stamps a swept `done`, not only the rig path]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[the FOUNDING book already scatters a fee across two metros]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[the founding book reads one shire and one march]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[the founding catalog exercises every Status and every SLA band at least once]] — *imported by the test FILE (shared source, not a claim about this one test)*

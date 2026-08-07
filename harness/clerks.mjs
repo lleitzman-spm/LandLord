@@ -21,6 +21,7 @@ import { brainOpts } from './brain-doctrine.mjs';
 import { rosterFor, rosterTrade, clampFeeCents, invoiceFor } from './vendors.mjs';
 import { baseRentCents, movesFor, moveByKey, applyMove } from './leasing.mjs';
 import { maintenanceSymptom, safeUrgency } from './safe-evidence.mjs';
+import { stampAgentActor } from './agents/actor.mjs';
 
 // ── Shared intake helpers (the Mabel clerk) ────────────────────────────────
 
@@ -302,8 +303,9 @@ export function makeIntakeClerk(ctx) {
           actor: `agent:${seat}`,
           note: `Identified as ${leaf.title} — put in motion as a ${tpl.title}.`,
         });
-        events.push(...core.completeStep(tpl, caseId, 0, { at, id, note: 'Report logged from the tenant intake.' }, params));
-        events.push(...core.completeStep(tpl, caseId, 1, { at, id, note: `Identified as ${leaf.title}.` }, params));
+        // Stamped: a clerk's `done` must not read as the operator's own work.
+        events.push(...stampAgentActor(core.completeStep(tpl, caseId, 0, { at, id, note: 'Report logged from the tenant intake.' }, params), seat));
+        events.push(...stampAgentActor(core.completeStep(tpl, caseId, 1, { at, id, note: `Identified as ${leaf.title}.` }, params), seat));
         const trade = params.trade ?? 'the trade';
         const urgency = params.urgency ?? 'routine';
         const gate = spendGateFor(core, doc, tpl, 2, params, estateId);
@@ -728,11 +730,23 @@ export function makePriceClerk(ctx) {
             : `${coin(invoiceCents)} invoice within the ${coin(recon.authorizedCeilingCents)} authorized ceiling, but held for the owner's review.${because}`
           : `${recon.note} Recommend approve & pay.${because}`;
 
+        const verdict = hold ? 'hold-for-owner' : 'clear-to-pay';
         const proposal = core.proposeStep(r.template, r.caseId, r.next.index - 1, `agent:${seat}`, { at, id, note });
         if (!proposal) continue;
+        // THE VERDICT GOES INTO THE RECORD, not only into the console.
+        // `docs/WRIT-THE-GATE.md` finding 3: both branches used to call
+        // proposeStep with identical arguments and differ only in `note`, so an
+        // invoice that overran its authorized ceiling and one comfortably under
+        // it were indistinguishable in the only thing that survives the run. A
+        // reading can now tell them apart without parsing prose.
+        proposal.params = {
+          ...(proposal.params ?? {}),
+          settlement: verdict,
+          invoiceCents: String(invoiceCents),
+          authorizedCeilingCents: String(recon.authorizedCeilingCents),
+        };
         events.push(proposal);
         taken.add(r.caseId);
-        const verdict = hold ? 'hold-for-owner' : 'clear-to-pay';
         records.push(
           `${r.template.title} "${r.subject}" → invoice ${coin(invoiceCents)} vs ${coin(recon.authorizedCeilingCents)} ceiling [${how}] — ${verdict}.`,
         );
@@ -1053,10 +1067,14 @@ export function makeAdvanceClerk(ctx, seat) {
           while (index < r.template.steps.length) {
             const s = r.template.steps[index];
             if (s.holder !== seat || !core.mayRunUnattended(s, modeOf)) break;
-            const done = core.completeStep(r.template, r.caseId, index, { at, id }, params);
+            const done = stampAgentActor(core.completeStep(r.template, r.caseId, index, { at, id }, params), seat);
             if (!done.length) break;
             events.push(...done);
-            ran.push(core.titleOf(doc.catalog, s.catalogRow) || s.key);
+            // Name the STEP. All eight vendor-dispatch steps share one catalog
+            // row, so a line built from the row title alone repeats the same
+            // words for every step swept and says nothing about what ran.
+            const title = core.titleOf(doc.catalog, s.catalogRow);
+            ran.push(title && title !== s.key ? `${s.key} (${title})` : s.key);
             index += 1;
           }
           if (ran.length) {

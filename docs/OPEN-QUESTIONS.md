@@ -10,6 +10,32 @@ would settle it.
 
 ---
 
+
+## A reasoning clerk sits on a catalog row the book marks `auto`
+
+*Raised 2026-08-07.* `violation-notice/classify` sits on catalog row
+`violation.classify`, which declares `mode: 'auto'` — no person needed. But the
+roster names **Rhys** to that commitment with a Tier-1 brain, and names **Ross**
+for the same shape of work ("classify a breach and grade it against the standard
+that governs it"). Both cannot be true: either classification is automatable and
+does not deserve a name, or the row is mislabelled.
+
+The evidence leans toward the row being wrong — the repository has twice decided
+that classification is a judgment, by giving it names and brains — and `escape.ts`
+already treats the mirror case as FATAL (a `judgment` failure route whose remedy
+sits on an `auto` row asserts two things that cannot both be true).
+
+**It is not flipped here, and that is deliberate.** `mode` is what
+`mayRunUnattended` reads, so changing it moves the escape ceiling — the number
+the whole product is judged against — and it needs a deployment path to running
+chronicles, which store their own copy of the catalog. That makes it a ruling,
+not a refactor. The precedent is the 2026-08-07 strike of `silence is
+authorization`, which was decided and recorded before it was made.
+
+`test/rig.test.ts` asserts the KNOWN set of these contradictions, so a NEW one
+fails the suite while this one does not pretend to be resolved. Rule on it and
+the test's expectation changes with the fix.
+
 ## Fee terms that are currently one shape, and probably need to be many
 
 The economy models a fee as a `kind` plus a `basis` plus a rate or flat amount.
