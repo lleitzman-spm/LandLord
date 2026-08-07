@@ -307,7 +307,7 @@ async function handleFleet(
   if (!doc.wargame?.seed) return json({ error: 'no muster stands — deploy one, then let the clerks work' }, 409);
   const now = doc.wargame.now ?? new Date().toISOString();
 
-  let result: { events: unknown[]; perClerk: unknown[]; proposals: number };
+  let result: { events: unknown[]; perClerk: unknown[]; proposals: number; swept: number };
   try {
     const guardedRun = await runGuardedModelWork(
       ({ onBlocked }) => deps.makeComplete(env, onBlocked),
@@ -321,7 +321,7 @@ async function handleFleet(
     return json({ error: `the fleet faltered: ${(err as Error).message}` }, 502);
   }
 
-  if (!result.events.length) return json({ proposals: 0, perClerk: result.perClerk });
+  if (!result.events.length) return json({ proposals: 0, swept: 0, perClerk: result.perClerk });
 
   // A minute of reasoning is not thrown away because the board wrote while the
   // clerks worked — the batch is replayed onto a fresh read (see commitAppend).
@@ -338,7 +338,7 @@ async function handleFleet(
       409,
     );
   }
-  return json({ proposals: result.proposals, perClerk: result.perClerk });
+  return json({ proposals: result.proposals, swept: result.swept, perClerk: result.perClerk });
 }
 
 /** The document as the vault holds it right now, or null if it cannot be read.

@@ -67,5 +67,20 @@ export async function runFleet({ doc, now, core, complete, brainFor, cap, meter 
       records: out.records,
     });
   }
-  return { events, perClerk, proposals: perClerk.reduce((n, c) => n + c.records.length, 0) };
+  // TWO COUNTS, because there are now two outcomes. Until the sweep landed a
+  // clerk could only park work on a human, so the number of records WAS the
+  // number of proposals. It is not any more: an advance clerk completes a step
+  // the book declared `auto`, and counting that as a proposal tells the human
+  // that N things await their word and then hands them a board showing fewer —
+  // or none. Count the EVENTS, which cannot mislead: a proposal parks, a
+  // completion carries through, and no record's prose is consulted.
+  const kinds = events.map((e) => e?.kind);
+  return {
+    events,
+    perClerk,
+    /** Steps now waiting on the human. The only number that earns a road to the Ledger. */
+    proposals: kinds.filter((k) => k === 'proposed' || k === 'awaiting').length,
+    /** Steps the clerks carried through unattended. Worth reporting, never a summons. */
+    swept: kinds.filter((k) => k === 'done').length,
+  };
 }

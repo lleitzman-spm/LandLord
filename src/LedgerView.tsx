@@ -890,8 +890,19 @@ function FlowInstanceCard({
                     // event and the readings recompute around it.
                     const inHand = r.next?.step.key === s.step.key;
                     const stepIx = s.index - 1; // StepReading.index is 1-based
+                    // The one shape the writer will ratify — the same rule the
+                    // domain enforces (`refusesRatification`, flows.ts).
+                    //
+                    // Approve used to be drawn on an `overridden` step too. That
+                    // was never a live dead button: `readFlow` counts overridden
+                    // among the ACTED kinds (flows.ts:1378), so the ball has
+                    // always moved past such a step and `inHand` never held on
+                    // one. It was unreachable code asserting a rule the domain
+                    // contradicts — that an override could be ratified after the
+                    // fact — and with the writer now refusing outright, leaving
+                    // it in would be a standing invitation to make it reachable.
+                    // An override IS the human's answer; there is no second one.
                     const canRatify = s.kind === 'awaiting' || s.kind === 'proposed';
-                    const canActAfterOverride = s.kind === 'overridden';
                     return (
                       <li key={s.step.key}>
                         <span className={`ledger-mark ${s.breached ? 'ledger-away' : 'ledger-out'}`}>
@@ -933,7 +944,7 @@ function FlowInstanceCard({
                         </span>
                         {inHand && r.status !== 'done' && (
                           <span className="flow-acts">
-                            {(canRatify || canActAfterOverride) && (
+                            {canRatify && (
                               <button
                                 className="rowbtn"
                                 onClick={() =>

@@ -112,7 +112,7 @@ function chronicleStore(env: Record<string, string>): Plugin {
   // a human judgment. The Worker mirrors this at POST /api/fleet for deployed
   // users behind the wall.
   async function runFleetOnce(cap: number): Promise<
-    | { status: 'ok'; proposals: number; perClerk: unknown[] }
+    | { status: 'ok'; proposals: number; swept: number; perClerk: unknown[] }
     | { status: 'no-muster' }
     | { status: 'conflict' }
     | { status: 'error'; message: string }
@@ -162,8 +162,8 @@ function chronicleStore(env: Record<string, string>): Plugin {
         message: 'model context refused; no clerk proposal was written',
       };
     }
-    const { events, perClerk, proposals } = guardedRun.result;
-    if (!events.length) return { status: 'ok', proposals: 0, perClerk };
+    const { events, perClerk, proposals, swept } = guardedRun.result;
+    if (!events.length) return { status: 'ok', proposals: 0, swept: 0, perClerk };
     // A minute of reasoning is not thrown away because the board wrote while
     // the clerks worked: the batch is replayed onto a fresh read by the one
     // law both doors keep (commitAppend — the Worker's door does the same).
@@ -184,7 +184,7 @@ function chronicleStore(env: Record<string, string>): Plugin {
     });
     if (committed === 'error') return { status: 'error', message: 'vault write refused' };
     if (committed === 'conflict') return { status: 'conflict' };
-    return { status: 'ok', proposals, perClerk };
+    return { status: 'ok', proposals, swept, perClerk };
   }
 
   // The court roll in dev. There is no Access wall here to name the caller, so
@@ -405,7 +405,7 @@ function chronicleStore(env: Record<string, string>): Plugin {
               res.statusCode = 502;
               res.end(JSON.stringify({ error: r.message }));
             } else {
-              res.end(JSON.stringify({ proposals: r.proposals, perClerk: r.perClerk }));
+              res.end(JSON.stringify({ proposals: r.proposals, swept: r.swept, perClerk: r.perClerk }));
             }
           });
         });

@@ -378,7 +378,9 @@ export interface WargameActions {
    *  edit. `cap` bounds how many cases each clerk proposes this run. Returns the
    *  proposal count, or an error the UI can surface. The clerks only PROPOSE —
    *  the Regent still ratifies every one. */
-  runClerks: (cap?: number) => Promise<{ ok: true; proposals: number } | { ok: false; error: string }>;
+  runClerks: (
+    cap?: number,
+  ) => Promise<{ ok: true; proposals: number; swept: number } | { ok: false; error: string }>;
 }
 
 /** Where the last write to the vault stands. `saving` while a PUT is in flight,
@@ -1410,7 +1412,7 @@ export function useChronicle(): ChronicleStore {
           const body = (await res.json().catch(() => ({}))) as { error?: string };
           return { ok: false as const, error: body.error ?? `the clerks' desk answered ${res.status}` };
         }
-        const data = (await res.json()) as { proposals?: number };
+        const data = (await res.json()) as { proposals?: number; swept?: number };
         // The fleet committed its proposals server-side; pull the fresh doc and
         // merge it in against our last-synced base, so both the new `agent:<seat>`
         // proposals and any un-persisted local edit survive (no silent loss).
@@ -1420,7 +1422,7 @@ export function useChronicle(): ChronicleStore {
           setChronicle((local) => mergeOnConflict(local, remote.chronicle, baseDoc.current));
           baseDoc.current = remote.chronicle;
         }
-        return { ok: true as const, proposals: data.proposals ?? 0 };
+        return { ok: true as const, proposals: data.proposals ?? 0, swept: data.swept ?? 0 };
       } catch (err) {
         return { ok: false as const, error: (err as Error).message };
       }

@@ -436,13 +436,28 @@ export default function WarTableView({
           ? {
               tone: 'done',
               proposals: r.proposals,
-              line: `The clerks worked — ${r.proposals} proposal${r.proposals === 1 ? '' : 's'} parked for your word.`,
+              // Carried work is said in the same breath, because a run that
+              // parked two and carried nine is a very different run from one
+              // that parked two — and the second number is the whole point.
+              line:
+                `The clerks worked — ${r.proposals} proposal${r.proposals === 1 ? '' : 's'} parked for your word` +
+                (r.swept > 0 ? `, ${r.swept} step${r.swept === 1 ? '' : 's'} carried through without you.` : '.'),
             }
-          : {
-              tone: 'empty',
-              proposals: 0,
-              line: 'The clerks found nothing to take up — every seat they grip is already answered.',
-            }
+          : r.swept > 0
+            ? {
+                // NOTHING PARKED, but the clerks were not idle. This case did
+                // not exist before the sweep, and the count that used to be
+                // shown here summoned the human to a Ledger with nothing on it
+                // — a road to an empty room. It reports and offers no road.
+                tone: 'done',
+                proposals: 0,
+                line: `The clerks worked — ${r.swept} step${r.swept === 1 ? '' : 's'} carried through without you. Nothing needs your word.`,
+              }
+            : {
+                tone: 'empty',
+                proposals: 0,
+                line: 'The clerks found nothing to take up — every seat they grip is already answered.',
+              }
         : { tone: 'error', proposals: 0, line: `The clerks could not work — ${r.error}` },
     );
   };
