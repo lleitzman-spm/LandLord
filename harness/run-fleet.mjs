@@ -67,5 +67,16 @@ export async function runFleet({ doc, now, core, complete, brainFor, cap, meter 
       records: out.records,
     });
   }
-  return { events, perClerk, proposals: perClerk.reduce((n, c) => n + c.records.length, 0) };
+  // COUNT THE EVENTS, NOT THE LINES. This used to sum `records.length`, which
+  // is the number of console lines each clerk wrote — and since the auto sweep
+  // landed, a swept step writes a record too ("ran 2 step(s) unattended"). So
+  // sweeps inflated the "proposals" figure, and a caller offering a road to the
+  // Ledger sent the reader to a surface that lists `awaitingHuman` — where a
+  // swept step never appears. A dead button, built out of a miscount.
+  //
+  // The two are reported apart because they mean opposite things: a proposal is
+  // work ARRIVING on the human's desk, a sweep is work that never reached it.
+  const proposals = events.filter((e) => e.kind === 'proposed').length;
+  const swept = events.filter((e) => e.kind === 'done').length;
+  return { events, perClerk, proposals, swept };
 }

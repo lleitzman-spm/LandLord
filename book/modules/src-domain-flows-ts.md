@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-1422 lines · 30 exported symbols.
+1453 lines · 30 exported symbols.
 
 ## What the file says of itself
 
@@ -34,7 +34,7 @@ aliases:
 
 ## Shape
 
-- **Lines:** 1422
+- **Lines:** 1453
 - **Exported symbols (30):** `FOUNDING_FLOWS`, `FailureDetects`, `FailureEnds`, `FailureRoute`, `FailureRoutes`, `FlowBook`, `FlowInstance`, `FlowParams`, `FlowReading`, `FlowStep`, `FlowTemplate`, `HolderRef`, `StepReading`, `TimingEdge`, `approveStep`, `awaitsOutside`, `completeStep`, `edgeLine`, `failStep`, `flowsAtFounding`, `fullParams`, `handStep`, `instantiateFlow`, `mayRunUnattended`, `overrideStep`, `paramsOf`, `proposeStep`, `readFailureRoutes`, `readFlow`, `readFlows`
 - **Assets it pulls in (no page, so no road):** `knowledge/facts.json`
 
@@ -228,6 +228,7 @@ aliases:
 - [[a door the book does not hold reads UNPLACED, and is named]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a door the book holds places cleanly — realm, shire, fee and knight]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[a door’s shire and its fee stand in the SAME realm as the door]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[a double completion cannot advance the cascade twice]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a failure sent back to the party who erred is NOT an escape]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a failure that is redone still leaves a mark — the count, not the latest kind]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a fee scattered across two shires reads fine, and rolls up as ONE fee]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -303,6 +304,7 @@ aliases:
 - [[ALLOWS the step that genuinely waits — the guard is not a wall]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an absent catalog shelf adopts the founding rows]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[an absent economySetting normalizes through untouched, and economyOf is a true no-op]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[an ADVANCING batch refuses to replay on conflict — it does not re-append blindly]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an agent CAN still advance a cascade — the belt makes it legible, not impossible]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an agent with no wired judgment refuses to run rather than pretend to]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an ancient trifle never outranks today’s crisis — age does not compound forever]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -318,6 +320,7 @@ aliases:
 - [[an estate with no override still reads the house cap (invariant)]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[an estate's own NTE governs the settlement ceiling where it has one]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[an id-keyed array merges by id, not by index]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[an OBSERVING batch still replays, so a minute of reasoning is not thrown away]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an out-of-range index is no act at all, like every other writer]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an owed edict PRESSES as its day nears]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[an unclassified estimate stops, and says WHY it stopped]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -344,6 +347,7 @@ aliases:
 - [[catches a money event with an unknown kind (silent-drop guard)]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[catches an over-sweep (bridge driven negative) the aggregate checker misses]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[catches an owner overdrawn (commingling guard)]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[classifies observing batches as replayable and advancing ones as not]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[commission_sweep lands the markup in By-Pass, never operating, and stays sound]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[counts each escalation, not each step — this is where rework becomes visible]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[counts each kind of override, and the house cap as one]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -465,6 +469,7 @@ aliases:
 - [[REFUSES a step nobody has reached]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[REFUSES an out-of-range step]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[refuses non-JSON, a non-array, a rowless shape, and unknown fields]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[refuses to complete a step the log already records as done]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[refuses to construct an agent that does not refuse to ratify]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[REFUSES to ratify the same step twice]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[rejects malformed rows and bad number shapes]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -483,6 +488,7 @@ aliases:
 - [[skips a known signal whose flow this chronicle does not carry]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[skips a malformed row rather than opening a case with a hole in it]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[skips a signal it has never agreed on, and says so]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[still allows a legitimate completion of the step in hand]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[still lets THIS session’s own load win over a stale remote]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[still names the declared office where it DOES stand]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[still routes ordinary rows — the scan must not fire on real work]] — *imported by the test FILE (shared source, not a claim about this one test)*

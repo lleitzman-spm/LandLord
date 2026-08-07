@@ -66,7 +66,7 @@ async function main() {
     console.error('Model context refused; the entire fleet run was discarded and no event was appended.');
     return;
   }
-  const { events, perClerk, proposals } = guardedRun.result;
+  const { events, perClerk, proposals, swept } = guardedRun.result;
 
   console.log(`The clerk fleet · game ${doc.wargame.seed} @ ${now} · ${perClerk.length} clerks\n`);
   for (const c of perClerk) {
@@ -82,8 +82,18 @@ async function main() {
     return;
   }
   const total = backing.appendEvents(events);
-  console.log(`Appended ${events.length} event(s) — ${proposals} proposal(s) parked; the log now holds ${total}.`);
-  console.log('Open the Ledger/Seat: each proposal reads by its clerk, awaiting the Regent\'s Approve/Override.');
+  console.log(
+    `Appended ${events.length} event(s) — ${proposals} proposal(s) parked, ` +
+      `${swept} step(s) run unattended; the log now holds ${total}.`,
+  );
+  // Only name the road when there is something at the end of it. A sweep puts
+  // nothing on the Regent's desk, so a run that only swept must not send the
+  // reader to an empty Ledger.
+  if (proposals) {
+    console.log("Open the Ledger/Seat: each proposal reads by its clerk, awaiting the Regent's Approve/Override.");
+  } else {
+    console.log('Nothing is parked for the Regent — every step this run was one the book says needs no person.');
+  }
   meter.report(proposals);
 }
 

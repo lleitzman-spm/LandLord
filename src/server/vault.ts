@@ -125,15 +125,45 @@ export async function vaultCasWrite(
 // ("the clerks could not work: the vault moved under the fleet" — Edwin hit it
 // on the live castle, 2026-07-27).
 //
-// It never needs to. The fleet's output is pure APPEND — new events, each with
-// its own id — so replaying it onto whatever the vault holds NOW is exactly
-// what the client's own merge would do, and is the same answer the clerks
-// already reasoned. So a conflict means re-read and re-append, never re-reason
-// and never overwrite the writer that got there first.
+// It never needs to — SO LONG AS the batch is genuinely pure append. That was
+// true when this was written: the fleet only ever emitted `proposed`, and a
+// duplicate proposal lands beside the first without changing what anybody may
+// do next.
+//
+// IT STOPPED BEING TRUE ON 2026-08-07, when `mode` was made operative and the
+// advance clerk began COMPLETING the steps the book declares need no person.
+// A `done` is not a note beside the work; it MOVES the cascade. Replaying one
+// onto a document that has moved underneath — because the very conflict that
+// triggered the replay may BE a human ratifying that step — appends a
+// completion for work nobody did, off a decision taken against a document that
+// no longer exists.
+//
+// So the replay is now conditioned on the property it always assumed:
+// `isPureAppend`. A batch that only observes replays as before; a batch that
+// ADVANCES refuses and reports the conflict, and the caller re-reads and
+// re-reasons. Losing a minute of clerk reasoning is cheap. A `done` on a step
+// no human touched is the thing the whole propose-only ratchet exists to
+// prevent.
 
 export interface AppendDoc {
   events?: unknown[];
   [k: string]: unknown;
+}
+
+/** The event kinds that MOVE a cascade rather than merely observe it. Replaying
+ *  one of these onto a document that changed under the writer can assert work
+ *  that never happened, so a batch containing any of them may not be replayed.
+ *  `proposed`, `opened`, `handed`, `awaiting` and `noted` are all safe: each
+ *  records that something arrived or is waiting, and a duplicate changes
+ *  nothing about who may act next. */
+const ADVANCING_KINDS = new Set(['done', 'approved', 'overridden', 'failed']);
+
+/** True when every event in the batch merely observes — the precondition this
+ *  module's replay has always depended on, now checked rather than assumed. */
+export function isPureAppend(events: unknown[]): boolean {
+  return events.every(
+    (e) => !ADVANCING_KINDS.has(String((e as { kind?: unknown } | null)?.kind ?? '')),
+  );
 }
 
 /** Commit `events` onto the document, replaying onto a fresh read whenever a
@@ -154,9 +184,15 @@ export async function commitAppend({
   write: (next: AppendDoc, baseRev: number) => Promise<CasResult>;
   attempts?: number;
 }): Promise<CasResult> {
+  const replayable = isPureAppend(events);
   for (let attempt = 0; attempt < attempts; attempt++) {
     let doc = base;
     if (attempt > 0) {
+      // AN ADVANCING BATCH IS NOT REPLAYED. See the note above: the conflict
+      // that sent us here may itself be a human ratifying the very step this
+      // batch would mark done. Report the conflict and let the caller re-read
+      // and re-reason against the document as it actually stands.
+      if (!replayable) return 'conflict';
       const fresh = await read();
       if (fresh === null) return 'error';
       doc = fresh;

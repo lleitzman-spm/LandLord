@@ -958,14 +958,45 @@ export function proposeStep(
  *  With no next step the cascade is finished: only the `done` returns, which
  *  folds the case closed. Callers pass the index of the step in hand
  *  (`reading.next`); an out-of-range index is no act at all. */
+/** THE COMPLETION GUARD — the ratification guard's sibling, and the door the
+ *  first one left open.
+ *
+ *  `refusesRatification` closed `approveStep`/`overrideStep` in 2026-08-07 and
+ *  `completeStep` was left bounds-checked only, which made it the loose door:
+ *  a replay, a double-click, or an agent could mark a step done that was
+ *  ALREADY done, advancing the cascade a second time off one act. That is not
+ *  hypothetical — it is the same shape as the vault's replay-on-conflict
+ *  (`src/server/vault.ts`), where a re-sent batch of `done` events lands on a
+ *  document that has already moved.
+ *
+ *  The rule is narrower than the ratification guard's on purpose. A step may
+ *  legitimately be completed from `handed`, `awaiting` or `proposed` — a clerk
+ *  sweeping an `auto` step, a human answering a parked one. What may never
+ *  happen is completing a step the log already records as `done`.
+ *
+ *  `log` is optional ONLY because a caller may be building a cascade whose
+ *  events do not exist yet (a fixture walking a case to a step, the intake
+ *  clerk completing steps on a case it just opened). Given a log, the guard
+ *  applies; every production caller passes one, and a test asserts it. */
+function refusesCompletion(
+  tpl: FlowTemplate,
+  caseId: string,
+  index: number,
+  opts: { at: string; log?: KingdomEvent[] },
+): boolean {
+  if (index < 0 || index >= tpl.steps.length) return true;
+  if (!opts.log) return false;
+  return readFlow(tpl, opts.log, caseId, opts.at)?.steps[index]?.kind === 'done';
+}
+
 export function completeStep(
   tpl: FlowTemplate,
   caseId: string,
   index: number,
-  opts: { at: string; id: () => string; note?: string },
+  opts: { at: string; id: () => string; note?: string; log?: KingdomEvent[] },
   params?: FlowParams,
 ): KingdomEvent[] {
-  if (index < 0 || index >= tpl.steps.length) return [];
+  if (refusesCompletion(tpl, caseId, index, opts)) return [];
   const events = [answerStep(tpl, caseId, index, 'done', opts)];
   if (index + 1 < tpl.steps.length)
     events.push(handStep(tpl, caseId, index + 1, opts, params));

@@ -304,8 +304,8 @@ export function makeIntakeClerk(ctx) {
           note: `Identified as ${leaf.title} — put in motion as a ${tpl.title}.`,
         });
         // Stamped: a clerk's `done` must not read as the operator's own work.
-        events.push(...stampAgentActor(core.completeStep(tpl, caseId, 0, { at, id, note: 'Report logged from the tenant intake.' }, params), seat));
-        events.push(...stampAgentActor(core.completeStep(tpl, caseId, 1, { at, id, note: `Identified as ${leaf.title}.` }, params), seat));
+        events.push(...stampAgentActor(core.completeStep(tpl, caseId, 0, { at, id, note: 'Report logged from the tenant intake.', log: [...doc.events, ...events] }, params), seat));
+        events.push(...stampAgentActor(core.completeStep(tpl, caseId, 1, { at, id, note: `Identified as ${leaf.title}.`, log: [...doc.events, ...events] }, params), seat));
         const trade = params.trade ?? 'the trade';
         const urgency = params.urgency ?? 'routine';
         const gate = spendGateFor(core, doc, tpl, 2, params, estateId);
@@ -1067,7 +1067,7 @@ export function makeAdvanceClerk(ctx, seat) {
           while (index < r.template.steps.length) {
             const s = r.template.steps[index];
             if (s.holder !== seat || !core.mayRunUnattended(s, modeOf)) break;
-            const done = stampAgentActor(core.completeStep(r.template, r.caseId, index, { at, id }, params), seat);
+            const done = stampAgentActor(core.completeStep(r.template, r.caseId, index, { at, id, log: [...doc.events, ...events] }, params), seat);
             if (!done.length) break;
             events.push(...done);
             // Name the STEP. All eight vendor-dispatch steps share one catalog

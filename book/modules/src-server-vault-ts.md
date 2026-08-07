@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-174 lines · 10 exported symbols.
+210 lines · 11 exported symbols.
 
 ## What the file says of itself
 
@@ -34,14 +34,14 @@ aliases:
 
 ## Shape
 
-- **Lines:** 174
-- **Exported symbols (10):** `AppendDoc`, `CANONICAL_DOC_ID`, `CasResult`, `VaultRead`, `commitAppend`, `revFilter`, `revOf`, `vaultCasWrite`, `vaultRead`, `vaultReadDoc`
+- **Lines:** 210
+- **Exported symbols (11):** `AppendDoc`, `CANONICAL_DOC_ID`, `CasResult`, `VaultRead`, `commitAppend`, `isPureAppend`, `revFilter`, `revOf`, `vaultCasWrite`, `vaultRead`, `vaultReadDoc`
 
 ## Backlinks
 
 ### Writs that specify it
 
-- [[Handoff — where things stand]] — *this writ names the exported symbol `commitAppend`*
+- [[Handoff — where things stand]] — *this writ names the exported symbol `commitAppend`; this writ names the exported symbol `isPureAppend`*
 
 ### Entities
 
@@ -56,10 +56,14 @@ aliases:
 
 *These roads come from a shared source FILE, not from a semantic claim: the test file imports the module. Read it as "stands near", never as "proves".*
 
+- [[a double completion cannot advance the cascade twice]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a lost create race yields conflict (POST 409, then PATCH matches 0 rows)]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a real insert failure (not a duplicate) is an error, not a conflict]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[an ADVANCING batch refuses to replay on conflict — it does not re-append blindly]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[an OBSERVING batch still replays, so a minute of reasoning is not thrown away]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[an unreadable vault is an error, not a silent loss]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[bootstraps a document that has no events book yet]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[classifies observing batches as replayable and advancing ones as not]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[commits straight through when nothing moved]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[commits when the row matches (non-empty representation)]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[creates a new identity row via POST insert]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -68,11 +72,13 @@ aliases:
 - [[gives up honestly if the vault never stops moving]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[keeps replaying while the vault keeps moving, and never re-reasons]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[ok returns the doc, absent on zero rows, error on refusal]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[refuses to complete a step the log already records as done]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[REPLAYS onto the fresh doc when the board wrote mid-run — losing neither]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[reports conflict when the row moved (empty representation)]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[reports error on a refused write]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[revFilter matches null-or-0 at base 0 (bootstrap), exact past that]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[revOf reads a numeric rev, else 0]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[still allows a legitimate completion of the step in hand]] — *imported by the test FILE (shared source, not a claim about this one test)*
 
 ## Documents that cite this source
 

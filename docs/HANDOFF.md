@@ -202,6 +202,71 @@ isolation was one-way.
 *(Both gaps listed here — the `BeltRefusal` and the missing identity guard —
 are now closed. See the entries below.)*
 
+**2026-08-07 (last) — the remaining four findings closed, and the scoping rule
+that hid two of them corrected.** All green: `npm run build`, **527 tests**,
+`leakcheck` 0 findings, `book:lint` exit 0.
+
+**First, a correction to this file's own previous entry.** It filed findings
+#1/#3/#5/#6 as "out of scope — React surface". That was wrong for three of the
+four, and the error hid work that was squarely in the lane: **#1 is
+`src/server/vault.ts` (server, not React)**, **#5 is
+`src/store/chronicleStore.ts` (store, not React)**, and **#3 and #6 each had a
+half inside `harness/` and `src/domain/` respectively**. Only the *presentation*
+halves of #3 and #6 are React at all. The brief's rule ("harness/ and
+src/domain/ ONLY") is also stricter than its own stated reason ("if it needs the
+React surface"), and `src/store/`/`src/server/` fall in the gap between them —
+which is exactly where the mislabelling happened. Widened deliberately, with
+the owner's word.
+
+- **#1 — the vault no longer replays an ADVANCING batch.** Replay-on-conflict
+  was justified because "the fleet's output is pure APPEND and a duplicate
+  `proposed` is a no-op". That stopped being true the day `mode` was made
+  operative and the advance clerk began emitting `done`. A `done` MOVES the
+  cascade, and the very conflict triggering the replay may be a human ratifying
+  that step. `isPureAppend` now checks the property the code always assumed:
+  observing batches replay as before, advancing batches return `conflict` and
+  the caller re-reads. Losing a minute of clerk reasoning is cheap; a `done` on
+  a step no human touched is what the whole ratchet exists to prevent.
+
+- **#6 — `completeStep` has a writer guard.** It was bounds-checked only, which
+  made it the loose door beside the ratification guard: a replay or a second
+  agent could mark a step done that was already done, advancing the cascade
+  twice off one act. `refusesCompletion` refuses exactly that, and deliberately
+  nothing more — a step may still legitimately be completed from `handed`,
+  `awaiting` or `proposed`. `log` is optional only because a caller may be
+  building a cascade whose events do not exist yet; every production caller
+  passes one.
+
+- **#5 — the `handFlow` TOCTOU is closed.** It built the batch against the
+  render snapshot and then wrote through `mutate`, so the ratification guard
+  could pass on a document that no longer existed by the time the events landed.
+  The build now happens INSIDE the updater against `prev`, so the guard's answer
+  and the write are taken against one book.
+
+- **#3 — the fleet's proposal count stopped lying.** It summed `records.length`
+  — console lines — and since the auto sweep landed a swept step writes a record
+  too, so sweeps inflated "proposals" and the road to the Ledger could land on a
+  surface listing nothing. It counts `proposed` events now, reports `swept`
+  separately because they mean opposite things, and only names the Ledger road
+  when something is actually parked. **Driven live:** a real fleet run over a
+  deployed muster reported *"41 event(s) — 20 proposal(s) parked, 9 step(s) run
+  unattended"*.
+
+**Driven in a real browser, not merely unit-tested** (`npm run dev`, Chromium):
+deployed the game (370 debt, 91% escape rate), ran the fleet, opened the Court,
+and **approved a clerk's proposal through the rebuilt `handFlow`** — events
+2062 → 2064, `approved` 0 → 1, **0 console errors**, 0px horizontal overflow.
+"Mark done" also drives fine.
+
+**One thing the browser could NOT prove, stated rather than implied:** the
+double-completion refusal. Clicking "Mark done" twice completes Step 4 then
+Step 5 — different steps — because the button always targets the step in hand
+and the cascade advances between clicks. The UI cannot naturally produce the
+same-index double the guard exists for (a replay or a race). That refusal rests
+on `test/four-findings.test.ts`, proved by reverting the guard and watching the
+test fail. **Finding #6's other half is still open and is React:** "Mark done"
+renders unconditionally, so the button is offered where the writer will refuse.
+
 **2026-08-07 (closing) — four more of the standing findings, and the one that
 must not be guessed.** All green: `npm run build`, **521 tests**, `leakcheck` 0
 findings, `book:lint` exit 0.

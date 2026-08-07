@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-1446 lines · 15 exported symbols.
+1463 lines · 15 exported symbols.
 
 ## What the file says of itself
 
@@ -32,7 +32,7 @@ aliases:
 
 ## Shape
 
-- **Lines:** 1446
+- **Lines:** 1463
 - **Exported symbols (15):** `CatalogActions`, `CensusActions`, `ChronicleStore`, `CourtActions`, `EconomyActions`, `EstateActions`, `EventsActions`, `FlowsActions`, `MarchesActions`, `Persistence`, `RegentActions`, `SaveStatus`, `TreasuryActions`, `WargameActions`, `useChronicle`
 - **Assets it pulls in (no page, so no road):** `data/library/pm-setting.json`
 
@@ -84,6 +84,7 @@ aliases:
 
 *These name this FILE by its path. That is a citation of the source, not a claim about any one idea inside it — do not read a path citation as agreement, dependence or implementation.*
 
+- [[Handoff — where things stand]]
 - [[Writ — the flow engine (the operator's spine)]]
 - [[Writ — the Land: pods, knights, owners, and guilds (the realm remodeled)]]
 - [[Writ — the operator's hands (swing two, part one)]]
