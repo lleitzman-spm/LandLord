@@ -40,6 +40,7 @@ The constitution of LandLord — design laws, the pledges, territories, the four
 - [[Writ — the economy pillar, re-expressed as chronicle readings]]
 - [[Writ — the first War Game (the proving ground)]]
 - [[Writ — the flow engine (the operator's spine)]]
+- [[Writ — The Knighthood: one seat, a Regent that is an agent, and the fief as a desk]]
 - [[Writ — the Land: pods, knights, owners, and guilds (the realm remodeled)]]
 - [[Writ — the operator's hands (swing two, part one)]]
 - [[Writ — The Realm Map (the illuminated map, come alive)]]

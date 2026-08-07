@@ -32,6 +32,7 @@ aliases:
 - Why this note exists
 - The split
 - "Escape" means two things — ours is the rate
+- "Orchestrator" was the wrong noun — the correction, paid 2026-08-07
 - The standing rule
 - What is deliberately not here
 
@@ -43,6 +44,13 @@ aliases:
 
 *Nothing in the Book points here. An orphan page is worse than a missing one — it exists, it is correct, and no reader will ever reach it. `npm run book:lint` counts these.*
 
+## Documents that cite this source
+
+*These name this FILE by its path. That is a citation of the source, not a claim about any one idea inside it — do not read a path citation as agreement, dependence or implementation.*
+
+- [[Handoff — where things stand]]
+- [[Writ — The Knighthood: one seat, a Regent that is an agent, and the fief as a desk]]
+
 ## Sources this page cites
 
 *Files this page names by path. Again: a citation of the file, nothing more.*
@@ -50,6 +58,7 @@ aliases:
 - [[ALLOWLIST.md]]
 - [[src/domain/escape.ts]]
 - [[src/domain/flows.ts]]
+- [[Writ — The Knighthood: one seat, a Regent that is an agent, and the fief as a desk]]
 
 ---
 

@@ -33,6 +33,7 @@ Any time someone is doing a job they should be delegating, the board says so —
 ### Writs that specify it
 
 - [[The Kingdom — Canon]] — *this writ names "The system hunts delegation debt" literally*
+- [[Writ — The Knighthood: one seat, a Regent that is an agent, and the fief as a desk]] — *this writ names "The system hunts delegation debt" literally*
 
 ---
 

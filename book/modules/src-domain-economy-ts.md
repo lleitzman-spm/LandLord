@@ -43,9 +43,11 @@ aliases:
 
 ### Writs that specify it
 
+- [[Handoff — where things stand]] — *this writ names the exported symbol `spendGate`*
 - [[Open questions]] — *this writ names the exported symbol `estimateSpendCents`; this writ names the exported symbol `spendGate`*
 - [[The Kingdom — Canon]] — *this writ names the exported symbol `BudgetLine`; this writ names the exported symbol `EARNED_FEE_LIMIT_DAYS`; +9 more*
 - [[Writ — the economy pillar, re-expressed as chronicle readings]] — *this writ names the exported symbol `EconomyBook`; this writ names the exported symbol `feeAmount`; +8 more*
+- [[Writ — The Gate: the money law is written and nothing enforces it]] — *this writ names the exported symbol `spendGate`*
 
 ### Facts it depends on
 
@@ -363,6 +365,7 @@ aliases:
 - [[The Kingdom — Canon]]
 - [[Working in parallel — the multi-session doctrine]]
 - [[Writ — the economy pillar, re-expressed as chronicle readings]]
+- [[Writ — The Gate: the money law is written and nothing enforces it]]
 
 ---
 

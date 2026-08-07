@@ -38,6 +38,61 @@ yours rather than forcing your copy over live work.
 
 ## State of play
 
+**2026-08-07 — the knighthood: LandLord is the agent layer, a fief is a desk, and
+the money gate turns out not to refuse.** All green: `npm run build`, **442 tests**,
+`leakcheck` 1,412 files / 0 findings, `npm run book` 1,141 pages / 4,472 roads,
+`npm run book:lint` **exit 0**, 0 dangling, 1,047 quotes re-verified against disk.
+
+**The frame question below is ANSWERED and struck.** The ruling: *operating
+instrument under load, not a video game with score points.* The follow-on reframe
+is the bigger news — **LandLord is the AGENT LAYER; the operating records are the
+graph and live behind the data gate.** A single-seat platform: one human, a fleet
+of agents.
+
+- **`docs/WRIT-THE-KNIGHTHOOD.md` — the canon amended.** King = the one human
+  operator. Regent = **the orchestrator agent**, holds no desk. **A fief is a
+  DESK** — the flow-book steps sharing one `holder`. Knight/vassal = an agent
+  granted a desk; squire = an agent in training, knighted at rung 2 *when its runs
+  get boring* (`re-pledge` already models it — no new record). **The delegation
+  debt and the escape rate are ONE number.** Struck: guilds, pods,
+  knights-as-partners, hamlets, mayors, the two lines, the map — to an archive
+  branch, not discarded. Design laws 3–6 untouched; law 5 becomes the literal
+  product thesis. `KINGDOM.md` carries the amendment and the four superseded
+  sections each say so on their face.
+
+- **The "orchestrator" correction is PAID** (`docs/SIBLING-BOUNDARY.md`). The
+  sibling recorded that the wrong noun started here and owed us the fix. Verified
+  against the tree: `harness/run-fleet.mjs:49-66` is a sequential `for…of` over a
+  fixed roster with a shared `taken` Set — no scheduler, queue, retry,
+  backpressure, autonomous trigger, or clock. **A runner, not a control plane**,
+  and neither side of the boundary has one. Consequence worth keeping: for as long
+  as both projects believed a control plane existed here, neither built one.
+
+- **`docs/WRIT-THE-GATE.md` — the money law is written and nothing enforces it.**
+  Five findings, **each re-verified against the bytes, not inherited**:
+  `assertFiduciarySound` lives at `test/invariants.ts:161` with a test as its only
+  caller; `spendGate` is read at three clerk sites and only ever *words a sentence*;
+  the price clerk's `hold` branch and its clear branch call `proposeStep` with
+  **identical arguments** (`clerks.mjs:733`) so an over-ceiling invoice is
+  indistinguishable in the record; the calendar window is never compared to a date;
+  and the only guard before a ratification is a **JSX render condition**
+  (`LedgerView.tsx:889`) — `approveStep` checks array bounds and nothing else.
+  What guards the money is an air gap, and **an air gap is surface area, not an
+  invariant.**
+
+- **The sharp one, and it is ours.** `flows.ts:551` declares `condition: 'silence
+  is authorization'` on lease-renewal `owner-window`. `condition` is never
+  evaluated, so it is inert today — **but that step is `mode: 'auto'`, one of the
+  13.** So the obvious next improvement (make `mode` operative; let clerks complete
+  the steps the book says need no person) would, in the natural order,
+  **auto-approve spending an owner's money on their silence.** *Ruling: strike
+  `silence is authorization` BEFORE `mode` is made operative.* Written down because
+  the safe order and the natural order are opposites here.
+
+**The standing rule that gates everything the agent layer is for:** no real data
+reaches the fleet until **at least one runtime refusal** exists in it. Not a gate
+that reports — a writer that declines, and leaves a different record.
+
 **2026-08-06 (later) — the Book opens as a vault, two labels stopped lying, and a
 blocker turned out to be built.** All green: `npm run build`, 442 tests,
 `leakcheck` 0, `book:lint` 0 dangling with 1,045 quotes re-verified.
@@ -59,7 +114,12 @@ blocker turned out to be built.** All green: `npm run build`, 442 tests,
 - **Write-loss surfacing was already built** — see the retirement note below. Two
   stale candidates in two sessions is now itself recorded as a pattern.
 
-**Open and unresolved — the frame question.** Luke, 2026-08-06: *"the real one
+**ANSWERED 2026-08-07 — see the entry above. The ruling is *operating instrument
+under load*, and the reframe that followed it (LandLord is the agent layer) settles
+the rest: the ribbon's counters and win condition describe a firm that no longer
+exists in the model. Kept below only for the reasoning, which was sound.***
+
+~~**Open and unresolved — the frame question.**~~ 2026-08-06: *"the real one
 shouldn't be a video game with video game score points."* The ribbon reads
 COFFERS · DELEGATION DEBT · PATRONS · ESCAPE RATE · *drive the debt to zero* —
 state counters with a win condition. The sibling's command bridge reads
@@ -201,16 +261,46 @@ All green: `npm run build`, **442 tests**, `npm run book:lint` exit 0 with 1,042
 
 ## Next candidates
 
-Unclaimed and roughly ordered by how much they unblock:
+Reordered 2026-08-07 by the knighthood amendment. **Items 1–3 are Phase 2 of
+`docs/WRIT-THE-KNIGHTHOOD.md` and must go in this order** — the safe order and the
+natural order are opposites (see the state-of-play entry).
 
-1. **Multi-tenancy.** One deployment serves one book. Per-identity vault rows are
+1. **Strike `silence is authorization`** (`flows.ts:551`). Must precede item 2.
+2. **Make `mode` operative.** A shared `modeOf(step, catalog)`; the advance clerk
+   **completes** an `auto` step instead of proposing it, sweeping consecutive auto
+   runs. Guess-free — the 13 declarations already exist, and all 13 sit on
+   advance-clerk seats. This is what stops a propose-only fleet from piling up.
+3. **Make one refusal real.** `spendGate`'s over-ceiling branch emits a *different
+   event*, not sadder prose; route the writer through the fiduciary invariant. This
+   is the entry condition for real data — see `docs/WRIT-THE-GATE.md`.
+4. **Two defects that make the governing number lie.** `readEscape` is not
+   seed-scoped, so pre-muster and hand-worked cases mix into a muster's rate; and
+   `readFlows` (`flows.ts:1301`) never passes `targetAt0` to `readFlow`, so the four
+   `anchor:'target'` steps of the move-out relay can never breach — silently undoing
+   half of the anchor fix from 2026-08-06.
+5. **The Regent** — the orchestrator that replaces the 14-poller roster with
+   dispatch. Blocked on 1–3: a clock over a propose-only fleet produces `awaiting`
+   and nothing else. Its measure is **queue depth the human can clear**, never
+   throughput.
+6. **Segregate the multi-person-firm model** to an archive branch (guilds, pods,
+   tenure, the map). Deliberately LAST — deleting rendering code is the cheapest and
+   least urgent thing here. `src/domain/realm.ts` is a **rewrite, not a delete**: its
+   `debt` reading is the objective and must be re-cut against desks. The economy
+   stack **stays whole** — it needs strengthening, not deletion.
+
+Older, still standing:
+
+7. **Multi-tenancy.** One deployment serves one book. Per-identity vault rows are
    a sandbox, not tenant isolation, and nothing should describe them as such
    until they are. This is the gap between "a working app" and "software anyone
    else can use", and `docs/OPEN-QUESTIONS.md` names it too.
-2. **Clerk fleet on non-simulated data.** Proven on the war game only.
-3. **Twenty orphan pages** — decisions and laws nothing in the Book cites. Not
+8. **Clerk fleet on non-simulated data.** Proven on the war game only, and now
+   formally **gated on item 3** — no real data until one runtime refusal exists.
+9. **Twenty-one orphan pages** — decisions and laws nothing in the Book cites. Not
    cosmetic: an uncited decision is one nobody can find, which is how a thing
-   gets built twice.
+   gets built twice. (Measured 2026-08-07: 21 unreachable + 8 declared-expected.
+   The 2026-08-07 amendment added **21 backlink lines and removed none**, so this
+   count is inherited, not grown.)
 
 **Retired from this list 2026-08-06:** "The Great Book's sources must be re-mined
 — until they exist, `npm run book` has nothing to compile." They exist and it
@@ -241,3 +331,22 @@ Four of the five entries in `docs/OPEN-QUESTIONS.md` are domain decisions no
 amount of reading the tree will settle — fee shapes, the spend gate's default
 when urgency is unknown, whether "artisan" is a pledge or a relationship, and
 trust-accounting rules that vary by jurisdiction.
+
+Raised 2026-08-07 by the knighthood amendment, none of them decidable from this tree:
+
+- **A live cross-repo contract depends on the map.** The sibling emits a bounded
+  projection for this repository to render, and its own load-bearing invariant —
+  stated in three separate places over there — is that *a visual layer may render a
+  projection but may never decide whether a light is green*. Striking the map
+  (candidate 6) breaks a consumer that exists. **Renegotiate with the sibling; do
+  not delete unilaterally.**
+- **The bridge document has one side.** The sibling's copy of the pact points at a
+  reconciliation doc in *this* repo, quoting it by line number. **No such file
+  exists here** — it was almost certainly removed when this repository went public,
+  because it carried the seat map. The ruling of 2026-08-07 (*"the living iteration
+  goes private, we build in public"*) finally gives that material a home; whether
+  the file is restored there is the owner's call.
+- **The archive branch is a decision about reuse, not just cleanup.** The
+  multi-person-firm model is being deprecated *because it may be wanted by another
+  project*, which is a different intent from deleting it, and it is why candidate 6
+  says archive branch rather than `rm`.

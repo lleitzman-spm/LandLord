@@ -36,7 +36,63 @@ the royal line of management versus the local line of trade.
    name opens its page — and undoing or continuing a recorded act is offered right where the
    record is shown.
 
+## The knighthood — the agent layer
+
+*Ratified 2026-08-07 (`docs/WRIT-THE-KNIGHTHOOD.md`). This section governs every section below it;
+where an older one disagrees, this one wins. The sections it amends carry a note saying so.*
+
+**LandLord is the AGENT LAYER.** The operating records — the doors, the owners, the money as it
+actually stands — are the **graph**, and the graph lives elsewhere, behind the data gate. This
+repository holds the workforce, the task-language it works, the invariants it must not cross, and
+the one human it answers to.
+
+Because the kingdom is now a **single-seat platform** — one human and a fleet of agents — the
+vocabulary stops describing a firm and starts describing the workforce:
+
+| Pledge | Meaning |
+|---|---|
+| **King** | **The single human operator.** The one seat. |
+| **Regent** | **The orchestrator agent.** Holds no desk; routes the work; escalates to the King. |
+| **Knight / vassal** | An **agent granted a desk** by deliberate, recorded act. |
+| **Squire** | An **agent in training** — reads and drafts, does not act. |
+| **Artisan** | An **outside hand**: a hosted model, a third party's system. Works, never holds. |
+| **Keeper** | An outside hand running a desk with no trusted vassal. Amber, as before. |
+
+**A FIEF IS A DESK** — the set of steps in the flow book that share one `holder`. Not a department
+(a department owns headcount); not a portfolio (a portfolio belongs to the graph). A desk is defined
+**by the work**, and the flow book already declares them. The Book compiler had reported the shape
+before the canon had a word for it: *"6 hands — three of which are queues, not people."*
+
+**King and Regent are no longer two people**, because they were never two seats — they were two
+halves of one job. The deciding half is the human; the routing half is a machine. The office's
+sharpest line survives verbatim: **the Regent manages what he does not hold.**
+
+**A knight earns its desk.** An agent enters as a **squire** (rung 0, *read*; rung 1, *draft*) and is
+**knighted** to rung 2 — *act within limits* — when its runs have become boring. `Re-pledge` already
+models the promotion; no new record is needed. **No rung ever reaches the ratchet:** no agent, at any
+rung, emits `approved` or `overridden`. That mark is the King's alone.
+
+**The delegation debt and the escape rate are ONE number** — how much of the operation is still the
+King's own hands. A desk with no knight and a step that reached the King are the same failure at two
+altitudes. Design law 5 stops being a metaphor and becomes the thesis of the product.
+
+**Struck by this amendment**, each having modelled a company with an org chart: guilds, pods,
+knights-as-equity-partners, Patrons-as-a-knight's-book, hamlets, mayors, the two lines of rule and
+trade, and the realm map. Preserved on an archive branch, not discarded — the shape is right for a
+multi-person firm and may be wanted by one.
+
+**Unaffected and not reopened:** design laws 3, 4, 5 and 6; records in and readings out; the
+append-only log; the propose-only ratchet.
+
+**The entry condition, and it is not yet met:** agents may not work real records until at least one
+runtime refusal exists in the fleet. The money law is presently written and unenforced —
+`docs/WRIT-THE-GATE.md` records the five checks and the order the fixes must go in.
+
 ## The two lines
+
+*STRUCK 2026-08-07 by the knighthood amendment above. Both lines described how humans outrank other
+humans; a single seat has no ladder. Kept here because the distinction it drew — deliberate holding
+versus mere working — survives in the knight/artisan split.*
 
 - **The line of rule** — the management chain. Delegation authority flows through it: King →
   Regent → fief lords → their vassals. Holding a *fief* places you on this line.
@@ -48,6 +104,12 @@ One person can sit on both lines at once (Mabel: vassal under Alys in Property M
 *and* mayor of Maintenance). Two hats, no org-chart lie.
 
 ## Pledges (the kinds of people)
+
+*AMENDED 2026-08-07 by the knighthood amendment above, which supersedes the meanings below: the
+King is the one human, the Regent is an agent, a vassal/knight is an agent holding a desk, and a
+squire is an agent in training. The table here is kept because the STORED VALUES are unchanged — in
+particular an artisan is still stored `pledge: 'sellsword'`, and renaming a stored value is a vault
+migration on every document.*
 
 | Pledge | Meaning |
 |---|---|
@@ -61,6 +123,13 @@ One person can sit on both lines at once (Mabel: vassal under Alys in Property M
 
 *Amended 2026-07-27 by the REFOUNDING (`docs/WRIT-THE-BROKERAGE.md`), which this section had
 not caught up with until 2026-07-29. A fief is no longer a department.*
+
+*AMENDED AGAIN 2026-08-07 by the knighthood amendment above, and this is the governing reading:
+**a fief is a DESK** — the flow-book steps sharing one `holder`. The book of doors below belongs to
+the graph, not to the agent layer. **Guilds, hamlets and mayors are struck.** A Crown office keeps
+its meaning as the household's own craft, but is read as a desk like any other. The graduation path
+below described territories growing into one another and no longer applies; a desk is created by the
+flow book declaring a holder, and by nothing else.*
 
 - **Fief** — a group's **BOOK OF DOORS**: the portfolio a lord leads, knights pledge to, and
   squires are seated in. Fiefs exist independent of who holds them (law 3). At the founding
@@ -115,6 +184,13 @@ map returns, it returns behind the same `Relief` interface the invented realm sa
 swap is a source, not a rewrite.
 
 ## The four states of a fief
+
+*RE-READ 2026-08-07 by the knighthood amendment above. The mechanism is untouched — still four
+states, still computed and never stored — but the subject is now a DESK and a holder is now an
+agent: 🟢 lorded is a knight who holds the desk and does not send the work back; 🟡 in regency is an
+outside hand keeping it, or a knight whose work keeps escaping to the King; 🔴 in stewardship is no
+agent at all, which means **the King is doing it personally**. The words below still read true; read
+"vassal" as "knight (an agent)" and "the Regent's desk" as "the King's own hands".*
 
 A fief is always in exactly one of four states, **computed from the records, never stored**:
 

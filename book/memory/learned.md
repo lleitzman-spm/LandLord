@@ -13,6 +13,32 @@ aliases:
 
 ← [[00 MEMORY]]
 
+## The safe order and the natural order were opposites — 2026-08-07
+
+The founding flow book declares 13 of its 46 steps `auto`, and the fleet proposes every one of them
+to a human anyway. The obvious fix is to make `mode` operative and let the clerks complete them.
+
+One of those 13 is lease-renewal `owner-window`, and it carries `condition: 'silence is
+authorization'`. So the obvious fix, done in the obvious order, **auto-approves spending an owner's
+money on their silence.** It is inert today only because `condition` is never evaluated.
+
+Nothing was wrong with either piece. The hazard lived in the *sequence*, and the natural reach — fix
+the thing that is plainly broken first — is the one that builds the loss. **When two safe-looking
+changes compose into an unsafe one, the ordering is the finding; write it down as a ruling, because
+the next session will reach in the natural order too.**
+
+## `leakcheck` scans TRACKED files — a new file is invisible to it — 2026-08-07
+
+Two new documents were written, `node tools/leakcheck.mjs` was run, and it reported **0 findings
+over 1,410 files** — the identical count as before the documents existed. It had never read them.
+The scan walks the git index; an untracked file is not in it.
+
+The output does not lie and does not warn, because from the scanner's side nothing happened. `git
+add` first, then scan: the count moved to 1,412 and the files were genuinely covered.
+
+**A clean result from a tool that never saw the input is the most convincing wrong answer there
+is** — and this repository's whole hygiene posture rests on that one command.
+
 ## A generated page is not where a running game reads its rules — 2026-08-06
 
 A failure route added in `src/domain/flows.ts` did not reach a game already in progress. The

@@ -44,9 +44,11 @@ aliases:
 ## Modules
 
 - [[src/CommandPalette.tsx]] — *this writ names the exported symbol `CommandPalette`*
-- [[src/domain/escape.ts]] — *this writ names the exported symbol `EscapeReading`*
-- [[src/domain/flows.ts]] — *this writ names the exported symbol `failStep`; this writ names the exported symbol `FlowReading`; +3 more*
-- [[src/operator-core.ts]] — *this writ names the exported symbol `FlowReading`; this writ names the exported symbol `readFlow`*
+- [[src/domain/economy.ts]] — *this writ names the exported symbol `spendGate`*
+- [[src/domain/escape.ts]] — *this writ names the exported symbol `EscapeReading`; this writ names the exported symbol `readEscape`*
+- [[src/domain/flows.ts]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `failStep`; +6 more*
+- [[src/LedgerView.tsx]] — *this writ names the exported symbol `LedgerView`*
+- [[src/operator-core.ts]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `FlowReading`; +4 more*
 
 ## artifact
 
@@ -76,6 +78,10 @@ aliases:
 - [[Open questions]]
 - [[src/domain/escape.ts]]
 - [[src/domain/flows.ts]]
+- [[src/domain/realm.ts]]
+- [[The sibling boundary — who owns the process model]]
+- [[Writ — The Gate: the money law is written and nothing enforces it]]
+- [[Writ — The Knighthood: one seat, a Regent that is an agent, and the fief as a desk]]
 
 ---
 

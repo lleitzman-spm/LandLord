@@ -30,6 +30,7 @@ aliases:
 ## Outline
 
 - Design laws
+- The knighthood — the agent layer
 - The two lines
 - Pledges (the kinds of people)
 - Territories
@@ -73,6 +74,7 @@ aliases:
 - [[Presence in the book is the only truth]] — *this writ names "Presence in the book is the only truth" literally*
 - [[Raw data in, structure out]] — *this writ names "Raw data in, structure out" literally*
 - [[The bridge is tribute]] — *this writ names "The bridge is tribute" literally*
+- [[The graduation path]] — *this writ names "The graduation path" literally*
 - [[The land itself is invented]] — *this writ names "The land itself is invented" literally*
 - [[The line of rule]] — *this writ names "The line of rule" literally*
 - [[The line of trade]] — *this writ names "The line of trade" literally*
@@ -129,6 +131,7 @@ aliases:
 - [[Writ — the economy pillar, re-expressed as chronicle readings]]
 - [[Writ — the first War Game (the proving ground)]]
 - [[Writ — the flow engine (the operator's spine)]]
+- [[Writ — The Knighthood: one seat, a Regent that is an agent, and the fief as a desk]]
 - [[Writ — the Land: pods, knights, owners, and guilds (the realm remodeled)]]
 - [[Writ — the operator's hands (swing two, part one)]]
 - [[Writ — The Realm Map (the illuminated map, come alive)]]
@@ -160,6 +163,8 @@ aliases:
 - [[wrangler.jsonc]]
 - [[Writ — The Brokerage: offices, guilds, fiefs, and the line of answer]]
 - [[Writ — the economy pillar, re-expressed as chronicle readings]]
+- [[Writ — The Gate: the money law is written and nothing enforces it]]
+- [[Writ — The Knighthood: one seat, a Regent that is an agent, and the fief as a desk]]
 - [[Writ — the task-language, the consequences, and the Regent's seat]]
 
 ---

@@ -33,14 +33,17 @@ shapes, which the boundary permits crossing. Adopting them is a session's work o
 **Note the shape of this one:** declining to guess is what made the `onFail` widening cost nothing
 when it came. Zero declarations meant zero migrations. See [[learned]].
 
-## Company material has no home
+## ~~Company material has no home~~ — ANSWERED 2026-08-07
 
-The private repository this project forked from was deleted. There is now no private repository in
-the account, so anything that cannot be public has nowhere to live. One correction to the sibling
-boundary document is stranded because of it.
+The ruling: **the living iteration goes private; we build in public.** This repository stays the
+public engine and canon; the running instance bound to real records is private, and that is where
+anything which cannot be public lives.
 
-Until a private repository exists, the answer to "where does this go" is sometimes *nowhere*, and
-the honest move is to say so rather than quietly widen what counts as public.
+What it unblocks, now carried in `docs/HANDOFF.md` under *What needs a human*: the sibling's copy of
+the pact points at a reconciliation document in this repo that **does not exist** — removed when
+this went public, because it carried the seat map — and it can now be restored on the private side.
+
+*Left standing on purpose:* the ruling names a destination, not a migration. Nothing has moved yet.
 
 ## `escape.ts` reads as binary to `file`
 

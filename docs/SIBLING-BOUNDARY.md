@@ -51,6 +51,38 @@ point that matters: a failure route here declares `endsAt: 'origin' | 'operator'
 values as the sibling's equivalent, so *"a failure that cost the one operator a slice of their day"*
 is one number across both projects. `EscapeReading.escalated` is that count; the rate is left alone.
 
+## "Orchestrator" was the wrong noun — the correction, paid 2026-08-07
+
+**This repository has no orchestrator, and this repository is where the wrong word started.**
+
+The sibling's copy of the bridge document called this project's fleet loop *the orchestrator*, and
+recorded that it had inherited the word from our side, amplified it into its own architecture notes,
+and owed us the correction — with the instruction that it be made in a session here rather than
+patched from there. It is made here.
+
+What exists is a **runner**. `harness/run-fleet.mjs:49-66` is a sequential `for…of` over a fixed
+roster of clerks with a shared `taken` Set for de-duplication. **No scheduler. No queue. No
+per-clerk retry** — one clerk's exception loses the whole batch. No parallelism, no backpressure, no
+autonomous trigger, and no clock anywhere in the project. `harness/fleet.mjs` is a CLI entry point
+around it; the deployed Worker calls the same loop.
+
+It is a real runner and good at its job. It is not a control plane, and nothing on either side of
+the boundary is one. **A scheduler is therefore not a thing either project would be duplicating** —
+it is a thing neither has.
+
+**Why the word mattered.** For as long as both projects believed a control plane existed here, each
+had a reason not to build one, and the gap was invisible from both sides. That is the same failure
+shape as the one at the top of this note: not carelessness, but a shared belief nobody re-checked.
+
+The orchestrator is now planned — as the **Regent** (`docs/WRIT-THE-KNIGHTHOOD.md`), the agent that
+holds no desk and routes the work. Two constraints ride with it, both worth carrying across:
+
+- **A clock over a propose-only fleet piles up; it does not progress.** An unattended tick produces
+  `awaiting` and nothing else until a human ratifies. The measure is **queue depth the human can
+  clear**, never throughput.
+- **The auto steps must run themselves before a clock exists.** The founding flow book declares 13
+  of its 46 steps `auto`, and every one is currently proposed to a human anyway.
+
 ## The standing rule
 
 **Before starting anything structural, read the sibling's recent commits.** One command in a

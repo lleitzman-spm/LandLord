@@ -49,7 +49,7 @@ aliases:
 
 ### Writs that specify it
 
-- [[Handoff — where things stand]] — *this writ names the exported symbol `EscapeReading`*
+- [[Handoff — where things stand]] — *this writ names the exported symbol `EscapeReading`; this writ names the exported symbol `readEscape`*
 - [[The sibling boundary — who owns the process model]] — *this writ names the exported symbol `EscapeReading`*
 
 ### Modules
@@ -96,6 +96,7 @@ aliases:
 
 - [[Handoff — where things stand]]
 - [[The sibling boundary — who owns the process model]]
+- [[Writ — The Knighthood: one seat, a Regent that is an agent, and the fief as a desk]]
 
 ---
 

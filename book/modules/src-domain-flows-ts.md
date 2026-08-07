@@ -46,10 +46,11 @@ aliases:
 
 ### Writs that specify it
 
-- [[Handoff — where things stand]] — *this writ names the exported symbol `failStep`; this writ names the exported symbol `FlowReading`; +3 more*
+- [[Handoff — where things stand]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `failStep`; +6 more*
 - [[The Kingdom — Canon]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `completeStep`; +6 more*
 - [[The PM Task-and-Process Library (reference)]] — *this writ names the exported symbol `FlowTemplate`; this writ names the exported symbol `instantiateFlow`; +1 more*
 - [[Writ — the flow engine (the operator's spine)]] — *this writ names the exported symbol `FOUNDING_FLOWS`*
+- [[Writ — The Gate: the money law is written and nothing enforces it]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `proposeStep`*
 - [[Writ — the Land: pods, knights, owners, and guilds (the realm remodeled)]] — *this writ names the exported symbol `flowsAtFounding`; this writ names the exported symbol `readFlow`*
 - [[Writ — the operator's hands (swing two, part one)]] — *this writ names the exported symbol `handStep`; this writ names the exported symbol `readFlow`*
 - [[Writ — the task-language, the consequences, and the Regent's seat]] — *this writ names the exported symbol `flowsAtFounding`; this writ names the exported symbol `FlowTemplate`; +4 more*
@@ -657,6 +658,7 @@ aliases:
 - [[The sibling boundary — who owns the process model]]
 - [[Writ — the first War Game (the proving ground)]]
 - [[Writ — the flow engine (the operator's spine)]]
+- [[Writ — The Gate: the money law is written and nothing enforces it]]
 - [[Writ — the operator's hands (swing two, part one)]]
 - [[Writ — the task-language, the consequences, and the Regent's seat]]
 

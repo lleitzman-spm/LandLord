@@ -52,11 +52,12 @@ aliases:
 
 ### Writs that specify it
 
-- [[Handoff — where things stand]] — *this writ names the exported symbol `FlowReading`; this writ names the exported symbol `readFlow`*
+- [[Handoff — where things stand]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `FlowReading`; +4 more*
 - [[Open questions]] — *this writ names the exported symbol `estimateSpendCents`; this writ names the exported symbol `spendGate`*
 - [[The Kingdom — Canon]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `CatalogRow`; +15 more*
 - [[The PM Task-and-Process Library (reference)]] — *this writ names the exported symbol `CatalogRow`; this writ names the exported symbol `domainsOf`; +6 more*
 - [[Writ — the economy pillar, re-expressed as chronicle readings]] — *this writ names the exported symbol `EconomyBook`; this writ names the exported symbol `feeAmount`; +7 more*
+- [[Writ — The Gate: the money law is written and nothing enforces it]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `proposeStep`; +1 more*
 - [[Writ — the Land: pods, knights, owners, and guilds (the realm remodeled)]] — *this writ names the exported symbol `readFlow`*
 - [[Writ — the operator's hands (swing two, part one)]] — *this writ names the exported symbol `handStep`; this writ names the exported symbol `readFlow`*
 - [[Writ — the task-language, the consequences, and the Regent's seat]] — *this writ names the exported symbol `CatalogRow`; this writ names the exported symbol `domainsOf`; +9 more*
