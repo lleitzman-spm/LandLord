@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-105 lines · 2 exported symbols.
+110 lines · 2 exported symbols.
 
 ## What the file says of itself
 
@@ -34,7 +34,7 @@ aliases:
 
 ## Shape
 
-- **Lines:** 105
+- **Lines:** 110
 - **Exported symbols (2):** `RealmReading`, `readRealm`
 
 ## Entities
@@ -67,7 +67,6 @@ aliases:
 
 ### Entities
 
-- [[Realm (a place — tenure.ts)]] — *names the exported symbol `RealmReading`*
 - [[RealmReading (a score, not a place)]] — *names the exported symbol `RealmReading`; the same file `src/domain/realm.ts`, seen as a module rather than a entity*
 
 ### Modules

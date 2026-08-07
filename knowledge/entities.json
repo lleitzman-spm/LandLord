@@ -996,54 +996,6 @@
     ]
   },
   {
-    "id": "entity:tenure-realm",
-    "type": "entity",
-    "label": "Realm (a place — tenure.ts)",
-    "standing": "built",
-    "summary": "A sovereign polity — a US state and the body that grants the right to practise within it. Not the same word as RealmReading, deliberately unrenamed.",
-    "source_path": "src/domain/tenure.ts",
-    "source_line": 34,
-    "quote": "A SOVEREIGN POLITY — a US state, and the body that grants the right to\n *  practise within it",
-    "links": [
-      "entity:the-realm-reading"
-    ],
-    "tags": [
-      "tenure",
-      "naming"
-    ]
-  },
-  {
-    "id": "entity:tenure-shire",
-    "type": "entity",
-    "label": "Shire / March (a metro's standing)",
-    "standing": "built",
-    "summary": "A metro's shire-or-march standing is a reading, never a stored field, computed from its doors and household against the promotion thresholds.",
-    "source_path": "src/domain/tenure.ts",
-    "source_line": 15,
-    "quote": "a standing is READ, never stored.",
-    "links": [
-      "fact:shire-min-doors",
-      "decision:shire-promotion-thresholds-picked"
-    ],
-    "tags": [
-      "tenure"
-    ]
-  },
-  {
-    "id": "entity:tenure-fee",
-    "type": "entity",
-    "label": "Fee (an owner group, tenure.ts)",
-    "standing": "built",
-    "summary": "An owner group, explicitly non-geographic — the type carries no bounds, no centroid, no polygon, so a renderer cannot assume contiguity.",
-    "source_path": "src/domain/tenure.ts",
-    "source_line": 17,
-    "quote": "Fee     — an owner group. NOT A PLACE",
-    "links": [],
-    "tags": [
-      "tenure"
-    ]
-  },
-  {
     "id": "entity:tenure-edict",
     "type": "entity",
     "label": "Edict (crown edicts, tenure hierarchy)",
@@ -1052,9 +1004,7 @@
     "source_path": "docs/WRIT-THE-WAR-TABLE.md",
     "source_line": 397,
     "quote": "over the real\nobligations: licence\nstatus, CE hours, disclosure, trust-account rules, filing deadlines.",
-    "links": [
-      "entity:tenure-realm"
-    ],
+    "links": [],
     "tags": [
       "tenure"
     ]

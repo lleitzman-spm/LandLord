@@ -9,7 +9,9 @@
     "source_line": 31,
     "quote": "Never \"Landlord\",\n  \"landlord\" or \"Land Lord\". The inner capital is load-bearing and holds\n  everywhere: code, comments, commits, docs, UI copy, prose.",
     "links": [],
-    "tags": ["naming"]
+    "tags": [
+      "naming"
+    ]
   },
   {
     "id": "decision:no-real-personal-data-no-credential",
@@ -21,7 +23,10 @@
     "source_line": 12,
     "quote": "No real personal data and no credential may ever enter this repository.",
     "links": [],
-    "tags": ["leakcheck", "safety"]
+    "tags": [
+      "leakcheck",
+      "safety"
+    ]
   },
   {
     "id": "decision:verify-claims-against-the-bytes",
@@ -33,7 +38,10 @@
     "source_line": 23,
     "quote": "This codebase's ancestor\nasserted its own hygiene incorrectly more than once.",
     "links": [],
-    "tags": ["leakcheck", "safety"]
+    "tags": [
+      "leakcheck",
+      "safety"
+    ]
   },
   {
     "id": "decision:configuration-not-constants",
@@ -44,8 +52,13 @@
     "source_path": "CLAUDE.md",
     "source_line": 47,
     "quote": "This is software for property-management\n  companies generally. No single firm's fee rates, caps, thresholds or org chart\n  may be compiled in.",
-    "links": ["entity:tenant-setting"],
-    "tags": ["economy", "factory-setting"]
+    "links": [
+      "entity:tenant-setting"
+    ],
+    "tags": [
+      "economy",
+      "factory-setting"
+    ]
   },
   {
     "id": "decision:reason-in-open-questions",
@@ -57,7 +70,9 @@
     "source_line": 52,
     "quote": "If a behaviour can only be justified\n  by pointing at one company's practice, it is probably wrong for a product",
     "links": [],
-    "tags": ["economy"]
+    "tags": [
+      "economy"
+    ]
   },
   {
     "id": "decision:verify-end-to-end-required",
@@ -69,7 +84,9 @@
     "source_line": 61,
     "quote": "A passing test is not a working button.",
     "links": [],
-    "tags": ["verification"]
+    "tags": [
+      "verification"
+    ]
   },
   {
     "id": "decision:report-what-was-observed",
@@ -81,7 +98,9 @@
     "source_line": 66,
     "quote": "Report what you actually observed, not what should have happened.",
     "links": [],
-    "tags": ["verification"]
+    "tags": [
+      "verification"
+    ]
   },
   {
     "id": "decision:aep-check-named",
@@ -93,7 +112,9 @@
     "source_line": 68,
     "quote": "Named because these three kept recurring.",
     "links": [],
-    "tags": ["aep"]
+    "tags": [
+      "aep"
+    ]
   },
   {
     "id": "decision:scrollintoview-is-a-dead-button",
@@ -105,7 +126,9 @@
     "source_line": 77,
     "quote": "a `scrollIntoView` onto something\n  already on screen is a dead button.",
     "links": [],
-    "tags": ["aep"]
+    "tags": [
+      "aep"
+    ]
   },
   {
     "id": "decision:review-gate-never-lifts",
@@ -117,7 +140,10 @@
     "source_line": 89,
     "quote": "the review gate never lifts",
     "links": [],
-    "tags": ["model-doctrine", "review"]
+    "tags": [
+      "model-doctrine",
+      "review"
+    ]
   },
   {
     "id": "decision:never-blind-copy-a-generated-file",
@@ -129,7 +155,10 @@
     "source_line": 91,
     "quote": "Never blind-copy a generated file over the current tree",
     "links": [],
-    "tags": ["review", "git"]
+    "tags": [
+      "review",
+      "git"
+    ]
   },
   {
     "id": "decision:read-only-means-get-only",
@@ -141,7 +170,10 @@
     "source_line": 95,
     "quote": "That is not paranoia:\nan audit agent once fired a live `DELETE` at an API as a probe.",
     "links": [],
-    "tags": ["safety", "review"]
+    "tags": [
+      "safety",
+      "review"
+    ]
   },
   {
     "id": "decision:writes-are-whole-document-last-writer-wins",
@@ -152,8 +184,13 @@
     "source_path": "CLAUDE.md",
     "source_line": 118,
     "quote": "Concurrent editors\n  lose each other's work.",
-    "links": ["entity:the-vault"],
-    "tags": ["vault", "known-weakness"]
+    "links": [
+      "entity:the-vault"
+    ],
+    "tags": [
+      "vault",
+      "known-weakness"
+    ]
   },
   {
     "id": "decision:no-multi-tenancy",
@@ -165,7 +202,10 @@
     "source_line": 121,
     "quote": "Per-identity vault rows are a sandbox, not\n  tenant isolation.",
     "links": [],
-    "tags": ["vault", "known-weakness"]
+    "tags": [
+      "vault",
+      "known-weakness"
+    ]
   },
   {
     "id": "decision:relief-and-realmreading-not-renamed",
@@ -177,7 +217,9 @@
     "source_line": 123,
     "quote": "Neither was renamed, deliberately — a rename is a migration on every\n  stored document.",
     "links": [],
-    "tags": ["naming"]
+    "tags": [
+      "naming"
+    ]
   },
   {
     "id": "decision:flow-steps-placed-by-marker-not-holder",
@@ -189,7 +231,10 @@
     "source_line": 127,
     "quote": "Matching by holder collapses consecutive same-holder steps, which once\n  made an entire half of the vendor-dispatch loop unreachable.",
     "links": [],
-    "tags": ["flow-engine", "bug-fixed"]
+    "tags": [
+      "flow-engine",
+      "bug-fixed"
+    ]
   },
   {
     "id": "decision:opus-drives-right-hand-builds",
@@ -201,7 +246,9 @@
     "source_line": 31,
     "quote": "Opus DRIVES; the right hand BUILDS; Opus REVIEWS and VERIFIES before anything ships.",
     "links": [],
-    "tags": ["model-doctrine"]
+    "tags": [
+      "model-doctrine"
+    ]
   },
   {
     "id": "decision:greenfield-brownfield-binary-retired",
@@ -213,7 +260,9 @@
     "source_line": 3,
     "quote": "the greenfield/brownfield binary is gone.",
     "links": [],
-    "tags": ["model-doctrine"]
+    "tags": [
+      "model-doctrine"
+    ]
   },
   {
     "id": "decision:stakes-rule-carve-out",
@@ -225,7 +274,9 @@
     "source_line": 10,
     "quote": "authorship of the highest-stakes, hardest-to-reverse\n> core (state-integrity / money / auth) goes to the lowest-surprise hand under the hardest review",
     "links": [],
-    "tags": ["model-doctrine"]
+    "tags": [
+      "model-doctrine"
+    ]
   },
   {
     "id": "decision:cost-posture-spend-for-roi",
@@ -237,7 +288,10 @@
     "source_line": 94,
     "quote": "don't burn quite as hot right now — but if the production is there, buy\ncredits and take the swing.",
     "links": [],
-    "tags": ["model-doctrine", "cost"]
+    "tags": [
+      "model-doctrine",
+      "cost"
+    ]
   },
   {
     "id": "decision:k3-parameters-temperature-one",
@@ -249,7 +303,10 @@
     "source_line": 22,
     "quote": "**`temperature: 1`**, **`reasoning_effort: \"high\"`** — *not* `max`, which wanders the\nendless corridor and may not return.",
     "links": [],
-    "tags": ["model-doctrine", "k3"]
+    "tags": [
+      "model-doctrine",
+      "k3"
+    ]
   },
   {
     "id": "decision:k3-review-for-house-fit-not-just-does-it-run",
@@ -261,7 +318,10 @@
     "source_line": 59,
     "quote": "review K3's output for architecture and\nhouse-fit, not merely \"does it run.\"",
     "links": [],
-    "tags": ["model-doctrine", "k3"]
+    "tags": [
+      "model-doctrine",
+      "k3"
+    ]
   },
   {
     "id": "decision:megamind-law",
@@ -273,7 +333,10 @@
     "source_line": 64,
     "quote": "Hoard the heavy, tangled work into one\nwell-staged writ and loose it once",
     "links": [],
-    "tags": ["model-doctrine", "k3"]
+    "tags": [
+      "model-doctrine",
+      "k3"
+    ]
   },
   {
     "id": "decision:run-many-sessions-coordinate-through-repo",
@@ -284,8 +347,12 @@
     "source_path": "docs/PARALLEL-SESSIONS.md",
     "source_line": 10,
     "quote": "Run many sessions; coordinate through the repo's own docs, never through memory.",
-    "links": ["artifact:docs-handoff"],
-    "tags": ["parallel-sessions"]
+    "links": [
+      "artifact:docs-handoff"
+    ],
+    "tags": [
+      "parallel-sessions"
+    ]
   },
   {
     "id": "decision:lanes-are-branch-surface-handoff-section",
@@ -297,7 +364,9 @@
     "source_line": 30,
     "quote": "A lane = a branch + an owned surface + a HANDOFF section.",
     "links": [],
-    "tags": ["parallel-sessions"]
+    "tags": [
+      "parallel-sessions"
+    ]
   },
   {
     "id": "decision:no-trello-use-open-prs-plus-handoff",
@@ -309,7 +378,9 @@
     "source_line": 92,
     "quote": "use open-PRs-(or-branches)-plus-HANDOFF; no Trello, no board to babysit.",
     "links": [],
-    "tags": ["parallel-sessions"]
+    "tags": [
+      "parallel-sessions"
+    ]
   },
   {
     "id": "decision:clerk-brain-cheapest-that-clears-the-bar",
@@ -321,7 +392,9 @@
     "source_line": 15,
     "quote": "use the cheapest thing that clears the bar, escalate only on\ndoubt, and let the data gate decide where the brain may live.",
     "links": [],
-    "tags": ["clerk-brain-doctrine"]
+    "tags": [
+      "clerk-brain-doctrine"
+    ]
   },
   {
     "id": "decision:every-clerk-degrades-gracefully",
@@ -333,7 +406,9 @@
     "source_line": 81,
     "quote": "every clerk\n  degrades gracefully",
     "links": [],
-    "tags": ["clerk-brain-doctrine"]
+    "tags": [
+      "clerk-brain-doctrine"
+    ]
   },
   {
     "id": "decision:no-local-brain-until-the-data-gate-opens",
@@ -345,7 +420,10 @@
     "source_line": 121,
     "quote": "Stage it, and nothing more yet.",
     "links": [],
-    "tags": ["clerk-brain-doctrine", "data-gate"]
+    "tags": [
+      "clerk-brain-doctrine",
+      "data-gate"
+    ]
   },
   {
     "id": "decision:brokerage-refounding-ratified",
@@ -356,8 +434,14 @@
     "source_path": "docs/WRIT-THE-BROKERAGE.md",
     "source_line": 3,
     "quote": "Ratified in conversation by Edwin, 2026-07-27, after the census surfaced a design\ncollision.",
-    "links": ["law:territory-fief", "law:territory-office-never-land"],
-    "tags": ["brokerage", "ruling"]
+    "links": [
+      "law:territory-fief",
+      "law:territory-office-never-land"
+    ],
+    "tags": [
+      "brokerage",
+      "ruling"
+    ]
   },
   {
     "id": "decision:department-fiefs-migration-question",
@@ -369,7 +453,10 @@
     "source_line": 133,
     "quote": "They are live data in\n  Edwin's own vault",
     "links": [],
-    "tags": ["brokerage", "open-question"]
+    "tags": [
+      "brokerage",
+      "open-question"
+    ]
   },
   {
     "id": "decision:land-remodeled-superseded-by-brokerage",
@@ -380,8 +467,13 @@
     "source_path": "docs/WRIT-THE-LAND.md",
     "source_line": 4,
     "quote": "The DEPARTMENTS-AS-GUILDS model this writ describes is retired.",
-    "links": ["decision:brokerage-refounding-ratified"],
-    "tags": ["brokerage", "superseded"]
+    "links": [
+      "decision:brokerage-refounding-ratified"
+    ],
+    "tags": [
+      "brokerage",
+      "superseded"
+    ]
   },
   {
     "id": "decision:realm-remodeled-pods-knights-land",
@@ -392,8 +484,12 @@
     "source_path": "docs/KINGDOM.md",
     "source_line": 758,
     "quote": "The fief becomes the POD** — the top-level holding.",
-    "links": ["entity:pod"],
-    "tags": ["realm-remodeled"]
+    "links": [
+      "entity:pod"
+    ],
+    "tags": [
+      "realm-remodeled"
+    ]
   },
   {
     "id": "decision:k3-off-model-pass-discarded",
@@ -405,7 +501,10 @@
     "source_line": 786,
     "quote": "K3's first pass invented a fictional world (made-up guilds and knights, hard-coded land, stored\nconsequences) that contradicted the ratified model and the events-only law, so it was discarded",
     "links": [],
-    "tags": ["model-doctrine", "k3"]
+    "tags": [
+      "model-doctrine",
+      "k3"
+    ]
   },
   {
     "id": "decision:war-table-hud-built-by-fable",
@@ -417,7 +516,10 @@
     "source_line": 799,
     "quote": "Built by **Claude Fable 5**\n(the strongest agentic-coding model — the best-of-both for a task that is aesthetics AND\nperfect wiring), orchestrated and reviewed by **Claude Opus**",
     "links": [],
-    "tags": ["model-doctrine", "war-table"]
+    "tags": [
+      "model-doctrine",
+      "war-table"
+    ]
   },
   {
     "id": "decision:campaign-is-default-first-deploy",
@@ -428,8 +530,13 @@
     "source_path": "docs/WRIT-THE-CAMPAIGN.md",
     "source_line": 200,
     "quote": "The campaign is the DEFAULT first deploy",
-    "links": ["entity:scenario", "entity:the-grand-muster"],
-    "tags": ["campaign"]
+    "links": [
+      "entity:scenario",
+      "entity:the-grand-muster"
+    ],
+    "tags": [
+      "campaign"
+    ]
   },
   {
     "id": "decision:grand-muster-not-retuned",
@@ -441,7 +548,9 @@
     "source_line": 203,
     "quote": "The grand muster is NOT retuned.",
     "links": [],
-    "tags": ["campaign"]
+    "tags": [
+      "campaign"
+    ]
   },
   {
     "id": "decision:muster-is-a-recipe-not-a-recording",
@@ -453,7 +562,9 @@
     "source_line": 33,
     "quote": "So the library must store recipes, never event logs.",
     "links": [],
-    "tags": ["campaign"]
+    "tags": [
+      "campaign"
+    ]
   },
   {
     "id": "decision:library-resolution-test",
@@ -465,7 +576,9 @@
     "source_line": 44,
     "quote": "Every scenario in the library is generated\n> against the founding setting, and every catalog row, flow key, step key and\n> seat it names must resolve.",
     "links": [],
-    "tags": ["campaign"]
+    "tags": [
+      "campaign"
+    ]
   },
   {
     "id": "decision:diegetic-war-table",
@@ -477,7 +590,10 @@
     "source_line": 47,
     "quote": "The interface is a physical war table viewed from a fixed high angle, lit by one warm key light in an otherwise dark room.",
     "links": [],
-    "tags": ["war-table", "realm-map"]
+    "tags": [
+      "war-table",
+      "realm-map"
+    ]
   },
   {
     "id": "decision:charming-not-aaa",
@@ -489,7 +605,9 @@
     "source_line": 65,
     "quote": "**AAA is explicitly not the target.** Indie ceiling is acceptable and intended.",
     "links": [],
-    "tags": ["war-table"]
+    "tags": [
+      "war-table"
+    ]
   },
   {
     "id": "decision:throne-and-seat-are-one-surface",
@@ -501,7 +619,9 @@
     "source_line": 300,
     "quote": "**So the merge is: THRONE + SEAT are one surface**",
     "links": [],
-    "tags": ["war-table"]
+    "tags": [
+      "war-table"
+    ]
   },
   {
     "id": "decision:no-renames-realm-and-marches",
@@ -513,19 +633,25 @@
     "source_line": 356,
     "quote": "So: **no renames, no migration, no churn.**",
     "links": [],
-    "tags": ["war-table", "naming"]
+    "tags": [
+      "war-table",
+      "naming"
+    ]
   },
   {
     "id": "decision:shire-promotion-thresholds-picked",
     "type": "decision",
     "label": "A march promotes to a shire when three thresholds all hold",
-    "standing": "settled",
-    "summary": "At least 25 doors, at least one knight seated, and no craft standing headless — working fluid numbers, picked to be exercisable now, not because 25 is sacred.",
+    "standing": "retired",
+    "summary": "At least 25 doors, at least one knight seated, and no craft standing headless — working fluid numbers, picked to be exercisable now, not because 25 is sacred. RETIRED 2026-08-07 with the multi-person-firm model: the thresholds it chose lived in src/domain/tenure.ts, now on the orphan branch archive/multi-person-firm. The reasoning is kept because a decision record outlives the code it governed.",
     "source_path": "docs/WRIT-THE-WAR-TABLE.md",
     "source_line": 385,
     "quote": "A march promotes to a shire when **all three** hold:",
-    "links": ["fact:shire-min-doors", "fact:shire-min-knights", "fact:shire-max-headless-crafts"],
-    "tags": ["war-table", "tenure"]
+    "links": [],
+    "tags": [
+      "war-table",
+      "tenure"
+    ]
   },
   {
     "id": "decision:realm-map-orchestrated-by-k3-reviewed-by-opus",
@@ -537,7 +663,10 @@
     "source_line": 238,
     "quote": "K3 builds** the standalone art-directed artifact above, against the canned fixture.",
     "links": [],
-    "tags": ["realm-map", "model-doctrine"]
+    "tags": [
+      "realm-map",
+      "model-doctrine"
+    ]
   },
   {
     "id": "decision:painterly-not-photoreal",
@@ -549,7 +678,9 @@
     "source_line": 40,
     "quote": "**Painterly stylized, not photoreal.**",
     "links": [],
-    "tags": ["realm-map"]
+    "tags": [
+      "realm-map"
+    ]
   },
   {
     "id": "decision:no-big-delegation-debt-scoreboard",
@@ -561,7 +692,9 @@
     "source_line": 108,
     "quote": "**never a big\n\"DELEGATION DEBT: 3\" scoreboard.**",
     "links": [],
-    "tags": ["realm-map"]
+    "tags": [
+      "realm-map"
+    ]
   },
   {
     "id": "decision:war-games-first-game-anonymized",
@@ -573,7 +706,9 @@
     "source_line": 50,
     "quote": "Make the first game the very thing we are preparing for: **move\na firm's ~200-door portfolio into the system.**",
     "links": [],
-    "tags": ["war-games"]
+    "tags": [
+      "war-games"
+    ]
   },
   {
     "id": "decision:jevons-trap-strategic-thesis",
@@ -585,7 +720,10 @@
     "source_line": 29,
     "quote": "The market's misread — the Jevons trap.",
     "links": [],
-    "tags": ["war-games", "strategy"]
+    "tags": [
+      "war-games",
+      "strategy"
+    ]
   },
   {
     "id": "decision:blender-is-the-oven-not-the-plate",
@@ -597,7 +735,10 @@
     "source_line": 57,
     "quote": "Blender is the OVEN, not the plate",
     "links": [],
-    "tags": ["realm-map", "tooling"]
+    "tags": [
+      "realm-map",
+      "tooling"
+    ]
   },
   {
     "id": "decision:no-webgl-perf-numbers-in-this-container",
@@ -609,7 +750,10 @@
     "source_line": 68,
     "quote": "Performance cannot be certified here — say\nso rather than reporting a figure that looks like a measurement.",
     "links": [],
-    "tags": ["tooling", "verification"]
+    "tags": [
+      "tooling",
+      "verification"
+    ]
   },
   {
     "id": "decision:great-book-never-edit-a-page",
@@ -621,7 +765,9 @@
     "source_line": 30,
     "quote": "Never edit a page in the Great Book. Every page is generated and will be\noverwritten.",
     "links": [],
-    "tags": ["great-book"]
+    "tags": [
+      "great-book"
+    ]
   },
   {
     "id": "decision:no-quote-no-object",
@@ -633,7 +779,9 @@
     "source_line": 114,
     "quote": "quote that does not appear is not a weak object — it is a hallucination with a schema, and it is",
     "links": [],
-    "tags": ["great-book"]
+    "tags": [
+      "great-book"
+    ]
   },
   {
     "id": "decision:links-are-found-never-invented",
@@ -645,7 +793,9 @@
     "source_line": 126,
     "quote": "Edges come from literal identifiers — ids, file paths, exported symbols, writ names, fact ids.",
     "links": [],
-    "tags": ["great-book"]
+    "tags": [
+      "great-book"
+    ]
   },
   {
     "id": "decision:orphans-checked-nowhere-else",
@@ -657,7 +807,9 @@
     "source_line": 142,
     "quote": "**Orphans are checked here and nowhere else.**",
     "links": [],
-    "tags": ["great-book"]
+    "tags": [
+      "great-book"
+    ]
   },
   {
     "id": "decision:allowlist-not-scrub",
@@ -669,7 +821,10 @@
     "source_line": 3,
     "quote": "How this public repository was assembled: **allowlist, not scrub.** Nothing was copied\nuntil it had been read and cleared.",
     "links": [],
-    "tags": ["carve", "leakcheck"]
+    "tags": [
+      "carve",
+      "leakcheck"
+    ]
   },
   {
     "id": "decision:allowlist-no-real-value-in-ledger",
@@ -681,7 +836,10 @@
     "source_line": 24,
     "quote": "No real value appears anywhere in this ledger — categories only, never values.",
     "links": [],
-    "tags": ["carve", "leakcheck"]
+    "tags": [
+      "carve",
+      "leakcheck"
+    ]
   },
   {
     "id": "decision:fee-terms-need-more-shapes",
@@ -692,8 +850,13 @@
     "source_path": "docs/OPEN-QUESTIONS.md",
     "source_line": 13,
     "quote": "Fee terms that are currently one shape, and probably need to be many",
-    "links": ["fact:late-split-firm-keeps"],
-    "tags": ["open-question", "economy"]
+    "links": [
+      "fact:late-split-firm-keeps"
+    ],
+    "tags": [
+      "open-question",
+      "economy"
+    ]
   },
   {
     "id": "decision:spend-gate-unknown-urgency-default-open",
@@ -704,8 +867,13 @@
     "source_path": "docs/OPEN-QUESTIONS.md",
     "source_line": 31,
     "quote": "The spend gate's default when urgency is unknown",
-    "links": ["fact:default-estimate-cents"],
-    "tags": ["open-question", "economy"]
+    "links": [
+      "fact:default-estimate-cents"
+    ],
+    "tags": [
+      "open-question",
+      "economy"
+    ]
   },
   {
     "id": "decision:artisan-pledge-or-relationship-open",
@@ -717,7 +885,9 @@
     "source_line": 42,
     "quote": "Whether \"artisan\" should be a pledge or a relationship",
     "links": [],
-    "tags": ["open-question"]
+    "tags": [
+      "open-question"
+    ]
   },
   {
     "id": "decision:trust-jurisdiction-day-count-open",
@@ -728,8 +898,13 @@
     "source_path": "docs/OPEN-QUESTIONS.md",
     "source_line": 54,
     "quote": "Trust-accounting rules that vary by jurisdiction",
-    "links": ["fact:earned-fee-limit-days"],
-    "tags": ["open-question", "economy"]
+    "links": [
+      "fact:earned-fee-limit-days"
+    ],
+    "tags": [
+      "open-question",
+      "economy"
+    ]
   },
   {
     "id": "decision:multi-tenancy-shape-open",
@@ -740,7 +915,12 @@
     "source_path": "docs/OPEN-QUESTIONS.md",
     "source_line": 67,
     "quote": "Multi-tenancy, and what the per-identity vault rows actually are",
-    "links": ["decision:no-multi-tenancy"],
-    "tags": ["open-question", "vault"]
+    "links": [
+      "decision:no-multi-tenancy"
+    ],
+    "tags": [
+      "open-question",
+      "vault"
+    ]
   }
 ]

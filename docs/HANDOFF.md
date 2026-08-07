@@ -38,6 +38,36 @@ yours rather than forcing your copy over live work.
 
 ## State of play
 
+**2026-08-07 (later still) — the multi-person firm is gone from the working
+branch, and archived rather than dropped.** `archive/multi-person-firm` is an
+ORPHAN branch (no shared history, nothing built from it) carrying
+`src/domain/tenure.ts`, `src/domain/tenureMuster.ts`, `test/tenure.test.ts` and
+a README saying what it is and why it left. It carries `.gitignore` too — the
+first attempt at the archive staged `node_modules` and `dist`, because an orphan
+branch starts with no ignore rules; that commit was deleted before it left the
+machine.
+
+The removal cost **50 tests** (486 → 436) and every one of them tested the
+retired model. Build green, book:lint exit 0, leakcheck 0 findings.
+
+**What the deletion actually cost beyond the three files** — this is the part
+worth knowing before the next removal, because none of it was in the plan's
+line count. Six knowledge records described constants that no longer exist
+(`fact:shire-min-doors`, `-min-knights`, `-max-headless-crafts`,
+`fact:edict-pressing-days`, `entity:tenure-shire`, `-fee`), a seventh
+(`entity:tenure-realm`) cited the file by path, and a DECISION record linked
+three of the facts. The facts and entities were removed; the decision was marked
+`retired` with its dead links stripped and its reasoning kept, because a
+decision record outlives the code it governed. `book:lint` catches every one of
+these and exits 1 until they are settled — so **run it after any domain
+deletion**, not just after a Book change.
+
+Also repaired: `src/domain/realm.ts`'s header warned about two senses of `Realm`
+and pointed at `tenure.ts` for the second. It now points at the archive branch
+and says the collision is history rather than a live hazard — a warning that
+names a missing file teaches nothing.
+
+
 **2026-08-07 (later) — the gate grew hands. Three refusals now exist where there
 were none.** All green: `npm run build`, **461 tests** (was 442), `leakcheck`
 1,427 files / 0 findings.

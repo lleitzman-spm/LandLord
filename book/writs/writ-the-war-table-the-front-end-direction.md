@@ -102,7 +102,6 @@ aliases:
 *Files this page names by path. Again: a citation of the file, nothing more.*
 
 - [[src/domain/realm.ts]]
-- [[src/domain/tenure.ts]]
 
 ---
 

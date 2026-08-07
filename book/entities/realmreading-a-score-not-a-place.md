@@ -40,10 +40,6 @@ The Regent's whole-kingdom fusion — pods, guilds, unseated work and coffers in
 
 ## Backlinks
 
-### Entities
-
-- [[Realm (a place — tenure.ts)]] — *declared in `knowledge/entities.json`*
-
 ### Modules
 
 - [[src/domain/realm.ts]] — *the same file `src/domain/realm.ts`, seen as a entity rather than a module*
