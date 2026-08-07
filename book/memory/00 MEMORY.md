@@ -36,6 +36,11 @@ two places is a fact that will disagree with itself.
 
 - [[open-questions]] — decisions waiting on Edwin, and known gaps nobody has ruled on
 - [[learned]] — things that cost us something to find out, kept so they cost us once
+- [[session-2026-08-07]] — the findings lane: what it closed, what it got wrong, what it left standing
+
+*A session page is the exception to "prune by hand", not the rule. Write one only when a session's
+SHAPE is worth keeping after its state has been overwritten — two lanes running blind to each other,
+say. The state itself belongs in `docs/HANDOFF.md` and will be refreshed away; do not copy it here.*
 
 ## Linking into the Book
 

@@ -129,3 +129,53 @@ note that had already been ratified twice.
 
 The general form: **when you explain away a tool's warning, check the bytes before you write the
 explanation down.** An unchecked explanation is more durable than the warning it dismisses.
+
+## `main...theirs` shows your own work back to you — 2026-08-07
+
+Assessing whether a parallel session's branch collided with mine, I ran
+`git diff --stat main...origin/<their-branch>` and reported that they had touched eight of the files
+I was working in — `flows.ts`, `LedgerView.tsx`, `chronicleStore.ts` and more. I told the human to
+expect a difficult merge.
+
+**They had touched one.** Their branch was based on *my* commit, so `main...theirs` included every
+commit I had made up to the fork point. I was reading my own work and attributing it to them.
+
+The fix is to diff against the actual fork point, never against `main`:
+
+    base=$(git merge-base HEAD origin/<their-branch>)
+    comm -12 <(git diff --name-only $base HEAD | sort) \
+             <(git diff --name-only $base origin/<their-branch> | sort)
+
+That prints the genuinely overlapping files and nothing else. The general form: **`A...B` is
+"changes on B since they diverged" only when A is an ancestor of the fork.** When two branches share
+a base that is ahead of `main`, `main...B` silently includes the shared history — and shared history
+between two agents working the same repo is *exactly* the work you are trying to tell apart.
+
+The cost was nearly a wrong decision: a merge reported as dangerous was in fact clean in every source
+file, and the real coordination risk (a runner being superseded, orphaning a fix) was somewhere the
+bad diff did not point at all.
+
+## An orphan branch starts with no ignore rules — 2026-08-07
+
+`git switch --orphan <name>` gives you an empty index — and no `.gitignore`, because that file is
+tracked content like any other. The reflex `git add -A` then stages `node_modules/`, `dist/`,
+`dist-operator/` and `dist-wargame/`. The commit succeeded and had to be deleted with
+`git update-ref -d` before it left the machine.
+
+**Check out `.gitignore` onto the orphan branch before the first `git add`,** and commit it as one of
+the archive's own files. An archive branch that carries a build tree is not an archive; it is a
+snapshot of somebody's laptop.
+
+## `book:lint` guards domain deletions, not just Book changes — 2026-08-07
+
+Deleting `src/domain/tenure.ts` cost three files and 50 tests — and then seven knowledge records that
+described constants which no longer existed, plus a decision record linking three of them.
+`npm run book:lint` exits **1** until every one is settled, and `npm run build` and `npm test` are
+both green the whole time. Nothing in the type system or the suite knows the Book has gone stale.
+
+So **run `book:lint` after any domain deletion**, not only after touching `book/` or `knowledge/`.
+
+One judgment inside that cleanup worth keeping: the facts and entities were deleted, but the
+**decision record was marked `retired` with its dead links stripped and its reasoning kept.** A
+decision outlives the code it governed — deleting it would erase *why* the thresholds were ever
+chosen, which is the only part that was ever hard to reconstruct.
