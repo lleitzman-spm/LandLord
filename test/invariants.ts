@@ -14,6 +14,7 @@ import {
   readOwnerStatement,
   ownersInLog,
   balanceOf,
+  fiduciaryViolationsAt,
   type MoneyLog,
   type EconomyBook,
 } from '../src/domain/economy';
@@ -91,45 +92,9 @@ export function assertChronicleSound(doc: unknown, opts: SoundnessOptions = {}):
 // PER PARTY and (optionally) POINT-IN-TIME to catch that class. (Surfaced by a
 // cross-vendor K3 adversarial review of the Shot-0 checker, 2026-07-22.)
 
-const TRUST_CASH_ROLES = ['trust_cash_rent', 'trust_cash_deposits', 'owner_reserve_cash'];
 
 /** Every way the books can be internally clean yet a FIDUCIARY breach — folded
  *  over one money slice (a full log, or a prefix during temporal replay). */
-function fiduciaryViolationsAt(economy: EconomyBook, money: MoneyLog, tag = ''): string[] {
-  const v: string[] = [];
-  const at = tag ? ` (${tag})` : '';
-  const p = readPostings(money);
-
-  // No trust bank overdrawn — spending money that is not there.
-  for (const role of TRUST_CASH_ROLES) {
-    const bal = balanceOf(economy, p, role);
-    if (bal < 0) v.push(`trust bank ${role} overdrawn: ${bal}${at}`);
-  }
-
-  // No over-sweep — a fee_sweep larger than fees earned drives the bridge
-  // equally negative (it still "ties"); the company would be holding owner money.
-  const dueToMgmt = balanceOf(economy, p, 'due_to_mgmt');
-  const dueFromTrust = balanceOf(economy, p, 'due_from_trust');
-  if (dueToMgmt < 0) v.push(`over-swept — due_to_mgmt negative: ${dueToMgmt}${at}`);
-  if (dueFromTrust < 0) v.push(`over-swept — due_from_trust negative: ${dueFromTrust}${at}`);
-
-  // No owner overdrawn — a negative owner net is, by definition, spending another
-  // owner's money (commingling). Per owner, not aggregate.
-  for (const owner of ownersInLog(money)) {
-    const net = readOwnerStatement(economy, money, owner).endingCents;
-    if (net < 0) v.push(`owner ${owner} overdrawn: ${net}${at}`);
-  }
-
-  // No tenant's deposit overdrawn — refunding tenant A out of B's deposit leaves
-  // the aggregate whole but B's subledger negative.
-  const tenants = [...new Set(money.map((e) => e.tenantId).filter((t): t is string => !!t))];
-  for (const tenant of tenants) {
-    const held = balanceOf(economy, p, 'security_deposits_held', (x) => x.tenantId === tenant);
-    if (held < 0) v.push(`tenant ${tenant} deposit overdrawn: ${held}${at}`);
-  }
-
-  return v;
-}
 
 export interface FiduciaryOptions extends SoundnessOptions {
   /** Replay the log prefix-by-prefix (causal/append order) and check every

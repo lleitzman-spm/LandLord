@@ -33,7 +33,7 @@ import type { TreasuryLedger } from '../domain/treasury';
 import { WAR_HOUSEHOLD, isHouseholdUpkeep } from '../domain/treasury';
 import { INTRO_CAMPAIGN, generateCampaign, vacateOffices } from '../domain/campaign';
 import type { EconomyBook, MoneyEvent, MoneyLog } from '../domain/economy';
-import { estimateSpendCents, sampleLedger, settlementGate, vendorSettlementMoney } from '../domain/economy';
+import { estimateSpendCents, fiduciaryViolationsAt, sampleLedger, settlementGate, vendorSettlementMoney } from '../domain/economy';
 import type { PledgeType, TerritoryKind } from '../domain/types';
 import { dealtGame, generateGrandMuster, generateWarGame } from '../domain/wargame';
 import type { WarState } from '../domain/wargame';
@@ -991,12 +991,27 @@ export function useChronicle(): ChronicleStore {
     // events, which is the fault this replaces.
     if (gate.refused) return [];
     const seed = chronicle.wargame?.seed;
-    return vendorSettlementMoney(economyOf(chronicle), chronicle.money, {
+    const posted = vendorSettlementMoney(economyOf(chronicle), chronicle.money, {
       caseId,
       billCents,
       at: stamp(),
       ownerId: ownerOf(reading),
     }).map((m) => ({ ...m, id: crypto.randomUUID(), ...(seed ? { wg: seed } : {}) }));
+    // THE FIDUCIARY INVARIANT, at the writer (docs/WRIT-THE-GATE.md, finding 1).
+    // It lived in the test shelf and was reachable only from CI: the kingdom
+    // proved its books balanced and never asked the question at the moment coin
+    // moved. It asks here now.
+    //
+    // The test is "does this batch INTRODUCE a breach", not "is the book sound" —
+    // a chronicle may already carry one (a hand-recorded event, a dealt muster),
+    // and refusing every later write because of an older fault would strand the
+    // whole ledger on someone else's mistake. A writer's duty is not to make it
+    // worse.
+    const economy = economyOf(chronicle);
+    const before = fiduciaryViolationsAt(economy, chronicle.money).length;
+    const after = fiduciaryViolationsAt(economy, [...chronicle.money, ...posted]).length;
+    if (after > before) return [];
+    return posted;
   };
 
   const flows: FlowsActions = {

@@ -1491,3 +1491,54 @@ export function settlementGate(
     reason: `${coinCents(billCents)} is above the ${coinCents(capCents)} owner-approval cap and NOBODY RATIFIED this case — refused. An unratified case is an absence, never a consent.`,
   };
 }
+
+// ── THE FIDUCIARY INVARIANT — moved into the domain 2026-08-07 ──────────────
+// This lived in `test/invariants.ts` and was reachable ONLY from a test: the
+// kingdom proved its books balanced in CI and never once asked the question at
+// the moment coin moved (docs/WRIT-THE-GATE.md, finding 1). An invariant a
+// writer cannot reach is a description, not a rule.
+//
+// It is unchanged in behaviour — the test shelf now re-exports it, so every
+// existing caller reads the same function it always did, and the suite that
+// pins it is the proof of that.
+
+/** The trust-side cash accounts. Owner money, never the Crown's. */
+export const TRUST_CASH_ROLES = ['trust_cash_rent', 'trust_cash_deposits', 'owner_reserve_cash'];
+
+/** Every way the money books breach a party's subledger, as plain strings.
+ *  Empty means sound. Pure over (economy, money) — no clock, no I/O. */
+export function fiduciaryViolationsAt(economy: EconomyBook, money: MoneyLog, tag = ''): string[] {
+  const v: string[] = [];
+  const at = tag ? ` (${tag})` : '';
+  const p = readPostings(money);
+
+  // No trust bank overdrawn — spending money that is not there.
+  for (const role of TRUST_CASH_ROLES) {
+    const bal = balanceOf(economy, p, role);
+    if (bal < 0) v.push(`trust bank ${role} overdrawn: ${bal}${at}`);
+  }
+
+  // No over-sweep — a fee_sweep larger than fees earned drives the bridge
+  // equally negative (it still "ties"); the company would be holding owner money.
+  const dueToMgmt = balanceOf(economy, p, 'due_to_mgmt');
+  const dueFromTrust = balanceOf(economy, p, 'due_from_trust');
+  if (dueToMgmt < 0) v.push(`over-swept — due_to_mgmt negative: ${dueToMgmt}${at}`);
+  if (dueFromTrust < 0) v.push(`over-swept — due_from_trust negative: ${dueFromTrust}${at}`);
+
+  // No owner overdrawn — a negative owner net is, by definition, spending another
+  // owner's money (commingling). Per owner, not aggregate.
+  for (const owner of ownersInLog(money)) {
+    const net = readOwnerStatement(economy, money, owner).endingCents;
+    if (net < 0) v.push(`owner ${owner} overdrawn: ${net}${at}`);
+  }
+
+  // No tenant's deposit overdrawn — refunding tenant A out of B's deposit leaves
+  // the aggregate whole but B's subledger negative.
+  const tenants = [...new Set(money.map((e) => e.tenantId).filter((t): t is string => !!t))];
+  for (const tenant of tenants) {
+    const held = balanceOf(economy, p, 'security_deposits_held', (x) => x.tenantId === tenant);
+    if (held < 0) v.push(`tenant ${tenant} deposit overdrawn: ${held}${at}`);
+  }
+
+  return v;
+}
