@@ -56,6 +56,7 @@ aliases:
 ### Writs that specify it
 
 - [[Handoff — where things stand]] — *this writ names the exported symbol `LedgerView`*
+- [[Open questions]] — *this writ names the exported symbol `LedgerView`*
 - [[Writ — the flow engine (the operator's spine)]] — *this writ names the exported symbol `LedgerView`*
 - [[Writ — The Gate: the money law is written and nothing enforces it]] — *this writ names the exported symbol `LedgerView`*
 - [[Writ — the Land: pods, knights, owners, and guilds (the realm remodeled)]] — *this writ names the exported symbol `LedgerView`*

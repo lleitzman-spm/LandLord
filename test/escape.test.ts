@@ -90,7 +90,18 @@ describe("escape rate — the design's own ceiling, and its evidence", () => {
     // did not answer is a judgment, and the book previously claimed a machine
     // could do it. A budget that got cheaper by mislabelling a judgment was not
     // a better budget.
-    expect(c.designed).toBe(34);
+    // 29 since the operator's ruling of 2026-08-07 on `vendor-dispatch`. It was
+    // 34, and every one of the five that moved was a step whose verdict the book
+    // could not previously express: all eight vendor-dispatch steps shared one
+    // catalog row, so logging a complaint, committing an owner's money and
+    // posting a ledger entry carried a single `human`. `FlowStep.mode` now lets
+    // a step carry its own, and the King ruled each: report / identify /
+    // invoice-in / confirm-work / post-to-accounting are the machine's;
+    // assign-vendor / dispatch / pay-vendor stay his until an agent earns them.
+    //
+    // The ceiling FALLING is the honest reading here, exactly as it RISING was
+    // when owner-window moved the other way. Neither number is a target.
+    expect(c.designed).toBe(29);
     expect(c.unmeasured).toBe(0);
   });
 

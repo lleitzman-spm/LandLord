@@ -202,6 +202,67 @@ isolation was one-way.
 *(Both gaps listed here — the `BeltRefusal` and the missing identity guard —
 are now closed. See the entries below.)*
 
+**2026-08-07 (the re-cut begins) — a step can carry its own verdict, and the
+first flow was re-cut for one seat.** All green: `npm run build`, **529 tests**,
+`leakcheck` 0 findings, `book:lint` exit 0.
+
+**The mechanism.** `mode` lived only on the catalog ROW, which is right for a
+task TYPE and wrong for a step: all eight `vendor-dispatch` steps are
+legitimately `work-order` tasks, so ONE row governed logging a complaint,
+committing an owner's money, and posting a ledger entry with a single verdict.
+**The book could not say they differ** — the limit `escape.ts` already reported
+on itself (46 steps, 39 independent judgments). `FlowStep.mode` now overrides
+its row, `modeInForce` is the one helper both the engine and the readings use,
+and a step that declares nothing still inherits the row — so every existing book
+reads byte-identically to before.
+
+**The ruling (the King's, 2026-08-07), step by step:**
+
+| step | verdict | why |
+|---|---|---|
+| `report` | auto | recording that a complaint arrived |
+| `identify` | auto | the agent's judgment, handed over at trust-ladder rung 2 |
+| `assign-vendor` | **human** | an owner's money is committed |
+| `dispatch` | **human** | sends a vendor to a real door |
+| `invoice-in` | auto | the bill arrived; whether to pay it is a separate step |
+| `confirm-work` | auto | closed on the artisan's word; a tenant may object after |
+| `pay-vendor` | **human** | coin leaves |
+| `post-to-accounting` | auto | the ledger consequence of an approved payment |
+
+Two rulings ride with it and are NOT one-offs. **`confirm-work` closes on the
+vendor's word**, with tenant feedback as a *non-blocking* channel — an
+opportunity to say "this is not fixed", not a gate. (That is a failure route in
+waiting; `onFail` is the field for it.) And the three `human` steps are
+**expected to migrate**: *"the system can propose... but the human approves,
+following the same 'until runs get boring' principle."* Their verdicts live in
+the book precisely so a setting can hand them over without a code change.
+
+**Measured, not asserted.** The founding book's designed-human rate moved
+**73.9% → 63.0%** (34 → 29 of 46 steps). Live on a deployed muster the fleet
+went from *20 proposals parked / 9 steps swept* to **11 parked / 18 swept** —
+roughly half the work stopped reaching the King's desk. *(Two runs at different
+points, so directional; the 73.9→63.0 figure is the exact one.)*
+
+**The trap was NOT walked into this time.** The chronicle stores its own copy of
+the flow book, so a code change does not reach a running game — the hazard
+`book/memory/learned.md` records and the 2026-08-07 mode flip fell into anyway.
+The books were deployed to `data/chronicle.json` (an 8-line diff, no game data),
+verified by `flowsAtFounding` reading true and by the fleet actually sweeping
+`report` and `invoice-in` on a live muster.
+
+**Two guard tests moved and both were meant to.** `escape.test.ts` (34 → 29) and
+`flows.test.ts` (8 → 13 steps the gate opens for) pin these numbers so they
+cannot drift silently; each now carries the ruling that moved it.
+
+**RAISED BY THE RULING, AND IT NEEDS ONE:** the auto verdicts were given on the
+condition that the log is *"fully auditable"* and makes everything unwindable.
+**Unwinding works** (`strike` is wired, and readings fold from events).
+**Auditing does not:** `strike` DELETES rather than appending a reversal, so the
+log forgets its own corrections, and `KINGDOM.md:540` claims a
+`chronicle_history` recording every write that **no code in this tree
+implements**. Both predate the ruling; neither should be inherited silently.
+Written up in `docs/OPEN-QUESTIONS.md`.
+
 **2026-08-07 (last) — the remaining four findings closed, and the scoping rule
 that hid two of them corrected.** All green: `npm run build`, **527 tests**,
 `leakcheck` 0 findings, `book:lint` exit 0.

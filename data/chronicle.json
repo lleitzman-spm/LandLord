@@ -853,6 +853,7 @@
         {
           "key": "report",
           "catalogRow": "work-order",
+          "mode": "auto",
           "holder": "pm-desk",
           "board": "Intake",
           "note": "The report logged — what broke, which door, how it reached us.",
@@ -864,6 +865,7 @@
         {
           "key": "identify",
           "catalogRow": "work-order",
+          "mode": "auto",
           "holder": "mabel",
           "board": "Intake",
           "note": "Walked down the tree to a leaf — a {trade} call, {urgency} priority.",
@@ -875,6 +877,7 @@
         {
           "key": "assign-vendor",
           "catalogRow": "work-order",
+          "mode": "human",
           "holder": "va-desk",
           "board": "Dispatch",
           "note": "A artisan of the {trade} trade chosen for a {urgency} call.",
@@ -887,6 +890,7 @@
         {
           "key": "dispatch",
           "catalogRow": "work-order",
+          "mode": "human",
           "holder": "va-desk",
           "board": "Dispatch",
           "note": "The {trade} artisan dispatched — {urgency} window, tenant notified.",
@@ -899,6 +903,7 @@
         {
           "key": "invoice-in",
           "catalogRow": "work-order",
+          "mode": "auto",
           "holder": "lp-queue",
           "board": "Settlement",
           "note": "The {trade} artisan's invoice received and matched to the work.",
@@ -911,6 +916,7 @@
         {
           "key": "confirm-work",
           "catalogRow": "work-order",
+          "mode": "auto",
           "holder": "mabel",
           "board": "Dispatch",
           "note": "The fix confirmed with the tenant — the {trade} work holds.",
@@ -923,6 +929,7 @@
         {
           "key": "pay-vendor",
           "catalogRow": "work-order",
+          "mode": "human",
           "holder": "lp-queue",
           "board": "Settlement",
           "note": "The artisan paid — only inside the open window of the circuit.",
@@ -937,6 +944,7 @@
         {
           "key": "post-to-accounting",
           "catalogRow": "work-order",
+          "mode": "auto",
           "holder": "lp-queue",
           "board": "Settlement",
           "note": "The cost posted to the door and its owner — the ledger balanced.",

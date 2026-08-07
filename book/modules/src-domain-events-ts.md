@@ -113,12 +113,14 @@ aliases:
 - [[a route naming a step the flow does not have writes nothing either]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a self-routed step comes back to the same desk, and the cascade does not walk past it]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a spend on the higher-cap estate CLEARS; the same spend on an unlisted estate GATES]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a step may carry its OWN verdict, overriding the row it shares]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a step never reached cannot escape — an idle system is not an automated one]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a step routed upstream sends the case back to where the bad input entered]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a step the catalog marks human is a DESIGNED escape, not a failure]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a step waiting on an OUTSIDE answer never runs unattended]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a step with no declared mode is NOT MEASURED and never joins a total]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a step with NO route cannot fail — nothing is written at all]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[a step with no verdict of its own still inherits the row — every existing book is unchanged]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a struck money event stays struck through the merge]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[a target-anchored step with NO target date is unknown, never overdue]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[act five is met by holding the watch with no door in crisis]] — *imported by the test FILE (shared source, not a claim about this one test)*

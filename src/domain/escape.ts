@@ -289,7 +289,7 @@ export function readDesignedCeiling(flows: FlowBook, catalog: CatalogRow[]): Esc
 
   for (const t of flows) {
     for (const s of t.steps) {
-      const mode = modeOf.get(s.catalogRow);
+      const mode = s.mode ?? modeOf.get(s.catalogRow);
       if (mode !== 'auto' && mode !== 'human') {
         unmeasured += 1;
         bump(byFlow, t.key, 'unmeasured');

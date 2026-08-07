@@ -129,6 +129,21 @@ export interface FlowStep {
    *  loaded ontology by key (docs/KINGDOM.md, "the catalog is the event
    *  taxonomy"). */
   catalogRow: string;
+  /** THIS STEP'S OWN verdict on whether a person is needed, overriding the
+   *  catalog row's.
+   *
+   *  `mode` has always lived on the catalog ROW, which is right for a task
+   *  TYPE and wrong for a step: all eight `vendor-dispatch` steps are
+   *  legitimately `work-order` tasks, so ONE row governed logging a complaint,
+   *  committing an owner's money, and posting a ledger entry with a single
+   *  verdict. The book could not SAY they differ, and `escape.ts` reports that
+   *  limit on itself: 46 steps but only 39 independent judgments.
+   *
+   *  Absent, the row still decides, so every existing book reads exactly as
+   *  before. Present, this wins. A deployment's own setting may carry these,
+   *  which is what lets a seat be handed more as an agent earns it (the trust
+   *  ladder) without a code change. */
+  mode?: 'auto' | 'human';
   holder: HolderRef;
   /** The board this step renders on — a phase of the cascade ("Move-Out",
    *  "Leasing"). Boards are config, not code. */
@@ -388,6 +403,8 @@ export const FOUNDING_FLOWS: FlowBook = withTiming(([
       {
         key: 'report',
         catalogRow: 'work-order',
+        // Recording that a complaint arrived. Nothing is decided.
+        mode: 'auto',
         holder: 'pm-desk',
         board: 'Intake',
         note: 'The report logged — what broke, which door, how it reached us.',
@@ -395,6 +412,8 @@ export const FOUNDING_FLOWS: FlowBook = withTiming(([
       {
         key: 'identify',
         catalogRow: 'work-order',
+        // The classification judgment, handed to the agent that holds it (Mace). Trust-ladder rung 2: taken back by setting this to `human`.
+        mode: 'auto',
         holder: 'mabel',
         board: 'Intake',
         note: 'Walked down the tree to a leaf — a {trade} call, {urgency} priority.',
@@ -402,6 +421,8 @@ export const FOUNDING_FLOWS: FlowBook = withTiming(([
       {
         key: 'assign-vendor',
         catalogRow: 'work-order',
+        // An owner's money is committed here. The agent proposes; the King approves.
+        mode: 'human',
         holder: 'va-desk',
         board: 'Dispatch',
         note: 'A artisan of the {trade} trade chosen for a {urgency} call.',
@@ -409,6 +430,8 @@ export const FOUNDING_FLOWS: FlowBook = withTiming(([
       {
         key: 'dispatch',
         catalogRow: 'work-order',
+        // Sends a vendor to a real door. Proposed, not taken, until the trust ladder says otherwise.
+        mode: 'human',
         holder: 'va-desk',
         board: 'Dispatch',
         note: 'The {trade} artisan dispatched — {urgency} window, tenant notified.',
@@ -416,6 +439,8 @@ export const FOUNDING_FLOWS: FlowBook = withTiming(([
       {
         key: 'invoice-in',
         catalogRow: 'work-order',
+        // The bill arrived and was matched. WHETHER to pay it is `pay-vendor`.
+        mode: 'auto',
         holder: 'lp-queue',
         board: 'Settlement',
         note: "The {trade} artisan's invoice received and matched to the work.",
@@ -423,6 +448,8 @@ export const FOUNDING_FLOWS: FlowBook = withTiming(([
       {
         key: 'confirm-work',
         catalogRow: 'work-order',
+        // Closed on the artisan's word. A tenant may say otherwise afterwards - that is a signal, not a gate.
+        mode: 'auto',
         holder: 'mabel',
         board: 'Dispatch',
         note: 'The fix confirmed with the tenant — the {trade} work holds.',
@@ -430,6 +457,8 @@ export const FOUNDING_FLOWS: FlowBook = withTiming(([
       {
         key: 'pay-vendor',
         catalogRow: 'work-order',
+        // Coin leaves. The settlement gate refuses above the cap without a ratification regardless.
+        mode: 'human',
         holder: 'lp-queue',
         board: 'Settlement',
         note: 'The artisan paid — only inside the open window of the circuit.',
@@ -437,6 +466,8 @@ export const FOUNDING_FLOWS: FlowBook = withTiming(([
       {
         key: 'post-to-accounting',
         catalogRow: 'work-order',
+        // The ledger consequence of a payment already approved.
+        mode: 'auto',
         holder: 'lp-queue',
         board: 'Settlement',
         note: 'The cost posted to the door and its owner — the ledger balanced.',
@@ -741,7 +772,18 @@ export function mayRunUnattended(
   s: FlowStep,
   modeOf: Map<string, 'auto' | 'human' | undefined>,
 ): boolean {
-  return modeOf.get(s.catalogRow) === 'auto' && !awaitsOutside(s);
+  return modeInForce(s, modeOf) === 'auto' && !awaitsOutside(s);
+}
+
+/** The verdict in force for a step: its own if it declares one, else its
+ *  catalog row's. ONE helper, so the engine and every reading agree - two
+ *  places deciding what `auto` means is how the mode flip once failed to reach
+ *  a running game. */
+export function modeInForce(
+  s: { mode?: 'auto' | 'human'; catalogRow: string },
+  modeOf: Map<string, 'auto' | 'human' | undefined>,
+): 'auto' | 'human' | undefined {
+  return s.mode ?? modeOf.get(s.catalogRow);
 }
 
 /** Human-legible timing for the emitted note, folded from the edge. */

@@ -53,7 +53,7 @@ aliases:
 - [[src/domain/economy.ts]] — *this writ names the exported symbol `coinCents`; this writ names the exported symbol `settlementGate`; +2 more*
 - [[src/domain/economySetting.ts]] — *this writ names the exported symbol `applyEconomySetting`*
 - [[src/domain/escape.ts]] — *this writ names the exported symbol `EscapeReading`; this writ names the exported symbol `readEscape`*
-- [[src/domain/flows.ts]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `awaitsOutside`; +12 more*
+- [[src/domain/flows.ts]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `awaitsOutside`; +13 more*
 - [[src/domain/guilds.ts]] — *this writ names the exported symbol `SEAT_GUILD`*
 - [[src/domain/pods.ts]] — *this writ names the exported symbol `commissionCaseId`; this writ names the exported symbol `knightsOf`; +1 more*
 - [[src/domain/realm.ts]] — *this writ names the exported symbol `readRealm`*

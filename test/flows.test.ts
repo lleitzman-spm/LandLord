@@ -319,6 +319,32 @@ describe('the automation gate', () => {
   it('and the gate opens for a real, useful number of steps', () => {
     // A guard that refuses everything passes every test above and ships nothing.
     const open = FOUNDING_FLOWS.flatMap((f) => f.steps).filter((s) => mayRunUnattended(s, modeOf));
-    expect(open.length).toBe(8);
+    // 13 since the operator's ruling of 2026-08-07: five vendor-dispatch steps
+    // gained their own `mode` and were ruled the machine's. It was 8 while all
+    // eight of that flow's steps inherited one row's single `human` verdict.
+    expect(open.length).toBe(13);
+  });
+
+  it('a step may carry its OWN verdict, overriding the row it shares', () => {
+    // The mechanism the re-cut needed. `mode` on the catalog ROW is right for a
+    // task TYPE and wrong for a step: eight vendor-dispatch steps are all
+    // legitimately `work-order` tasks, so one row governed logging a complaint
+    // AND committing an owner's money with a single verdict. The book could not
+    // say they differ. Now it can.
+    const rows = new Map([['work-order', 'human' as const]]);
+    const base = { catalogRow: 'work-order', edge: {} };
+    expect(mayRunUnattended({ ...base, key: 'a', holder: 'x', board: 'b' } as never, rows)).toBe(false);
+    expect(mayRunUnattended({ ...base, key: 'b', holder: 'x', board: 'b', mode: 'auto' } as never, rows)).toBe(true);
+    // ...and the override does not defeat `awaitsOutside`: a step waiting on
+    // something the machine cannot see stays parked whatever its mode claims.
+    expect(
+      mayRunUnattended({ ...base, key: 'c', holder: 'x', board: 'b', mode: 'auto', condition: 'until leased' } as never, rows),
+    ).toBe(false);
+  });
+
+  it('a step with no verdict of its own still inherits the row — every existing book is unchanged', () => {
+    const rows = new Map([['work-order', 'auto' as const]]);
+    const s = { key: 'a', catalogRow: 'work-order', holder: 'x', board: 'b', edge: {} };
+    expect(mayRunUnattended(s as never, rows)).toBe(true);
   });
 });

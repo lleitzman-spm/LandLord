@@ -11,6 +11,38 @@ would settle it.
 ---
 
 
+
+## The log can unwind a mistake but does not record that it did
+
+*Raised 2026-08-07, and it is load-bearing.* Five `vendor-dispatch` steps were
+moved to `auto` on the operator's ruling, given explicitly on the condition:
+*"as long as there is a fully auditable LOG. The log makes everything
+unwindable."* Checked against the bytes, that condition is half met.
+
+**Unwinding works.** `strike(eventId)` is wired to a button in the Ledger
+(`LedgerView.tsx`), and because every reading is folded from events, removing a
+`done` genuinely un-completes the step. Agent acts now carry
+`actor: agent:<seat>`, so the machine's work is distinguishable from a person's.
+
+**The audit does not.** Two gaps:
+
+1. **`strike` deletes rather than reverses** — `events.filter(e => e.id !== id)`.
+   After an unwind the log reads as though the step was never completed. It does
+   not record that the system did it and a human undid it. This contradicts the
+   kingdom's own law that the event log is append-only and *"a correction is a
+   reversing event, never an edit."*
+2. **`KINGDOM.md:540` claims the vault keeps an append-only `chronicle_history`
+   "that records every write."** Nothing in `src/server/` or `src/worker.ts`
+   writes one. So there is no second book to recover a struck event from either.
+   The constitution asserts a safety net this tree does not build.
+
+Neither gap was created by the auto ruling; both predate it. But the ruling
+rests on them, so it should be made deliberately rather than inherited.
+
+**The question is which:** make `strike` append a reversal (a real change to how
+every reading folds), implement `chronicle_history`, or amend the canon to stop
+claiming it. All three are defensible; guessing between them is not.
+
 ## A reasoning clerk sits on a catalog row the book marks `auto`
 
 *Raised 2026-08-07.* `violation-notice/classify` sits on catalog row
