@@ -728,11 +728,23 @@ export function makePriceClerk(ctx) {
             : `${coin(invoiceCents)} invoice within the ${coin(recon.authorizedCeilingCents)} authorized ceiling, but held for the owner's review.${because}`
           : `${recon.note} Recommend approve & pay.${because}`;
 
+        const verdict = hold ? 'hold-for-owner' : 'clear-to-pay';
         const proposal = core.proposeStep(r.template, r.caseId, r.next.index - 1, `agent:${seat}`, { at, id, note });
         if (!proposal) continue;
+        // THE VERDICT GOES INTO THE RECORD, not only into the console.
+        // `docs/WRIT-THE-GATE.md` finding 3: both branches used to call
+        // proposeStep with identical arguments and differ only in `note`, so an
+        // invoice that overran its authorized ceiling and one comfortably under
+        // it were indistinguishable in the only thing that survives the run. A
+        // reading can now tell them apart without parsing prose.
+        proposal.params = {
+          ...(proposal.params ?? {}),
+          settlement: verdict,
+          invoiceCents: String(invoiceCents),
+          authorizedCeilingCents: String(recon.authorizedCeilingCents),
+        };
         events.push(proposal);
         taken.add(r.caseId);
-        const verdict = hold ? 'hold-for-owner' : 'clear-to-pay';
         records.push(
           `${r.template.title} "${r.subject}" → invoice ${coin(invoiceCents)} vs ${coin(recon.authorizedCeilingCents)} ceiling [${how}] — ${verdict}.`,
         );
@@ -1065,7 +1077,11 @@ export function makeAdvanceClerk(ctx, seat) {
             );
             if (!done.length) break;
             events.push(...done);
-            ran.push(core.titleOf(doc.catalog, s.catalogRow) || s.key);
+            // Name the STEP. All eight vendor-dispatch steps share one catalog
+            // row, so a line built from the row title alone repeats the same
+            // words for every step swept and says nothing about what ran.
+            const title = core.titleOf(doc.catalog, s.catalogRow);
+            ran.push(title && title !== s.key ? `${s.key} (${title})` : s.key);
             index += 1;
           }
           if (ran.length) {
