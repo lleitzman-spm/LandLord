@@ -18,14 +18,13 @@ aliases:
 > Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
 > *Declared in `knowledge/artifacts.json`.*
 
-*Named 2026-07-19 (Edwin). The realm's proving ground: a live simulation of the whole operation where knights (property managers) train against every scenario before real combat — and where the kingdom tests and hardens its own machine. Working names floated: War Games / Grand Melee / the Tourney. *
+> **DEPRECATED AS CURRENT-WORK AUTHORITY.** This is an initiative design record, > not a task queue. Activation and priority must come through LandLord's local > handoff and `C:\Users\lleit\.agents\work-hub\HUB.json`.
 
 ## The source, verbatim
 
-> *Named 2026-07-19 (Edwin). The realm's proving ground: a live simulation of the whole operation
-> where knights (property managers) train against every scenario before real combat — and where the
-> kingdom tests and hardens its own machine. Working names floated: War Games / Grand Melee / the
-> Tourney. **War Games** stands.*
+> > **DEPRECATED AS CURRENT-WORK AUTHORITY.** This is an initiative design record,
+> > not a task queue. Activation and priority must come through LandLord's local
+> > handoff and `C:\Users\lleit\.agents\work-hub\HUB.json`.
 
 *Verified against `docs/WAR-GAMES.md`:1 on every lint — no quote, no object.*
 

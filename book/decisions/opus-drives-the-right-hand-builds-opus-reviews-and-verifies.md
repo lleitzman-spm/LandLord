@@ -2,7 +2,7 @@
 type: "decision"
 id: "decision:opus-drives-right-hand-builds"
 title: "Opus drives; the right hand builds; Opus reviews and verifies"
-standing: "settled"
+standing: "retired"
 standing_source: "knowledge/decisions.json"
 source_path: "docs/MODEL-DOCTRINE.md"
 source_line: 31
@@ -16,11 +16,11 @@ aliases:
 
 # Opus drives; the right hand builds; Opus reviews and verifies
 
-> **STANDING — SETTLED**  
-> Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
+> **STANDING — RETIRED**  
+> Superseded. Kept for history, never cited as current.  
 > *Declared in `knowledge/decisions.json`.*
 
-The session is always Opus, which holds the constitution, the context, and the judgment; never trust a builder's word.
+Retired as shared orchestration law on 2026-08-09. Preserved only as historical LandLord model-review guidance; global orchestration and work selection now live in ORCHESTRATION.md and HUB.json.
 
 ## The source, verbatim
 

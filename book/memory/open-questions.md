@@ -9,6 +9,10 @@ aliases:
 
 # Open questions
 
+> **Questions and evidence only.** A row here does not create, prioritize, or
+> close work. Any actionable item must be represented in the LandLord-local
+> handoff and projected through `C:\Users\lleit\.agents\work-hub\HUB.json`.
+
 *Waiting on a ruling. When one is answered, put the answer in its source, recompile, and strike
 the row from here.*
 

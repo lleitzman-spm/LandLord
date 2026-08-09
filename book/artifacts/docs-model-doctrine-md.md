@@ -20,7 +20,7 @@ aliases:
 > Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
 > *Declared in `knowledge/artifacts.json`.*
 
-How the kingdom allocates its minds across its work — the roster, the allocation seam, the review gate.
+Historical LandLord-local model-selection and review guidance; it is not shared orchestration or work authority.
 
 ## The source, verbatim
 

@@ -2,7 +2,7 @@
 type: "decision"
 id: "decision:no-trello-use-open-prs-plus-handoff"
 title: "Use open-PRs-or-branches plus HANDOFF; no separate board to babysit"
-standing: "settled"
+standing: "retired"
 standing_source: "knowledge/decisions.json"
 source_path: "docs/PARALLEL-SESSIONS.md"
 source_line: 92
@@ -16,11 +16,11 @@ aliases:
 
 # Use open-PRs-or-branches plus HANDOFF; no separate board to babysit
 
-> **STANDING — SETTLED**  
-> Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
+> **STANDING — RETIRED**  
+> Superseded. Kept for history, never cited as current.  
 > *Declared in `knowledge/decisions.json`.*
 
-A second coordination system goes stale the moment someone skips the update; the branches and PRs already are the state.
+Retired on 2026-08-09. Branches, PRs, and HANDOFF remain evidence or LandLord-local detail; HUB.json is the sole cross-project work authority.
 
 ## The source, verbatim
 

@@ -126,6 +126,10 @@ export function readJson(abs) {
 
 const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'dist-operator', 'dist-ssr', 'dist-wargame']);
 
+function repoRelative(abs) {
+  return path.relative(REPO, abs).split(path.sep).join('/');
+}
+
 /** Every file under `dir`, repo-relative, sorted, with the noisy places skipped. */
 export function walkFiles(dir, { ext = null } = {}) {
   const out = [];
@@ -145,7 +149,7 @@ export function walkFiles(dir, { ext = null } = {}) {
         if (!SKIP_DIRS.has(e.name)) stack.push(abs);
       } else if (e.isFile()) {
         if (ext && !ext.some((x) => e.name.endsWith(x))) continue;
-        out.push(path.relative(REPO, abs));
+        out.push(repoRelative(abs));
       }
     }
   }
@@ -432,7 +436,7 @@ function resolveImport(fromRel, spec) {
   if (/\.jsx?$/.test(base)) for (const e of CODE_EXT) tries.push(base.replace(/\.jsx?$/, e));
   for (const t of tries) {
     try {
-      if (fs.statSync(t).isFile()) return path.relative(REPO, t);
+      if (fs.statSync(t).isFile()) return repoRelative(t);
     } catch {
       /* keep trying */
     }

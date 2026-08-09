@@ -2,7 +2,7 @@
 type: "artifact"
 id: "artifact:docs-parallel-sessions"
 title: "docs/PARALLEL-SESSIONS.md"
-standing: "settled"
+standing: "retired"
 standing_source: "knowledge/artifacts.json"
 source_path: "docs/PARALLEL-SESSIONS.md"
 source_line: 3
@@ -16,11 +16,11 @@ aliases:
 
 # docs/PARALLEL-SESSIONS.md
 
-> **STANDING — SETTLED**  
-> Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
+> **STANDING — RETIRED**  
+> Superseded. Kept for history, never cited as current.  
 > *Declared in `knowledge/artifacts.json`.*
 
-How to run several Claude sessions at once, within a project and across all of them, without stepping on your own work.
+Retired cross-project doctrine retained only for historical LandLord-local lane context; ORCHESTRATION.md and HUB.json supersede it.
 
 ## The source, verbatim
 

@@ -18,14 +18,13 @@ aliases:
 > Two sources disagree and no decision has been made. Do not act on it as settled.  
 > *Declared in `knowledge/artifacts.json`.*
 
-*Decisions that are genuinely open, written down rather than settled quietly in a comment. The rule that feeds this file: **if a behaviour can only be justified by pointing at what one company does, it is probably wrong for a product** — raise it here instead of shipping it.*
+> **Evidence and questions only.** This file is not a task or decision queue. > Actionable work must appear once in LandLord's local handoff and be projected > through `C:\Users\lleit\.agents\work-hub\HUB.json`.
 
 ## The source, verbatim
 
-> *Decisions that are genuinely open, written down rather than settled quietly in
-> a comment. The rule that feeds this file: **if a behaviour can only be justified
-> by pointing at what one company does, it is probably wrong for a product** —
-> raise it here instead of shipping it.*
+> > **Evidence and questions only.** This file is not a task or decision queue.
+> > Actionable work must appear once in LandLord's local handoff and be projected
+> > through `C:\Users\lleit\.agents\work-hub\HUB.json`.
 
 *Verified against `docs/OPEN-QUESTIONS.md`:1 on every lint — no quote, no object.*
 

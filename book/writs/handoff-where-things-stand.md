@@ -18,14 +18,14 @@ aliases:
 > Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
 > *Declared in `knowledge/artifacts.json`.*
 
-*The working-state document. `KINGDOM.md` is the constitution (what the kingdom **is**); this is the state of play (what is **done**, what is **next**, what is **stuck**). Much of the codebase points here, because a session that starts by trusting a stale note is worse off than one that starts with 
+> **Project-local status only.** This file may describe LandLord facts, local > candidates, active lanes, and blockers. Cross-project priority and the > universal next-work selection live only in > `C:\Users\lleit\.agents\work-hub\HUB.json`; this file cannot outrank it.
 
 ## The source, verbatim
 
-> *The working-state document. `KINGDOM.md` is the constitution (what the kingdom
-> **is**); this is the state of play (what is **done**, what is **next**, what is
-> **stuck**). Much of the codebase points here, because a session that starts by
-> trusting a stale note is worse off than one that starts with nothing.*
+> > **Project-local status only.** This file may describe LandLord facts, local
+> > candidates, active lanes, and blockers. Cross-project priority and the
+> > universal next-work selection live only in
+> > `C:\Users\lleit\.agents\work-hub\HUB.json`; this file cannot outrank it.
 
 *Verified against `docs/HANDOFF.md`:1 on every lint — no quote, no object.*
 

@@ -20,7 +20,7 @@ aliases:
 > Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
 > *Declared in `knowledge/artifacts.json`.*
 
-The working-state document — starts empty in the public repository on purpose, since its private predecessor named real people and live infrastructure.
+The LandLord-local working-state detail surface; it does not rank cross-project work. It starts empty publicly because its private predecessor named real people and infrastructure.
 
 ## The source, verbatim
 

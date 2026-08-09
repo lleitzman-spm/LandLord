@@ -18,12 +18,14 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-*LandLord has a sibling project in a private repository. This note records the boundary between them, because on 2026-08-06 both built the same layer thirty-five minutes apart and neither knew.*
+> **Dependency boundary only.** This file may prevent duplicate implementation; > it cannot assign or rank work. Shared orchestration and portfolio priority live > only in `C:\Users\lleit\.agents\ORCHESTRATION.md` and > `C:\Users\lleit\.agents\work-hub\HUB.json`.
 
 ## The source, verbatim
 
-> *LandLord has a sibling project in a private repository. This note records the boundary between
-> them, because on 2026-08-06 both built the same layer thirty-five minutes apart and neither knew.*
+> > **Dependency boundary only.** This file may prevent duplicate implementation;
+> > it cannot assign or rank work. Shared orchestration and portfolio priority live
+> > only in `C:\Users\lleit\.agents\ORCHESTRATION.md` and
+> > `C:\Users\lleit\.agents\work-hub\HUB.json`.
 
 *Verified against `docs/SIBLING-BOUNDARY.md`:1 on every lint — no quote, no object.*
 
