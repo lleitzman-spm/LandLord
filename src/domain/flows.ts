@@ -129,6 +129,9 @@ export interface FlowStep {
    *  loaded ontology by key (docs/KINGDOM.md, "the catalog is the event
    *  taxonomy"). */
   catalogRow: string;
+  /** A step may narrow the catalog row's general execution mode. This is only
+   *  descriptive input to the authority gate; it is never an execution grant. */
+  mode?: 'auto' | 'human';
   holder: HolderRef;
   /** The board this step renders on — a phase of the cascade ("Move-Out",
    *  "Leasing"). Boards are config, not code. */
@@ -741,7 +744,16 @@ export function mayRunUnattended(
   s: FlowStep,
   modeOf: Map<string, 'auto' | 'human' | undefined>,
 ): boolean {
-  return modeOf.get(s.catalogRow) === 'auto' && !awaitsOutside(s);
+  return modeInForce(s, modeOf) === 'auto' && !awaitsOutside(s);
+}
+
+/** The step's own verdict wins when present; existing books continue to inherit
+ *  their catalog row. Callers must still enforce actor and case-scoped grants. */
+export function modeInForce(
+  s: { mode?: 'auto' | 'human'; catalogRow: string },
+  modeOf: Map<string, 'auto' | 'human' | undefined>,
+): 'auto' | 'human' | undefined {
+  return s.mode ?? modeOf.get(s.catalogRow);
 }
 
 /** Human-legible timing for the emitted note, folded from the edge. */

@@ -321,6 +321,22 @@ describe('the automation gate', () => {
     const open = FOUNDING_FLOWS.flatMap((f) => f.steps).filter((s) => mayRunUnattended(s, modeOf));
     expect(open.length).toBe(8);
   });
+
+  it('lets a step narrow its row without treating that verdict as a grant', () => {
+    const rows = new Map([['work-order', 'human' as const]]);
+    const base = { catalogRow: 'work-order', edge: {} };
+    expect(mayRunUnattended({ ...base, key: 'a', holder: 'x', board: 'b' } as never, rows)).toBe(false);
+    expect(mayRunUnattended({ ...base, key: 'b', holder: 'x', board: 'b', mode: 'auto' } as never, rows)).toBe(true);
+    expect(
+      mayRunUnattended({ ...base, key: 'c', holder: 'x', board: 'b', mode: 'auto', condition: 'until leased' } as never, rows),
+    ).toBe(false);
+  });
+
+  it('leaves an existing step without a verdict on its catalog row', () => {
+    const rows = new Map([['work-order', 'auto' as const]]);
+    const s = { key: 'a', catalogRow: 'work-order', holder: 'x', board: 'b', edge: {} };
+    expect(mayRunUnattended(s as never, rows)).toBe(true);
+  });
 });
 
 // ── Who advanced the step ───────────────────────────────────────────────────
