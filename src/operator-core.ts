@@ -17,6 +17,7 @@
 
 // ── The flow engine (the operator's spine) ──────────────────────────────────
 export {
+  FOUNDING_FLOWS,
   instantiateFlow,
   handStep,
   completeStep,

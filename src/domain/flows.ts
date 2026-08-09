@@ -169,6 +169,9 @@ export interface FlowStep {
 
 export interface FlowTemplate {
   key: string;
+  /** Immutable identity of this authored shape. External commands must name it
+   *  so a case cannot be advanced against a silently changed template. */
+  version: string;
   title: string;
   /** The human trigger line ("a tenant gives notice"). Swing one triggers by
    *  a hand on the Ledger; the trigger is config so the clerks can fire it. */
@@ -283,6 +286,7 @@ function withTiming(book: UntimedTemplate[]): FlowBook {
 export const FOUNDING_FLOWS: FlowBook = withTiming(([
   {
     key: 'move-out-relay',
+    version: 'founding-1',
     title: 'Move-out → re-list relay',
     trigger: 'A tenant gives notice',
     steps: [
@@ -385,6 +389,7 @@ export const FOUNDING_FLOWS: FlowBook = withTiming(([
   },
   {
     key: 'vendor-dispatch',
+    version: 'founding-1',
     title: 'Vendor dispatch',
     trigger: 'A work order is reported',
     steps: [
@@ -453,6 +458,7 @@ export const FOUNDING_FLOWS: FlowBook = withTiming(([
   // vendor-dispatch pattern. {violation} / {days} render from TOKEN_DEFAULTS.
   {
     key: 'violation-notice',
+    version: 'founding-1',
     title: 'Violation / notice',
     trigger: 'A violation or notice arrives',
     steps: [
@@ -515,6 +521,7 @@ export const FOUNDING_FLOWS: FlowBook = withTiming(([
   // window → record; unsigned rolls to month-to-month with the premium.
   {
     key: 'lease-renewal',
+    version: 'founding-1',
     title: 'Lease renewal',
     trigger: 'A lease nears its term (T-90)',
     steps: [
@@ -608,6 +615,7 @@ export const FOUNDING_FLOWS: FlowBook = withTiming(([
   // first owner report → go live (list & syndicate a vacant door).
   {
     key: 'owner-onboarding',
+    version: 'founding-1',
     title: 'Owner onboarding',
     trigger: "A new owner's property is won",
     steps: [
