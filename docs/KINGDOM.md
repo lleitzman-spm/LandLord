@@ -36,6 +36,68 @@ the royal line of management versus the local line of trade.
    name opens its page — and undoing or continuing a recorded act is offered right where the
    record is shown.
 
+## The operating boundary and the three provenances
+
+*Ratified 2026-08-09 after the LandLord council audit. This section governs product identity,
+authority and readiness. Where an older section or writ makes the map primary, joins Escape to
+delegation debt, implies that one operator describes the present organisation, or calls simulated
+work live, this section wins.*
+
+**LandLord is the single-operator authority and agent layer; the sibling owns the evidenced
+operating graph.** LandLord owns the workforce, command language, grants, refusals, append-only
+acts and the decision bridge to its one human operator. The sibling owns what the operation is
+evidenced to do. LandLord may execute a deliberately loaded runtime shape; it may never promote an
+unevidenced simulation, an imported report or a map projection into operating truth.
+
+**One operator is the target topology and the attention constraint.** It is the design bar against
+which the operating system is judged, not a claim that the present business has only one person in
+it. Existing people, responsibilities and handoffs remain facts of the evidenced graph until the
+operator explicitly changes them.
+
+**The Proving Ground and the Operating Instrument are separate modes.** They may share the same
+flow engine, command types, refusal rules and readings only where those components enforce
+equivalent authority. The Proving Ground uses synthetic working fluid and may accelerate time or
+deal scenarios. The Operating Instrument may touch real records only through a separately proven
+and authorised data path. Passing in one mode is never evidence that the other is live-ready.
+
+Every surface and artifact declares one of three provenances:
+
+| Provenance | What it means |
+|---|---|
+| **SIMULATION** | Synthetic working fluid in the Proving Ground. No live authority and no claim about present operations. |
+| **SHADOW** | A read-only comparison against authorised evidence. It may report; it never applies. |
+| **LIVE** | An authorised Operating Instrument acting through server-enforced grants against real records. |
+
+The repository and its current user interface are **SIMULATION**. No screen, build, test, preview,
+generated Book page or deployment may call itself SHADOW or LIVE merely because it runs, persists,
+uses a hosted brain, or resembles a real operation. Promotion requires its own evidence and the
+operator's explicit authority.
+
+**Automatic work is permitted only inside a server-enforced grant.** An agent may complete a step
+marked automatic when the command names the exact case, flow version, step, attempt, expected
+version, actor, grant, origin, cause, idempotency key and governing evidence. Approval, override,
+policy or grant changes, and exceptional money remain human acts. A UI convention, belt manifest
+or well-behaved client is not enforcement.
+
+**Human minutes per door per year is the north star.** Designed judgment, unplanned escape,
+rework, chase, supervision, queue age and delegation debt remain separate diagnostic readings;
+none may be folded into a flattering substitute for human attention. The existing Escape reading
+is experimental: useful for investigation, not a governing score or readiness gate.
+
+**The decision bridge is primary.** The operator's pending decisions, the evidence and authority
+for each, the proposed act, and the refusal or consequence of acting are the primary interface.
+The realm map is a secondary, non-authoritative projection and navigation aid. Invented geography,
+visual position and simulated consequence never decide what is true or what may be done.
+
+**Cross-project contact begins shape-only and offline.** The first contract may carry schemas,
+topology and digests, but no instances, names, dates, values, quotes, identifiers, source paths,
+network access or executable instructions. Its consumer reports only and always records that it
+applied nothing. Any wider bridge needs a later, explicit ruling.
+
+**The first product is the private, single-tenant operating system.** SaaS tenancy, shared hosting
+and multi-company isolation are deferred. Per-identity vault rows remain sandboxes and must not be
+described as tenant isolation.
+
 ## The knighthood — the agent layer
 
 *Ratified 2026-08-07 (`docs/WRIT-THE-KNIGHTHOOD.md`). This section governs every section below it;
@@ -72,9 +134,10 @@ sharpest line survives verbatim: **the Regent manages what he does not hold.**
 models the promotion; no new record is needed. **No rung ever reaches the ratchet:** no agent, at any
 rung, emits `approved` or `overridden`. That mark is the King's alone.
 
-**The delegation debt and the escape rate are ONE number** — how much of the operation is still the
-King's own hands. A desk with no knight and a step that reached the King are the same failure at two
-altitudes. Design law 5 stops being a metaphor and becomes the thesis of the product.
+*SUPERSEDED 2026-08-09:* delegation debt and the Escape rate are not one governing number. A desk
+with no knight and a step that reached the King can share a cause, but they remain separate
+diagnostics. Human minutes per door per year governs the attention objective; Escape remains an
+experimental reading until evidence establishes what it measures and how it should be used.
 
 **Struck by this amendment**, each having modelled a company with an org chart: guilds, pods,
 knights-as-equity-partners, Patrons-as-a-knight's-book, hamlets, mayors, the two lines of rule and

@@ -36,7 +36,7 @@ A boundary table with a hole in it is what a double-build looks like before it h
 - **Shapes cross; instances and numbers do not.** A structure may inform a flow here. Its evidence,
   quotes, thresholds, deadlines, caps and actor names are real client data and stay where they are.
 
-## "Escape" means two things — ours is the rate
+## "Escape" means two things — neither is the north star
 
 Both projects measure against the same bar: one operator, ten thousand doors. They count
 differently, and for a while used one word for both.
@@ -46,10 +46,28 @@ differently, and for a while used one word for both.
   (`src/domain/escape.ts`).
 - **There**, an escape is a repair that comes to rest on the operator. It is a **count**.
 
-Neither is wrong and they are not the same number. As of 2026-08-06 the two are reconciled at the
+Neither is wrong and they are not the same number. LandLord's rate is **experimental**, not a
+governing score or readiness gate; human minutes per door per year is the north star, with designed
+judgment, unplanned escape, rework, chase and supervision reported separately. As of 2026-08-06 the two are reconciled at the
 point that matters: a failure route here declares `endsAt: 'origin' | 'operator'`, using the same
 values as the sibling's equivalent, so *"a failure that cost the one operator a slice of their day"*
 is one number across both projects. `EscapeReading.escalated` is that count; the rate is left alone.
+
+## The first bridge is shape-only, offline and report-only
+
+*Ratified 2026-08-09.* The sibling remains the authority for the evidenced operating graph;
+LandLord remains the authority and agent layer. Their first machine-readable contact may compare
+shape, but it may not move operating truth or create runtime authority.
+
+The contract is `spm-landlord-audit-projection/v1`. A producer must pin its source revision and
+digest. The payload may carry schemas and topology only: **no instances, names, dates, values,
+quotes, identifiers, source paths, network access or executable instructions.** The consumer is
+manually invoked, writes only to temporary storage, reports differences, and records
+`"applied": false` on every result. Before and after repository status must prove the comparison
+introduced no tracked or untracked repository change.
+
+Any online connection, instance exchange, real-data projection or applying consumer is a new
+authority decision. This ruling does not authorise one.
 
 ## "Orchestrator" was the wrong noun — the correction, paid 2026-08-07
 

@@ -34,6 +34,7 @@ yours rather than forcing your copy over live work.
 
 | Lane | Branch | Owned surface | Status |
 |---|---|---|---|
+| Audit canon + provenance | `codex/landlord-gate0` | handwritten authority docs, knowledge authority, War Table provenance | **Gate 0 verified 2026-08-09; ready for integration** |
 | The rig | `claude/landlord-agent-rig-family-ualhub` | `harness/agents/`, `harness/fleet.mjs`, `harness/operate.mjs`, `harness/viewer.mjs`, `contextGuard` | **merged into the findings lane 2026-08-07** |
 | Findings + segregation | `claude/landlord-gameplay-loop-xzk8n3` | `src/server/`, `src/store/`, the views, `src/domain/flows.ts`, the strike waves | **merged; this is the trunk of the two** |
 
@@ -44,6 +45,47 @@ were running, which is exactly when it was supposed to be full. Claim the lane
 BEFORE the work, not after it merges.*
 
 ## State of play
+
+**2026-08-09 — THE LANDLORD AUDIT IS RATIFIED FOR OFFLINE INTEGRATION THROUGH GATE 3.** The
+operator approved decisions 1–9 and Gates 0–3. The integration starts semantically from audited
+frontier `bf9d5d8`; the four post-ancestor rig commits are replayed individually in order:
+`1ce52a4`, `0feae89`, `1951863`, `d68fbaa`. Generated Book conflicts are never resolved by hand;
+the Book is regenerated once from reconciled sources.
+
+The governing product boundary now lives in `docs/KINGDOM.md`, "The operating boundary and the
+three provenances": LandLord is the single-operator authority and agent layer; the sibling owns the
+evidenced operating graph; one operator is a target topology rather than a claim about present
+staffing; Proving Ground and Operating Instrument are separate modes; human minutes per door per
+year is the north star; Escape is experimental; the decision bridge is primary and the map is a
+secondary projection; the first bridge is shape-only and offline; and the private single-tenant
+operating system comes before SaaS.
+
+**The provenance wall is binding now.** This repository and its current UI are `SIMULATION`:
+synthetic working fluid, no live authority, no claim about present operations. `SHADOW` means an
+authorised read-only comparison that never applies. `LIVE` means an authorised Operating
+Instrument acting through server-enforced grants against real records. Running, persisting,
+building, deploying or calling a hosted brain does not promote provenance.
+
+**The adversarial failures carried into the integration dossier:** an ordinary case may not cross
+into another case; a command may not jump to a future step; a step may not be ratified twice; stale
+evidence and stale case versions must refuse; duplicate requests must be idempotent; a forged actor
+must refuse; a generic privileged-event writer may not bypass typed commands; and unauthorised or
+exceptional money must refuse. Unattended sweeping stays disabled until case scope, exact-current-
+step enforcement, causal versioning and idempotency are proven through hostile tests.
+
+**This approval does not authorise activation.** No real records, credentials, money movement,
+unattended live action, live sibling bridge, shadow trial, production deployment, or widening of
+the identity wall is part of Gates 0–3. Publication of the integration branch and a draft PR is
+authorised; merging to `main` remains a separate act because this repository's herald deploys it.
+
+**Gate 0 verification receipt:** `npm test` — 38 files / 476 tests passed; `npm run build` passed;
+`npm run leakcheck` — 1,400 tracked text files / 0 findings; `npm run book:lint` — 1,074 quotes
+checked / 0 failed and 0 dangling links. A headless Chrome drive at 1366×768 and 390×844 observed
+the onboarding provenance and the persistent ribbon wall, 0px horizontal overflow and 0 console
+errors. A second browser drive entered the Ledger by keyboard and observed `ESCAPE RATE ·
+EXPERIMENTAL` with its non-governing disclaimer and 0 console errors. A/E/P: the state is announced
+to assistive technology, visible without navigation, and adjacent to the product identity on every
+War Table surface.
 
 **2026-08-07 — TWO LANES MERGED.** The rig lane
 (`claude/landlord-agent-rig-family-ualhub`) and the findings lane

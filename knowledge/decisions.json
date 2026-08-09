@@ -583,12 +583,12 @@
   {
     "id": "decision:diegetic-war-table",
     "type": "decision",
-    "label": "The interface is a physical war table viewed from a fixed high angle",
-    "standing": "settled",
-    "summary": "Panels become objects on the table; the map is the primary interface, not a decorative element, chosen over a prettier dashboard or an outdoor low-poly landscape.",
+    "label": "The War Table remains the Proving Ground's visual craft, not its authority",
+    "standing": "retired",
+    "summary": "Superseded in part on 2026-08-09: the map remains an interactive visual projection, but the decision bridge is primary and the map is secondary and non-authoritative.",
     "source_path": "docs/WRIT-THE-WAR-TABLE.md",
-    "source_line": 47,
-    "quote": "The interface is a physical war table viewed from a fixed high angle, lit by one warm key light in an otherwise dark room.",
+    "source_line": 52,
+    "quote": "Decided for the Proving Ground's visual craft; amended 2026-08-09.",
     "links": [],
     "tags": [
       "war-table",
@@ -892,11 +892,11 @@
   {
     "id": "decision:trust-jurisdiction-day-count-open",
     "type": "decision",
-    "label": "Whether a deployment ever spans two trust-accounting jurisdictions is open",
+    "label": "A single-tenant deployment carries one trust-accounting jurisdiction",
     "standing": "contested",
-    "summary": "The earned-fee sweep day count is set by jurisdiction, not by the firm; today it is one number for the whole deployment.",
+    "summary": "For the first product, deployment-wide is tenant-wide. If SaaS tenancy is reopened, the earned-fee sweep day count must move to the tenant record.",
     "source_path": "docs/OPEN-QUESTIONS.md",
-    "source_line": 54,
+    "source_line": 85,
     "quote": "Trust-accounting rules that vary by jurisdiction",
     "links": [
       "fact:earned-fee-limit-days"
@@ -909,18 +909,115 @@
   {
     "id": "decision:multi-tenancy-shape-open",
     "type": "decision",
-    "label": "Whether LandLord is single-tenant or multi-tenant is genuinely open",
-    "standing": "contested",
-    "summary": "The vault's per-identity rows are a sandbox repeatedly at risk of being mistaken for tenant isolation; the answer decides whether it is renamed or made a first-class record.",
+    "label": "LandLord optimises first for a private single-tenant operating system",
+    "standing": "settled",
+    "summary": "SaaS tenancy, shared hosting and multi-company isolation are deferred; per-identity vault rows remain sandboxes and are not tenant isolation.",
     "source_path": "docs/OPEN-QUESTIONS.md",
-    "source_line": 67,
-    "quote": "Multi-tenancy, and what the per-identity vault rows actually are",
+    "source_line": 114,
+    "quote": "Settled: optimise first for the private, single-tenant operating system.",
     "links": [
       "decision:no-multi-tenancy"
     ],
     "tags": [
-      "open-question",
+      "product-boundary",
+      "single-tenant",
       "vault"
     ]
+  },
+  {
+    "id": "decision:landlord-authority-sibling-graph",
+    "type": "decision",
+    "label": "LandLord owns authority and agents; the sibling owns the evidenced graph",
+    "standing": "settled",
+    "summary": "LandLord owns the workforce, command language, grants, refusals, append-only acts and the operator decision bridge; the sibling owns evidenced operational truth.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 46,
+    "quote": "LandLord is the single-operator authority and agent layer; the sibling owns the evidenced",
+    "links": [],
+    "tags": ["product-boundary", "authority", "sibling"]
+  },
+  {
+    "id": "decision:one-operator-is-target-topology",
+    "type": "decision",
+    "label": "One operator is a target topology, not a staffing claim",
+    "standing": "settled",
+    "summary": "The one-operator bar constrains the target system and human attention; it does not deny the present multi-person operation.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 52,
+    "quote": "One operator is the target topology and the attention constraint.",
+    "links": [],
+    "tags": ["product-boundary", "one-operator"]
+  },
+  {
+    "id": "decision:proving-ground-operating-instrument-separated",
+    "type": "decision",
+    "label": "The Proving Ground and Operating Instrument are separate modes",
+    "standing": "settled",
+    "summary": "They share only authority-equivalent engine components; simulation proof is not live-operating proof.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 57,
+    "quote": "The Proving Ground and the Operating Instrument are separate modes.",
+    "links": [],
+    "tags": ["product-boundary", "provenance", "simulation"]
+  },
+  {
+    "id": "decision:auto-requires-server-grant",
+    "type": "decision",
+    "label": "Automatic work requires a server-enforced grant",
+    "standing": "settled",
+    "summary": "Agents may complete explicitly automatic work only through exact, server-enforced grants; approval, override, policy and grant changes, and exceptional money remain human.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 76,
+    "quote": "Automatic work is permitted only inside a server-enforced grant.",
+    "links": [],
+    "tags": ["authority", "agent", "trust-kernel"]
+  },
+  {
+    "id": "decision:human-minutes-per-door-north-star",
+    "type": "decision",
+    "label": "Human minutes per door per year is the north star",
+    "standing": "settled",
+    "summary": "Designed judgment, unplanned escape, rework, chase, supervision, queue age and delegation debt stay separate diagnostics; Escape is experimental.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 82,
+    "quote": "Human minutes per door per year is the north star.",
+    "links": [],
+    "tags": ["measurement", "human-attention", "escape"]
+  },
+  {
+    "id": "decision:decision-bridge-primary",
+    "type": "decision",
+    "label": "The decision bridge is primary; the map is secondary",
+    "standing": "settled",
+    "summary": "The operator's decision, evidence, authority, proposed act and refusal are the primary interface; the map is a non-authoritative projection and navigation aid.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 87,
+    "quote": "The decision bridge is primary.",
+    "links": [],
+    "tags": ["decision-bridge", "realm-map", "authority"]
+  },
+  {
+    "id": "decision:first-sibling-contact-shape-only-offline",
+    "type": "decision",
+    "label": "First sibling contact is shape-only, offline and report-only",
+    "standing": "settled",
+    "summary": "The initial contract carries schemas, topology and digests without instances or execution; its consumer always records that it applied nothing.",
+    "source_path": "docs/KINGDOM.md",
+    "source_line": 92,
+    "quote": "Cross-project contact begins shape-only and offline.",
+    "links": [],
+    "tags": ["sibling", "projection", "offline"]
+  },
+  {
+    "id": "decision:audit-integration-baseline",
+    "type": "decision",
+    "label": "The audit integrates semantically from the named frontier",
+    "standing": "settled",
+    "summary": "Integrate from bf9d5d8 and replay the four post-ancestor rig commits individually; regenerate the Book from reconciled sources.",
+    "source_path": "docs/HANDOFF.md",
+    "source_line": 50,
+    "quote": "The integration starts semantically from audited",
+    "links": [],
+    "tags": ["audit-integration", "git", "book"]
   }
 ]

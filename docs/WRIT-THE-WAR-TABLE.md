@@ -1,5 +1,10 @@
 # Writ — the War Table (the front-end direction)
 
+*SUPERSEDED IN PART 2026-08-09 by `docs/KINGDOM.md`, "The operating boundary and the three
+provenances." This remains the historical build direction for the Proving Ground's visual craft.
+Its ruling that the map is the primary interface no longer governs: the decision bridge is primary,
+and the map is a secondary, non-authoritative projection and navigation aid.*
+
 *Edwin's direction brief, brought into the repo verbatim 2026-07-28 so the build has
 one durable spec rather than a chat attachment. Sections 2-7 are SETTLED — do not
 relitigate. Section 10 is the failure-mode list; read it twice. Claude's answers to
@@ -44,7 +49,10 @@ Honest assessment of what is wrong with it:
 
 ## 2. Direction: diegetic war table
 
-**Decided.** The interface is a physical war table viewed from a fixed high angle, lit by one warm key light in an otherwise dark room. Panels become objects on the table. The map is the primary interface, not a decorative element.
+**Decided for the Proving Ground's visual craft; amended 2026-08-09.** The interface is a physical
+war table viewed from a fixed high angle, lit by one warm key light in an otherwise dark room.
+Panels become objects on the table. The map may remain richly interactive, but it is a secondary,
+non-authoritative projection; the decision bridge is the primary interface.
 
 Alternative considered and rejected: keep the current dashboard architecture and invest only in making the map beautiful. Rejected because it has a hard ceiling. A prettier map still flanked by panels does not solve the information architecture problem.
 

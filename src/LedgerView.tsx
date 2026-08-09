@@ -506,13 +506,13 @@ export default function LedgerView({ events, catalog, flows, kingdom, now, focus
 }
 
 
-/** THE ESCAPE RATE — what share of work reached a human.
+/** THE EXPERIMENTAL ESCAPE RATE — what share of work reached a human.
  *
  *  It sits apart from the KPI tiles rather than among them, and that is deliberate:
- *  it is not one measure of six, it is the one the whole product is judged against,
- *  and it carries two things a tile cannot hold — the split between escapes the flow
- *  book INTENDED and escapes that mean the machine failed, and an honest note about
- *  how much evidence the number rests on.
+ *  it is an investigative diagnostic, not the north star or a readiness gate. It
+ *  carries two things a tile cannot hold — the split between escapes the flow book
+ *  INTENDED and escapes that mean the machine failed, and an honest note about how
+ *  much evidence the number rests on.
  *
  *  It names the leaking steps rather than only the total, because a rate with no
  *  road is a count you cannot act on. Nothing here is a link: the reading knows which
@@ -523,7 +523,11 @@ function EscapeBand({ escape }: { escape: ReturnType<typeof readEscape> }) {
   const leaks = escape.byStep.filter((l) => l.unplanned > 0).slice(0, 4);
   return (
     <div className="card">
-      <h3>Escape rate</h3>
+      <h3>Escape rate · Experimental</h3>
+      <p className="fine">
+        Investigative diagnostic only — not the north star, a readiness score, or a substitute
+        for measured human minutes per door per year.
+      </p>
       {escape.rate === null ? (
         <>
           <p className="num-lg">NOT MEASURED</p>
@@ -540,8 +544,7 @@ function EscapeBand({ escape }: { escape: ReturnType<typeof readEscape> }) {
             {escape.escaped} of {escape.stepsReached} steps reached a person —{' '}
             <strong>{escape.designed} by design</strong> (a judgment the flow book means to keep
             human) and <strong>{escape.unplanned} unplanned</strong> (a step marked automatic that
-            somebody had to touch anyway). The second number is the one to drive down; the first is
-            the ceiling the flow book set before any case was worked.
+            somebody had to touch anyway). They remain separate observations; neither is governing.
           </p>
         </>
       )}

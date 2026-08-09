@@ -88,25 +88,22 @@ to would produce the wrong shape twice.
 owners likely will be."* Trust-accounting duty follows the property and the licensed
 broker, not the owner's address, so for those firms one number is correct.
 
-**That does not settle it, and this entry was briefly recorded as though it did.** It
-was written 2026-08-06 as "the limit stays a single DEPLOYMENT-WIDE number", which is
-false the moment LandLord is what it is: **multi-tenant, single vertical**. One
-deployment serves many property-management companies, and the second one licensed
-outside Texas breaks a deployment-wide constant. The answer given was true of tenant
-one; it was recorded as true of the product, and those are different claims.
+**For the first product, deployment-wide is tenant-wide.** The 2026-08-09 ruling
+optimises for a private, single-tenant operating system and defers SaaS. A second
+company in a different jurisdiction therefore requires another deployment, not a
+widened constant inside this one.
 
-**So: the sweep-days limit belongs on the TENANT record, not the deployment and not
-the economy.** That is a live constraint on the tenancy design rather than a
-follow-on from it — a tenant is not merely an isolation boundary, it is the thing
-that carries jurisdiction, and jurisdiction is the first thing found that a tenant
-must carry. Anything else discovered to be per-tenant-jurisdictional belongs beside it.
+**If SaaS tenancy is reopened later, the sweep-days limit belongs on the tenant
+record, not the deployment and not the economy.** That is a carried constraint on
+any future tenancy design: jurisdiction is something the tenant must carry, not a
+reason to smuggle multi-tenancy into the first product.
 
 **Still separate, still unmodelled.** Owners being out-of-state does not touch trust
 accounting and may well touch owner reporting — non-resident withholding and year-end
 tax documents follow where the OWNER sits. Nothing models that. Not in scope until
 somebody says so; if owner reporting is ever built, ask this first.
 
-## Multi-tenancy, and what the per-identity vault rows actually are
+## ~~Multi-tenancy, and what the per-identity vault rows actually are~~ — SETTLED 2026-08-09
 
 The vault keys a chronicle document by verified identity. That is a **sandbox** —
 it keeps two people from overwriting each other while exploring — and it is
@@ -114,7 +111,8 @@ repeatedly at risk of being described as tenant isolation, which it is not. Ther
 is no tenant record, no membership, no authorisation model between identities,
 and writes are whole-document upserts where the last writer wins.
 
-**What would settle it:** deciding whether LandLord is single-tenant per
-deployment (in which case the sandbox should be renamed and scoped down) or
-multi-tenant (in which case tenancy is a first-class record and this is a large
-piece of design, not a rename).
+**Settled: optimise first for the private, single-tenant operating system.** The
+per-identity rows remain sandboxes and must not be described as tenant isolation.
+SaaS tenancy, shared hosting and multi-company isolation are deferred; none is
+implicitly authorised by this ruling. If SaaS expansion is reopened, tenancy is a
+first-class authority design, not a rename.
