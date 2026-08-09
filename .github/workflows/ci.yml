@@ -35,7 +35,7 @@ jobs:
         run: node tools/leakcheck.mjs
 
   build:
-    name: type-check and test
+    name: Book, type-check, test, and builds
     runs-on: ubuntu-latest
     needs: leakcheck
     steps:
@@ -50,5 +50,11 @@ jobs:
         run: npx tsc --noEmit
       - name: Test
         run: npm test
-      - name: Build
+      - name: Lint the Great Book graph
+        run: npm run book:lint
+      - name: Build the main surface
         run: npm run build
+      - name: Build the operator surface
+        run: npm run build:operator
+      - name: Build the War Game surface
+        run: npm run build:wargame
