@@ -88,3 +88,14 @@ export type { EconomySettingPatch } from './domain/economySetting';
 // the Worker's fleet route — must be unable to call a brain unguarded.
 export { assertNoIdentity, guardComplete, findIdentity, IdentityLeakError } from './domain/contextGuard';
 export type { IdentityFinding } from './domain/contextGuard';
+
+// The governing operator-attention reading.  Kept in this shared bundle so
+// the names-free shadow runner exercises the same fold as the application.
+export { readAttentionLedger, validateAttentionLog, boundedMachineCandidate } from './domain/attention';
+export type {
+  AttentionEvent,
+  AttentionLog,
+  AttentionEntry,
+  AttentionLedger,
+  AttentionTotals,
+} from './domain/attention';
