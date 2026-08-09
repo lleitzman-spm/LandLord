@@ -515,6 +515,20 @@ describe('a reasoning clerk on an `auto` catalog row is a contradiction — surf
     expect(found, 'a NEW reasoning-clerk-on-auto-row contradiction appeared — rule on it, do not widen this list')
       .toEqual(['Rhys:violation-notice/classify']);
   });
+
+  it('keeps the ambient auto sweep disabled and parks the step for a person', async () => {
+    const { AUTO_SWEEP_ENABLED, makeAdvanceClerk } = await import('../harness/clerks.mjs');
+    const doc = atStepFixture(core, {
+      flowKey: 'violation-notice',
+      stepKey: 'draft-notice',
+      subject: 'a demo notice',
+    });
+    const clerk = makeAdvanceClerk({ core, brainFor }, 'va-desk');
+    const out = await clerk.run({ doc, now: '2026-08-07T09:00:00.000Z', taken: new Set() });
+    expect(AUTO_SWEEP_ENABLED).toBe(false);
+    expect(out.events.some((e: any) => e.kind === 'done')).toBe(false);
+    expect(out.events.map((e: any) => e.kind)).toEqual(['proposed']);
+  });
 });
 
 describe('a backing refuses on the WRITE path too', () => {

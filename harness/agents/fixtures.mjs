@@ -87,11 +87,12 @@ export function vendorCommitmentFixture(core, {
   const id = ids('fx-vc');
   const params = core.fullParams(tpl, { trade, urgency });
   const instance = core.instantiateFlow(tpl, subject, { at: now, id }, params);
-  const events = [
-    ...instance.events,
-    ...core.completeStep(tpl, instance.caseId, 0, { at: now, id, note: 'Report logged from the tenant intake.' }, params),
-    ...core.completeStep(tpl, instance.caseId, 1, { at: now, id, note: `Identified as an ${trade} call.` }, params),
-  ];
+  // Built by PUSHING rather than in one literal, so each `completeStep` can be
+  // handed the log as it stands — the completion guard folds the case from it,
+  // and a literal referring to the array it defines is a dead zone.
+  const events = [...instance.events];
+  events.push(...core.completeStep(tpl, instance.caseId, 0, { at: now, id, note: 'Report logged from the tenant intake.', log: events }, params));
+  events.push(...core.completeStep(tpl, instance.caseId, 1, { at: now, id, note: `Identified as an ${trade} call.`, log: events }, params));
   return { catalog: BOOK.catalog, flows: BOOK.flows, events, caseId: instance.caseId };
 }
 
@@ -142,17 +143,15 @@ export function settlementFixture(core, {
   const id = ids('fx-settle');
   const params = core.fullParams(tpl, { trade, urgency });
   const dollars = (c) => (c / 100).toFixed(0);
-  const events = [
-    ...base.events,
-    ...core.completeStep(tpl, base.caseId, 2, { at: now, id, note: `${vendor} engaged — quoted $${dollars(quoteCents)}.` }, params),
-    ...core.completeStep(tpl, base.caseId, 3, { at: now, id, note: `${vendor} dispatched — tenant notified.` }, params),
-    {
-      id: id(), at: now, caseId: base.caseId, kind: 'noted', holder: 'lp-queue', catalogRow: 'work-order',
-      note: `Invoice received from ${vendor}: $${dollars(invoiceCents)}.`,
-    },
-    ...core.completeStep(tpl, base.caseId, 4, { at: now, id, note: 'Invoice matched to the work.' }, params),
-    ...core.completeStep(tpl, base.caseId, 5, { at: now, id, note: 'Tenant confirms the fix holds.' }, params),
-  ];
+  const events = [...base.events];
+  events.push(...core.completeStep(tpl, base.caseId, 2, { at: now, id, note: `${vendor} engaged — quoted $${dollars(quoteCents)}.`, log: events }, params));
+  events.push(...core.completeStep(tpl, base.caseId, 3, { at: now, id, note: `${vendor} dispatched — tenant notified.`, log: events }, params));
+  events.push({
+    id: id(), at: now, caseId: base.caseId, kind: 'noted', holder: 'lp-queue', catalogRow: 'work-order',
+    note: `Invoice received from ${vendor}: $${dollars(invoiceCents)}.`,
+  });
+  events.push(...core.completeStep(tpl, base.caseId, 4, { at: now, id, note: 'Invoice matched to the work.', log: events }, params));
+  events.push(...core.completeStep(tpl, base.caseId, 5, { at: now, id, note: 'Tenant confirms the fix holds.', log: events }, params));
   return { catalog: BOOK.catalog, flows: BOOK.flows, events, caseId: base.caseId, quoteCents, invoiceCents };
 }
 
@@ -176,7 +175,7 @@ export function atStepFixture(core, { flowKey, stepKey, subject, params = {}, no
   const instance = core.instantiateFlow(tpl, subject, { at: now, id }, full);
   const events = [...instance.events];
   for (let i = 0; i < target; i++) {
-    events.push(...core.completeStep(tpl, instance.caseId, i, { at: now, id }, full));
+    events.push(...core.completeStep(tpl, instance.caseId, i, { at: now, id, log: events }, full));
   }
   return { catalog: BOOK.catalog, flows: BOOK.flows, events, caseId: instance.caseId, stepIndex: target };
 }

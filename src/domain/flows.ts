@@ -981,14 +981,26 @@ export function proposeStep(
  *  With no next step the cascade is finished: only the `done` returns, which
  *  folds the case closed. Callers pass the index of the step in hand
  *  (`reading.next`); an out-of-range index is no act at all. */
+function refusesCompletion(
+  tpl: FlowTemplate,
+  caseId: string,
+  index: number,
+  opts: { at: string; log?: KingdomEvent[] },
+): boolean {
+  if (index < 0 || index >= tpl.steps.length) return true;
+  if (!opts.log) return false;
+  const next = readFlow(tpl, opts.log, caseId, opts.at)?.next;
+  return !next || next.index - 1 !== index;
+}
+
 export function completeStep(
   tpl: FlowTemplate,
   caseId: string,
   index: number,
-  opts: { at: string; id: () => string; note?: string; actor?: string },
+  opts: { at: string; id: () => string; note?: string; actor?: string; log?: KingdomEvent[] },
   params?: FlowParams,
 ): KingdomEvent[] {
-  if (index < 0 || index >= tpl.steps.length) return [];
+  if (refusesCompletion(tpl, caseId, index, opts)) return [];
   const events = [answerStep(tpl, caseId, index, 'done', opts)];
   if (index + 1 < tpl.steps.length)
     events.push(handStep(tpl, caseId, index + 1, opts, params));

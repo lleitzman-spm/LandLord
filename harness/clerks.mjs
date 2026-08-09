@@ -302,8 +302,14 @@ export function makeIntakeClerk(ctx) {
           actor: `agent:${seat}`,
           note: `Identified as ${leaf.title} — put in motion as a ${tpl.title}.`,
         });
-        events.push(...core.completeStep(tpl, caseId, 0, { at, id, actor: `agent:${seat}`, note: 'Report logged from the tenant intake.' }, params));
-        events.push(...core.completeStep(tpl, caseId, 1, { at, id, actor: `agent:${seat}`, note: `Identified as ${leaf.title}.` }, params));
+        events.push(...core.completeStep(tpl, caseId, 0, {
+          at, id, actor: `agent:${seat}`, note: 'Report logged from the tenant intake.',
+          log: [...doc.events, ...events],
+        }, params));
+        events.push(...core.completeStep(tpl, caseId, 1, {
+          at, id, actor: `agent:${seat}`, note: `Identified as ${leaf.title}.`,
+          log: [...doc.events, ...events],
+        }, params));
         const trade = params.trade ?? 'the trade';
         const urgency = params.urgency ?? 'routine';
         const gate = spendGateFor(core, doc, tpl, 2, params, estateId);
@@ -985,6 +991,10 @@ export function makeLeasingClerk(ctx) {
  *  it works on any grammar the setting loaded, which is exactly what "an agent
  *  on every seat" means. Deterministic: the proposal is the template's own step,
  *  no reasoning needed (the doctrine's Tier-0 lane). */
+// The audit integration keeps unattended action dark until the command writer
+// proves case scope, exact-current-step authority, and idempotency end to end.
+export const AUTO_SWEEP_ENABLED = false;
+
 export function makeAdvanceClerk(ctx, seat) {
   const policy = ctx.brainFor(seat, 'advance');
   return {
@@ -1059,7 +1069,7 @@ export function makeAdvanceClerk(ctx, seat) {
         // leave a cascade parked mid-stride for no reason. It stops at a seat
         // boundary by design: a clerk works its own desk, and the neighbouring
         // desk's clerk takes it from there.
-        if (audited && core.mayRunUnattended(r.next.step, modeOf)) {
+        if (AUTO_SWEEP_ENABLED && audited && core.mayRunUnattended(r.next.step, modeOf)) {
           let index = r.next.index - 1;
           const ran = [];
           while (index < r.template.steps.length) {
@@ -1072,7 +1082,7 @@ export function makeAdvanceClerk(ctx, seat) {
               r.template,
               r.caseId,
               index,
-              { at, id, actor: `agent:${seat}` },
+              { at, id, actor: `agent:${seat}`, log: [...doc.events, ...events] },
               params,
             );
             if (!done.length) break;

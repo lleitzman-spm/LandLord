@@ -79,7 +79,7 @@ export async function runFleet({ doc, now, core, complete, brainFor, cap, meter 
     events,
     perClerk,
     /** Steps now waiting on the human. The only number that earns a road to the Ledger. */
-    proposals: kinds.filter((k) => k === 'proposed' || k === 'awaiting').length,
+    proposals: kinds.filter((k) => k === 'proposed').length,
     /** Steps the clerks carried through unattended. Worth reporting, never a summons. */
     swept: kinds.filter((k) => k === 'done').length,
   };

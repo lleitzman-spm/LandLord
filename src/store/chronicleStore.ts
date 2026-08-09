@@ -920,42 +920,60 @@ export function useChronicle(): ChronicleStore {
   ) => {
     const tpl = chronicle.flows.find((f) => f.key === flowKey);
     if (!tpl) return;
-    // Recover the instance's letters from its `opened` event so advancing the
-    // cascade renders the next step's trade/urgency, never a literal {token}
-    // (the params-advance seam, WRIT-TASK-LANGUAGE swing three).
-    const params = paramsOf(chronicle.events, caseId);
-    const appended = build(
-      tpl,
-      caseId,
-      index,
-      // `log` feeds the ratification guard in `approveStep`/`overrideStep` — a
-      // step is ratifiable only while it actually waits on a human's word
-      // (docs/WRIT-THE-GATE.md, finding 5). `completeStep` ignores it. The same
-      // snapshot `paramsOf` reads just above, so both halves of this call see one
-      // consistent view of the book.
-      { at: stamp(), id: () => crypto.randomUUID(), note, log: chronicle.events },
-      params,
-    );
-    // An empty batch is a REFUSAL as often as it is a no-op now: the guard
-    // returns nothing when a step is not ratifiable, and nothing is written.
-    if (!appended.length) return;
-    // The vertical slice (WRIT-B): settling a vendor-dispatch WO posts its real
-    // money — the vendor paid, the coordination markup earned — so the
-    // Counting-house reflects THIS settled work. Fires once, at the settlement
-    // step, guarded so re-advancing never double-posts. Events + money commit in
-    // ONE mutate (one CAS write; mergeOnConflict unions both, losing neither).
-    const settlement = settlementMoney(tpl, caseId, index, appended);
-    mutate((prev) => ({
-      ...prev,
-      events: [...prev.events, ...appended],
-      money: settlement.length ? [...prev.money, ...settlement] : prev.money,
-    }));
+    // THE GUARD READS THE SAME BOOK THE WRITE LANDS ON.
+    //
+    // This used to build the batch OUTSIDE `mutate`, against `chronicle.events`
+    // — the render snapshot — and then write through `mutate`. Between those
+    // two moments the store can move (another tab, the fleet's own append, a
+    // second click on a slow render), so the ratification guard could pass on a
+    // document that no longer existed by the time its events were committed:
+    // a check-then-act gap on the one writer the whole propose-only ratchet
+    // depends on.
+    //
+    // Building INSIDE the updater closes it: `prev` is the state the append is
+    // actually applied to, so the guard's answer and the write are taken
+    // against one book. `paramsOf` reads `prev` too, so the cascade's letters
+    // come from the same view.
+    let appended: KingdomEvent[] = [];
+    mutate((prev) => {
+      // Recover the instance's letters from its `opened` event so advancing the
+      // cascade renders the next step's trade/urgency, never a literal {token}
+      // (the params-advance seam, WRIT-TASK-LANGUAGE swing three).
+      const params = paramsOf(prev.events, caseId);
+      // `log` feeds the ratification guard in `approveStep`/`overrideStep` and
+      // the completion guard in `completeStep` — a step is ratifiable only
+      // while it waits on a human's word, and completable only while it is not
+      // already done (docs/WRIT-THE-GATE.md, findings 5 and 6).
+      appended = build(
+        tpl,
+        caseId,
+        index,
+        { at: stamp(), id: () => crypto.randomUUID(), note, log: prev.events },
+        params,
+      );
+      // An empty batch is a REFUSAL as often as it is a no-op now: the guard
+      // returns nothing when a step is not ratifiable, and nothing is written.
+      if (!appended.length) return prev;
+      // The vertical slice (WRIT-B): settling a vendor-dispatch WO posts its
+      // real money — the vendor paid, the coordination markup earned — so the
+      // Counting-house reflects THIS settled work. Fires once, at the
+      // settlement step, guarded so re-advancing never double-posts. Events +
+      // money commit in ONE mutate (one CAS write; mergeOnConflict unions
+      // both, losing neither).
+      const settlement = settlementMoney(prev, tpl, caseId, index, appended);
+      return {
+        ...prev,
+        events: [...prev.events, ...appended],
+        money: settlement.length ? [...prev.money, ...settlement] : prev.money,
+      };
+    });
   };
 
   /** The money one settled vendor-dispatch step posts (empty for every other
    *  step/flow, or if this WO already settled). Stamps ids/wg like the other
    *  money hands; the amounts + soundness live in `vendorSettlementMoney`. */
   const settlementMoney = (
+    doc: Chronicle,
     tpl: FlowBook[number],
     caseId: string,
     index: number,
@@ -963,8 +981,8 @@ export function useChronicle(): ChronicleStore {
   ): MoneyEvent[] => {
     const step = tpl.steps[index];
     if (!step || tpl.key !== 'vendor-dispatch' || !SETTLE_STEP_KEYS.has(step.key)) return [];
-    if (chronicle.money.some((m) => m.sourceId === caseId && m.kind === 'vendor_paid')) return [];
-    const events = [...chronicle.events, ...appended];
+    if (doc.money.some((m) => m.sourceId === caseId && m.kind === 'vendor_paid')) return [];
+    const events = [...doc.events, ...appended];
     const reading = readCase(events, caseId);
     const billCents = settledBillCents(reading, paramsOf(events, caseId));
     // Undefined means nothing said what this cost. No money moves on a number
@@ -982,7 +1000,7 @@ export function useChronicle(): ChronicleStore {
       (e) => e.kind === 'approved' || e.kind === 'overridden',
     );
     const gate = settlementGate(
-      economyOf(chronicle),
+      economyOf(doc),
       billCents,
       ratified,
       reading.estateId ?? undefined,
@@ -992,8 +1010,8 @@ export function useChronicle(): ChronicleStore {
     // reading of the money log, not by a human reading prose off two identical
     // events, which is the fault this replaces.
     if (gate.refused) return [];
-    const seed = chronicle.wargame?.seed;
-    const posted = vendorSettlementMoney(economyOf(chronicle), chronicle.money, {
+    const seed = doc.wargame?.seed;
+    const posted = vendorSettlementMoney(economyOf(doc), doc.money, {
       caseId,
       billCents,
       at: stamp(),
@@ -1009,9 +1027,9 @@ export function useChronicle(): ChronicleStore {
     // and refusing every later write because of an older fault would strand the
     // whole ledger on someone else's mistake. A writer's duty is not to make it
     // worse.
-    const economy = economyOf(chronicle);
-    const before = fiduciaryViolationsAt(economy, chronicle.money).length;
-    const after = fiduciaryViolationsAt(economy, [...chronicle.money, ...posted]).length;
+    const economy = economyOf(doc);
+    const before = fiduciaryViolationsAt(economy, doc.money).length;
+    const after = fiduciaryViolationsAt(economy, [...doc.money, ...posted]).length;
     if (after > before) return [];
     return posted;
   };

@@ -88,7 +88,11 @@ async function main() {
   console.log(
     `Appended ${events.length} event(s) — ${proposals} proposal(s) parked${carried}; the log now holds ${total}.`,
   );
-  console.log('Open the Ledger/Seat: each proposal reads by its clerk, awaiting the Regent\'s Approve/Override.');
+  if (proposals) {
+    console.log('Open the Ledger/Seat: each proposal reads by its clerk, awaiting the Regent\'s Approve/Override.');
+  } else {
+    console.log('Nothing is parked for the Regent.');
+  }
   meter.report(proposals);
 }
 
