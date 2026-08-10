@@ -162,6 +162,10 @@ interface Props {
   /** A flow case a road asked the Ledger to open and scroll to (law 6: the
    *  reading was a road to the step in hand). */
   focusCase?: string;
+  /** The standing muster's seed, or null. The escape rate is scoped to it —
+   *  unscoped, a game's cases and every pre-muster and hand-worked case are
+   *  averaged into one number, which is two populations wearing one rate. */
+  seed?: string | null;
 }
 
 /** A hand named on the Ledger — a door to that person when the census knows
@@ -178,7 +182,7 @@ function Hand({ kingdom, holder }: { kingdom: Kingdom; holder: string | null | u
   );
 }
 
-export default function LedgerView({ events, catalog, flows, kingdom, now, focusCase }: Props) {
+export default function LedgerView({ events, catalog, flows, kingdom, now, focusCase, seed }: Props) {
   const nav = useNav();
   const detail = useDetail();
   const log = events.log;
@@ -192,7 +196,7 @@ export default function LedgerView({ events, catalog, flows, kingdom, now, focus
   const feed = [...log].sort((a, b) => (a.at < b.at ? 1 : -1)); // newest first
   const parked = clerkProposals(log).filter((p) => p.awaiting);
   const live = readFlows(flows.flows, log, now);
-  const escape = readEscape(flows.flows, catalog.rows, log);
+  const escape = readEscape(flows.flows, catalog.rows, log, seed);
   // Which case the cascade list opens on. It arrives from a road outside the
   // Ledger (nav.goToLedger(caseId)) but must also be settable from INSIDE it —
   // a proposal you can read and cannot open is information with no road to the
@@ -502,13 +506,13 @@ export default function LedgerView({ events, catalog, flows, kingdom, now, focus
 }
 
 
-/** THE ESCAPE RATE — what share of work reached a human.
+/** THE EXPERIMENTAL ESCAPE RATE — what share of work reached a human.
  *
  *  It sits apart from the KPI tiles rather than among them, and that is deliberate:
- *  it is not one measure of six, it is the one the whole product is judged against,
- *  and it carries two things a tile cannot hold — the split between escapes the flow
- *  book INTENDED and escapes that mean the machine failed, and an honest note about
- *  how much evidence the number rests on.
+ *  it is an investigative diagnostic, not the north star or a readiness gate. It
+ *  carries two things a tile cannot hold — the split between escapes the flow book
+ *  INTENDED and escapes that mean the machine failed, and an honest note about how
+ *  much evidence the number rests on.
  *
  *  It names the leaking steps rather than only the total, because a rate with no
  *  road is a count you cannot act on. Nothing here is a link: the reading knows which
@@ -519,7 +523,11 @@ function EscapeBand({ escape }: { escape: ReturnType<typeof readEscape> }) {
   const leaks = escape.byStep.filter((l) => l.unplanned > 0).slice(0, 4);
   return (
     <div className="card">
-      <h3>Escape rate</h3>
+      <h3>Escape rate · Experimental</h3>
+      <p className="fine">
+        Investigative diagnostic only — not the north star, a readiness score, or a substitute
+        for measured human minutes per door per year.
+      </p>
       {escape.rate === null ? (
         <>
           <p className="num-lg">NOT MEASURED</p>
@@ -536,8 +544,7 @@ function EscapeBand({ escape }: { escape: ReturnType<typeof readEscape> }) {
             {escape.escaped} of {escape.stepsReached} steps reached a person —{' '}
             <strong>{escape.designed} by design</strong> (a judgment the flow book means to keep
             human) and <strong>{escape.unplanned} unplanned</strong> (a step marked automatic that
-            somebody had to touch anyway). The second number is the one to drive down; the first is
-            the ceiling the flow book set before any case was worked.
+            somebody had to touch anyway). They remain separate observations; neither is governing.
           </p>
         </>
       )}
@@ -886,8 +893,19 @@ function FlowInstanceCard({
                     // event and the readings recompute around it.
                     const inHand = r.next?.step.key === s.step.key;
                     const stepIx = s.index - 1; // StepReading.index is 1-based
+                    // The one shape the writer will ratify — the same rule the
+                    // domain enforces (`refusesRatification`, flows.ts).
+                    //
+                    // Approve used to be drawn on an `overridden` step too. That
+                    // was never a live dead button: `readFlow` counts overridden
+                    // among the ACTED kinds (flows.ts:1378), so the ball has
+                    // always moved past such a step and `inHand` never held on
+                    // one. It was unreachable code asserting a rule the domain
+                    // contradicts — that an override could be ratified after the
+                    // fact — and with the writer now refusing outright, leaving
+                    // it in would be a standing invitation to make it reachable.
+                    // An override IS the human's answer; there is no second one.
                     const canRatify = s.kind === 'awaiting' || s.kind === 'proposed';
-                    const canActAfterOverride = s.kind === 'overridden';
                     return (
                       <li key={s.step.key}>
                         <span className={`ledger-mark ${s.breached ? 'ledger-away' : 'ledger-out'}`}>
@@ -929,7 +947,7 @@ function FlowInstanceCard({
                         </span>
                         {inHand && r.status !== 'done' && (
                           <span className="flow-acts">
-                            {(canRatify || canActAfterOverride) && (
+                            {canRatify && (
                               <button
                                 className="rowbtn"
                                 onClick={() =>

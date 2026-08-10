@@ -13,18 +13,11 @@
 // Typed against the DOM lib's Request/Response on purpose, so the app build
 // needs no @cloudflare/workers-types; the bindings the worker actually uses
 // are declared here by hand.
-import {
-  absorbBorderRows,
-  carriedArrivalIds,
-  fetchBorderRows,
-  mergeBorderArrivals,
-} from './server/border';
+import { fetchBorderRows, mergeBorderArrivals } from './server/border';
 import {
   CANONICAL_DOC_ID,
   commitAppend,
-  revOf,
   vaultCasWrite,
-  vaultRead,
   vaultReadDoc,
 } from './server/vault';
 import type { AppendDoc } from './server/vault';
@@ -48,9 +41,10 @@ import {
   submitPetition,
   visibleTo,
 } from './server/courtroll';
+import { handleCommand, type CommandEnv } from './server/command';
 import { makeComplete as makeGuardedComplete } from './server/brain';
-// The fleet run + its brain doctrine live in the harness (shared with the Node
-// terminal fleet); the Worker calls the SAME runFleet against a user's vault.
+// Retained only for the closed migration adapter below. The route is disabled
+// until the fleet emits typed commands through the authority kernel.
 // eslint-disable-next-line import/extensions
 import { runFleet } from '../harness/run-fleet.mjs';
 // eslint-disable-next-line import/extensions
@@ -58,7 +52,7 @@ import { brainFor } from '../harness/brain-doctrine.mjs';
 import { runGuardedModelWork } from '../harness/run-guard.mjs';
 import * as core from './operator-core';
 
-export interface Env extends AccessEnv {
+export interface Env extends AccessEnv, CommandEnv {
   SUPABASE_URL?: string;
   SUPABASE_SECRET_KEY?: string;
   /** Who holds the Crown — comma-separated Access emails. Absent ⇒ NO ONE is
@@ -84,6 +78,8 @@ interface WorkerDeps {
   makeComplete: typeof makeGuardedComplete;
 }
 
+const TYPED_FLEET_READY = false;
+
 export function createWorker(
   deps: WorkerDeps = { runFleet, makeComplete: makeGuardedComplete },
 ) {
@@ -91,7 +87,10 @@ export function createWorker(
     const { pathname } = new URL(request.url);
     const isCanonical = pathname === '/api/canonical/chronicle';
     const isPrivateApi =
-      pathname === '/api/chronicle' || pathname === '/api/court' || pathname === '/api/fleet';
+      pathname === '/api/chronicle' ||
+      pathname === '/api/court' ||
+      pathname === '/api/fleet' ||
+      pathname === '/api/command';
     let identity = '';
     if (isCanonical) {
       const access = await authenticateCanonicalCapability(request, env);
@@ -106,10 +105,14 @@ export function createWorker(
       return handleCourt(request, env, identity);
     }
     if (pathname === '/api/fleet') {
-      // The fleet's door: run the clerks against this identity's vault.
-      return handleFleet(request, env, identity, deps);
+      // The legacy fleet writes batches directly to the Chronicle and has not
+      // yet migrated to typed commands. It stays shut rather than become a
+      // second authority implementation beside /api/command.
+      if (TYPED_FLEET_READY) return handleFleet(request, env, identity, deps);
+      void deps;
+      return new Response('fleet disabled until typed-command migration', { status: 503 });
     }
-    if (pathname !== '/api/chronicle' && !isCanonical) {
+    if (pathname !== '/api/chronicle' && pathname !== '/api/command' && !isCanonical) {
       // Not the chronicle's door — the castle itself answers.
       return env.ASSETS.fetch(request);
     }
@@ -132,6 +135,10 @@ export function createWorker(
     // The document this verified identity owns.
     const docId = isCanonical ? CANONICAL_DOC_ID : docIdFor(identity);
 
+    if (pathname === '/api/command') {
+      return handleCommand(request, env, identity, { rest, headers, docId });
+    }
+
     if (request.method === 'GET') {
       const read = await vaultReadDoc(rest, headers, docId);
       if (read.status === 'error') {
@@ -152,34 +159,9 @@ export function createWorker(
     }
 
     if (request.method === 'PUT') {
-      let doc: unknown;
-      try {
-        doc = JSON.parse(await request.text());
-      } catch {
-        return new Response('not json', { status: 400 });
-      }
-      // Compare-and-set: the doc carries rev = base + 1; it commits only if the
-      // stored rev still equals base (no concurrent writer got there first).
-      const base = revOf(doc) - 1;
-      const result = await vaultCasWrite(rest, headers, docId, doc, base);
-      if (result === 'error') {
-        return new Response('vault write refused', { status: 502 });
-      }
-      if (result === 'conflict') {
-        // Someone advanced the rev. Hand back the fresh doc so the client can
-        // merge its appends in and retry — never overwrite.
-        const fresh = await vaultRead(rest, headers, docId);
-        return new Response(JSON.stringify(fresh ?? {}), {
-          status: 409,
-          headers: { 'content-type': 'application/json' },
-        });
-      }
-      // Committed. Retire the border rows this write carried (canonical only,
-      // best-effort — a refusal only means they fold in again next read).
-      if (isCanonical) {
-        await absorbBorderRows(rest, headers, carriedArrivalIds(doc), new Date().toISOString());
-      }
-      return new Response('ok');
+      // No document at the typed-command door is generically replaceable. A
+      // caller names a command; the server mints and appends its event batch.
+      return new Response('typed commands only', { status: 405 });
     }
 
     return new Response('method not allowed', { status: 405 });
@@ -307,7 +289,7 @@ async function handleFleet(
   if (!doc.wargame?.seed) return json({ error: 'no muster stands — deploy one, then let the clerks work' }, 409);
   const now = doc.wargame.now ?? new Date().toISOString();
 
-  let result: { events: unknown[]; perClerk: unknown[]; proposals: number };
+  let result: { events: unknown[]; perClerk: unknown[]; proposals: number; swept: number };
   try {
     const guardedRun = await runGuardedModelWork(
       ({ onBlocked }) => deps.makeComplete(env, onBlocked),
@@ -321,7 +303,7 @@ async function handleFleet(
     return json({ error: `the fleet faltered: ${(err as Error).message}` }, 502);
   }
 
-  if (!result.events.length) return json({ proposals: 0, perClerk: result.perClerk });
+  if (!result.events.length) return json({ proposals: 0, swept: 0, perClerk: result.perClerk });
 
   // A minute of reasoning is not thrown away because the board wrote while the
   // clerks worked — the batch is replayed onto a fresh read (see commitAppend).
@@ -338,7 +320,7 @@ async function handleFleet(
       409,
     );
   }
-  return json({ proposals: result.proposals, perClerk: result.perClerk });
+  return json({ proposals: result.proposals, swept: result.swept, perClerk: result.perClerk });
 }
 
 /** The document as the vault holds it right now, or null if it cannot be read.

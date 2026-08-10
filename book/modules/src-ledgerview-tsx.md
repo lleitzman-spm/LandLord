@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-1316 lines · 1 exported symbol.
+1334 lines · 1 exported symbol.
 
 ## What the file says of itself
 
@@ -30,7 +30,7 @@ aliases:
 
 ## Shape
 
-- **Lines:** 1316
+- **Lines:** 1334
 - **Exported symbols (1):** `LedgerView`
 
 ## Modules
@@ -55,7 +55,9 @@ aliases:
 
 ### Writs that specify it
 
+- [[Handoff — where things stand]] — *this writ names the exported symbol `LedgerView`*
 - [[Writ — the flow engine (the operator's spine)]] — *this writ names the exported symbol `LedgerView`*
+- [[Writ — The Gate: the money law is written and nothing enforces it]] — *this writ names the exported symbol `LedgerView`*
 - [[Writ — the Land: pods, knights, owners, and guilds (the realm remodeled)]] — *this writ names the exported symbol `LedgerView`*
 - [[Writ — the operator's hands (swing two, part one)]] — *this writ names the exported symbol `LedgerView`*
 - [[Writ — the task-language, the consequences, and the Regent's seat]] — *this writ names the exported symbol `LedgerView`*
@@ -74,6 +76,7 @@ aliases:
 *These name this FILE by its path. That is a citation of the source, not a claim about any one idea inside it — do not read a path citation as agreement, dependence or implementation.*
 
 - [[Writ — the flow engine (the operator's spine)]]
+- [[Writ — The Gate: the money law is written and nothing enforces it]]
 - [[Writ — the operator's hands (swing two, part one)]]
 - [[Writ — the task-language, the consequences, and the Regent's seat]]
 

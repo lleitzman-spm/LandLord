@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Derived from the tree — the code is there to be read.*
 
-React view in `src/LedgerView.tsx` — 1316 lines.
+React view in `src/LedgerView.tsx` — 1334 lines.
 
 ## Where it lives
 
@@ -56,6 +56,7 @@ React view in `src/LedgerView.tsx` — 1316 lines.
 *These name this FILE by its path. That is a citation of the source, not a claim about any one idea inside it — do not read a path citation as agreement, dependence or implementation.*
 
 - [[Writ — the flow engine (the operator's spine)]]
+- [[Writ — The Gate: the money law is written and nothing enforces it]]
 - [[Writ — the operator's hands (swing two, part one)]]
 - [[Writ — the task-language, the consequences, and the Regent's seat]]
 

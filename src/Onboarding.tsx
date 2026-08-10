@@ -34,7 +34,7 @@ const GLOSSARY: { term: string; say: string }[] = [
     term: 'The Muster',
     say:
       'Sound the war horn and a simulated month of operations deals onto the board at once — ' +
-      'owners, doors, and work orders — so the whole game runs live.',
+      'fictional owners, doors, and work orders — so the whole simulation starts running.',
   },
   {
     term: 'The Marches',
@@ -113,9 +113,8 @@ export default function OnboardingOverlay() {
             <div className="wt-onb-htext">
               <h2>Welcome to the War Table</h2>
               <p>
-                LandLord runs a property-management operation as a kingdom you command from this
-                board. Everything below is a real instrument — dressed in plain-English medieval
-                words instead of office ones.
+                This is LandLord's Proving Ground: a simulation of a property-management operation
+                rendered as a kingdom. It uses synthetic working fluid and carries no live authority.
               </p>
             </div>
             <button className="wt-onb-x" onClick={dismiss} aria-label="Close and enter the court">
@@ -124,6 +123,10 @@ export default function OnboardingOverlay() {
           </header>
 
           <div className="wt-onb-body">
+            <div className="wt-onb-provenance" role="status">
+              <strong>Simulation</strong>
+              <span>Synthetic working fluid · no live records · no live authority</span>
+            </div>
             {/* HOW TO GET ANYWHERE, and this earns its place at the top: the
                 board used to carry a rail of nine labelled glyphs down its left
                 side, so navigation explained itself and this screen never had to
@@ -141,11 +144,11 @@ export default function OnboardingOverlay() {
                 </dd>
               </div>
               <div className="wt-onb-row">
-                <dt>⚑ Council</dt>
+                <dt>Decision Bridge</dt>
                 <dd>
-                  What presses, and the act for each — one line apiece. <b>c</b> raises and lowers
-                  it; <b>Why</b> shows the reasoning under every matter. Lower it and the board
-                  takes the whole screen.
+                  Your primary operator inbox: what presses, its evidence, and the act for each —
+                  one line apiece. <b>c</b> focuses it; <b>Why</b> shows the reasoning under every
+                  matter. The map beside it is a simulation projection for navigation only.
                 </dd>
               </div>
               <div className="wt-onb-row">

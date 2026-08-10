@@ -37,7 +37,7 @@ The front-end direction brief for the War Table — the diegetic table, the tenu
 - [[A march promotes to a shire when three thresholds all hold]] — *declared in `knowledge/artifacts.json`; the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a artifact*
 - [[Realm and marches are not renamed despite the naming collision]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a artifact*
 - [[The bar is charming, not AAA]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a artifact*
-- [[The interface is a physical war table viewed from a fixed high angle]] — *declared in `knowledge/artifacts.json`; the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a artifact*
+- [[The War Table remains the Proving Ground's visual craft, not its authority]] — *declared in `knowledge/artifacts.json`; the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a artifact*
 - [[THRONE folds into SEAT — one surface, a state and its acts]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a artifact*
 
 ## Entities
@@ -55,7 +55,7 @@ The front-end direction brief for the War Table — the diegetic table, the tenu
 - [[A march promotes to a shire when three thresholds all hold]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a artifact rather than a decision*
 - [[Realm and marches are not renamed despite the naming collision]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a artifact rather than a decision*
 - [[The bar is charming, not AAA]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a artifact rather than a decision*
-- [[The interface is a physical war table viewed from a fixed high angle]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a artifact rather than a decision*
+- [[The War Table remains the Proving Ground's visual craft, not its authority]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a artifact rather than a decision*
 - [[THRONE folds into SEAT — one surface, a state and its acts]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a artifact rather than a decision*
 
 ### Entities

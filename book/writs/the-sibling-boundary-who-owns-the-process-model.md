@@ -18,12 +18,14 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-*LandLord has a sibling project in a private repository. This note records the boundary between them, because on 2026-08-06 both built the same layer thirty-five minutes apart and neither knew.*
+> **Dependency boundary only.** This file may prevent duplicate implementation; > it cannot assign or rank work. Shared orchestration lives only in > `C:\Users\lleit\.agents\ORCHESTRATION.md`; LandLord task state lives only in > `method/work-registry.json`. The SPM work hub does not govern this proj
 
 ## The source, verbatim
 
-> *LandLord has a sibling project in a private repository. This note records the boundary between
-> them, because on 2026-08-06 both built the same layer thirty-five minutes apart and neither knew.*
+> > **Dependency boundary only.** This file may prevent duplicate implementation;
+> > it cannot assign or rank work. Shared orchestration lives only in
+> > `C:\Users\lleit\.agents\ORCHESTRATION.md`; LandLord task state lives only in
+> > `method/work-registry.json`. The SPM work hub does not govern this project.
 
 *Verified against `docs/SIBLING-BOUNDARY.md`:1 on every lint — no quote, no object.*
 
@@ -31,9 +33,15 @@ aliases:
 
 - Why this note exists
 - The split
-- "Escape" means two things — ours is the rate
+- "Escape" means two things — neither is the north star
+- The first bridge is shape-only, offline and report-only
+- "Orchestrator" was the wrong noun — the correction, paid 2026-08-07
 - The standing rule
 - What is deliberately not here
+
+## Decisions that touched it
+
+- [[Human minutes per door per year is the north star]] — *this writ names "Human minutes per door per year is the north star" literally*
 
 ## Modules
 
@@ -43,13 +51,22 @@ aliases:
 
 *Nothing in the Book points here. An orphan page is worse than a missing one — it exists, it is correct, and no reader will ever reach it. `npm run book:lint` counts these.*
 
+## Documents that cite this source
+
+*These name this FILE by its path. That is a citation of the source, not a claim about any one idea inside it — do not read a path citation as agreement, dependence or implementation.*
+
+- [[Handoff — where things stand]]
+- [[Writ — The Knighthood: one seat, a Regent that is an agent, and the fief as a desk]]
+
 ## Sources this page cites
 
 *Files this page names by path. Again: a citation of the file, nothing more.*
 
 - [[ALLOWLIST.md]]
+- [[method/]]
 - [[src/domain/escape.ts]]
 - [[src/domain/flows.ts]]
+- [[Writ — The Knighthood: one seat, a Regent that is an agent, and the fief as a desk]]
 
 ---
 

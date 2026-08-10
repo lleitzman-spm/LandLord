@@ -20,7 +20,7 @@ aliases:
 > Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
 > *Declared in `knowledge/artifacts.json`.*
 
-The working-state document — starts empty in the public repository on purpose, since its private predecessor named real people and live infrastructure.
+The LandLord-local working-state detail surface; method/work-registry.json owns task state. It starts empty publicly because its private predecessor named real people and infrastructure.
 
 ## The source, verbatim
 
@@ -32,6 +32,10 @@ The working-state document — starts empty in the public repository on purpose,
 
 - [[Handoff — where things stand]] — *the same file `docs/HANDOFF.md`, seen as a writ rather than a artifact*
 
+## Decisions that touched it
+
+- [[The audit integrates semantically from the named frontier]] — *the same file `docs/HANDOFF.md`, seen as a decision rather than a artifact*
+
 ## Backlinks
 
 ### Writs that specify it
@@ -41,14 +45,23 @@ The working-state document — starts empty in the public repository on purpose,
 ### Decisions that touched it
 
 - [[Run many sessions; coordinate through the repo's own docs, never through memory]] — *declared in `knowledge/decisions.json`*
+- [[The audit integrates semantically from the named frontier]] — *the same file `docs/HANDOFF.md`, seen as a artifact rather than a decision*
 
 ## Documents that cite this source
 
 *These name this FILE by its path. That is a citation of the source, not a claim about any one idea inside it — do not read a path citation as agreement, dependence or implementation.*
 
+- [[Open questions]]
 - [[The Kingdom — Canon]]
+- [[War Games — the master plan]]
 - [[Writ — the flow engine (the operator's spine)]]
 - [[Writ — the task-language, the consequences, and the Regent's seat]]
+
+## Sources this page cites
+
+*Files this page names by path. Again: a citation of the file, nothing more.*
+
+- [[method/]]
 
 ---
 

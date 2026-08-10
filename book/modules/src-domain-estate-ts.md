@@ -43,7 +43,6 @@ aliases:
 ### Modules
 
 - [[src/domain/chronicle.ts]] — *imported by this file*
-- [[src/domain/tenureMuster.ts]] — *imported by this file*
 - [[src/store/chronicleStore.ts]] — *imported by this file*
 - [[src/WarTableView.tsx]] — *imported by this file*
 

@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-180 lines · 1 exported symbol.
+183 lines · 1 exported symbol.
 
 ## What the file says of itself
 
@@ -32,7 +32,7 @@ aliases:
 
 ## Shape
 
-- **Lines:** 180
+- **Lines:** 183
 - **Exported symbols (1):** `OnboardingOverlay`
 
 ## Modules

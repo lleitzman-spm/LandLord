@@ -390,7 +390,11 @@ export const FOUNDING_CATALOG: Catalog = [
   { key: 'renewal.price', title: 'Set the renewal rent', class: 'firm', mode: 'human', domain: 'renewals' },
   { key: 'renewal.draft-offer', title: 'Draft the renewal offer', class: 'firm', mode: 'auto', domain: 'renewals' },
   { key: 'renewal.send-offer', title: 'Send the renewal offer', class: 'firm', mode: 'auto', domain: 'renewals' },
-  { key: 'renewal.owner-window', title: 'Owner authorization window', class: 'firm', mode: 'auto', domain: 'renewals' },
+  // `human`, not `auto`, since 2026-08-07 (docs/WRIT-THE-GATE.md). Closing an
+  // owner's authorization window is a judgment whenever the owner did not
+  // answer, and the machine cannot tell consent from silence. Marking it `auto`
+  // is what would have let a clerk bank the owner's silence as a yes.
+  { key: 'renewal.owner-window', title: 'Owner authorization window', class: 'firm', mode: 'human', domain: 'renewals' },
   { key: 'renewal.tenant-response', title: 'Chase the tenant to sign', class: 'firm', mode: 'auto', domain: 'renewals' },
   { key: 'renewal.countersign', title: 'Countersign the renewal', class: 'firm', mode: 'human', domain: 'renewals' },
   { key: 'renewal.fee', title: 'Post the renewal fee', class: 'firm', mode: 'auto', domain: 'renewals' },

@@ -49,6 +49,7 @@ const NOW = '2026-07-10T00:00:00.000Z';
  *  ordinary remediation shape: the input was wrong, put it in again. */
 const SELF_ROUTED: FlowTemplate = {
   key: 'test-self',
+  version: 'test-1',
   title: 'A flow that can be redone',
   trigger: 'a test says so',
   steps: [
@@ -69,6 +70,7 @@ const SELF_ROUTED: FlowTemplate = {
  *  first — where the bad input entered. */
 const BACK_ROUTED: FlowTemplate = {
   key: 'test-back',
+  version: 'test-1',
   title: 'A flow that sends a failure upstream',
   trigger: 'a test says so',
   steps: [
@@ -89,6 +91,7 @@ const BACK_ROUTED: FlowTemplate = {
  *  failure and then have nowhere to hand the case. */
 const BROKEN: FlowTemplate = {
   key: 'test-broken',
+  version: 'test-1',
   title: 'A flow with a route to nowhere',
   trigger: 'a test says so',
   steps: [
@@ -195,6 +198,7 @@ describe('the failure path — what it lets the escape rate see', () => {
   // involved, and nothing in the engine said so. `endsAt: 'operator'` says so.
   const ESCALATING: FlowTemplate = {
     key: 'test-escalates',
+    version: 'test-1',
     title: 'A flow whose failures land on the operator',
     trigger: 'a test says so',
     steps: [
@@ -308,6 +312,7 @@ describe('the failure path — closure over a book', () => {
     // step a machine performs. One of those is wrong and nothing says which.
     const AUTO_REMEDY: FlowTemplate = {
       key: 'test-judgment',
+      version: 'test-1',
       title: 'A judgment call repaired by a machine',
       trigger: 'a test says so',
       steps: [

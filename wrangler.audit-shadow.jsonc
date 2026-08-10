@@ -1,0 +1,7 @@
+{
+  "name": "landlord-audit-shadow-20260809-v1",
+  "main": "./src/audit-shadow-worker.ts",
+  "compatibility_date": "2026-07-01",
+  "workers_dev": true,
+  "preview_urls": false
+}

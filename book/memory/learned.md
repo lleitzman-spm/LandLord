@@ -13,6 +13,69 @@ aliases:
 
 ← [[00 MEMORY]]
 
+## The session that read the gate writ then re-shipped its central fault — 2026-08-07
+
+A session spent its first hour reading `docs/WRIT-THE-GATE.md`, whose finding 2 is *"it is not
+unused — which is worse than unused, because a gate that is read reads as protection. Nothing
+branches on it."* It then built a capability rig and put **three** of exactly that in it: a belt tag
+(`read:trade-roster`) that bound functions nothing read, a freeze one level too shallow to freeze
+anything that mattered, and a printed reassurance to the operator — *"no tool could cross this"* —
+that was false, proved by driving the agent's own scoped core straight past the commitment.
+
+Reading a failure mode does not inoculate you against it. The writ describes a shape that is
+**cheap to build by accident**, and the accident is not committed at the moment you write the
+decorative line — it is committed at the moment you *believe your own manifest instead of running
+it*. All three survived a green build, a green suite, and a hand-written test file specifically
+about capability enforcement, because every one of those checks read the same table the code did.
+
+What actually caught them: a reviewer with no stake in the design, asked to prove the claims false
+rather than confirm them, who instrumented the running agent instead of reading the source. **The
+check has to come from outside the assumption.** A test written by the author of a guard tends to
+test the guard's own vocabulary.
+
+## A belt's manifest is a claim, and only running the agent through it checks it — 2026-08-07
+
+`harness/agents/roster.mjs` declared Mace's belt as `['read:work', 'read:catalog',
+'open:cascade']` — a manifest that read as complete and passed every existing test
+(`roster.test.ts` checks shape, not sufficiency). It was wrong twice over, and
+neither gap showed until the agent rig (`harness/agents/rig.mjs`) actually scoped
+her `core` to those tags and *ran* her: her clerk (`clerks.mjs` `makeIntakeClerk`)
+stops at a `proposed` commitment, which needs `propose`; and that proposal reads
+the spend gate first, which needs `read:economy` (`core.applyEconomySetting is not
+a function`, thrown mid-run — nothing before this session had ever restricted her
+`core` to her declared belt, so the gap was invisible to every prior check).
+
+The general shape: a capability manifest is only as honest as the narrowest thing
+that has ever tried to exercise it. **Verify claims against the bytes** now has a
+second reading: verify a capability declaration by constructing the narrowest
+thing that would fail if it were wrong, not by reading the declaration and nodding.
+
+## The safe order and the natural order were opposites — 2026-08-07
+
+The founding flow book declares 13 of its 46 steps `auto`, and the fleet proposes every one of them
+to a human anyway. The obvious fix is to make `mode` operative and let the clerks complete them.
+
+One of those 13 is lease-renewal `owner-window`, and it carries `condition: 'silence is
+authorization'`. So the obvious fix, done in the obvious order, **auto-approves spending an owner's
+money on their silence.** It is inert today only because `condition` is never evaluated.
+
+Nothing was wrong with either piece. The hazard lived in the *sequence*, and the natural reach — fix
+the thing that is plainly broken first — is the one that builds the loss. **When two safe-looking
+changes compose into an unsafe one, the ordering is the finding; write it down as a ruling, because
+the next session will reach in the natural order too.**
+
+## `leakcheck` scans TRACKED files — a new file is invisible to it — 2026-08-07
+
+Two new documents were written, `node tools/leakcheck.mjs` was run, and it reported **0 findings
+over 1,410 files** — the identical count as before the documents existed. It had never read them.
+The scan walks the git index; an untracked file is not in it.
+
+The output does not lie and does not warn, because from the scanner's side nothing happened. `git
+add` first, then scan: the count moved to 1,412 and the files were genuinely covered.
+
+**A clean result from a tool that never saw the input is the most convincing wrong answer there
+is** — and this repository's whole hygiene posture rests on that one command.
+
 ## A generated page is not where a running game reads its rules — 2026-08-06
 
 A failure route added in `src/domain/flows.ts` did not reach a game already in progress. The
@@ -49,8 +112,70 @@ one-operator/ten-thousand-door bar and used the word *escape* for different quan
 steps here, a count of operator-terminated repairs there. Same word, same bar, different number.
 Reconciled at `endsAt`.
 
-## `file` is not a decoder — 2026-08-06
+## ~~`file` is not a decoder~~ — the diagnosis was wrong — 2026-08-06, corrected 2026-08-07
 
-A leak check reported a `.ts` source as binary needing human review. It was valid UTF-8 with a dense
-run of em-dashes and middots in its header. Any check that classifies before it decodes will do this,
-and the cost is a reviewer's attention spent on nothing.
+This said a leak check flagged a `.ts` source as binary because it was "valid UTF-8 with a dense run
+of em-dashes and middots in its header," and concluded the cost was a reviewer's attention spent on
+nothing.
+
+**The file contains a literal NUL byte** (`src/domain/escape.ts:176`, offset 9312) — a deliberate
+map-key delimiter. `file` classified it correctly. The reviewer's attention was not spent on nothing;
+it was spent on the one real control byte in the tree, which is exactly what that column is for.
+
+Nothing was broken by the wrong diagnosis, and that is the point worth keeping: **a plausible
+explanation that is never checked survives, gets written down, and is then cited.** It took a third
+session actually running `open(...,'rb').read().find(b'\x00')` to find out — one line, against a
+note that had already been ratified twice.
+
+The general form: **when you explain away a tool's warning, check the bytes before you write the
+explanation down.** An unchecked explanation is more durable than the warning it dismisses.
+
+## `main...theirs` shows your own work back to you — 2026-08-07
+
+Assessing whether a parallel session's branch collided with mine, I ran
+`git diff --stat main...origin/<their-branch>` and reported that they had touched eight of the files
+I was working in — `flows.ts`, `LedgerView.tsx`, `chronicleStore.ts` and more. I told the human to
+expect a difficult merge.
+
+**They had touched one.** Their branch was based on *my* commit, so `main...theirs` included every
+commit I had made up to the fork point. I was reading my own work and attributing it to them.
+
+The fix is to diff against the actual fork point, never against `main`:
+
+    base=$(git merge-base HEAD origin/<their-branch>)
+    comm -12 <(git diff --name-only $base HEAD | sort) \
+             <(git diff --name-only $base origin/<their-branch> | sort)
+
+That prints the genuinely overlapping files and nothing else. The general form: **`A...B` is
+"changes on B since they diverged" only when A is an ancestor of the fork.** When two branches share
+a base that is ahead of `main`, `main...B` silently includes the shared history — and shared history
+between two agents working the same repo is *exactly* the work you are trying to tell apart.
+
+The cost was nearly a wrong decision: a merge reported as dangerous was in fact clean in every source
+file, and the real coordination risk (a runner being superseded, orphaning a fix) was somewhere the
+bad diff did not point at all.
+
+## An orphan branch starts with no ignore rules — 2026-08-07
+
+`git switch --orphan <name>` gives you an empty index — and no `.gitignore`, because that file is
+tracked content like any other. The reflex `git add -A` then stages `node_modules/`, `dist/`,
+`dist-operator/` and `dist-wargame/`. The commit succeeded and had to be deleted with
+`git update-ref -d` before it left the machine.
+
+**Check out `.gitignore` onto the orphan branch before the first `git add`,** and commit it as one of
+the archive's own files. An archive branch that carries a build tree is not an archive; it is a
+snapshot of somebody's laptop.
+
+## `book:lint` guards domain deletions, not just Book changes — 2026-08-07
+
+Deleting `src/domain/tenure.ts` cost three files and 50 tests — and then seven knowledge records that
+described constants which no longer existed, plus a decision record linking three of them.
+`npm run book:lint` exits **1** until every one is settled, and `npm run build` and `npm test` are
+both green the whole time. Nothing in the type system or the suite knows the Book has gone stale.
+
+So **run `book:lint` after any domain deletion**, not only after touching `book/` or `knowledge/`.
+
+One judgment inside that cleanup worth keeping: the facts and entities were deleted, but the
+**decision record was marked `retired` with its dead links stripped and its reasoning kept.** A
+decision outlives the code it governed — deleting it would erase *why* the thresholds were ever
+chosen, which is the only part that was ever hard to reconstruct.

@@ -1,0 +1,82 @@
+{
+  "schema": "landlord-attention-shadow-input/v1",
+  "classification": "synthetic-demo-only",
+  "events": [
+    {
+      "id": "demo/work/alpha/opened",
+      "at": "2026-08-09T00:00:00.000Z",
+      "workId": "demo/work/alpha",
+      "kind": "opened"
+    },
+    {
+      "id": "demo/work/alpha/classified",
+      "at": "2026-08-09T00:01:00.000Z",
+      "workId": "demo/work/alpha",
+      "kind": "classified",
+      "requirement": "machine-candidate",
+      "avoidability": "unavoidable",
+      "reversibility": "reversible",
+      "exceptionBurden": "none",
+      "confidence": 0.96,
+      "evidence": [
+        {
+          "ref": "demo-evidence/alpha",
+          "kind": "test"
+        }
+      ]
+    },
+    {
+      "id": "demo/work/bravo/opened",
+      "at": "2026-08-09T00:02:00.000Z",
+      "workId": "demo/work/bravo",
+      "kind": "opened"
+    },
+    {
+      "id": "demo/work/bravo/classified",
+      "at": "2026-08-09T00:03:00.000Z",
+      "workId": "demo/work/bravo",
+      "kind": "classified",
+      "requirement": "human-required",
+      "avoidability": "unavoidable",
+      "reversibility": "irreversible",
+      "exceptionBurden": "material",
+      "confidence": 0.93,
+      "evidence": [
+        {
+          "ref": "demo-evidence/bravo",
+          "kind": "policy"
+        }
+      ]
+    },
+    {
+      "id": "demo/work/charlie/opened",
+      "at": "2026-08-09T00:04:00.000Z",
+      "workId": "demo/work/charlie",
+      "kind": "opened"
+    },
+    {
+      "id": "demo/work/charlie/classified",
+      "at": "2026-08-09T00:05:00.000Z",
+      "workId": "demo/work/charlie",
+      "kind": "classified",
+      "requirement": "human-required",
+      "avoidability": "avoidable",
+      "reversibility": "reversible",
+      "exceptionBurden": "routine",
+      "confidence": 0.91,
+      "evidence": [
+        {
+          "ref": "demo-evidence/charlie",
+          "kind": "record"
+        }
+      ]
+    },
+    {
+      "id": "demo/work/charlie/escalated",
+      "at": "2026-08-09T00:06:00.000Z",
+      "workId": "demo/work/charlie",
+      "kind": "escalated",
+      "escalationAttribution": "capability"
+    }
+  ]
+}

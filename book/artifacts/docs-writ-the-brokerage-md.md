@@ -75,6 +75,7 @@ Offices, guilds, fiefs, and the line of answer — the ratified brokerage model 
 *These name this FILE by its path. That is a citation of the source, not a claim about any one idea inside it — do not read a path citation as agreement, dependence or implementation.*
 
 - [[The Kingdom — Canon]]
+- [[Writ — The Knighthood: one seat, a Regent that is an agent, and the fief as a desk]]
 - [[Writ — the Land: pods, knights, owners, and guilds (the realm remodeled)]]
 
 ---

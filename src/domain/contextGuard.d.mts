@@ -28,3 +28,8 @@ export function guardComplete<T extends (payload: any) => Promise<any>>(
   complete: T,
   options?: { onBlocked?: (error: IdentityLeakError) => void },
 ): T;
+
+/** Marks a transport already wrapped by `guardComplete`. */
+export const IDENTITY_GUARDED: unique symbol;
+/** True when `fn` is already wrapped by `guardComplete`. */
+export function isIdentityGuarded(fn: unknown): boolean;

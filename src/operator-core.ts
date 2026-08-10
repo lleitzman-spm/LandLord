@@ -17,6 +17,7 @@
 
 // ── The flow engine (the operator's spine) ──────────────────────────────────
 export {
+  FOUNDING_FLOWS,
   instantiateFlow,
   handStep,
   completeStep,
@@ -27,11 +28,17 @@ export {
   readFlow,
   fullParams,
   paramsOf,
+  // The automation gate the clerks read: may this step run with no human in it?
+  // `mayRunUnattended` is the whole decision; `awaitsOutside` is exported beside
+  // it so a clerk can SAY which of the two reasons it stopped for.
+  mayRunUnattended,
+  awaitsOutside,
+  flowsAtFounding,
 } from './domain/flows';
 export type { FlowBook, FlowTemplate, FlowParams, FlowInstance, FlowReading } from './domain/flows';
 
 // ── The catalog (the task-language the agent reads) ─────────────────────────
-export { findRow, rowsByDomain, titleOf, flowKeyFor, domainsOf, systemsOf } from './domain/catalog';
+export { findRow, rowsByDomain, titleOf, flowKeyFor, domainsOf, systemsOf, catalogAtFounding } from './domain/catalog';
 export type { Catalog, CatalogRow, DomainGroup } from './domain/catalog';
 
 // ── The event log (the queue the agent works off) ───────────────────────────
@@ -81,3 +88,14 @@ export type { EconomySettingPatch } from './domain/economySetting';
 // the Worker's fleet route — must be unable to call a brain unguarded.
 export { assertNoIdentity, guardComplete, findIdentity, IdentityLeakError } from './domain/contextGuard';
 export type { IdentityFinding } from './domain/contextGuard';
+
+// The governing operator-attention reading.  Kept in this shared bundle so
+// the names-free shadow runner exercises the same fold as the application.
+export { readAttentionLedger, validateAttentionLog, boundedMachineCandidate } from './domain/attention';
+export type {
+  AttentionEvent,
+  AttentionLog,
+  AttentionEntry,
+  AttentionLedger,
+  AttentionTotals,
+} from './domain/attention';

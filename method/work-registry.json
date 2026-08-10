@@ -1,0 +1,136 @@
+{
+  "schema": "spm-work-registry/v1",
+  "authority": {
+    "project_id": "landlord",
+    "hub_projection": false,
+    "schema_reuse": "Structural reuse only; the SPM work hub does not govern, project, or ingest LandLord task state.",
+    "scope": [
+      "task_identity",
+      "status",
+      "priority",
+      "rank",
+      "owner",
+      "next_action",
+      "blocker",
+      "closing_proof"
+    ],
+    "derived_surfaces_must_not_edit_task_state": true
+  },
+  "external_writes": false,
+  "tasks": [
+    {
+      "id": "LANDLORD-AUDIT-INTEGRATION-20260809",
+      "title": "Integrate the ratified LandLord audit through the bounded activation proof",
+      "status": "closed",
+      "priority": "high",
+      "rank": 1,
+      "owner": "agent:codex",
+      "next_action": "Preserve draft PR #1, exact CI and branch-protection receipts, the comparison-gaps-present verdict, and the verified reversible activation receipt as the review boundary; merging remains a separate act.",
+      "blocker": null,
+      "closing_proof": "The ratified decisions and Gates 0-3 are implemented on the integration branch; hostile and full verification pass; the branch is pushed; a draft PR and required protection exist; one names-free bounded external act is verified and reversed; comparison gaps remain explicit rather than promoted to LIVE.",
+      "closure_receipt": "2026-08-09: Proof-source commit 1bc3ddd333b8a2a4cbbbce5647142eead70485dd (tree abad32aa8fa1f5ef2fdc94b9f0850969e256c701) passed the full local matrix: 44 test files / 529 tests, type-check, main/operator/War Game builds, 1,494-file leakcheck with 0 text findings, Great Book lint with 0 manifest/quote/standing failures, projection and shadow hostile contracts, and deploy contract. Draft PR #1 is OPEN/DRAFT/CLEAN; push run 31350423854 and PR run 31350425418 both passed the exact required contexts. Main protection is strict with both contexts, admin enforcement, linear history and conversation resolution; force pushes and deletion are denied. SPM producer 51e234cc1938896d17c0ec478a48e92f5c0f6a4e supplied projection digest ec4a481451784eb7cf15e87015f852e6ee9406cb751f3536156a29bd937b909d; comparison remained comparison-gaps-present for place count, transition count, topology degree signature, G2 observation and semantic crosswalk, so no LIVE claim was made. Cloudflare deployment 3f13ed35-f0d6-4dc0-9266-845fa366dd5c served version f19b921a-2ff3-4d69-b854-9e7d9d0863d0 at 100% with exact commit/tree provenance, zero bindings/secrets, applied:false and POST refusal. Isolated KV namespace 5b3e6832db7f4333a6c8f7e004cab1f4 wrote and read one opaque value, deleted the key, and was deleted by returned id; the Worker was then deleted, deployments returned code 10007, the proof URL returned 404 and namespace list returned []. An earlier attempt on version caad2aa9-3c38-4318-9ad3-b550b0f92785 failed closed because Wrangler 4.97 rejects --force on single-key deletion; its finally cleanup deleted that namespace and the Worker was removed before the corrected retry. No real records, identity-bearing data, credentials, money or operational authority were used or promoted.",
+      "external_writes": true,
+      "source_refs": [
+        "thread:019fe8d0-b03e-7db2-a2f5-54c25fb2cea9",
+        "gdrive:1Zc9nxntHmK9OSBXiM1U5RBw6BbWlWEQiGcw-0wUWXtg",
+        "git:codex/landlord-audit-integration@1bc3ddd333b8a2a4cbbbce5647142eead70485dd",
+        "github:lleitzman-spm/LandLord#1",
+        "github-actions:31350423854",
+        "github-actions:31350425418",
+        "git:spm-optimization@51e234cc1938896d17c0ec478a48e92f5c0f6a4e",
+        "cloudflare:deployment:3f13ed35-f0d6-4dc0-9266-845fa366dd5c:deleted",
+        "cloudflare:version:f19b921a-2ff3-4d69-b854-9e7d9d0863d0:deleted",
+        "cloudflare:kv-namespace:5b3e6832db7f4333a6c8f7e004cab1f4:deleted"
+      ],
+      "lane_receipts": [
+        {
+          "lane": "gate0",
+          "owner": "agent:gate0",
+          "source_refs": ["git:19e41ac", "git:4514ceb"],
+          "objective_delta": {"introduced": [], "completed": ["Ratify decisions 1-9 and make the Decision Bridge primary while marking Escape experimental."], "remaining": []},
+          "residual_dispositions": [{"observation": "Decision cards still need the future evidence and authority fields before operational classification.", "disposition": "non_task_with_reason", "reason": "Outside the authorized Gates 0-3 classification cut; this task preserves the missing fields as an evidence boundary rather than creating follow-on work."}],
+          "evidence_refs": ["test:476-pass", "browser:decision-bridge-desktop-mobile-pass"]
+        },
+        {
+          "lane": "book-ci",
+          "owner": "agent:book_ci",
+          "source_refs": ["git:1137fcb"],
+          "objective_delta": {"introduced": [], "completed": ["Make Great Book paths portable and require Book plus all builds in CI."], "remaining": []},
+          "evidence_refs": ["test:479-pass", "book:lint-pass", "build:main-operator-wargame-pass"]
+        },
+        {
+          "lane": "reconcile",
+          "owner": "agent:reconcile",
+          "source_refs": ["git:046ff2b", "git:45f8e0b", "git:4c04213", "git:7289bb8"],
+          "objective_delta": {"introduced": [], "completed": ["Reconcile gameplay and rig semantics with replay-safe current-step guards and ambient sweep disabled."], "remaining": []},
+          "residual_dispositions": [{"observation": "Operational callers remain subject to the typed authority-adapter boundary.", "disposition": "non_task_with_reason", "reason": "This is a proven adapter boundary, not unfinished scope in this lane."}],
+          "evidence_refs": ["test:490-pass", "build:main-operator-wargame-pass"]
+        },
+        {
+          "lane": "attention-shadow",
+          "owner": "agent:attention_shadow",
+          "source_refs": ["git:fbc21a8"],
+          "objective_delta": {"introduced": [], "completed": ["Build the names-free Attention Ledger and fail-closed simulated shadow proof."], "remaining": []},
+          "residual_dispositions": [{"observation": "Simulation is not operational activation.", "disposition": "non_task_with_reason", "reason": "This provenance limit is an evidence boundary, not a separate task."}],
+          "evidence_refs": ["test:500-pass", "shadow:simulated-reversal-pass"]
+        },
+        {
+          "lane": "trust-kernel",
+          "owner": "agent:trust_kernel",
+          "source_refs": ["git:16e427a", "git:045c6d1", "git:fc6eac2"],
+          "objective_delta": {"introduced": [], "completed": ["Implement and harden the typed Worker authority seam with exact grants, digests, CAS, and generic-writer denial."], "remaining": []},
+          "residual_dispositions": [{"observation": "UI, fleet, canonical Chronicle, court roll, and simulation adapters are not one shared operational kernel.", "disposition": "non_task_with_reason", "reason": "Repo-wide kernel unification is outside the authorized Gates 0-3 scope; the partial seam remains explicit."}],
+          "evidence_refs": ["test:515-pass", "review:typed-seam-partial-only"]
+        },
+        {
+          "lane": "bounded-deploy",
+          "owner": "agent:bounded_deploy",
+          "source_refs": ["git:f221c5f"],
+          "objective_delta": {"introduced": [], "completed": ["Prepare an isolated workers.dev proof and reversible KV write-read-delete lane.", "Execute the exact green proof-source deployment, verify its provenance and empty secrets, complete the opaque KV round trip, and remove all Worker and KV state."], "remaining": []},
+          "residual_dispositions": [{"observation": "Execute only after combined and remote gates pass, then prove cleanup.", "disposition": "non_task_with_reason", "reason": "Execution is owned by the integration task's next_action after gates; it is not a separate objective of the preparation lane."}],
+          "evidence_refs": ["wrangler:dry-run-pass", "test:audit-shadow-worker-3-pass", "cloudflare:deployment:3f13ed35-f0d6-4dc0-9266-845fa366dd5c:deleted", "cloudflare:kv-namespace:5b3e6832db7f4333a6c8f7e004cab1f4:deleted", "cloudflare:worker-absence-10007", "cloudflare:kv-list-empty"]
+        },
+        {
+          "lane": "adversarial-review",
+          "owner": "agent:adversarial_review",
+          "source_refs": ["review:authority-shadow-projection-release"],
+          "objective_delta": {"introduced": [], "completed": ["Find and drive closure of projection, shadow, version, UI, and typed-authority bypasses."], "remaining": []},
+          "residual_dispositions": [{"observation": "Keep comparison gaps and partial adapter coverage explicit.", "disposition": "non_task_with_reason", "reason": "Keeping gaps explicit is a reporting constraint, not additional implementation scope."}],
+          "evidence_refs": ["test:targeted-hostile-pass", "comparison:gaps-present"]
+        },
+        {
+          "lane": "final-authority-review",
+          "owner": "agent:final_authority_review",
+          "source_refs": ["git:231ac20"],
+          "objective_delta": {"introduced": [], "completed": ["Confirm the human complete-step ratification bypass is closed.", "Independently verify the live proof's exact commit/tree, applied:false response, POST refusal, empty secret list and expected version at 100%."], "remaining": []},
+          "residual_dispositions": [{"observation": "Do not claim repo-wide shared enforcement.", "disposition": "non_task_with_reason", "reason": "This is a claim boundary, not a separate implementation objective."}],
+          "evidence_refs": ["test:authority-23-pass", "tsc:pass", "cloudflare:version:f19b921a-2ff3-4d69-b854-9e7d9d0863d0:verified"]
+        },
+        {
+          "lane": "release-gate-review",
+          "owner": "agent:release_gate_review",
+          "source_refs": ["review:book-ci-cloudflare-protection"],
+          "objective_delta": {"introduced": [], "completed": ["Audit release gates, Cloudflare cleanup, CI check names, and branch-protection prerequisites.", "Independently confirm exact-head CI and protection before activation, then Worker/KV absence after rollback."], "remaining": []},
+          "residual_dispositions": [{"observation": "Run remote CI before protection and preserve exact rollback receipts.", "disposition": "non_task_with_reason", "reason": "Remote proof and rollback are owned by the integration task's next_action; this review lane is complete."}],
+          "evidence_refs": ["github:main-unprotected", "book:warning-audit", "github-actions:31350423854", "github-actions:31350425418", "github:main-protection-verified", "cloudflare:rollback-absence-verified"]
+        },
+        {
+          "lane": "objective-authority",
+          "owner": "agent:objective_authority",
+          "source_refs": ["file:C:/Users/lleit/.agents/ORCHESTRATION.md", "file:C:/Users/lleit/.agents/work-hub/HUB.json", "git:8e3e24f", "git:d140fc0"],
+          "objective_delta": {"introduced": ["Reconcile LandLord authority prose to the SPM-only work-hub boundary."], "completed": ["Confirm the SPM work hub excludes LandLord, its historic inbox route is closed there as out of scope, and this project-local registry owns the integration objective.", "Reconcile LandLord source authority to shared ORCHESTRATION.md and the project-local registry without changing hub state."], "remaining": []},
+          "residual_dispositions": [{"observation": "Activate the canonical registry, route the inbox item, and refresh the hub after closure.", "disposition": "non_task_with_reason", "reason": "The SPM-only hub already disposed the LandLord inbox entry as out of scope; canonical hub activation is neither authorized nor required."}],
+          "evidence_refs": ["work-hub:check-pass-view-current", "hub:landlord-route-closed-out-of-scope"]
+        },
+        {
+          "lane": "integration",
+          "owner": "agent:codex",
+          "source_refs": ["thread:019fe8d0-b03e-7db2-a2f5-54c25fb2cea9"],
+          "objective_delta": {"introduced": [], "completed": ["Integrate all approved audit decisions and gates without manufacturing LIVE claims.", "Push the verified branch, open draft PR #1, protect main, execute and reverse the bounded external proof, and record exact cleanup receipts."], "remaining": []},
+          "residual_dispositions": [{"observation": "Finish the remote gates, bounded external proof, cleanup, and authority closeout.", "disposition": "non_task_with_reason", "reason": "These acts remain in this task's next_action and are not a second objective."}],
+          "evidence_refs": ["git:codex/landlord-audit-integration@1bc3ddd333b8a2a4cbbbce5647142eead70485dd", "github:lleitzman-spm/LandLord#1", "comparison:comparison-gaps-present", "cloudflare:bounded-proof-complete-and-deleted"]
+        }
+      ]
+    }
+  ]
+}

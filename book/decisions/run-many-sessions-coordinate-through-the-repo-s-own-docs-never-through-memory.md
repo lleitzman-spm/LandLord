@@ -2,7 +2,7 @@
 type: "decision"
 id: "decision:run-many-sessions-coordinate-through-repo"
 title: "Run many sessions; coordinate through the repo's own docs, never through memory"
-standing: "settled"
+standing: "retired"
 standing_source: "knowledge/decisions.json"
 source_path: "docs/PARALLEL-SESSIONS.md"
 source_line: 10
@@ -16,11 +16,11 @@ aliases:
 
 # Run many sessions; coordinate through the repo's own docs, never through memory
 
-> **STANDING — SETTLED**  
-> Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
+> **STANDING — RETIRED**  
+> Superseded. Kept for history, never cited as current.  
 > *Declared in `knowledge/decisions.json`.*
 
-A session is a worker; the repo is the shared desk. HANDOFF plus KINGDOM are a durable, async, shared-state substrate.
+Retired for cross-project coordination on 2026-08-09. ORCHESTRATION.md governs shared orchestration, method/work-registry.json owns LandLord task state, and HANDOFF remains local detail only.
 
 ## The source, verbatim
 
@@ -46,6 +46,12 @@ A session is a worker; the repo is the shared desk. HANDOFF plus KINGDOM are a d
 ### artifact
 
 - [[docs/PARALLEL-SESSIONS.md]] — *declared in `knowledge/artifacts.json`; the same file `docs/PARALLEL-SESSIONS.md`, seen as a decision rather than a artifact*
+
+## Sources this page cites
+
+*Files this page names by path. Again: a citation of the file, nothing more.*
+
+- [[method/]]
 
 ---
 

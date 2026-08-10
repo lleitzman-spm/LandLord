@@ -43,8 +43,6 @@ aliases:
 ### Modules
 
 - [[src/table/fantasyRelief.ts]] — *imported by this file*
-- [[src/table/terrainPaint.ts]] — *imported by this file*
-- [[src/table/WarTableFrame.tsx]] — *imported by this file*
 
 ---
 

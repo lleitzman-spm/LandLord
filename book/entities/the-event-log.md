@@ -44,6 +44,7 @@ The sole record of the real work; a work item, a queue, who holds the ball, agin
 
 ### Writs that specify it
 
+- [[Handoff — where things stand]] — *this writ names "The event log" literally*
 - [[The Kingdom — Canon]] — *this writ names "The event log" literally*
 - [[Writ — the flow engine (the operator's spine)]] — *this writ names "The event log" literally*
 - [[Writ — the operator's hands (swing two, part one)]] — *this writ names "The event log" literally*

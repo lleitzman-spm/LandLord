@@ -18,14 +18,15 @@ aliases:
 > Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
 > *Declared in `knowledge/artifacts.json`.*
 
-*The working-state document. `KINGDOM.md` is the constitution (what the kingdom **is**); this is the state of play (what is **done**, what is **next**, what is **stuck**). Much of the codebase points here, because a session that starts by trusting a stale note is worse off than one that starts with 
+> **Project-local status only.** This file may describe LandLord facts, local > candidates, active lanes, and blockers. LandLord task state lives only in > `method/work-registry.json`; shared orchestration lives in > `C:\Users\lleit\.agents\ORCHESTRATION.md`. The SPM work hub does not govern, > proj
 
 ## The source, verbatim
 
-> *The working-state document. `KINGDOM.md` is the constitution (what the kingdom
-> **is**); this is the state of play (what is **done**, what is **next**, what is
-> **stuck**). Much of the codebase points here, because a session that starts by
-> trusting a stale note is worse off than one that starts with nothing.*
+> > **Project-local status only.** This file may describe LandLord facts, local
+> > candidates, active lanes, and blockers. LandLord task state lives only in
+> > `method/work-registry.json`; shared orchestration lives in
+> > `C:\Users\lleit\.agents\ORCHESTRATION.md`. The SPM work hub does not govern,
+> > project, or ingest this project.
 
 *Verified against `docs/HANDOFF.md`:1 on every lint — no quote, no object.*
 
@@ -37,22 +38,43 @@ aliases:
 - Next candidates
 - What needs a human
 
+## Decisions that touched it
+
+- [[The audit integrates semantically from the named frontier]] — *the same file `docs/HANDOFF.md`, seen as a decision rather than a writ*
+
 ## Entities
 
+- [[FOUNDING_GUILDS still names Crown offices, not outside trades]] — *this writ names `entity:founding-guilds-naming-drift` literally*
 - [[The chronicle]] — *this writ names "The chronicle" literally*
+- [[The clerk fleet]] — *this writ names "The clerk fleet" literally*
+- [[The event log]] — *this writ names "The event log" literally*
 
 ## Modules
 
 - [[src/CommandPalette.tsx]] — *this writ names the exported symbol `CommandPalette`*
-- [[src/domain/escape.ts]] — *this writ names the exported symbol `EscapeReading`*
-- [[src/domain/flows.ts]] — *this writ names the exported symbol `failStep`; this writ names the exported symbol `FlowReading`; +3 more*
-- [[src/operator-core.ts]] — *this writ names the exported symbol `FlowReading`; this writ names the exported symbol `readFlow`*
+- [[src/domain/catalog.ts]] — *this writ names the exported symbol `catalogAtFounding`*
+- [[src/domain/contextGuard.d.mts]] — *this writ names the exported symbol `guardComplete`; this writ names the exported symbol `isIdentityGuarded`*
+- [[src/domain/contextGuard.mjs]] — *this writ names the exported symbol `guardComplete`; this writ names the exported symbol `isIdentityGuarded`*
+- [[src/domain/economy.ts]] — *this writ names the exported symbol `coinCents`; this writ names the exported symbol `settlementGate`; +2 more*
+- [[src/domain/economySetting.ts]] — *this writ names the exported symbol `applyEconomySetting`*
+- [[src/domain/escape.ts]] — *this writ names the exported symbol `EscapeReading`; this writ names the exported symbol `readEscape`*
+- [[src/domain/flows.ts]] — *this writ names the exported symbol `approveStep`; this writ names the exported symbol `awaitsOutside`; +12 more*
+- [[src/domain/guilds.ts]] — *this writ names the exported symbol `SEAT_GUILD`*
+- [[src/domain/pods.ts]] — *this writ names the exported symbol `commissionCaseId`; this writ names the exported symbol `knightsOf`; +1 more*
+- [[src/domain/realm.ts]] — *this writ names the exported symbol `readRealm`*
+- [[src/LedgerView.tsx]] — *this writ names the exported symbol `LedgerView`*
+- [[src/operator-core.ts]] — *this writ names the exported symbol `applyEconomySetting`; this writ names the exported symbol `approveStep`; +14 more*
+- [[src/server/vault.ts]] — *this writ names the exported symbol `ADVANCING_KINDS`; this writ names the exported symbol `commitAppend`; +1 more*
 
 ## artifact
 
 - [[docs/HANDOFF.md]] — *the same file `docs/HANDOFF.md`, seen as a artifact rather than a writ*
 
 ## Backlinks
+
+### Decisions that touched it
+
+- [[The audit integrates semantically from the named frontier]] — *the same file `docs/HANDOFF.md`, seen as a writ rather than a decision*
 
 ### artifact
 
@@ -62,7 +84,9 @@ aliases:
 
 *These name this FILE by its path. That is a citation of the source, not a claim about any one idea inside it — do not read a path citation as agreement, dependence or implementation.*
 
+- [[Open questions]]
 - [[The Kingdom — Canon]]
+- [[War Games — the master plan]]
 - [[Writ — the flow engine (the operator's spine)]]
 - [[Writ — the task-language, the consequences, and the Regent's seat]]
 
@@ -71,11 +95,20 @@ aliases:
 *Files this page names by path. Again: a citation of the file, nothing more.*
 
 - [[.gitattributes]]
+- [[.gitignore]]
 - [[CLAUDE.md]]
+- [[docs/KINGDOM.md]]
 - [[docs/OPEN-QUESTIONS.md]]
+- [[method/]]
 - [[Open questions]]
 - [[src/domain/escape.ts]]
 - [[src/domain/flows.ts]]
+- [[src/domain/guilds.ts]]
+- [[src/domain/realm.ts]]
+- [[The Kingdom — Canon]]
+- [[The sibling boundary — who owns the process model]]
+- [[Writ — The Gate: the money law is written and nothing enforces it]]
+- [[Writ — The Knighthood: one seat, a Regent that is an agent, and the fief as a desk]]
 
 ---
 

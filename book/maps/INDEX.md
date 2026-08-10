@@ -5,7 +5,7 @@ title: "Map of the Great Book"
 standing: "built"
 standing_source: "derived"
 source_path: "tools/vault/emit.mjs"
-generated: "2026-08-06T22:55:08.263Z"
+generated: "2026-08-10T02:48:59.910Z"
 generator: "tools/vault/emit.mjs"
 aliases:
   - "map:index"
@@ -19,30 +19,30 @@ aliases:
 
 | kind | pages |
 |---|---:|
-| invariant | 428 |
-| fact | 163 |
-| module | 83 |
-| entity | 67 |
-| decision | 62 |
-| artifact | 58 |
+| invariant | 511 |
+| fact | 160 |
+| decision | 70 |
+| module | 69 |
+| entity | 64 |
+| artifact | 57 |
 | law | 53 |
 | task | 52 |
 | place | 46 |
 | guard | 41 |
 | transition | 41 |
-| writ | 23 |
+| writ | 26 |
 | surface | 10 |
 | hand | 6 |
 | flow | 5 |
-| **all** | **1138** |
+| **all** | **1211** |
 
 | standing | pages |
 |---|---:|
-| built | 977 |
-| settled | 78 |
+| built | 1042 |
+| settled | 80 |
 | canon | 69 |
-| contested | 9 |
-| retired | 4 |
+| retired | 11 |
+| contested | 8 |
 | proposed | 1 |
 
 ## PROPOSED — not built, and never evidence that anything works ⚠
@@ -53,21 +53,27 @@ aliases:
 
 ## CONTESTED — two sources disagree, nobody has ruled
 
+- [[A single-tenant deployment carries one trust-accounting jurisdiction]] — `docs/OPEN-QUESTIONS.md`
 - [[docs/OPEN-QUESTIONS.md]] — `docs/OPEN-QUESTIONS.md`
 - [[Fee terms are currently one shape and probably need to be many]] — `docs/OPEN-QUESTIONS.md`
 - [[FOUNDING_GUILDS still names Crown offices, not outside trades]] — `src/domain/guilds.ts`
 - [[Open questions]] — `docs/OPEN-QUESTIONS.md`
-- [[Whether a deployment ever spans two trust-accounting jurisdictions is open]] — `docs/OPEN-QUESTIONS.md`
 - [[Whether an unclassified spend estimate should default at the cap is open]] — `docs/OPEN-QUESTIONS.md`
 - [[Whether artisan should be a pledge or a relationship is open]] — `docs/OPEN-QUESTIONS.md`
-- [[Whether LandLord is single-tenant or multi-tenant is genuinely open]] — `docs/OPEN-QUESTIONS.md`
 - [[Whether the department-territories are struck or migrated is undecided]] — `docs/WRIT-THE-BROKERAGE.md`
 
 ## RETIRED — kept for history, never cited as current
 
+- [[A march promotes to a shire when three thresholds all hold]]
 - [[Default estimate for an unclassified repair — RETIRED, there is no default]]
+- [[docs/PARALLEL-SESSIONS.md]]
 - [[docs/WRIT-THE-LAND.md]]
+- [[Opus drives; the right hand builds; Opus reviews and verifies]]
+- [[Run many sessions; coordinate through the repo's own docs, never through memory]]
 - [[The departments-as-guilds land model is superseded]]
+- [[The War Table remains the Proving Ground's visual craft, not its authority]]
+- [[Use open-PRs-or-branches plus HANDOFF; no separate board to babysit]]
+- [[Working in parallel — the multi-session doctrine]]
 - [[Writ — the Land: pods, knights, owners, and guilds (the realm remodeled)]]
 
 ## Load-bearing — what the rest of the kingdom leans on
@@ -76,36 +82,36 @@ aliases:
 
 | page | kind | standing | roads |
 |---|---|---|---:|
-| [[src/domain/flows.ts]] | module | built | 597 |
-| [[src/domain/catalog.ts]] | module | built | 335 |
-| [[src/domain/economy.ts]] | module | built | 319 |
-| [[src/domain/chronicle.ts]] | module | built | 270 |
-| [[src/domain/wargame.ts]] | module | built | 247 |
-| [[src/domain/events.ts]] | module | built | 141 |
-| [[src/domain/court.ts]] | module | built | 135 |
-| [[The Kingdom — Canon]] | writ | canon | 116 |
-| [[src/domain/guilds.ts]] | module | built | 111 |
+| [[src/domain/flows.ts]] | module | built | 656 |
+| [[src/domain/catalog.ts]] | module | built | 363 |
+| [[src/domain/economy.ts]] | module | built | 324 |
+| [[src/domain/chronicle.ts]] | module | built | 246 |
+| [[src/domain/events.ts]] | module | built | 213 |
+| [[src/domain/wargame.ts]] | module | built | 197 |
+| [[The Kingdom — Canon]] | writ | canon | 124 |
+| [[src/operator-core.ts]] | module | built | 91 |
+| [[src/domain/court.ts]] | module | built | 85 |
 | [[src/domain/treasury.ts]] | module | built | 82 |
-| [[src/operator-core.ts]] | module | built | 66 |
+| [[Handoff — where things stand]] | writ | settled | 80 |
+| [[src/domain/economySetting.ts]] | module | built | 76 |
+| [[Writ — the task-language, the consequences, and the Regent's seat]] | writ | built | 67 |
+| [[src/domain/guilds.ts]] | module | built | 65 |
 | [[src/domain/types.ts]] | module | built | 64 |
-| [[Writ — the task-language, the consequences, and the Regent's seat]] | writ | built | 64 |
 | [[src/domain/consequences.ts]] | module | built | 53 |
-| [[src/domain/tenureMuster.ts]] | module | built | 53 |
 | [[Move-out → re-list relay]] | flow | built | 51 |
 | [[src/domain/campaign.ts]] | module | built | 49 |
+| [[src/domain/pods.ts]] | module | built | 48 |
+| [[Writ — the Land: pods, knights, owners, and guilds (the realm remodeled)]] | writ | retired | 48 |
 | [[src/domain/states.ts]] | module | built | 46 |
-| [[Writ — the Land: pods, knights, owners, and guilds (the realm remodeled)]] | writ | retired | 46 |
-| [[src/realm/scene.ts]] | module | built | 44 |
-| [[src/WarTableView.tsx]] | module | built | 44 |
-| [[src/domain/pods.ts]] | module | built | 42 |
-| [[src/domain/realm.ts]] | module | built | 40 |
-| [[WarTableView]] | surface | built | 40 |
+| [[src/domain/contextGuard.mjs]] | module | built | 44 |
+| [[src/WarTableView.tsx]] | module | built | 43 |
+| [[src/domain/realm.ts]] | module | built | 41 |
+| [[src/realm/scene.ts]] | module | built | 40 |
 | [[Writ — the economy pillar, re-expressed as chronicle readings]] | writ | built | 40 |
+| [[src/domain/escape.ts]] | module | built | 39 |
+| [[WarTableView]] | surface | built | 39 |
+| [[src/server/vault.ts]] | module | built | 36 |
 | [[Lease renewal]] | flow | built | 35 |
-| [[Owner onboarding]] | flow | built | 35 |
-| [[src/domain/economySetting.ts]] | module | built | 35 |
-| [[src/domain/escape.ts]] | module | built | 34 |
-| [[src/domain/throne.ts]] | module | built | 34 |
 
 ## Ways in
 
@@ -126,22 +132,22 @@ aliases:
 ## Every shelf
 
 - `book/laws/` — 53 law pages
-- `book/modules/` — 83 module pages
-- `book/invariants/` — 428 invariant pages
-- `book/writs/` — 23 writ pages
-- `book/facts/` — 163 fact pages
-- `book/decisions/` — 62 decision pages
+- `book/modules/` — 69 module pages
+- `book/invariants/` — 511 invariant pages
+- `book/writs/` — 26 writ pages
+- `book/facts/` — 160 fact pages
+- `book/decisions/` — 70 decision pages
 - `book/surfaces/` — 10 surface pages
-- `book/entities/` — 67 entity pages
+- `book/entities/` — 64 entity pages
 - `book/tasks/` — 52 task pages
 - `book/hands/` — 6 hand pages
 - `book/flows/` — 5 flow pages
 - `book/places/` — 46 place pages
 - `book/transitions/` — 41 transition pages
 - `book/guards/` — 41 guard pages
-- `book/artifacts/` — 58 artifact pages
+- `book/artifacts/` — 57 artifact pages
 - `book/maps/` — 0 map pages
 
 ---
 
-*Generated by `tools/vault/emit.mjs` at 2026-08-06T22:55:08.263Z. This is the ONLY page carrying a build time — the rest hold no clock, so `git diff book/` shows what actually changed. Re-compile with `npm run book`; check it with `npm run book:lint`; ask it a question with `npm run book:trace -- "<subject>"` — the `--` is npm's, not ours, and without it npm swallows the subject.*
+*Generated by `tools/vault/emit.mjs` at 2026-08-10T02:48:59.910Z. This is the ONLY page carrying a build time — the rest hold no clock, so `git diff book/` shows what actually changed. Re-compile with `npm run book`; check it with `npm run book:lint`; ask it a question with `npm run book:trace -- "<subject>"` — the `--` is npm's, not ours, and without it npm swallows the subject.*

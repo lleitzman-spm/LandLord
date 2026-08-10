@@ -10,12 +10,17 @@
 // nothing is stored. The old `readThrone` stands untouched for the old views —
 // this is the new lens the War Table will render.
 //
-// TWO REALMS, AND THEY ARE NOT THE SAME WORD. The `RealmReading` below is a
+// TWO REALMS, AND THEY WERE NOT THE SAME WORD. The `RealmReading` below is a
 // SCORE — the Regent's whole-kingdom fusion, the debt he drives to zero. It is
-// not a place and never was. The `Realm` of `src/domain/tenure.ts` is a PLACE —
-// a sovereign polity (a US state and its commission) that shires sit inside of
-// and edicts issue from. Nothing was renamed to settle this; see that file's
-// header for why, and read it before you build on either sense.
+// not a place and never was. The other `Realm` was a PLACE: a sovereign polity
+// that shires sat inside of and edicts issued from, in the tenure hierarchy.
+//
+// That collision is now HISTORY, not a live hazard: the tenure model retired
+// with the multi-person firm on 2026-08-07 and lives on the orphan branch
+// `archive/multi-person-firm`. The warning stays because the ambiguity is what
+// makes this file's name misleading on its own, and because anything grafted
+// back from that branch brings the second sense with it. Only one `Realm` is
+// reachable from here now, and it is a number.
 
 import type { EventLog } from './events';
 import type { Kingdom } from './types';

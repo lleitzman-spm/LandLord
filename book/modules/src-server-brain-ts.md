@@ -48,19 +48,19 @@ aliases:
 
 *These roads come from a shared source FILE, not from a semantic claim: the test file imports the module. Read it as "stands near", never as "proves".*
 
-- [[a blocked fleet prompt never calls the provider and never persists a proposal]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[authenticates before reporting missing vault configuration]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[denies generic writes even on the verified identity sandbox]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[derives the sandbox only from a valid signed assertion]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[does not treat a raw Access email header as identity or canonical authority]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[keeps a real read failure distinct from an identity failure]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[keeps canonical access on a separate machine capability]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[keeps the legacy fleet disabled until it uses typed commands]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[lets non-api paths fall through to the castle assets]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[rejects a missing assertion on %s before touching the vault]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[rejects a signed assertion with no usable identity claim]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[rejects the wrong audience and a forged signature]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[requires verifier configuration rather than failing open]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[serves a new verified identity founding rather than the canonical Chronicle]] — *imported by the test FILE (shared source, not a claim about this one test)*
-- [[writes only to the verified identity sandbox]] — *imported by the test FILE (shared source, not a claim about this one test)*
 
 ---
 

@@ -3,6 +3,7 @@ import {
   normalizeChronicle,
   isFoundingChronicle,
   FOUNDING_CHRONICLE,
+  LEGACY_FLOW_VERSION,
 } from '../src/domain/chronicle';
 import { foundingDoc } from './fixtures';
 
@@ -25,6 +26,13 @@ describe('chronicle — the migration seam', () => {
   it('an absent catalog shelf adopts the founding rows', () => {
     const c = normalizeChronicle({});
     expect(c.catalog.length).toBeGreaterThan(0);
+  });
+
+  it('marks a present unversioned flow as legacy instead of inventing a current version', () => {
+    const legacy = structuredClone(FOUNDING_CHRONICLE.flows[0]) as unknown as Record<string, unknown>;
+    delete legacy.version;
+    const c = normalizeChronicle({ flows: [legacy] });
+    expect(c.flows[0].version).toBe(LEGACY_FLOW_VERSION);
   });
 
   it('the founding chronicle reads as founding', () => {

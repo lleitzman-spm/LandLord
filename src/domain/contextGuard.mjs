@@ -274,8 +274,16 @@ function materializeModelPayload(payload) {
  * that a clerk swallowed the exception for fallback; the route can then reject
  * the whole run before any proposal is persisted.
  */
+/** Marks a transport that already has the identity boundary in front of it. */
+export const IDENTITY_GUARDED = Symbol.for('landlord.identityGuarded');
+
+/** True when `fn` is already wrapped by `guardComplete`. */
+export function isIdentityGuarded(fn) {
+  return typeof fn === 'function' && fn[IDENTITY_GUARDED] === true;
+}
+
 export function guardComplete(complete, options = {}) {
-  return async (payload) => {
+  const guarded = async (payload) => {
     let prepared;
     try {
       prepared = materializeModelPayload(payload);
@@ -289,4 +297,13 @@ export function guardComplete(complete, options = {}) {
       : prepared.modelPayload;
     return complete(exactPayload);
   };
+  // A visible mark that this transport has the boundary in front of it. Read
+  // by `harness/agents/rig.mjs`, which must guarantee "no agent reaches
+  // identity" for every agent it deploys but is handed its `complete` by the
+  // caller. Without a mark the rig can only choose between wrapping blindly —
+  // which would swallow the FIRST leak and so bypass an inner `onBlocked`,
+  // silently defeating `runGuardedModelWork`'s poison flag — and trusting the
+  // caller. The mark lets it wrap only what is genuinely unguarded.
+  Object.defineProperty(guarded, IDENTITY_GUARDED, { value: true });
+  return guarded;
 }

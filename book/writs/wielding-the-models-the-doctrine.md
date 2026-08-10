@@ -18,23 +18,15 @@ aliases:
 > Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
 > *Declared in `knowledge/artifacts.json`.*
 
-> **⚠ RETIRED FRAMING (Edwin, 2026-07-22): the greenfield/brownfield binary is gone.** Where this doc > below frames K3 as "#1 GREENFIELD / weak agentic / WANDERS on brownfield" and reserves brownfield for > Fable/Opus, treat that as **superseded**. Delegation is **vendor-blind**: pick the builder b
+> **DEPRECATED AS SHARED ORCHESTRATION AUTHORITY.** Retain this as historical, > LandLord-local model-selection evidence only. It may inform a hand choice but > may not assign work, choose the shared task authority, or replace > `C:\Users\lleit\.agents\ORCHESTRATION.md` or LandLord's local > `method
 
 ## The source, verbatim
 
-> > **⚠ RETIRED FRAMING (Edwin, 2026-07-22): the greenfield/brownfield binary is gone.** Where this doc
-> > below frames K3 as "#1 GREENFIELD / weak agentic / WANDERS on brownfield" and reserves brownfield for
-> > Fable/Opus, treat that as **superseded**. Delegation is **vendor-blind**: pick the builder by
-> > task-fit, measured capability, stakes, and cost — not by tribe. **Kimi (K3) is a first-class candidate
-> > for substantial brownfield builds**, not a greenfield/UI sidecar (re-derived across the sibling repos;
-> > K3 has built state-critical brownfield code autonomously under review). The recorded observation that
-> > K3 wandered twice stands as a *review-hard caution*, **not** a categorical exclusion. The one durable
-> > carve-out is the **STAKES rule** (vendor-neutral): authorship of the highest-stakes, hardest-to-reverse
-> > core (state-integrity / money / auth) goes to the lowest-surprise hand under the hardest review —
-> > **split by stakes, not vendor**; hard shot designs get an independent Kimi-vs-Opus panel. Opus still
-> > drives, reviews every diff, and ships, and the review gate never lifts for any hand.
-> >
-> > **Portable:** this doc is written to drop into any repository unchanged.
+> > **DEPRECATED AS SHARED ORCHESTRATION AUTHORITY.** Retain this as historical,
+> > LandLord-local model-selection evidence only. It may inform a hand choice but
+> > may not assign work, choose the shared task authority, or replace
+> > `C:\Users\lleit\.agents\ORCHESTRATION.md` or LandLord's local
+> > `method/work-registry.json`. The SPM work hub does not govern this project.
 
 *Verified against `docs/MODEL-DOCTRINE.md`:1 on every lint — no quote, no object.*
 
@@ -88,6 +80,7 @@ aliases:
 - [[docs/CLERK-BRAIN-DOCTRINE.md]]
 - [[docs/K3-PROFILE.md]]
 - [[Kimi K3 — capability profile & how to wield it]]
+- [[method/]]
 - [[The clerk-brain doctrine — what intelligence powers which clerk]]
 
 ---

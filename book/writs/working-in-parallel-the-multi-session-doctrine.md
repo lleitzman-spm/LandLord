@@ -2,7 +2,7 @@
 type: "writ"
 id: "writ:docs/PARALLEL-SESSIONS.md"
 title: "Working in parallel — the multi-session doctrine"
-standing: "settled"
+standing: "retired"
 standing_source: "knowledge/artifacts.json"
 source_path: "docs/PARALLEL-SESSIONS.md"
 source_line: 1
@@ -14,18 +14,20 @@ aliases:
 
 # Working in parallel — the multi-session doctrine
 
-> **STANDING — SETTLED**  
-> Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
+> **STANDING — RETIRED**  
+> Superseded. Kept for history, never cited as current.  
 > *Declared in `knowledge/artifacts.json`.*
 
-*How to run several Claude sessions at once — within a project and across all of them — and accomplish more without stepping on your own work. **Portable:** this doc is written to drop into any repo's `docs/` with a one-line pointer in its `CLAUDE.md` (the way `K3-PROFILE.md` was meant to propagate)
+> **DEPRECATED AS ORCHESTRATION AUTHORITY.** Do not use this document as a > portable, cross-project, or task-priority standard. Shared orchestration lives > only in `C:\Users\lleit\.agents\ORCHESTRATION.md`; LandLord current-work > authority lives only in `method/work-registry.json`. The SPM work h
 
 ## The source, verbatim
 
-> *How to run several Claude sessions at once — within a project and across all of them — and accomplish
-> more without stepping on your own work. **Portable:** this doc is written to drop into any repo's `docs/`
-> with a one-line pointer in its `CLAUDE.md` (the way `K3-PROFILE.md` was meant to propagate). Drafted
-> 2026-07-21 (Edwin's ratified choice: a full coordination doctrine + a control tower).*
+> > **DEPRECATED AS ORCHESTRATION AUTHORITY.** Do not use this document as a
+> > portable, cross-project, or task-priority standard. Shared orchestration lives
+> > only in `C:\Users\lleit\.agents\ORCHESTRATION.md`; LandLord current-work
+> > authority lives only in `method/work-registry.json`. The SPM work hub does not
+> > govern this project. The material below is retained only as historical
+> > LandLord-local lane guidance.
 
 *Verified against `docs/PARALLEL-SESSIONS.md`:1 on every lint — no quote, no object.*
 
@@ -84,6 +86,7 @@ aliases:
 
 - [[CLAUDE.md]]
 - [[docs/PARALLEL-SESSIONS.md]]
+- [[method/]]
 - [[src/domain/economy.ts]]
 
 ---

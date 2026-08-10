@@ -2,7 +2,7 @@
 type: "decision"
 id: "decision:shire-promotion-thresholds-picked"
 title: "A march promotes to a shire when three thresholds all hold"
-standing: "settled"
+standing: "retired"
 standing_source: "knowledge/decisions.json"
 source_path: "docs/WRIT-THE-WAR-TABLE.md"
 source_line: 385
@@ -17,11 +17,11 @@ aliases:
 
 # A march promotes to a shire when three thresholds all hold
 
-> **STANDING — SETTLED**  
-> Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
+> **STANDING — RETIRED**  
+> Superseded. Kept for history, never cited as current.  
 > *Declared in `knowledge/decisions.json`.*
 
-At least 25 doors, at least one knight seated, and no craft standing headless — working fluid numbers, picked to be exercisable now, not because 25 is sacred.
+At least 25 doors, at least one knight seated, and no craft standing headless — working fluid numbers, picked to be exercisable now, not because 25 is sacred. RETIRED 2026-08-07 with the multi-person-firm model: the thresholds it chose lived in src/domain/tenure.ts, now on the orphan branch archive/multi-person-firm. The reasoning is kept because a decision record outlives the code it governed.
 
 ## The source, verbatim
 
@@ -32,12 +32,6 @@ At least 25 doors, at least one knight seated, and no craft standing headless �
 ## Writs that specify it
 
 - [[Writ — the War Table (the front-end direction)]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a writ rather than a decision*
-
-## Facts it depends on
-
-- [[Shire promotion — headless crafts allowed]] — *declared in `knowledge/decisions.json`*
-- [[Shire promotion — minimum doors]] — *declared in `knowledge/decisions.json`*
-- [[Shire promotion — minimum knights]] — *declared in `knowledge/decisions.json`*
 
 ## Entities
 
@@ -53,16 +47,9 @@ At least 25 doors, at least one knight seated, and no craft standing headless �
 
 - [[Writ — the War Table (the front-end direction)]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a writ*
 
-### Facts it depends on
-
-- [[Shire promotion — headless crafts allowed]] — *declared in `knowledge/facts.json`*
-- [[Shire promotion — minimum doors]] — *declared in `knowledge/facts.json`*
-- [[Shire promotion — minimum knights]] — *declared in `knowledge/facts.json`*
-
 ### Entities
 
 - [[Edict (crown edicts, tenure hierarchy)]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a entity*
-- [[Shire / March (a metro's standing)]] — *declared in `knowledge/entities.json`*
 
 ### artifact
 

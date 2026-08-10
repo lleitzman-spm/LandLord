@@ -50,6 +50,7 @@ aliases:
 - [[src/domain/chronicle.ts]] — *this writ names the exported symbol `isFoundingChronicle`; this writ names the exported symbol `normalizeChronicle`*
 - [[src/domain/flows.ts]] — *this writ names the exported symbol `FOUNDING_FLOWS`*
 - [[src/LedgerView.tsx]] — *this writ names the exported symbol `LedgerView`*
+- [[src/operator-core.ts]] — *this writ names the exported symbol `FOUNDING_FLOWS`*
 - [[src/wargame-core.ts]] — *this writ names the exported symbol `normalizeChronicle`*
 
 ## artifact

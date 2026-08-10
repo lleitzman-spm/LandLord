@@ -9,6 +9,10 @@ aliases:
 
 # Open questions
 
+> **Questions and evidence only.** A row here does not create, prioritize, or
+> close work. Any actionable LandLord item must be represented once in
+> `method/work-registry.json`; the SPM work hub does not govern or ingest it.
+
 *Waiting on a ruling. When one is answered, put the answer in its source, recompile, and strike
 the row from here.*
 
@@ -33,18 +37,35 @@ shapes, which the boundary permits crossing. Adopting them is a session's work o
 **Note the shape of this one:** declining to guess is what made the `onFail` widening cost nothing
 when it came. Zero declarations meant zero migrations. See [[learned]].
 
-## Company material has no home
+## ~~Company material has no home~~ — ANSWERED 2026-08-07
 
-The private repository this project forked from was deleted. There is now no private repository in
-the account, so anything that cannot be public has nowhere to live. One correction to the sibling
-boundary document is stranded because of it.
+The ruling: **the living iteration goes private; we build in public.** This repository stays the
+public engine and canon; the running instance bound to real records is private, and that is where
+anything which cannot be public lives.
 
-Until a private repository exists, the answer to "where does this go" is sometimes *nowhere*, and
-the honest move is to say so rather than quietly widen what counts as public.
+What it unblocks, now carried in `docs/HANDOFF.md` under *What needs a human*: the sibling's copy of
+the pact points at a reconciliation document in this repo that **does not exist** — removed when
+this went public, because it carried the seat map — and it can now be restored on the private side.
 
-## `escape.ts` reads as binary to `file`
+*Left standing on purpose:* the ruling names a destination, not a migration. Nothing has moved yet.
 
-`tools/leakcheck.mjs` flags `src/domain/escape.ts` for human review as binary content. It is valid
-UTF-8 and always has been; `file` is defeated by the density of typography in the header comment.
-Harmless, but it will keep flagging until someone thins the comment or the check learns to decode
-before it judges.
+## ~~`escape.ts` reads as binary to `file`~~ — DIAGNOSED WRONG, corrected 2026-08-07
+
+The old entry said the file was valid UTF-8 and that `file` was "defeated by the density of
+typography in the header comment." **That was wrong, and it was wrong twice — [[learned]] carried
+the same mistaken diagnosis.**
+
+`src/domain/escape.ts` contains a **literal NUL byte**, at offset 9312, line 176:
+
+    const id = `${e.caseId}\x00${e.catalogRow}`;
+
+It is a deliberate delimiter — a separator that cannot occur inside a case id, so the dedup map
+cannot collide `"a b" + "c"` with `"a" + "b c"`. It is the only control byte in the file.
+
+So `file` was RIGHT and the scanner is behaving correctly; there is nothing to fix in either. What
+needed fixing was the note. **Two sessions asserted a cause without opening the bytes** — in a
+repository whose own standing rule is *verify claims against the bytes*, about the one file its
+hygiene scanner keeps pointing at.
+
+The live hazard now is the opposite of the one recorded: **do not let an editor "clean" line 176.**
+Retyping it as a space silently reintroduces the collision.

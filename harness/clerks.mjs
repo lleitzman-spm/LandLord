@@ -302,8 +302,14 @@ export function makeIntakeClerk(ctx) {
           actor: `agent:${seat}`,
           note: `Identified as ${leaf.title} — put in motion as a ${tpl.title}.`,
         });
-        events.push(...core.completeStep(tpl, caseId, 0, { at, id, note: 'Report logged from the tenant intake.' }, params));
-        events.push(...core.completeStep(tpl, caseId, 1, { at, id, note: `Identified as ${leaf.title}.` }, params));
+        events.push(...core.completeStep(tpl, caseId, 0, {
+          at, id, actor: `agent:${seat}`, note: 'Report logged from the tenant intake.',
+          log: [...doc.events, ...events],
+        }, params));
+        events.push(...core.completeStep(tpl, caseId, 1, {
+          at, id, actor: `agent:${seat}`, note: `Identified as ${leaf.title}.`,
+          log: [...doc.events, ...events],
+        }, params));
         const trade = params.trade ?? 'the trade';
         const urgency = params.urgency ?? 'routine';
         const gate = spendGateFor(core, doc, tpl, 2, params, estateId);
@@ -728,11 +734,23 @@ export function makePriceClerk(ctx) {
             : `${coin(invoiceCents)} invoice within the ${coin(recon.authorizedCeilingCents)} authorized ceiling, but held for the owner's review.${because}`
           : `${recon.note} Recommend approve & pay.${because}`;
 
+        const verdict = hold ? 'hold-for-owner' : 'clear-to-pay';
         const proposal = core.proposeStep(r.template, r.caseId, r.next.index - 1, `agent:${seat}`, { at, id, note });
         if (!proposal) continue;
+        // THE VERDICT GOES INTO THE RECORD, not only into the console.
+        // `docs/WRIT-THE-GATE.md` finding 3: both branches used to call
+        // proposeStep with identical arguments and differ only in `note`, so an
+        // invoice that overran its authorized ceiling and one comfortably under
+        // it were indistinguishable in the only thing that survives the run. A
+        // reading can now tell them apart without parsing prose.
+        proposal.params = {
+          ...(proposal.params ?? {}),
+          settlement: verdict,
+          invoiceCents: String(invoiceCents),
+          authorizedCeilingCents: String(recon.authorizedCeilingCents),
+        };
         events.push(proposal);
         taken.add(r.caseId);
-        const verdict = hold ? 'hold-for-owner' : 'clear-to-pay';
         records.push(
           `${r.template.title} "${r.subject}" → invoice ${coin(invoiceCents)} vs ${coin(recon.authorizedCeilingCents)} ceiling [${how}] — ${verdict}.`,
         );
@@ -973,6 +991,10 @@ export function makeLeasingClerk(ctx) {
  *  it works on any grammar the setting loaded, which is exactly what "an agent
  *  on every seat" means. Deterministic: the proposal is the template's own step,
  *  no reasoning needed (the doctrine's Tier-0 lane). */
+// The audit integration keeps unattended action dark until the command writer
+// proves case scope, exact-current-step authority, and idempotency end to end.
+export const AUTO_SWEEP_ENABLED = false;
+
 export function makeAdvanceClerk(ctx, seat) {
   const policy = ctx.brainFor(seat, 'advance');
   return {
@@ -997,18 +1019,105 @@ export function makeAdvanceClerk(ctx, seat) {
         )
         .sort((a, b) => (a.openedAt ?? '').localeCompare(b.openedAt ?? '')); // oldest first
 
+      // The book's own claim about which steps need no person. `mode` lives on
+      // the CATALOG ROW, so this map is the lookup `mayRunUnattended` wants.
+      const modeOf = new Map((doc.catalog ?? []).map((row) => [row.key, row.mode]));
+
+      // THE SWEEP RUNS ONLY AGAINST AN AUDITED BOOK.
+      //
+      // `mode: 'auto'` is a claim, and the claim is only as good as the hand that
+      // wrote it. The FOUNDING books were read step by step before the sweep was
+      // switched on. The grand muster's loaded library was not: `deployGrand`
+      // swaps in a ~160-step book whose `mode` was authored to mean "a PM shop
+      // could in principle automate this", which is NOT a grant of authority to
+      // assert the work happened. Left ungated, this clerk was measured
+      // completing — unattended, on that book — a statutory deposit disposition
+      // and refund, a late-fee assessment, a rent posting, and a SHOWING, which
+      // asserts a physical event occurred that nobody observed.
+      //
+      // `awaitsOutside` cannot catch those: none of them carries a condition, a
+      // repeat or a window. Nothing structural distinguishes them. The only
+      // honest guard is provenance — so the sweep is refused on any book this
+      // repository has not read, and such a book falls back to proposing, which
+      // is exactly the old behaviour and safe by construction.
+      //
+      // To widen it: audit the loaded book's `auto` rows one at a time, the way
+      // the founding thirteen were, and say so here. Do not relax the check.
+      const audited =
+        typeof core.flowsAtFounding === 'function' &&
+        typeof core.catalogAtFounding === 'function' &&
+        core.flowsAtFounding(doc.flows) &&
+        core.catalogAtFounding(doc.catalog);
+
       for (let i = 0; i < cap && i < targets.length; i++) {
         const r = targets[i];
         const at = now;
         const id = () => randomUUID();
+        const params = core.paramsOf(doc.events, r.caseId);
+
+        // ── The auto sweep ────────────────────────────────────────────────
+        // If the book says this step needs no person, DO IT — do not park it on
+        // the Regent's desk. Proposing an `auto` step was the fleet's own worst
+        // habit: `proposed` counts as a human touch, so every one of them booked
+        // an UNPLANNED ESCAPE against the one number the product is judged by,
+        // while adding a click nobody had asked for. A clock over a fleet that
+        // only proposes piles up; it does not progress.
+        //
+        // The sweep runs on while the NEXT step is also unattendable and also
+        // this seat's — consecutive auto runs exist (an offer drafted then sent;
+        // a report filed then the door opened) and stopping between them would
+        // leave a cascade parked mid-stride for no reason. It stops at a seat
+        // boundary by design: a clerk works its own desk, and the neighbouring
+        // desk's clerk takes it from there.
+        if (AUTO_SWEEP_ENABLED && audited && core.mayRunUnattended(r.next.step, modeOf)) {
+          let index = r.next.index - 1;
+          const ran = [];
+          while (index < r.template.steps.length) {
+            const s = r.template.steps[index];
+            if (s.holder !== seat || !core.mayRunUnattended(s, modeOf)) break;
+            // STAMPED. An unattended completion says whose hand it was, in the
+            // same `agent:<seat>` grammar a proposal uses — otherwise the sweep
+            // reads as the operator's own work and flatters the escape rate.
+            const done = core.completeStep(
+              r.template,
+              r.caseId,
+              index,
+              { at, id, actor: `agent:${seat}`, log: [...doc.events, ...events] },
+              params,
+            );
+            if (!done.length) break;
+            events.push(...done);
+            // Name the STEP. All eight vendor-dispatch steps share one catalog
+            // row, so a line built from the row title alone repeats the same
+            // words for every step swept and says nothing about what ran.
+            const title = core.titleOf(doc.catalog, s.catalogRow);
+            ran.push(title && title !== s.key ? `${s.key} (${title})` : s.key);
+            index += 1;
+          }
+          if (ran.length) {
+            taken.add(r.caseId);
+            records.push(
+              `${r.template.title} "${r.subject}" → ran ${ran.length} step(s) unattended: ${ran.join(' → ')}.`,
+            );
+            continue;
+          }
+        }
+
+        // ── Otherwise: propose, and stop ──────────────────────────────────
+        // A judgment, or a step waiting on something outside the machine's
+        // sight. Either way the Regent's word is next, and no clerk crosses the
+        // ratchet.
         const step = r.next.step;
         const what = core.titleOf(doc.catalog, step.catalogRow) || step.key;
-        const params = core.paramsOf(doc.events, r.caseId);
         const gate = spendGateFor(core, doc, r.template, r.next.index - 1, params, estateOf(core, doc, r.caseId));
+        // Say WHICH of the two reasons parked it — a judgment the book means to
+        // stop at reads very differently from an `auto` step held back because it
+        // waits on an answer nobody here can give.
+        const why = core.awaitsOutside(step) ? ' — it waits on an answer from outside' : '';
         const proposal = core.proposeStep(r.template, r.caseId, r.next.index - 1, `agent:${seat}`, {
           at,
           id,
-          note: `Propose to advance ${what} on the ${step.board} board — awaiting the Regent's word.${gate ? ` ${gate.note}` : ''}`,
+          note: `Propose to advance ${what} on the ${step.board} board — awaiting the Regent's word${why}.${gate ? ` ${gate.note}` : ''}`,
         });
         if (!proposal) continue;
         events.push(proposal);

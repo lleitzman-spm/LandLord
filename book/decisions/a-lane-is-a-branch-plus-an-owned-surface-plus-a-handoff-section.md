@@ -20,7 +20,7 @@ aliases:
 > Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
 > *Declared in `knowledge/decisions.json`.*
 
-A lane edits only its own surface; before starting or shipping, git fetch and check the lanes table so a landed lane's work is adopted rather than overwritten.
+LandLord-local collision guidance only: a lane edits its assigned surface and reports to the integration owner. It cannot replace shared ORCHESTRATION.md or method/work-registry.json task priority.
 
 ## The source, verbatim
 
@@ -45,6 +45,12 @@ A lane edits only its own surface; before starting or shipping, git fetch and ch
 ### artifact
 
 - [[docs/PARALLEL-SESSIONS.md]] — *the same file `docs/PARALLEL-SESSIONS.md`, seen as a decision rather than a artifact*
+
+## Sources this page cites
+
+*Files this page names by path. Again: a citation of the file, nothing more.*
+
+- [[method/]]
 
 ---
 

@@ -94,7 +94,6 @@ aliases:
 - [[public/]]
 - [[README.md]]
 - [[src/]]
-- [[src/realm/deriveLayout.ts]]
 - [[src/realm/scene.ts]]
 - [[test/]]
 - [[The Kingdom — Canon]]

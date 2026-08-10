@@ -30,6 +30,8 @@ aliases:
 ## Outline
 
 - Design laws
+- The operating boundary and the three provenances
+- The knighthood — the agent layer
 - The two lines
 - Pledges (the kinds of people)
 - Territories
@@ -73,11 +75,16 @@ aliases:
 - [[Presence in the book is the only truth]] — *this writ names "Presence in the book is the only truth" literally*
 - [[Raw data in, structure out]] — *this writ names "Raw data in, structure out" literally*
 - [[The bridge is tribute]] — *this writ names "The bridge is tribute" literally*
+- [[The graduation path]] — *this writ names "The graduation path" literally*
 - [[The land itself is invented]] — *this writ names "The land itself is invented" literally*
 - [[The line of rule]] — *this writ names "The line of rule" literally*
 - [[The line of trade]] — *this writ names "The line of trade" literally*
 - [[The Marches are the border lands]] — *this writ names "The Marches are the border lands" literally*
 - [[The system hunts delegation debt]] — *this writ names "The system hunts delegation debt" literally*
+
+## Decisions that touched it
+
+- [[Human minutes per door per year is the north star]] — *this writ names "Human minutes per door per year is the north star" literally*
 
 ## Entities
 
@@ -125,14 +132,17 @@ aliases:
 
 *These name this FILE by its path. That is a citation of the source, not a claim about any one idea inside it — do not read a path citation as agreement, dependence or implementation.*
 
+- [[Handoff — where things stand]]
 - [[The PM Task-and-Process Library (reference)]]
 - [[Writ — the economy pillar, re-expressed as chronicle readings]]
 - [[Writ — the first War Game (the proving ground)]]
 - [[Writ — the flow engine (the operator's spine)]]
+- [[Writ — The Knighthood: one seat, a Regent that is an agent, and the fief as a desk]]
 - [[Writ — the Land: pods, knights, owners, and guilds (the realm remodeled)]]
 - [[Writ — the operator's hands (swing two, part one)]]
 - [[Writ — The Realm Map (the illuminated map, come alive)]]
 - [[Writ — the task-language, the consequences, and the Regent's seat]]
+- [[Writ — the War Table (the front-end direction)]]
 - [[Writ of the Great Book — the living wiki, and the law that keeps it honest]]
 
 ## Sources this page cites
@@ -148,6 +158,7 @@ aliases:
 - [[docs/WRIT-TASK-LANGUAGE.md]]
 - [[docs/WRIT-THE-BROKERAGE.md]]
 - [[Handoff — where things stand]]
+- [[method/]]
 - [[src/domain/catalog.ts]]
 - [[src/domain/economy.ts]]
 - [[src/domain/flows.ts]]
@@ -160,6 +171,8 @@ aliases:
 - [[wrangler.jsonc]]
 - [[Writ — The Brokerage: offices, guilds, fiefs, and the line of answer]]
 - [[Writ — the economy pillar, re-expressed as chronicle readings]]
+- [[Writ — The Gate: the money law is written and nothing enforces it]]
+- [[Writ — The Knighthood: one seat, a Regent that is an agent, and the fief as a desk]]
 - [[Writ — the task-language, the consequences, and the Regent's seat]]
 
 ---

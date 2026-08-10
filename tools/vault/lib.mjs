@@ -46,6 +46,28 @@ export const LABEL_MIN = 10;
 /** An exported symbol shorter than this is not hunted in prose (`id`, `at`, `now`). */
 export const SYMBOL_MIN = 6;
 
+/** Repository identities are serialized once, at their ingestion boundary, with `/`.
+ *  `node:path` quite properly returns native separators; the Book is a cross-platform
+ *  artifact, so letting that native spelling escape would mint a second identity for
+ *  the same file and make Windows module imports look like non-module assets. */
+export function normalizeRepoPath(value) {
+  return String(value == null ? '' : value)
+    .replace(/\\/g, '/')
+    .replace(/^\.\/+/, '')
+    .replace(/\/{2,}/g, '/')
+    .replace(/\/+$/, '');
+}
+
+const PATH_ID_TYPES = new Set(['artifact', 'module', 'surface', 'writ']);
+
+/** Normalize only ids whose suffix is a repository path. Domain ids remain byte-for-byte. */
+export function normalizeGraphId(value) {
+  const id = String(value == null ? '' : value);
+  const colon = id.indexOf(':');
+  if (colon < 0 || !PATH_ID_TYPES.has(id.slice(0, colon))) return id;
+  return `${id.slice(0, colon + 1)}${normalizeRepoPath(id.slice(colon + 1))}`;
+}
+
 /** A symbol is only hunted in prose when its SHAPE marks it as an identifier rather than
  *  an ordinary word of the kingdom's vocabulary: an inner capital (`foldIntoFief`,
  *  `readFlow`), an underscore (`FOUNDING_FLOWS`), or sheer length. Without this, `census`
@@ -145,7 +167,7 @@ export function walkFiles(dir, { ext = null } = {}) {
         if (!SKIP_DIRS.has(e.name)) stack.push(abs);
       } else if (e.isFile()) {
         if (ext && !ext.some((x) => e.name.endsWith(x))) continue;
-        out.push(path.relative(REPO, abs));
+        out.push(normalizeRepoPath(path.relative(REPO, abs)));
       }
     }
   }
@@ -227,18 +249,18 @@ function lineOf(src, index) {
  *  exists, and a reader can judge it. */
 export function makeNode(fields) {
   return {
-    id: fields.id,
+    id: normalizeGraphId(fields.id),
     type: fields.type,
     label: fields.label ?? fields.id,
     standing: STANDINGS.includes(fields.standing) ? fields.standing : 'proposed',
     standing_source: fields.standing_source ?? 'defaulted',
     summary: fields.summary ?? '',
     body: fields.body ?? '',
-    source_path: fields.source_path ?? '',
+    source_path: normalizeRepoPath(fields.source_path ?? ''),
     source_line: fields.source_line ?? null,
     quote: fields.quote ?? '',
     tags: fields.tags ?? [],
-    edges: fields.edges ?? [], // [{ to, why }]
+    edges: (fields.edges ?? []).map((edge) => ({ ...edge, to: normalizeGraphId(edge.to) })), // [{ to, why }]
     extra: fields.extra ?? {}, // type-specific detail, rendered on the page
     origin: fields.origin ?? 'derived', // 'mined' (a knowledge file) | 'derived' (the tree)
   };
@@ -249,6 +271,7 @@ export function makeNode(fields) {
  *  laws mined out of it — those citations are collapsed onto the file's own page and
  *  rendered apart, so they never drown the roads that carry meaning. */
 function addEdge(node, to, why, kind = 'idea') {
+  to = normalizeGraphId(to);
   if (!to || to === node.id) return;
   if (node.edges.some((e) => e.to === to && e.why === why)) return;
   node.edges.push({ to, why, kind });
@@ -323,7 +346,7 @@ export function artifactDeclarations(knowledge) {
     let p = r.path || r.file || r.root || r.source_path || '';
     if (!p && typeof r.id === 'string' && r.id.includes(':')) p = r.id.slice(r.id.indexOf(':') + 1);
     if (!p) continue;
-    p = String(p).replace(/^\.\//, '').replace(/\/+$/, '');
+    p = normalizeRepoPath(p);
     byPath.set(p, { kind: r.kind || r.type || '', standing: r.standing || '', raw: r });
   }
   return byPath;
@@ -423,8 +446,10 @@ function importSpecifiers(src) {
 
 /** Resolve a relative specifier to a real file in the tree, or null. Only real files
  *  become edges — an unresolved specifier (a package, a virtual module) is dropped. */
-function resolveImport(fromRel, spec) {
-  if (!spec.startsWith('.')) return null;
+export function resolveImport(fromRel, spec) {
+  fromRel = normalizeRepoPath(fromRel);
+  if (!String(spec).startsWith('.') && !String(spec).startsWith('.\\')) return null;
+  spec = normalizeRepoPath(spec);
   const base = path.resolve(REPO, path.dirname(fromRel), spec);
   const tries = [base];
   for (const e of CODE_EXT) tries.push(base + e);
@@ -432,7 +457,7 @@ function resolveImport(fromRel, spec) {
   if (/\.jsx?$/.test(base)) for (const e of CODE_EXT) tries.push(base.replace(/\.jsx?$/, e));
   for (const t of tries) {
     try {
-      if (fs.statSync(t).isFile()) return path.relative(REPO, t);
+      if (fs.statSync(t).isFile()) return normalizeRepoPath(path.relative(REPO, t));
     } catch {
       /* keep trying */
     }
@@ -443,7 +468,8 @@ function resolveImport(fromRel, spec) {
 /** A file the tree can read, turned into a page. `adopted` marks a file OUTSIDE `src/`
  *  that only exists here because a hand-mined record named it — a law that leans on a
  *  workflow file, say. Adopting it is better than a road to nowhere. */
-function moduleNodeFor(rel, declByPath, { adopted = false } = {}) {
+export function moduleNodeFor(rel, declByPath, { adopted = false } = {}) {
+  rel = normalizeRepoPath(rel);
   const abs = path.join(REPO, rel);
   let stat;
   try {

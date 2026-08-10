@@ -20,7 +20,7 @@ aliases:
 > Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
 > *Declared in `knowledge/artifacts.json`.*
 
-Guidance for an AI agent working in this repository — the rule that overrides everything, the conventions, and the A/E/P check.
+LandLord-local repository guidance — safety, conventions, and the A/E/P check — subordinate to shared ORCHESTRATION.md and project-local task authority.
 
 ## The source, verbatim
 

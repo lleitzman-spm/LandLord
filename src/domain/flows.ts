@@ -129,6 +129,9 @@ export interface FlowStep {
    *  loaded ontology by key (docs/KINGDOM.md, "the catalog is the event
    *  taxonomy"). */
   catalogRow: string;
+  /** A step may narrow the catalog row's general execution mode. This is only
+   *  descriptive input to the authority gate; it is never an execution grant. */
+  mode?: 'auto' | 'human';
   holder: HolderRef;
   /** The board this step renders on — a phase of the cascade ("Move-Out",
    *  "Leasing"). Boards are config, not code. */
@@ -166,6 +169,9 @@ export interface FlowStep {
 
 export interface FlowTemplate {
   key: string;
+  /** Immutable identity of this authored shape. External commands must name it
+   *  so a case cannot be advanced against a silently changed template. */
+  version: string;
   title: string;
   /** The human trigger line ("a tenant gives notice"). Swing one triggers by
    *  a hand on the Ledger; the trigger is config so the clerks can fire it. */
@@ -280,6 +286,7 @@ function withTiming(book: UntimedTemplate[]): FlowBook {
 export const FOUNDING_FLOWS: FlowBook = withTiming(([
   {
     key: 'move-out-relay',
+    version: 'founding-1',
     title: 'Move-out → re-list relay',
     trigger: 'A tenant gives notice',
     steps: [
@@ -382,6 +389,7 @@ export const FOUNDING_FLOWS: FlowBook = withTiming(([
   },
   {
     key: 'vendor-dispatch',
+    version: 'founding-1',
     title: 'Vendor dispatch',
     trigger: 'A work order is reported',
     steps: [
@@ -450,6 +458,7 @@ export const FOUNDING_FLOWS: FlowBook = withTiming(([
   // vendor-dispatch pattern. {violation} / {days} render from TOKEN_DEFAULTS.
   {
     key: 'violation-notice',
+    version: 'founding-1',
     title: 'Violation / notice',
     trigger: 'A violation or notice arrives',
     steps: [
@@ -512,6 +521,7 @@ export const FOUNDING_FLOWS: FlowBook = withTiming(([
   // window → record; unsigned rolls to month-to-month with the premium.
   {
     key: 'lease-renewal',
+    version: 'founding-1',
     title: 'Lease renewal',
     trigger: 'A lease nears its term (T-90)',
     steps: [
@@ -548,8 +558,24 @@ export const FOUNDING_FLOWS: FlowBook = withTiming(([
         catalogRow: 'renewal.owner-window',
         holder: 'lp-queue',
         board: 'Owner',
-        condition: 'silence is authorization',
-        note: "The owner's window — silence past it stands as consent.",
+        // STRUCK 2026-08-07: this read `condition: 'silence is authorization'`
+        // and the note said silence past the window "stands as consent"
+        // (docs/WRIT-THE-GATE.md). Two reasons it had to go, and the second is
+        // the one that made it urgent.
+        //
+        // First, `condition` is FREE TEXT and is never evaluated anywhere — so a
+        // condition declaring a dangerous default is pure hazard: it teaches
+        // every reader and every clerk the wrong rule, with no mechanism that
+        // could ever make it true or catch it being wrong.
+        //
+        // Second, this step's catalog row was `mode: 'auto'`. The obvious next
+        // improvement — let the clerks complete the steps the book says need no
+        // person — would therefore have AUTHORIZED SPENDING AN OWNER'S MONEY ON
+        // THEIR SILENCE, on a clock, with no human in it. The row is now
+        // `human`: an owner's window that closes unanswered is an absence, and
+        // an absence is a judgment, not a yes.
+        condition: 'until the owner answers',
+        note: "The owner's window — an unanswered window is an absence, never a consent.",
       },
       {
         key: 'tenant-response',
@@ -589,6 +615,7 @@ export const FOUNDING_FLOWS: FlowBook = withTiming(([
   // first owner report → go live (list & syndicate a vacant door).
   {
     key: 'owner-onboarding',
+    version: 'founding-1',
     title: 'Owner onboarding',
     trigger: "A new owner's property is won",
     steps: [
@@ -679,6 +706,62 @@ function stepWaits(s: FlowStep): boolean {
     s.repeatEveryDays != null ||
     s.condition != null
   );
+}
+
+/** A step whose progress depends on something OUTSIDE the machine's sight — an
+ *  answer from someone who does not work here, a condition on the world, or a
+ *  chase that repeats until somebody acts. **No clerk may complete one of these
+ *  unattended, whatever its mode says**, because the clerk cannot observe the
+ *  thing it would be asserting to be true.
+ *
+ *  DELIBERATELY NOT `stepWaits`, and the difference is the whole point.
+ *  `stepWaits` asks *does this step park?* and answers yes for an `slaDays` — but
+ *  **an SLA is a DEADLINE, not a dependency.** A step due in two days is exactly
+ *  a step a machine should do NOW. Reusing `stepWaits` as this guard was tried
+ *  and measured: it left **1 of 13** `auto` steps runnable instead of 8, so the
+ *  guard would have silently cancelled the feature it was meant to protect.
+ *
+ *  The calendar window is in this list for a DIFFERENT and TEMPORARY reason:
+ *  `onOrAfterDayOfMonth`/`beforeDayOfMonth` are never compared to a date
+ *  anywhere (`docs/WRIT-THE-GATE.md`, finding 4), so the month-start freeze they
+ *  express is not enforced by anything. Until it bites, a clerk must not run
+ *  through one — it would be honouring a window nothing checks. Revisit here
+ *  when that finding is fixed. */
+export function awaitsOutside(s: FlowStep): boolean {
+  return (
+    s.condition != null ||
+    s.repeatEveryDays != null ||
+    s.edge.onOrAfterDayOfMonth != null ||
+    s.edge.beforeDayOfMonth != null
+  );
+}
+
+/** May a clerk complete this step on its own, with no human in the loop?
+ *
+ *  Two conditions, both required: the book must SAY so (`mode: 'auto'` on the
+ *  step's catalog row — the machine's own claim that no person is needed), and
+ *  the step must not depend on anything the machine cannot see (`awaitsOutside`).
+ *
+ *  Mode lives on the catalog ROW rather than the step, so steps sharing a row
+ *  share one judgment — all eight vendor-dispatch steps are one row. That is a
+ *  real limit on how fine this can be, and `escape.ts` reports the same limit on
+ *  its own reading. The mode lookup is passed in as a map rather than imported,
+ *  because this module deliberately does not depend on the catalog;
+ *  `readFailureRoutes` already takes it the same way. */
+export function mayRunUnattended(
+  s: FlowStep,
+  modeOf: Map<string, 'auto' | 'human' | undefined>,
+): boolean {
+  return modeInForce(s, modeOf) === 'auto' && !awaitsOutside(s);
+}
+
+/** The step's own verdict wins when present; existing books continue to inherit
+ *  their catalog row. Callers must still enforce actor and case-scoped grants. */
+export function modeInForce(
+  s: { mode?: 'auto' | 'human'; catalogRow: string },
+  modeOf: Map<string, 'auto' | 'human' | undefined>,
+): 'auto' | 'human' | undefined {
+  return s.mode ?? modeOf.get(s.catalogRow);
 }
 
 /** Human-legible timing for the emitted note, folded from the edge. */
@@ -845,6 +928,24 @@ export function fullParams(tpl: FlowTemplate, leaf?: FlowParams): FlowParams {
 // `overridden` below is the answer to it. The template is the plan and the log
 // is the truth: advancing hands the next TEMPLATE step, never a pre-emitted
 // future one.
+//
+// AMENDED 2026-08-07. "A human act carries no actor" was a sound convention
+// while `done` could only BE a human act — absence of an actor meant the
+// operator, because nothing else could reach the writer. The sweep ended that:
+// an advance clerk now completes a step the book declared `auto`, through this
+// same `completeStep`, and an unstamped `done` made the machine's work
+// indistinguishable from the operator's own hand.
+//
+// That is not a cosmetic gap. The escape rate is the governing number of this
+// product, and it is READ off the log; a fold that cannot tell a swept step from
+// a worked one cannot measure the thing the kingdom exists to drive down, and
+// would have flattered it in exactly the direction nobody would question. It
+// also breaks the audit ledger's plainest promise — that you can ask who did a
+// thing and get an answer.
+//
+// So `actor` is now stampable on any answering act, and absence keeps its
+// meaning: no actor is the operator. The clerks stamp `agent:<seat>`, the same
+// grammar `proposeStep` has always used, so one reading recognises both.
 
 /** One appended event answering the step in hand — the shared spine of the
  *  helpers below. Carries the step's catalog row and holder so the fold reads
@@ -854,11 +955,11 @@ function answerStep(
   caseId: string,
   index: number,
   kind: EventKind,
-  opts: { at: string; id: () => string; note?: string },
+  opts: { at: string; id: () => string; note?: string; actor?: string },
 ): KingdomEvent {
   const s = tpl.steps[index];
   const line = opts.note?.trim() ? ` — ${opts.note.trim()}` : '';
-  return {
+  const ev: KingdomEvent = {
     id: opts.id(),
     at: opts.at,
     caseId,
@@ -867,6 +968,11 @@ function answerStep(
     holder: s.holder,
     note: `Step ${index + 1}/${tpl.steps.length} · ${kind}${line}`,
   };
+  // Set only when named. An absent `actor` still means the operator's own hand,
+  // so every event written before this existed keeps the meaning it was written
+  // with — and a stamped empty string would be a third state nobody reads.
+  if (opts.actor) ev.actor = opts.actor;
+  return ev;
 }
 
 /** An operator agent's proposal on the step in hand (swing four): the clerk did
@@ -895,14 +1001,26 @@ export function proposeStep(
  *  With no next step the cascade is finished: only the `done` returns, which
  *  folds the case closed. Callers pass the index of the step in hand
  *  (`reading.next`); an out-of-range index is no act at all. */
+function refusesCompletion(
+  tpl: FlowTemplate,
+  caseId: string,
+  index: number,
+  opts: { at: string; log?: KingdomEvent[] },
+): boolean {
+  if (index < 0 || index >= tpl.steps.length) return true;
+  if (!opts.log) return false;
+  const next = readFlow(tpl, opts.log, caseId, opts.at)?.next;
+  return !next || next.index - 1 !== index;
+}
+
 export function completeStep(
   tpl: FlowTemplate,
   caseId: string,
   index: number,
-  opts: { at: string; id: () => string; note?: string },
+  opts: { at: string; id: () => string; note?: string; actor?: string; log?: KingdomEvent[] },
   params?: FlowParams,
 ): KingdomEvent[] {
-  if (index < 0 || index >= tpl.steps.length) return [];
+  if (refusesCompletion(tpl, caseId, index, opts)) return [];
   const events = [answerStep(tpl, caseId, index, 'done', opts)];
   if (index + 1 < tpl.steps.length)
     events.push(handStep(tpl, caseId, index + 1, opts, params));
@@ -913,14 +1031,52 @@ export function completeStep(
  *  `approved`, then the next template step handed. (An approved step has
  *  proceeded; the flow does not sit twice on one step.) Ratifying the LAST step
  *  also CLOSES the case — see `closeIfLast`. */
+/** THE RATIFICATION GUARD — the kingdom's first RUNTIME refusal.
+ *
+ *  Until 2026-08-07 the only thing standing between a script and a ratification
+ *  was `LedgerView.tsx`'s `canRatify` — **a JSX render condition**
+ *  (`docs/WRIT-THE-GATE.md`, finding 5). It hides a button. `approveStep` itself
+ *  validated array bounds and agreed to anything else it was asked: a replay, a
+ *  second click, an agent, or any future route reached the writer directly and
+ *  the writer said yes. A guard in a view is not a guard; it is a guard's
+ *  costume.
+ *
+ *  This refuses where the event is MINTED, so a button and a script are governed
+ *  by one rule, and it FAILS CLOSED — an unreadable case, an out-of-range step,
+ *  or a step in any state but "waiting for a human's word" yields no events at
+ *  all. The posture is inherited deliberately from `contextGuard.ts`, which
+ *  throws rather than redacting on the reasoning that a clerk reasoning on
+ *  silently-altered evidence is worse than a clerk that stops.
+ *
+ *  It reuses `readFlow` rather than re-deriving which event belongs to which
+ *  step. That placement rule (`Step n/N`, with the legacy holder fallback) has
+ *  already been got wrong once, and a second copy of it is a second chance to
+ *  get it wrong differently.
+ *
+ *  Returning `[]` is the refusal, and every caller already handles it: the
+ *  store's `handFlow` returns early on an empty batch, so nothing is appended
+ *  and nothing is written. */
+function refusesRatification(
+  tpl: FlowTemplate,
+  caseId: string,
+  index: number,
+  opts: { at: string; log: KingdomEvent[] },
+): boolean {
+  if (index < 0 || index >= tpl.steps.length) return true;
+  // `now` only governs breach and age here, never `kind` — the ratification
+  // instant is the honest clock to fold against.
+  const kind = readFlow(tpl, opts.log, caseId, opts.at)?.steps[index]?.kind;
+  return !(kind === 'awaiting' || kind === 'proposed');
+}
+
 export function approveStep(
   tpl: FlowTemplate,
   caseId: string,
   index: number,
-  opts: { at: string; id: () => string; note?: string },
+  opts: { at: string; id: () => string; note?: string; log: KingdomEvent[] },
   params?: FlowParams,
 ): KingdomEvent[] {
-  if (index < 0 || index >= tpl.steps.length) return [];
+  if (refusesRatification(tpl, caseId, index, opts)) return [];
   const events = [answerStep(tpl, caseId, index, 'approved', opts)];
   if (index + 1 < tpl.steps.length) events.push(handStep(tpl, caseId, index + 1, opts, params));
   else events.push(...closeIfLast(tpl, caseId, index, opts));
@@ -961,10 +1117,13 @@ export function overrideStep(
   tpl: FlowTemplate,
   caseId: string,
   index: number,
-  opts: { at: string; id: () => string; note?: string },
+  opts: { at: string; id: () => string; note?: string; log: KingdomEvent[] },
   params?: FlowParams,
 ): KingdomEvent[] {
-  if (index < 0 || index >= tpl.steps.length) return [];
+  // The same runtime refusal as `approveStep`. An override is the human
+  // DIVERGING from the proposal, which is still a ratification and still the one
+  // act no agent may take — so it cannot be the loose door beside the locked one.
+  if (refusesRatification(tpl, caseId, index, opts)) return [];
   const events = [answerStep(tpl, caseId, index, 'overridden', opts)];
   if (index + 1 < tpl.steps.length) events.push(handStep(tpl, caseId, index + 1, opts, params));
   else events.push(...closeIfLast(tpl, caseId, index, opts));

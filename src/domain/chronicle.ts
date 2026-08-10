@@ -90,6 +90,17 @@ export const FOUNDING_CHRONICLE: Chronicle = {
   wargame: null,
 };
 
+export const LEGACY_FLOW_VERSION = 'legacy-unversioned';
+
+function normalizeFlows(flows: FlowBook | undefined): FlowBook {
+  return (flows ?? FOUNDING_FLOWS).map((flow) => ({
+    ...flow,
+    version: typeof flow.version === 'string' && flow.version.length > 0
+      ? flow.version
+      : LEGACY_FLOW_VERSION,
+  }));
+}
+
 /** Tolerant parse: missing books — and missing shelves within a book —
  *  adopt their founding state. This is the migration that moves census
  *  records from code into the chronicle, one shelf at a time as features
@@ -123,7 +134,7 @@ export function normalizeChronicle(raw: unknown): Chronicle {
     catalog: c.catalog ?? FOUNDING_CATALOG,
     // A chronicle with no flows shelf adopts the founding templates — the same
     // shelf-by-shelf migration; a shelf present, even empty, is the truth.
-    flows: c.flows ?? FOUNDING_FLOWS,
+    flows: normalizeFlows(c.flows),
     // The economy book adopts the founding working-fluid chart when absent (the
     // catalog/flows migration pattern); the money stream adopts empty. The raw
     // record is carried as-is — UNPATCHED — so `economy` always names the

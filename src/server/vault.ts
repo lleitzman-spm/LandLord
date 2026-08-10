@@ -130,6 +130,52 @@ export async function vaultCasWrite(
 // what the client's own merge would do, and is the same answer the clerks
 // already reasoned. So a conflict means re-read and re-append, never re-reason
 // and never overwrite the writer that got there first.
+//
+// AMENDED 2026-08-07. The paragraph above was true when a clerk could only ever
+// PROPOSE. It stopped being true the day the sweep landed: an advance clerk now
+// COMPLETES a step the book declared `auto`, so a fleet batch can carry `done`.
+//
+// A proposal is genuinely order-free — it parks on a human either way, and an
+// extra one is noise a human resolves. A completion is not. It was decided
+// against the document as it stood a minute ago: that the step was still open,
+// still `auto`, still the one in hand. Replaying it onto a document that moved
+// asserts all three again without checking any of them. The concrete loss: a
+// human ratifies that very step from the live board while the clerks reason,
+// the rev moves, and the replay appends a second completion for a step already
+// settled — plus completions for the steps behind it that were swept as a run
+// and were never evaluated against the new state at all.
+//
+// Splitting the batch is worse than refusing it. The sweep completes CONSECUTIVE
+// steps, so keeping some and dropping others leaves the cascade half-advanced —
+// silent corruption in place of a clean failure. So an advancing batch does not
+// replay. It loses its minute and says so, which is the cost the kingdom now
+// takes over a write it cannot vouch for (`docs/WRIT-THE-GATE.md`: an invariant
+// refuses; surface area merely hasn't been reached yet).
+//
+// The common path is untouched. Attempt one always writes onto the base the job
+// read, with no replay in it — only a genuine concurrent write reaches this.
+
+/** The kinds that move a case FORWARD on their own, rather than parking it on a
+ *  human. A batch carrying one of these cannot be replayed onto a document it
+ *  was not reasoned against. `approved`/`overridden` can never appear in a fleet
+ *  batch — no agent may emit them (the propose-only ratchet) — but they are
+ *  named here so the guard is a property of the BATCH and not of one caller. */
+export const ADVANCING_KINDS: ReadonlySet<string> = new Set([
+  'done',
+  'failed',
+  'approved',
+  'overridden',
+]);
+
+/** Whether this batch may be replayed onto a document that moved under it.
+ *  Unknown shapes count as advancing: a batch this module cannot read is one it
+ *  cannot vouch for, and the safe answer to that is no. */
+export function replaySafe(events: unknown[]): boolean {
+  return events.every((e) => {
+    const kind = (e as { kind?: unknown } | null)?.kind;
+    return typeof kind === 'string' && !ADVANCING_KINDS.has(kind);
+  });
+}
 
 export interface AppendDoc {
   events?: unknown[];
@@ -139,7 +185,11 @@ export interface AppendDoc {
 /** Commit `events` onto the document, replaying onto a fresh read whenever a
  *  concurrent writer moves the rev. `read` returns the document as it stands
  *  now (null ⇒ unreadable); `write` is the compare-and-set. Pure of transport:
- *  the Worker and the dev server both hand it their own two doors. */
+ *  the Worker and the dev server both hand it their own two doors.
+ *
+ *  A batch that ADVANCES a case (see `replaySafe`) is never replayed — on the
+ *  first conflict it returns 'conflict' rather than reassert a decision made
+ *  against a document that has since moved. */
 export async function commitAppend({
   base,
   events,
@@ -154,9 +204,13 @@ export async function commitAppend({
   write: (next: AppendDoc, baseRev: number) => Promise<CasResult>;
   attempts?: number;
 }): Promise<CasResult> {
+  const mayReplay = replaySafe(events);
   for (let attempt = 0; attempt < attempts; attempt++) {
     let doc = base;
     if (attempt > 0) {
+      // The refusal. An advancing batch was reasoned against `base` and holds
+      // no claim on anything else, so it does not get a second document.
+      if (!mayReplay) return 'conflict';
       const fresh = await read();
       if (fresh === null) return 'error';
       doc = fresh;

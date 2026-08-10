@@ -34,11 +34,11 @@ Decisions that are genuinely open, written down rather than settled quietly in a
 
 ## Decisions that touched it
 
+- [[A single-tenant deployment carries one trust-accounting jurisdiction]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a decision rather than a artifact*
 - [[Fee terms are currently one shape and probably need to be many]] — *declared in `knowledge/artifacts.json`; the same file `docs/OPEN-QUESTIONS.md`, seen as a decision rather than a artifact*
-- [[Whether a deployment ever spans two trust-accounting jurisdictions is open]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a decision rather than a artifact*
+- [[LandLord optimises first for a private single-tenant operating system]] — *declared in `knowledge/artifacts.json`; the same file `docs/OPEN-QUESTIONS.md`, seen as a decision rather than a artifact*
 - [[Whether an unclassified spend estimate should default at the cap is open]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a decision rather than a artifact*
 - [[Whether artisan should be a pledge or a relationship is open]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a decision rather than a artifact*
-- [[Whether LandLord is single-tenant or multi-tenant is genuinely open]] — *declared in `knowledge/artifacts.json`; the same file `docs/OPEN-QUESTIONS.md`, seen as a decision rather than a artifact*
 
 ## Backlinks
 
@@ -48,11 +48,11 @@ Decisions that are genuinely open, written down rather than settled quietly in a
 
 ### Decisions that touched it
 
+- [[A single-tenant deployment carries one trust-accounting jurisdiction]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a artifact rather than a decision*
 - [[Fee terms are currently one shape and probably need to be many]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a artifact rather than a decision*
-- [[Whether a deployment ever spans two trust-accounting jurisdictions is open]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a artifact rather than a decision*
+- [[LandLord optimises first for a private single-tenant operating system]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a artifact rather than a decision*
 - [[Whether an unclassified spend estimate should default at the cap is open]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a artifact rather than a decision*
 - [[Whether artisan should be a pledge or a relationship is open]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a artifact rather than a decision*
-- [[Whether LandLord is single-tenant or multi-tenant is genuinely open]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a artifact rather than a decision*
 
 ## Documents that cite this source
 

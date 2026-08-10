@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-105 lines · 2 exported symbols.
+110 lines · 2 exported symbols.
 
 ## What the file says of itself
 
@@ -34,7 +34,7 @@ aliases:
 
 ## Shape
 
-- **Lines:** 105
+- **Lines:** 110
 - **Exported symbols (2):** `RealmReading`, `readRealm`
 
 ## Entities
@@ -56,6 +56,7 @@ aliases:
 
 ### Writs that specify it
 
+- [[Handoff — where things stand]] — *this writ names the exported symbol `readRealm`*
 - [[The Kingdom — Canon]] — *this writ names the exported symbol `readRealm`*
 - [[Writ — the Land: pods, knights, owners, and guilds (the realm remodeled)]] — *this writ names the exported symbol `readRealm`*
 - [[Writ — the War Table (the front-end direction)]] — *this writ names the exported symbol `readRealm`; this writ names the exported symbol `RealmReading`*
@@ -66,7 +67,6 @@ aliases:
 
 ### Entities
 
-- [[Realm (a place — tenure.ts)]] — *names the exported symbol `RealmReading`*
 - [[RealmReading (a score, not a place)]] — *names the exported symbol `RealmReading`; the same file `src/domain/realm.ts`, seen as a module rather than a entity*
 
 ### Modules
@@ -106,6 +106,7 @@ aliases:
 
 *These name this FILE by its path. That is a citation of the source, not a claim about any one idea inside it — do not read a path citation as agreement, dependence or implementation.*
 
+- [[Handoff — where things stand]]
 - [[Writ — the War Table (the front-end direction)]]
 
 ---

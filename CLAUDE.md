@@ -3,6 +3,12 @@
 Guidance for an AI agent working in this repository. It is a public,
 open-source codebase; everything here is craft, not house politics.
 
+**Work-authority scope.** Read `C:\Users\lleit\.agents\ORCHESTRATION.md` for
+shared orchestration before nontrivial work. The SPM work hub does not govern,
+project, or ingest LandLord. `method/work-registry.json` owns LandLord-local task
+state; the remaining LandLord documents govern facts, design, and local handoff
+detail only.
+
 **Read `docs/KINGDOM.md` first** — it is the constitution. The code implements
 it, and it wins until amended. Per-surface design documents are `docs/WRIT-*.md`.
 `CONTRIBUTING.md` holds the human-facing version of most of this.

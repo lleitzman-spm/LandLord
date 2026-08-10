@@ -52,6 +52,22 @@
       ]
     },
     {
+      "id": "artifact:dot-claude",
+      "type": "artifact",
+      "label": ".claude/",
+      "standing": "built",
+      "path": ".claude",
+      "kind": "governance",
+      "summary": "Repository-local Claude hook configuration; its stop hook only checks whether a LandLord session report exists and emits a reminder when none is present.",
+      "source_path": ".claude/settings.json",
+      "source_line": 4,
+      "quote": "\"Stop\": [",
+      "links": [],
+      "tags": [
+        "artifact-manifest"
+      ]
+    },
+    {
       "id": "artifact:dot-gitignore",
       "type": "artifact",
       "label": ".gitignore",
@@ -106,7 +122,7 @@
       "standing": "settled",
       "path": "AGENTS.md",
       "kind": "governance",
-      "summary": "The operating charter for any autonomous agent working on LandLord — mandate, latitude, and the gates that bind every hand alike. Its own header still reads draft-awaiting-ratification, but it is the operative charter in practice.",
+      "summary": "LandLord-local operating charter, subordinate to shared ORCHESTRATION.md and the project-local method/work-registry.json task authority. The SPM work hub does not govern LandLord.",
       "source_path": "AGENTS.md",
       "source_line": 12,
       "quote": "LandLord is an instrument panel disguised as an org chart",
@@ -140,7 +156,7 @@
       "standing": "settled",
       "path": "CLAUDE.md",
       "kind": "governance",
-      "summary": "Guidance for an AI agent working in this repository — the rule that overrides everything, the conventions, and the A/E/P check.",
+      "summary": "LandLord-local repository guidance — safety, conventions, and the A/E/P check — subordinate to shared ORCHESTRATION.md and project-local task authority.",
       "source_path": "CLAUDE.md",
       "source_line": 10,
       "quote": "The rule that overrides everything",
@@ -301,6 +317,23 @@
       ]
     },
     {
+      "id": "artifact:method-dir",
+      "type": "artifact",
+      "label": "method/",
+      "standing": "built",
+      "path": "method",
+      "kind": "governance",
+      "summary": "The machine-readable LandLord-local work authority. It structurally reuses spm-work-registry/v1 but is not governed, projected, or ingested by the SPM work hub; derived surfaces may not edit its task state.",
+      "source_path": "method/work-registry.json",
+      "source_line": 2,
+      "quote": "\"schema\": \"spm-work-registry/v1\"",
+      "links": [],
+      "tags": [
+        "artifact-manifest",
+        "work-authority"
+      ]
+    },
+    {
       "id": "artifact:book-dir",
       "type": "artifact",
       "label": "book/",
@@ -368,38 +401,6 @@
       ]
     },
     {
-      "id": "artifact:realm-preview-html",
-      "type": "artifact",
-      "label": "realm-preview.html",
-      "standing": "built",
-      "path": "realm-preview.html",
-      "kind": "tool",
-      "summary": "A standalone dev harness page that serves realm-preview.tsx directly, without the main app shell.",
-      "source_path": "realm-preview.html",
-      "source_line": 1,
-      "quote": "<title>Realm</title>",
-      "links": [],
-      "tags": [
-        "artifact-manifest"
-      ]
-    },
-    {
-      "id": "artifact:realm-preview-tsx",
-      "type": "artifact",
-      "label": "realm-preview.tsx",
-      "standing": "built",
-      "path": "realm-preview.tsx",
-      "kind": "tool",
-      "summary": "Mounts RealmView standalone against a canned scene fixture, chosen by a ?scene= query param.",
-      "source_path": "realm-preview.tsx",
-      "source_line": 2,
-      "quote": "import RealmView from './src/realm/RealmView';",
-      "links": [],
-      "tags": [
-        "artifact-manifest"
-      ]
-    },
-    {
       "id": "artifact:src-dir",
       "type": "artifact",
       "label": "src/",
@@ -428,40 +429,6 @@
       "quote": "Per-identity chronicle sandboxes (beta blocker B2).",
       "links": [
         "entity:the-vault"
-      ],
-      "tags": [
-        "artifact-manifest"
-      ]
-    },
-    {
-      "id": "artifact:table-preview-html",
-      "type": "artifact",
-      "label": "table-preview.html",
-      "standing": "built",
-      "path": "table-preview.html",
-      "kind": "tool",
-      "summary": "A standalone dev harness page that serves table-preview.tsx — the War Table proving frame.",
-      "source_path": "table-preview.html",
-      "source_line": 1,
-      "quote": "The War Table — the proving frame",
-      "links": [],
-      "tags": [
-        "artifact-manifest"
-      ]
-    },
-    {
-      "id": "artifact:table-preview-tsx",
-      "type": "artifact",
-      "label": "table-preview.tsx",
-      "standing": "built",
-      "path": "table-preview.tsx",
-      "kind": "tool",
-      "summary": "Mounts WarTableFrame standalone against the loaded relief and working-fluid parcels, for measuring the proving frame's look and cost in isolation.",
-      "source_path": "table-preview.tsx",
-      "source_line": 2,
-      "quote": "The War Table proving frame — standalone preview (WRIT-THE-WAR-TABLE §11).",
-      "links": [
-        "decision:diegetic-war-table"
       ],
       "tags": [
         "artifact-manifest"
@@ -601,6 +568,24 @@
       ]
     },
     {
+      "id": "artifact:wrangler-audit-shadow-jsonc",
+      "type": "artifact",
+      "label": "wrangler.audit-shadow.jsonc",
+      "standing": "built",
+      "path": "wrangler.audit-shadow.jsonc",
+      "kind": "governance",
+      "summary": "The isolated audit-proof Worker config: workers.dev only, preview URLs disabled, and no routes, bindings, variables, or secrets.",
+      "source_path": "wrangler.audit-shadow.jsonc",
+      "source_line": 2,
+      "quote": "\"name\": \"landlord-audit-shadow-20260809-v1\"",
+      "links": [],
+      "tags": [
+        "artifact-manifest",
+        "audit-shadow",
+        "walls"
+      ]
+    },
+    {
       "id": "artifact:docs-clerk-brain-doctrine",
       "type": "artifact",
       "label": "docs/CLERK-BRAIN-DOCTRINE.md",
@@ -643,7 +628,7 @@
       "standing": "settled",
       "path": "docs/HANDOFF.md",
       "kind": "governance",
-      "summary": "The working-state document — starts empty in the public repository on purpose, since its private predecessor named real people and live infrastructure.",
+      "summary": "The LandLord-local working-state detail surface; method/work-registry.json owns task state. It starts empty publicly because its private predecessor named real people and infrastructure.",
       "source_path": "docs/HANDOFF.md",
       "source_line": 8,
       "quote": "This file starts empty in the public repository, on purpose.",
@@ -659,7 +644,7 @@
       "standing": "settled",
       "path": "docs/K3-PROFILE.md",
       "kind": "knowledge",
-      "summary": "Kimi K3's capability profile and how to wield it — the numbers, the seam, the megamind law.",
+      "summary": "Historical LandLord-local Kimi K3 capability and review evidence; it is not portable orchestration or task authority.",
       "source_path": "docs/K3-PROFILE.md",
       "source_line": 16,
       "quote": "a 2.8T-parameter open-weight multimodal",
@@ -711,7 +696,7 @@
       "standing": "settled",
       "path": "docs/MODEL-DOCTRINE.md",
       "kind": "knowledge",
-      "summary": "How the kingdom allocates its minds across its work — the roster, the allocation seam, the review gate.",
+      "summary": "Historical LandLord-local model-selection and review guidance; it is not shared orchestration or work authority.",
       "source_path": "docs/MODEL-DOCTRINE.md",
       "source_line": 17,
       "quote": "How the kingdom allocates its minds across its work.",
@@ -745,10 +730,10 @@
       "id": "artifact:docs-parallel-sessions",
       "type": "artifact",
       "label": "docs/PARALLEL-SESSIONS.md",
-      "standing": "settled",
+      "standing": "retired",
       "path": "docs/PARALLEL-SESSIONS.md",
       "kind": "knowledge",
-      "summary": "How to run several Claude sessions at once, within a project and across all of them, without stepping on your own work.",
+      "summary": "Retired cross-project doctrine retained only for historical LandLord-local lane context; shared ORCHESTRATION.md and project-local method/work-registry.json supersede it.",
       "source_path": "docs/PARALLEL-SESSIONS.md",
       "source_line": 3,
       "quote": "How to run several Claude sessions at once",

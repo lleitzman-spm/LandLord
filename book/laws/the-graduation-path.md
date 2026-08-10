@@ -30,7 +30,9 @@ A garrison becomes a hamlet when it gets a mayor; a hamlet becomes a fief when t
 
 ## Backlinks
 
-*Nothing in the Book points here. An orphan page is worse than a missing one — it exists, it is correct, and no reader will ever reach it. `npm run book:lint` counts these.*
+### Writs that specify it
+
+- [[The Kingdom — Canon]] — *this writ names "The graduation path" literally*
 
 ---
 

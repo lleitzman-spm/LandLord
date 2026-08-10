@@ -56,7 +56,9 @@ aliases:
 
 ### Writs that specify it
 
+- [[Handoff — where things stand]] — *this writ names the exported symbol `commissionCaseId`; this writ names the exported symbol `knightsOf`; +1 more*
 - [[The Kingdom — Canon]] — *this writ names the exported symbol `readPods`; this writ names the exported symbol `unplacedOwners`*
+- [[Writ — The Knighthood: one seat, a Regent that is an agent, and the fief as a desk]] — *this writ names the exported symbol `commissionCaseId`; this writ names the exported symbol `knightsOf`; +1 more*
 - [[Writ — the Land: pods, knights, owners, and guilds (the realm remodeled)]] — *this writ names the exported symbol `POD_CAPACITY`; this writ names the exported symbol `readPods`; +1 more*
 
 ### Facts it depends on

@@ -18,14 +18,14 @@ aliases:
 > Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
 > *Declared in `knowledge/artifacts.json`.*
 
-*Named 2026-07-19 (Edwin). The realm's proving ground: a live simulation of the whole operation where knights (property managers) train against every scenario before real combat — and where the kingdom tests and hardens its own machine. Working names floated: War Games / Grand Melee / the Tourney. *
+> **DEPRECATED AS CURRENT-WORK AUTHORITY.** This is an initiative design record, > not a task queue. Activation and priority must come through LandLord's local > `method/work-registry.json`; `docs/HANDOFF.md` may carry supporting detail. The > SPM work hub does not govern this project.
 
 ## The source, verbatim
 
-> *Named 2026-07-19 (Edwin). The realm's proving ground: a live simulation of the whole operation
-> where knights (property managers) train against every scenario before real combat — and where the
-> kingdom tests and hardens its own machine. Working names floated: War Games / Grand Melee / the
-> Tourney. **War Games** stands.*
+> > **DEPRECATED AS CURRENT-WORK AUTHORITY.** This is an initiative design record,
+> > not a task queue. Activation and priority must come through LandLord's local
+> > `method/work-registry.json`; `docs/HANDOFF.md` may carry supporting detail. The
+> > SPM work hub does not govern this project.
 
 *Verified against `docs/WAR-GAMES.md`:1 on every lint — no quote, no object.*
 
@@ -70,6 +70,14 @@ aliases:
 *These name this FILE by its path. That is a citation of the source, not a claim about any one idea inside it — do not read a path citation as agreement, dependence or implementation.*
 
 - [[Writ — the first War Game (the proving ground)]]
+
+## Sources this page cites
+
+*Files this page names by path. Again: a citation of the file, nothing more.*
+
+- [[docs/HANDOFF.md]]
+- [[Handoff — where things stand]]
+- [[method/]]
 
 ---
 
