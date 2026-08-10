@@ -85,7 +85,7 @@ export async function handleCommand(
   const commandRecord =
     typeof raw === 'object' && raw !== null ? (raw as { grantId?: unknown }) : {};
   const grant = grantById(env.LANDLORD_AUTHORITY_GRANTS, commandRecord.grantId);
-  const decision = evaluateCommand(raw, {
+  const decision = await evaluateCommand(raw, {
     chronicle: normalizeChronicle(doc),
     chronicleVersion: revOf(doc),
     authenticatedPrincipal: principal,

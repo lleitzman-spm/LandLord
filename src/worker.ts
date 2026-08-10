@@ -17,9 +17,7 @@ import { fetchBorderRows, mergeBorderArrivals } from './server/border';
 import {
   CANONICAL_DOC_ID,
   commitAppend,
-  revOf,
   vaultCasWrite,
-  vaultRead,
   vaultReadDoc,
 } from './server/vault';
 import type { AppendDoc } from './server/vault';
@@ -43,10 +41,10 @@ import {
   submitPetition,
   visibleTo,
 } from './server/courtroll';
-import { makeComplete as makeGuardedComplete } from './server/brain';
 import { handleCommand, type CommandEnv } from './server/command';
-// The fleet run + its brain doctrine live in the harness (shared with the Node
-// terminal fleet); the Worker calls the SAME runFleet against a user's vault.
+import { makeComplete as makeGuardedComplete } from './server/brain';
+// Retained only for the closed migration adapter below. The route is disabled
+// until the fleet emits typed commands through the authority kernel.
 // eslint-disable-next-line import/extensions
 import { runFleet } from '../harness/run-fleet.mjs';
 // eslint-disable-next-line import/extensions
@@ -80,6 +78,8 @@ interface WorkerDeps {
   makeComplete: typeof makeGuardedComplete;
 }
 
+const TYPED_FLEET_READY = false;
+
 export function createWorker(
   deps: WorkerDeps = { runFleet, makeComplete: makeGuardedComplete },
 ) {
@@ -105,8 +105,12 @@ export function createWorker(
       return handleCourt(request, env, identity);
     }
     if (pathname === '/api/fleet') {
-      // The fleet's door: run the clerks against this identity's vault.
-      return handleFleet(request, env, identity, deps);
+      // The legacy fleet writes batches directly to the Chronicle and has not
+      // yet migrated to typed commands. It stays shut rather than become a
+      // second authority implementation beside /api/command.
+      if (TYPED_FLEET_READY) return handleFleet(request, env, identity, deps);
+      void deps;
+      return new Response('fleet disabled until typed-command migration', { status: 503 });
     }
     if (pathname !== '/api/chronicle' && pathname !== '/api/command' && !isCanonical) {
       // Not the chronicle's door — the castle itself answers.
@@ -155,38 +159,9 @@ export function createWorker(
     }
 
     if (request.method === 'PUT') {
-      // The canonical Chronicle has no generic writer. Its operational door is
-      // /api/command, where the server mints an authorized event batch. This
-      // legacy whole-document seam remains only on the per-identity simulation
-      // sandboxes while the browser migrates; it is not an authority boundary.
-      if (isCanonical) {
-        return new Response('typed commands only', { status: 405 });
-      }
-      let doc: unknown;
-      try {
-        doc = JSON.parse(await request.text());
-      } catch {
-        return new Response('not json', { status: 400 });
-      }
-      // Compare-and-set: the doc carries rev = base + 1; it commits only if the
-      // stored rev still equals base (no concurrent writer got there first).
-      const base = revOf(doc) - 1;
-      const result = await vaultCasWrite(rest, headers, docId, doc, base);
-      if (result === 'error') {
-        return new Response('vault write refused', { status: 502 });
-      }
-      if (result === 'conflict') {
-        // Someone advanced the rev. Hand back the fresh doc so the client can
-        // merge its appends in and retry — never overwrite.
-        const fresh = await vaultRead(rest, headers, docId);
-        return new Response(JSON.stringify(fresh ?? {}), {
-          status: 409,
-          headers: { 'content-type': 'application/json' },
-        });
-      }
-      return new Response('ok', {
-        headers: { 'x-landlord-write-boundary': 'simulation-whole-document' },
-      });
+      // No document at the typed-command door is generically replaceable. A
+      // caller names a command; the server mints and appends its event batch.
+      return new Response('typed commands only', { status: 405 });
     }
 
     return new Response('method not allowed', { status: 405 });

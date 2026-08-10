@@ -205,12 +205,12 @@ describe('worker — verified Access identity', () => {
     expect(response.status).toBe(502);
   });
 
-  it('writes only to the verified identity sandbox', async () => {
+  it('denies generic writes even on the verified identity sandbox', async () => {
     const { calls } = fakeVault();
     const response = await put({ rev: 5, marches: { arrivals: [] } }, 'a@example.org');
-    expect(response.status).toBe(200);
-    const write = calls.find((call) => call.method === 'PATCH' || call.method === 'POST');
-    expect(write?.url).toContain('chronicle%3Aa%40example.org');
+    expect(response.status).toBe(405);
+    expect(await response.text()).toBe('typed commands only');
+    expect(calls.some((call) => call.method === 'PATCH' || call.method === 'POST')).toBe(false);
     expect(calls.some((call) => call.url.includes('border_arrivals'))).toBe(false);
   });
 
@@ -243,7 +243,7 @@ describe('worker — verified Access identity', () => {
 });
 
 describe('worker — fleet context boundary', () => {
-  it('a blocked fleet prompt never calls the provider and never persists a proposal', async () => {
+  it('keeps the legacy fleet disabled until it uses typed commands', async () => {
     const runFleet = vi.fn(async ({ complete }: { complete: (args: unknown) => Promise<unknown> }) => {
       try {
         await complete({
@@ -298,12 +298,10 @@ describe('worker — fleet context boundary', () => {
       env({ MOONSHOT_API_KEY: 'test-provider-key' }),
     );
 
-    expect(response.status).toBe(422);
-    expect(runFleet).toHaveBeenCalledOnce();
+    expect(response.status).toBe(503);
+    expect(runFleet).not.toHaveBeenCalled();
     expect(calls.some((call) => call.url.includes('/chat/completions'))).toBe(false);
     expect(calls.some((call) => call.method === 'PATCH' || call.method === 'POST')).toBe(false);
-    expect(await response.json()).toEqual({
-      error: 'model context refused; no clerk proposal was written',
-    });
+    expect(await response.text()).toBe('fleet disabled until typed-command migration');
   });
 });

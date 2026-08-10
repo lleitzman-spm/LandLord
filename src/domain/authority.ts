@@ -3,6 +3,10 @@
 // grant an act. This module receives the already-authenticated principal, the
 // current record, and an expiring grant from the server's trusted setting. It
 // either mints the complete event batch or mints nothing.
+//
+// This governs the deployed external command seam only. The game's internal
+// helpers remain simulation machinery, not equivalent enforcement, and the
+// untyped fleet route stays disabled until it speaks this protocol.
 
 import type { Chronicle } from './chronicle';
 import type { KingdomEvent } from './events';
@@ -13,6 +17,7 @@ import {
   paramsOf,
   proposeStep,
   readFlow,
+  mayRunUnattended,
   type FlowTemplate,
 } from './flows';
 
@@ -20,15 +25,26 @@ export type CommandKind =
   | 'complete-step'
   | 'propose-step'
   | 'approve-step'
-  | 'override-step'
-  | 'correct-event';
+  | 'override-step';
 
 export type AuthorityCapability =
   | 'step:complete'
   | 'step:propose'
   | 'step:approve'
-  | 'step:override'
-  | 'event:correct';
+  | 'step:override';
+
+export interface GrantedFlow {
+  key: string;
+  version: string;
+  sha256: string;
+}
+
+export interface GrantedStepPolicy {
+  flowKey: string;
+  stepKey: string;
+  purpose: string;
+  money: boolean;
+}
 
 /** Every field is required deliberately. `null` says "not applicable"; an
  * omitted field says the caller and kernel disagree about the protocol. */
@@ -45,14 +61,12 @@ export interface ExternalCommand {
   actor: string;
   grantId: string;
   origin: string;
-  cause: string;
+  causeRef: string;
   idempotencyKey: string;
   evidenceVersion: string;
   policyVersion: string;
-  correctionTarget: string | null;
   purpose: string;
   amountCents: number | null;
-  note: string | null;
 }
 
 /** Grants are trusted setting, never request body. A principal is the identity
@@ -65,14 +79,14 @@ export interface AuthorityGrant {
   actorKind: 'human' | 'agent';
   capabilities: AuthorityCapability[];
   caseIds: string[];
-  flowKeys: string[];
+  flows: GrantedFlow[];
+  stepPolicies: GrantedStepPolicy[];
   origins: string[];
-  purposes: string[];
+  causeRefs: string[];
   issuedAt: string;
   expiresAt: string;
   maxAmountCents: number | null;
   ordinaryAmountCents: number | null;
-  amountRequiredPurposes: string[];
   evidenceVersions: string[];
   policyVersions: string[];
 }
@@ -95,6 +109,7 @@ export type AuthorityRefusalCode =
   | 'unversioned-flow'
   | 'wrong-flow'
   | 'stale-flow'
+  | 'flow-digest-mismatch'
   | 'missing-case'
   | 'stale-chronicle'
   | 'stale-case'
@@ -106,13 +121,14 @@ export type AuthorityRefusalCode =
   | 'out-of-scope'
   | 'missing-capability'
   | 'wrong-origin'
+  | 'wrong-cause'
   | 'wrong-purpose'
   | 'amount-refused'
   | 'human-only'
   | 'stale-evidence'
   | 'stale-policy'
   | 'replay'
-  | 'wrong-correction-target'
+  | 'unattended-refused'
   | 'engine-refused';
 
 export type AuthorityDecision =
@@ -133,7 +149,7 @@ export interface EventAuthority {
   principal: string;
   actor: string;
   origin: string;
-  cause: string;
+  causeRef: string;
   idempotencyKey: string;
   flowKey: string;
   flowVersion: string;
@@ -146,7 +162,6 @@ export interface EventAuthority {
   policyVersion: string;
   purpose: string;
   amountCents: number | null;
-  correctionTarget: string | null;
 }
 
 export interface AuthorizedKingdomEvent extends KingdomEvent {
@@ -166,14 +181,12 @@ const COMMAND_KEYS = [
   'actor',
   'grantId',
   'origin',
-  'cause',
+  'causeRef',
   'idempotencyKey',
   'evidenceVersion',
   'policyVersion',
-  'correctionTarget',
   'purpose',
   'amountCents',
-  'note',
 ] as const;
 
 const GRANT_KEYS = [
@@ -183,14 +196,14 @@ const GRANT_KEYS = [
   'actorKind',
   'capabilities',
   'caseIds',
-  'flowKeys',
+  'flows',
+  'stepPolicies',
   'origins',
-  'purposes',
+  'causeRefs',
   'issuedAt',
   'expiresAt',
   'maxAmountCents',
   'ordinaryAmountCents',
-  'amountRequiredPurposes',
   'evidenceVersions',
   'policyVersions',
 ] as const;
@@ -200,14 +213,12 @@ const KINDS: ReadonlySet<string> = new Set([
   'propose-step',
   'approve-step',
   'override-step',
-  'correct-event',
 ]);
 const CAPABILITIES: ReadonlySet<string> = new Set([
   'step:complete',
   'step:propose',
   'step:approve',
   'step:override',
-  'event:correct',
 ]);
 
 const CAPABILITY_FOR: Record<CommandKind, AuthorityCapability> = {
@@ -215,7 +226,6 @@ const CAPABILITY_FOR: Record<CommandKind, AuthorityCapability> = {
   'propose-step': 'step:propose',
   'approve-step': 'step:approve',
   'override-step': 'step:override',
-  'correct-event': 'event:correct',
 };
 
 function record(value: unknown): value is Record<string, unknown> {
@@ -232,8 +242,8 @@ function text(value: unknown): value is string {
   return typeof value === 'string' && value.trim().length > 0;
 }
 
-function nullableText(value: unknown): value is string | null {
-  return value === null || text(value);
+function sha256Text(value: unknown): value is string {
+  return typeof value === 'string' && /^sha256:[0-9a-f]{64}$/.test(value);
 }
 
 function integer(value: unknown): value is number {
@@ -252,6 +262,45 @@ function stringArray(value: unknown): value is string[] {
   );
 }
 
+const FLOW_GRANT_KEYS = ['key', 'version', 'sha256'] as const;
+const STEP_POLICY_KEYS = ['flowKey', 'stepKey', 'purpose', 'money'] as const;
+
+function grantedFlows(value: unknown): value is GrantedFlow[] {
+  return (
+    Array.isArray(value) &&
+    value.every(
+      (item) =>
+        record(item) &&
+        exactKeys(item, FLOW_GRANT_KEYS) &&
+        text(item.key) &&
+        text(item.version) &&
+        sha256Text(item.sha256),
+    ) &&
+    new Set(value.map((item) => `${(item as GrantedFlow).key}\0${(item as GrantedFlow).version}`)).size ===
+      value.length
+  );
+}
+
+function grantedStepPolicies(value: unknown): value is GrantedStepPolicy[] {
+  return (
+    Array.isArray(value) &&
+    value.every(
+      (item) =>
+        record(item) &&
+        exactKeys(item, STEP_POLICY_KEYS) &&
+        text(item.flowKey) &&
+        text(item.stepKey) &&
+        text(item.purpose) &&
+        typeof item.money === 'boolean',
+    ) &&
+    new Set(
+      value.map(
+        (item) => `${(item as GrantedStepPolicy).flowKey}\0${(item as GrantedStepPolicy).stepKey}`,
+      ),
+    ).size === value.length
+  );
+}
+
 function parseCommand(raw: unknown): ExternalCommand | null {
   if (!record(raw) || !exactKeys(raw, COMMAND_KEYS)) return null;
   if (!text(raw.type) || !KINDS.has(raw.type)) return null;
@@ -264,18 +313,16 @@ function parseCommand(raw: unknown): ExternalCommand | null {
     !integer(raw.attempt) ||
     raw.attempt < 1 ||
     !integer(raw.expectedChronicleVersion) ||
-    !text(raw.expectedCaseVersion) ||
+    !sha256Text(raw.expectedCaseVersion) ||
     !text(raw.actor) ||
     !text(raw.grantId) ||
     !text(raw.origin) ||
-    !text(raw.cause) ||
+    !text(raw.causeRef) ||
     !text(raw.idempotencyKey) ||
     !text(raw.evidenceVersion) ||
     !text(raw.policyVersion) ||
-    !nullableText(raw.correctionTarget) ||
     !text(raw.purpose) ||
-    !nullableInteger(raw.amountCents) ||
-    !(raw.note === null || typeof raw.note === 'string')
+    !nullableInteger(raw.amountCents)
   ) {
     return null;
   }
@@ -292,14 +339,14 @@ function parseGrant(raw: unknown): AuthorityGrant | null {
     !stringArray(raw.capabilities) ||
     !raw.capabilities.every((capability) => CAPABILITIES.has(capability)) ||
     !stringArray(raw.caseIds) ||
-    !stringArray(raw.flowKeys) ||
+    !grantedFlows(raw.flows) ||
+    !grantedStepPolicies(raw.stepPolicies) ||
     !stringArray(raw.origins) ||
-    !stringArray(raw.purposes) ||
+    !stringArray(raw.causeRefs) ||
     !text(raw.issuedAt) ||
     !text(raw.expiresAt) ||
     !nullableInteger(raw.maxAmountCents) ||
     !nullableInteger(raw.ordinaryAmountCents) ||
-    !stringArray(raw.amountRequiredPurposes) ||
     !stringArray(raw.evidenceVersions) ||
     !stringArray(raw.policyVersions)
   ) {
@@ -319,23 +366,29 @@ function canonical(value: unknown): string {
   return JSON.stringify(value);
 }
 
-/** A small deterministic record fingerprint. It is a concurrency identity,
- * not a credential: the server still protects the authoritative Chronicle
- * with compare-and-set. */
-function fingerprint(value: unknown): string {
-  const source = canonical(value);
-  let hash = 0x811c9dc5;
-  for (let i = 0; i < source.length; i++) {
-    hash ^= source.charCodeAt(i);
-    hash = Math.imul(hash, 0x01000193);
-  }
-  return (hash >>> 0).toString(16).padStart(8, '0');
+/** Collision-resistant canonical digest, using the Web Crypto primitive shared
+ * by Workers and current Node. It is async so no runtime substitutes a small,
+ * non-cryptographic hash at an authority boundary. */
+async function sha256(value: unknown): Promise<string> {
+  const bytes = new TextEncoder().encode(canonical(value));
+  const digest = new Uint8Array(await crypto.subtle.digest('SHA-256', bytes));
+  return `sha256:${[...digest].map((byte) => byte.toString(16).padStart(2, '0')).join('')}`;
 }
 
 /** Exact version of the one case as it stands. A command reasoned against a
  * different sequence has no claim on the present record. */
-export function caseVersion(events: readonly KingdomEvent[], caseId: string): string {
-  return `case-v1:${fingerprint(events.filter((event) => event.caseId === caseId))}`;
+export async function caseVersion(
+  events: readonly KingdomEvent[],
+  caseId: string,
+): Promise<string> {
+  return sha256(events.filter((event) => event.caseId === caseId));
+}
+
+/** Digest the complete loaded flow shape. The trusted grant binds both its
+ * declared version and this digest; changing bytes without changing a label is
+ * therefore a refusal, not a silent policy rewrite. */
+export async function flowDigest(template: FlowTemplate): Promise<string> {
+  return sha256(template);
 }
 
 /** Flow versions are declarations, not guesses. Historical unversioned books
@@ -360,7 +413,7 @@ function eventAuthority(
     principal: context.authenticatedPrincipal,
     actor: command.actor,
     origin: command.origin,
-    cause: command.cause,
+    causeRef: command.causeRef,
     idempotencyKey: command.idempotencyKey,
     flowKey: command.flowKey,
     flowVersion: command.flowVersion,
@@ -373,13 +426,15 @@ function eventAuthority(
     policyVersion: command.policyVersion,
     purpose: command.purpose,
     amountCents: command.amountCents,
-    correctionTarget: command.correctionTarget,
   };
 }
 
 /** Evaluate one outside command. The ordering is intentional: protocol and
  * authority refuse before domain work, and no branch returns a partial batch. */
-export function evaluateCommand(raw: unknown, context: AuthorityContext): AuthorityDecision {
+export async function evaluateCommand(
+  raw: unknown,
+  context: AuthorityContext,
+): Promise<AuthorityDecision> {
   const command = parseCommand(raw);
   if (!command) return refuse('malformed-command', 'the command has missing or unknown fields');
   if (!KINDS.has(command.type)) return refuse('unknown-command', 'the command kind is unknown');
@@ -400,8 +455,8 @@ export function evaluateCommand(raw: unknown, context: AuthorityContext): Author
   if (!Number.isFinite(now) || !Number.isFinite(issued) || !Number.isFinite(expires) || now < issued || now >= expires) {
     return refuse('expired-grant', 'the authority grant is not in force');
   }
-  if (!grant.caseIds.includes(command.caseId) || !grant.flowKeys.includes(command.flowKey)) {
-    return refuse('out-of-scope', 'the case or flow lies outside the grant');
+  if (!grant.caseIds.includes(command.caseId)) {
+    return refuse('out-of-scope', 'the case lies outside the grant');
   }
   if (!grant.capabilities.includes(CAPABILITY_FOR[command.type])) {
     return refuse('missing-capability', 'the grant does not carry this capability');
@@ -409,8 +464,8 @@ export function evaluateCommand(raw: unknown, context: AuthorityContext): Author
   if (!grant.origins.includes(command.origin)) {
     return refuse('wrong-origin', 'the command origin lies outside the grant');
   }
-  if (!grant.purposes.includes(command.purpose)) {
-    return refuse('wrong-purpose', 'the command purpose lies outside the grant');
+  if (!/^[a-z][a-z0-9._/-]{2,127}$/.test(command.causeRef) || !grant.causeRefs.includes(command.causeRef)) {
+    return refuse('wrong-cause', 'the cause reference is malformed or outside the grant');
   }
   if (
     command.type === 'approve-step' ||
@@ -421,8 +476,17 @@ export function evaluateCommand(raw: unknown, context: AuthorityContext): Author
     }
   }
 
-  if (grant.amountRequiredPurposes.includes(command.purpose) && command.amountCents === null) {
-    return refuse('amount-refused', 'this granted purpose requires an exact amount');
+  const stepPolicy = grant.stepPolicies.find(
+    (policy) => policy.flowKey === command.flowKey && policy.stepKey === command.stepKey,
+  );
+  if (!stepPolicy || stepPolicy.purpose !== command.purpose) {
+    return refuse('wrong-purpose', 'the trusted step policy does not grant this purpose');
+  }
+  if (stepPolicy.money && command.amountCents === null) {
+    return refuse('amount-refused', 'this money-affecting step requires an exact amount');
+  }
+  if (!stepPolicy.money && command.amountCents !== null) {
+    return refuse('amount-refused', 'this step is not classified to carry money');
   }
   if (command.amountCents !== null) {
     if (grant.maxAmountCents === null || command.amountCents > grant.maxAmountCents) {
@@ -451,7 +515,7 @@ export function evaluateCommand(raw: unknown, context: AuthorityContext): Author
   if (command.expectedChronicleVersion !== context.chronicleVersion) {
     return refuse('stale-chronicle', 'the Chronicle moved after the command was formed');
   }
-  if (command.expectedCaseVersion !== caseVersion(context.chronicle.events, command.caseId)) {
+  if (command.expectedCaseVersion !== (await caseVersion(context.chronicle.events, command.caseId))) {
     return refuse('stale-case', 'the case moved after the command was formed');
   }
 
@@ -461,8 +525,17 @@ export function evaluateCommand(raw: unknown, context: AuthorityContext): Author
   }
   const flowVersion = declaredFlowVersion(template);
   if (!flowVersion) return refuse('unversioned-flow', 'this historical flow has no operational version');
+  const grantedFlow = grant.flows.find(
+    (entry) => entry.key === command.flowKey && entry.version === command.flowVersion,
+  );
+  if (!grantedFlow) {
+    return refuse('out-of-scope', 'the exact flow version lies outside the grant');
+  }
   if (command.flowVersion !== flowVersion) {
     return refuse('stale-flow', 'the command was formed against another flow version');
+  }
+  if ((await flowDigest(template)) !== grantedFlow.sha256) {
+    return refuse('flow-digest-mismatch', 'the loaded flow bytes do not match the trusted grant');
   }
 
   const reading = readFlow(template, context.chronicle.events, command.caseId, context.now);
@@ -478,32 +551,25 @@ export function evaluateCommand(raw: unknown, context: AuthorityContext): Author
     return refuse('wrong-attempt', 'the command names another attempt');
   }
 
+  if (command.type === 'complete-step' && grant.actorKind === 'agent') {
+    const modes = new Map(context.chronicle.catalog.map((row) => [row.key, row.mode]));
+    if (reading.next.kind === 'proposed' || !mayRunUnattended(reading.next.step, modes)) {
+      return refuse(
+        'unattended-refused',
+        'an agent may complete only an auto step with no outside wait or unresolved mode',
+      );
+    }
+  }
+
   const prior = context.chronicle.events as AuthorizedKingdomEvent[];
   if (prior.some((event) => event.authority?.idempotencyKey === command.idempotencyKey)) {
     return refuse('replay', 'the idempotency key has already been accepted');
   }
 
-  if (command.type === 'correct-event') {
-    if (!command.correctionTarget) {
-      return refuse('wrong-correction-target', 'a correction must name the event it reverses');
-    }
-    const target = context.chronicle.events.find(
-      (event) => event.id === command.correctionTarget && event.caseId === command.caseId,
-    );
-    if (
-      !target ||
-      prior.some((event) => event.authority?.correctionTarget === command.correctionTarget)
-    ) {
-      return refuse('wrong-correction-target', 'the target is absent, cross-case, or already corrected');
-    }
-  } else if (command.correctionTarget !== null) {
-    return refuse('wrong-correction-target', 'only a correction may name a correction target');
-  }
-
   const opts = {
     at: context.now,
     id: context.id,
-    note: command.note ?? undefined,
+    note: command.causeRef,
     actor: command.actor,
     log: context.chronicle.events,
   };
@@ -522,22 +588,8 @@ export function evaluateCommand(raw: unknown, context: AuthorityContext): Author
     minted = proposal ? [proposal] : [];
   } else if (command.type === 'approve-step') {
     minted = approveStep(template, command.caseId, command.stepIndex, opts, params);
-  } else if (command.type === 'override-step') {
-    minted = overrideStep(template, command.caseId, command.stepIndex, opts, params);
   } else {
-    const step = template.steps[command.stepIndex];
-    minted = [
-      {
-        id: context.id(),
-        at: context.now,
-        caseId: command.caseId,
-        kind: 'noted',
-        catalogRow: step.catalogRow,
-        holder: step.holder,
-        actor: command.actor,
-        note: `Step ${command.stepIndex + 1}/${template.steps.length} · correction recorded`,
-      },
-    ];
+    minted = overrideStep(template, command.caseId, command.stepIndex, opts, params);
   }
   if (!minted.length) return refuse('engine-refused', 'the flow engine refused this act');
 
