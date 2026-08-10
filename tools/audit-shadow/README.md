@@ -21,10 +21,10 @@ against an in-memory copy of the bundled demo fixture:
 node tools/audit-shadow/run-audit-shadow.mjs --act --proof $shadow.report --commit $taskSha
 ```
 
-That receipt is `applied: true` only for `in-memory-demo-copy-only`, records the
-inverse event, proves the original reading was restored, and reports
-`externalEffects: false`. It has no network client, credential input, or route
-to the vault.
+That receipt remains `applied: false` and `simulated: true`: it records an
+in-memory demo transition and inverse event, proves the original reading was
+restored, and reports `externalEffects: false`. It has no network client,
+credential input, or route to the vault.
 
 The shadow refuses unless every gate passes: synthetic input, names-free shape,
 valid append-only records, complete classification, evidence, confidence, and

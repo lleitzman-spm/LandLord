@@ -472,6 +472,7 @@
   "flows": [
     {
       "key": "move-out-relay",
+      "version": "founding-1",
       "title": "Move-out \u2192 re-list relay",
       "trigger": "A tenant gives notice",
       "steps": [
@@ -635,6 +636,7 @@
     },
     {
       "key": "vendor-dispatch",
+      "version": "founding-1",
       "title": "Vendor dispatch",
       "trigger": "A work order is reported",
       "steps": [
@@ -739,6 +741,7 @@
     {
       "key": "violation-notice",
       "title": "Violation / notice",
+      "version": "founding-1",
       "trigger": "A violation or notice arrives",
       "steps": [
         {
@@ -823,6 +826,7 @@
     },
     {
       "key": "lease-renewal",
+      "version": "founding-1",
       "title": "Lease renewal",
       "trigger": "A lease nears its term (T-90)",
       "steps": [
@@ -938,6 +942,7 @@
     {
       "key": "owner-onboarding",
       "title": "Owner onboarding",
+      "version": "founding-1",
       "trigger": "A new owner's property is won",
       "steps": [
         {

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 import { createHash } from 'node:crypto';
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, realpathSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
+import { basename, dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 export const SCHEMA = 'spm-landlord-audit-projection/v1';
@@ -11,6 +11,8 @@ export const PURPOSE = 'offline-comparison-only';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(HERE, '..');
+const REAL_REPO_ROOT = realpathSync(REPO_ROOT);
+const REAL_TEMP_ROOT = realpathSync(tmpdir());
 const EXIT = Object.freeze({ invalid: 2, forbidden: 3, boundary: 4, mismatch: 5 });
 
 function sha256(value) {
@@ -65,24 +67,48 @@ export function validateProjection(payload, expectedProducerCommit) {
     throw Object.assign(new Error('projection digest mismatch'), { exitCode: EXIT.invalid });
   }
 
-  const forbiddenKeys = /^(cases?|instances?|addresses?|people|persons?|names?|actors?|values?|quotes?|notes?|sourcepaths?|credentials?|tokens?)$/i;
-  const rawIdentity = /\b\d{1,6}\s+[A-Za-z0-9.'-]+\s+(street|st|avenue|ave|road|rd|drive|dr|lane|ln|boulevard|blvd|court|ct)\b/i;
-  function visit(value, path = '$') {
-    if (Array.isArray(value)) return value.forEach((item, index) => visit(item, `${path}[${index}]`));
-    if (value && typeof value === 'object') {
-      for (const [key, child] of Object.entries(value)) {
-        if (forbiddenKeys.test(key)) throw forbiddenError(`forbidden field at ${path}.${key}`);
-        visit(child, `${path}.${key}`);
-      }
-    } else if (typeof value === 'string' && rawIdentity.test(value)) {
-      throw forbiddenError(`suspected operational identity at ${path}`);
-    }
+  function exact(value, keys, path) {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) throw forbiddenError(`object required at ${path}`);
+    const unknown = Object.keys(value).filter((key) => !keys.includes(key));
+    const missing = keys.filter((key) => !(key in value));
+    if (unknown.length || missing.length) throw forbiddenError(`schema fields differ at ${path}: unknown=${unknown.join(',') || '-'} missing=${missing.join(',') || '-'}`);
   }
-  visit(payload);
+
+  exact(payload, ['schema', 'purpose', 'applied', 'producer', 'policy', 'processFamily', 'lanes', 'attestation'], '$');
+  exact(payload.producer, ['repository', 'commit', 'inputArtifactSha256'], '$.producer');
+  exact(payload.policy, ['execution', 'network', 'operationalData', 'guardContent', 'permittedContent'], '$.policy');
+  exact(payload.lanes, ['G1', 'G2', 'G3'], '$.lanes');
+  exact(payload.attestation, ['producerProvenanceValidated', 'digestMethod', 'canonicalJsonSha256'], '$.attestation');
+  if (payload.processFamily !== 'maintenance-work-order' || payload.policy.guardContent !== 'withheld' || payload.policy.permittedContent !== 'hashed-topology-and-abstract-capabilities-only') {
+    throw forbiddenError('projection contains an unrecognized process or content policy');
+  }
+
+  const modes = new Set(['human-required', 'machine-candidate', 'external-wait', 'unresolved']);
+  const kinds = new Set(['trigger', 'read', 'decide', 'act', 'gate', 'verify', 'ledger']);
+  const capabilities = new Set(['observe-state', 'hold-until-guard', 'advance-case']);
+  const guardSlots = new Set(['entry', 'exit', 'precondition', 'authority', 'evidence']);
 
   for (const lane of ['G1', 'G2', 'G3']) {
-    if (!payload.lanes?.[lane] || !Array.isArray(payload.lanes[lane].places) || !Array.isArray(payload.lanes[lane].transitions)) {
+    const laneValue = payload.lanes?.[lane];
+    exact(laneValue, lane === 'G2' ? ['status', 'places', 'transitions'] : ['places', 'transitions'], `$.lanes.${lane}`);
+    if (!Array.isArray(laneValue.places) || !Array.isArray(laneValue.transitions)) {
       throw Object.assign(new Error(`projection lane ${lane} is incomplete`), { exitCode: EXIT.invalid });
+    }
+    if (lane === 'G2' && laneValue.status !== 'comparison-not-observed') throw forbiddenError('G2 status is not accepted');
+    for (const [index, place] of laneValue.places.entries()) {
+      exact(place, ['id', 'taskFamily', 'abstractCapability', 'modeClaim', 'structuralKind', 'guardSlots'], `$.lanes.${lane}.places[${index}]`);
+      if (!/^p-[0-9a-f]{16}$/.test(place.id) || place.taskFamily !== 'maintenance-work-order' || !capabilities.has(place.abstractCapability) || !modes.has(place.modeClaim) || !kinds.has(place.structuralKind)) {
+        throw forbiddenError(`place contains an unrecognized value at $.lanes.${lane}.places[${index}]`);
+      }
+      if (!Array.isArray(place.guardSlots) || place.guardSlots.some((slot) => !guardSlots.has(slot))) throw forbiddenError(`place guard slots are invalid at $.lanes.${lane}.places[${index}]`);
+    }
+    for (const [index, edge] of laneValue.transitions.entries()) {
+      exact(edge, ['id', 'taskFamily', 'abstractCapability', 'modeClaim', 'structuralKind', 'consumes', 'produces', 'guardSlots'], `$.lanes.${lane}.transitions[${index}]`);
+      if (!/^t-[0-9a-f]{16}$/.test(edge.id) || edge.taskFamily !== 'maintenance-work-order' || !capabilities.has(edge.abstractCapability) || !modes.has(edge.modeClaim) || !kinds.has(edge.structuralKind)) {
+        throw forbiddenError(`transition contains an unrecognized value at $.lanes.${lane}.transitions[${index}]`);
+      }
+      if (![edge.consumes, edge.produces, edge.guardSlots].every(Array.isArray)) throw forbiddenError(`transition arrays are invalid at $.lanes.${lane}.transitions[${index}]`);
+      if ([...edge.consumes, ...edge.produces].some((id) => !/^p-[0-9a-f]{16}$/.test(id)) || edge.guardSlots.some((slot) => !guardSlots.has(slot))) throw forbiddenError(`transition topology is invalid at $.lanes.${lane}.transitions[${index}]`);
     }
   }
   return payload;
@@ -93,12 +119,19 @@ function histogram(items, key) {
 }
 
 function laneReading(lane) {
+  const degrees = new Map(lane.places.map((place) => [place.id, { incoming: 0, outgoing: 0 }]));
+  for (const edge of lane.transitions) {
+    for (const id of edge.consumes ?? []) if (degrees.has(id)) degrees.get(id).outgoing += 1;
+    for (const id of edge.produces ?? []) if (degrees.has(id)) degrees.get(id).incoming += 1;
+  }
+  const degreeShape = [...degrees.values()].map(({ incoming, outgoing }) => `${incoming}:${outgoing}`).sort();
   return {
     places: lane.places.length,
     transitions: lane.transitions.length,
     structuralKinds: histogram([...lane.places, ...lane.transitions], 'structuralKind'),
     modeClaims: histogram([...lane.places, ...lane.transitions], 'modeClaim'),
     branchTransitions: lane.transitions.filter((edge) => (edge.consumes?.length || 0) > 1 || (edge.produces?.length || 0) > 1).length,
+    topologyDegreeSignature: sha256(canonicalJson(degreeShape)),
   };
 }
 
@@ -116,12 +149,15 @@ export function compareProjection(payload, flow) {
     linearTransitions: Math.max(0, flow.steps.length - 1),
     failureRoutes: flow.steps.filter((step) => step.onFail).length,
     humanJudgments: flow.steps.filter((step) => step.onFail?.detects === 'judgment').length,
+    topologyDegreeSignature: sha256(canonicalJson(flow.steps.map((_step, index) => `${index === 0 ? 0 : 1}:${index === flow.steps.length - 1 ? 0 : 1}`).sort())),
   };
   const gaps = [];
   if (candidate.version === 'unversioned') gaps.push('candidate-flow-version-missing');
   if (candidate.steps !== g3.places) gaps.push('place-count-differs');
   if (candidate.linearTransitions !== g3.transitions) gaps.push('transition-count-differs');
+  if (candidate.topologyDegreeSignature !== g3.topologyDegreeSignature) gaps.push('topology-degree-signature-differs');
   if (payload.lanes.G2.status === 'comparison-not-observed') gaps.push('g2-not-observed');
+  gaps.push('semantic-crosswalk-unproven');
 
   return {
     schema: 'landlord-spm-audit-comparison/v1',
@@ -131,7 +167,7 @@ export function compareProjection(payload, flow) {
     projectionDigest: payload.attestation.canonicalJsonSha256,
     readings: { G1: g1, G2: g2, G3: g3, landlordCandidate: candidate },
     gaps,
-    verdict: gaps.length === 0 ? 'shape-aligned' : 'comparison-gaps-present',
+    verdict: 'comparison-gaps-present',
   };
 }
 
@@ -154,10 +190,11 @@ export async function main(argv = process.argv.slice(2)) {
     throw Object.assign(new Error('--projection and --expected-producer-commit are required'), { exitCode: EXIT.invalid });
   }
   const projectionPath = resolve(args.projection);
-  if (!inside(tmpdir(), projectionPath) || inside(REPO_ROOT, projectionPath)) {
+  const realProjectionPath = realpathSync(projectionPath);
+  if (!inside(REAL_TEMP_ROOT, realProjectionPath) || inside(REAL_REPO_ROOT, realProjectionPath)) {
     throw boundaryError('projection input must be an operating-system temp artifact outside the repository');
   }
-  const payload = validateProjection(JSON.parse(readFileSync(projectionPath, 'utf8')), args['expected-producer-commit']);
+  const payload = validateProjection(JSON.parse(readFileSync(realProjectionPath, 'utf8')), args['expected-producer-commit']);
 
   const bundlePath = resolve(args.bundle || resolve(REPO_ROOT, 'dist-operator/operator-core.mjs'));
   if (!inside(REPO_ROOT, bundlePath)) throw boundaryError('operator bundle must be inside the LandLord repository');
@@ -173,6 +210,9 @@ export async function main(argv = process.argv.slice(2)) {
   } else {
     outputPath = resolve(mkdtempSync(resolve(tmpdir(), 'landlord-spm-comparison-')), 'report.json');
   }
+  const realOutputParent = realpathSync(dirname(outputPath));
+  if (!inside(REAL_TEMP_ROOT, realOutputParent) || inside(REAL_REPO_ROOT, realOutputParent)) throw boundaryError('report parent resolves outside the operating-system temp directory');
+  outputPath = resolve(realOutputParent, basename(outputPath));
   writeFileSync(outputPath, `${JSON.stringify(report, null, 2)}\n`, { encoding: 'utf8', flag: 'wx' });
   process.stdout.write(`${JSON.stringify({ ok: true, applied: false, outputPath, verdict: report.verdict, gaps: report.gaps })}\n`);
   return outputPath;

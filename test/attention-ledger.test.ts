@@ -117,7 +117,12 @@ describe('the narrow machine-act gate', () => {
       opened('demo/work/machine'),
       classified('demo/work/machine', 'machine-candidate'),
     ]);
-    expect(boundedMachineCandidate(ledger)?.workId).toBe('demo/work/machine');
+    expect(boundedMachineCandidate([
+      opened('demo/work/human'),
+      classified('demo/work/human', 'human-required'),
+      opened('demo/work/machine'),
+      classified('demo/work/machine', 'machine-candidate'),
+    ])?.workId).toBe('demo/work/machine');
   });
 
   it('rejects an irreversible machine classification at validation and at the act gate', () => {
@@ -126,7 +131,27 @@ describe('the narrow machine-act gate', () => {
     expect(validateAttentionLog(events)).toContain(
       'irreversible work cannot be a machine candidate: demo/work/unsafe/classified',
     );
-    expect(boundedMachineCandidate(readAttentionLedger(events))).toBeNull();
+    expect(boundedMachineCandidate(events)).toBeNull();
+  });
+
+  it('rejects authority fields smuggled onto a later event', () => {
+    const events = [
+      opened('demo/work/smuggled'),
+      classified('demo/work/smuggled', 'human-required'),
+      {
+        id: 'demo/work/smuggled/escalated',
+        at: '2026-08-09T00:02:00.000Z',
+        workId: 'demo/work/smuggled',
+        kind: 'escalated',
+        escalationAttribution: 'system',
+        requirement: 'machine-candidate',
+      } as AttentionEvent,
+    ];
+    expect(validateAttentionLog(events)).toContain(
+      'field is not permitted on escalated: demo/work/smuggled/escalated.requirement',
+    );
+    expect(readAttentionLedger(events).open[0].requirement).toBe('human-required');
+    expect(boundedMachineCandidate(events)).toBeNull();
   });
 
   it('fails validation when evidence or confidence is absent', () => {

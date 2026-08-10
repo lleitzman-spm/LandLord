@@ -2,9 +2,10 @@
 
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
+import { realpathSync, readFileSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
+import { basename, dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const EXIT = Object.freeze({
@@ -22,6 +23,8 @@ const ROOT = resolve(HERE, '..', '..');
 const DEFAULT_INPUT = resolve(HERE, 'demo-attention.json');
 const OPERATOR_BUNDLE = resolve(ROOT, 'dist-operator', 'operator-core.mjs');
 const TEMP_ROOT = resolve(tmpdir());
+const REAL_ROOT = realpathSync(ROOT);
+const REAL_TEMP_ROOT = realpathSync(TEMP_ROOT);
 
 class ShadowFailure extends Error {
   constructor(message, exitCode) {
@@ -62,10 +65,16 @@ function argsOf(argv) {
   return result;
 }
 
-function assertOutputBoundary(path) {
+async function safeOutputPath(path) {
   if (!inside(TEMP_ROOT, path) || inside(ROOT, path)) {
     throw new ShadowFailure('reports may be written only beneath the operating-system temp directory', EXIT.boundary);
   }
+  await mkdir(dirname(path), { recursive: true });
+  const parent = realpathSync(dirname(path));
+  if (!inside(REAL_TEMP_ROOT, parent) || inside(REAL_ROOT, parent)) {
+    throw new ShadowFailure('report parent resolves outside the operating-system temp directory', EXIT.boundary);
+  }
+  return resolve(parent, basename(path));
 }
 
 function assertCommit(pinned) {
@@ -74,18 +83,20 @@ function assertCommit(pinned) {
   }
   const head = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: ROOT, encoding: 'utf8' }).trim();
   if (head !== pinned) throw new ShadowFailure('pinned commit does not match HEAD', EXIT.proof);
-  const owned = [
-    'src/domain/attention.ts',
-    'src/operator-core.ts',
-    'test/attention-ledger.test.ts',
-    'tools/audit-shadow',
-  ];
-  const dirty = execFileSync('git', ['status', '--porcelain', '--', ...owned], {
+  const dirty = execFileSync('git', ['status', '--porcelain'], {
     cwd: ROOT,
     encoding: 'utf8',
   }).trim();
-  if (dirty) throw new ShadowFailure('attention/shadow sources are not clean at the pinned commit', EXIT.proof);
+  if (dirty) throw new ShadowFailure('repository is not clean at the pinned commit', EXIT.proof);
   return head;
+}
+
+function prepareEngine(pinned) {
+  const repositoryCommit = assertCommit(pinned);
+  const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+  execFileSync(npm, ['run', 'build:operator'], { cwd: ROOT, encoding: 'utf8', stdio: 'pipe' });
+  const bytes = readFileSync(OPERATOR_BUNDLE);
+  return { repositoryCommit, operatorBundleDigest: createHash('sha256').update(bytes).digest('hex') };
 }
 
 const forbiddenKeys = new Set([
@@ -131,15 +142,20 @@ function assertSyntheticInput(input) {
 }
 
 async function loadInput(path) {
-  const input = JSON.parse(await readFile(path, 'utf8'));
+  const real = realpathSync(path);
+  const realDefault = realpathSync(DEFAULT_INPUT);
+  if (real !== realDefault && (!inside(REAL_TEMP_ROOT, real) || inside(REAL_ROOT, real))) {
+    throw new ShadowFailure('custom shadow input must resolve beneath the operating-system temp directory', EXIT.boundary);
+  }
+  const input = JSON.parse(await readFile(real, 'utf8'));
   assertSyntheticInput(input);
   return input;
 }
 
 async function writeReport(report, path) {
-  assertOutputBoundary(path);
-  await mkdir(dirname(path), { recursive: true });
-  await writeFile(path, `${JSON.stringify(report, null, 2)}\n`, { flag: 'wx' });
+  const safe = await safeOutputPath(path);
+  await writeFile(safe, `${JSON.stringify(report, null, 2)}\n`, { flag: 'wx' });
+  return safe;
 }
 
 async function defaultOutput(kind) {
@@ -170,12 +186,10 @@ function summarizeLedger(ledger) {
   };
 }
 
-async function runShadow(options, engine) {
-  const repositoryCommit = assertCommit(options.commit);
-  const input = await loadInput(options.input);
+function evaluate(input, engine) {
   const failures = engine.validateAttentionLog(input.events);
   const ledger = engine.readAttentionLedger(input.events);
-  const candidate = engine.boundedMachineCandidate(ledger);
+  const candidate = engine.boundedMachineCandidate(input.events);
   const gates = [
     { gate: 'synthetic-input', pass: true },
     { gate: 'names-free', pass: true },
@@ -185,13 +199,20 @@ async function runShadow(options, engine) {
     { gate: 'confidence-sufficient', pass: ledger.totals.lowConfidence === 0 },
     { gate: 'reversible-candidate', pass: candidate !== null },
   ];
+  return { failures, ledger, candidate, gates };
+}
+
+async function runShadow(options, engine, build) {
+  const input = await loadInput(options.input);
+  const { ledger, candidate, gates } = evaluate(input, engine);
   if (gates.some((gate) => !gate.pass)) {
     throw new ShadowFailure(`shadow gates refused: ${JSON.stringify(gates)}`, EXIT.gate);
   }
   const proof = {
     schema: 'landlord-attention-shadow-proof/v1',
     classification: 'synthetic-demo-only',
-    repositoryCommit,
+    repositoryCommit: build.repositoryCommit,
+    operatorBundleDigest: build.operatorBundleDigest,
     inputDigest: digest(input),
     createdAt: new Date().toISOString(),
     gates,
@@ -203,23 +224,27 @@ async function runShadow(options, engine) {
   };
   proof.proofDigest = proofDigest(proof);
   const path = options.out ?? await defaultOutput('shadow-proof');
-  await writeReport(proof, path);
-  return { path, report: proof };
+  const safePath = await writeReport(proof, path);
+  return { path: safePath, report: proof };
 }
 
-async function runAct(options, engine) {
-  if (!options.proof || !inside(TEMP_ROOT, options.proof) || inside(ROOT, options.proof)) {
+async function runAct(options, engine, build) {
+  if (!options.proof) {
     throw new ShadowFailure('--act requires a proof beneath the operating-system temp directory', EXIT.proof);
   }
-  const repositoryCommit = assertCommit(options.commit);
+  const proofPath = realpathSync(options.proof);
+  if (!inside(REAL_TEMP_ROOT, proofPath) || inside(REAL_ROOT, proofPath)) {
+    throw new ShadowFailure('--act proof resolves outside the operating-system temp directory', EXIT.proof);
+  }
   const input = await loadInput(options.input);
-  const proof = JSON.parse(await readFile(options.proof, 'utf8'));
+  const proof = JSON.parse(await readFile(proofPath, 'utf8'));
   if (
     proof.schema !== 'landlord-attention-shadow-proof/v1' ||
     proof.classification !== 'synthetic-demo-only' ||
     proof.applied !== false ||
     proof.externalEffects !== false ||
-    proof.repositoryCommit !== repositoryCommit ||
+    proof.repositoryCommit !== build.repositoryCommit ||
+    proof.operatorBundleDigest !== build.operatorBundleDigest ||
     proof.inputDigest !== digest(input) ||
     proof.proofDigest !== proofDigest(proof) ||
     !Array.isArray(proof.gates) ||
@@ -228,8 +253,12 @@ async function runAct(options, engine) {
     throw new ShadowFailure('shadow proof is stale, mismatched, or tampered', EXIT.proof);
   }
 
-  const before = engine.readAttentionLedger(input.events);
-  const candidate = engine.boundedMachineCandidate(before);
+  const evaluation = evaluate(input, engine);
+  if (evaluation.gates.some((gate) => !gate.pass)) {
+    throw new ShadowFailure('shadow gates no longer pass under the pinned engine', EXIT.proof);
+  }
+  const before = evaluation.ledger;
+  const candidate = evaluation.candidate;
   if (!candidate || candidate.workId !== proof.boundedCandidate) {
     throw new ShadowFailure('the proved bounded candidate is no longer admissible', EXIT.act);
   }
@@ -260,9 +289,12 @@ async function runAct(options, engine) {
   const receipt = {
     schema: 'landlord-attention-bounded-demo-act/v1',
     classification: 'synthetic-demo-only',
-    repositoryCommit,
+    repositoryCommit: build.repositoryCommit,
+    operatorBundleDigest: build.operatorBundleDigest,
     proofDigest: proof.proofDigest,
-    applied: true,
+    applied: false,
+    simulated: true,
+    simulationExecuted: true,
     appliedScope: 'in-memory-demo-copy-only',
     externalEffects: false,
     workId: candidate.workId,
@@ -274,17 +306,18 @@ async function runAct(options, engine) {
     afterReversal: summarizeLedger(afterReversal),
   };
   const path = options.out ?? await defaultOutput('bounded-demo-act');
-  await writeReport(receipt, path);
-  return { path, report: receipt };
+  const safePath = await writeReport(receipt, path);
+  return { path: safePath, report: receipt };
 }
 
 async function main() {
   try {
     const options = argsOf(process.argv.slice(2));
-    const engine = await import(pathToFileURL(OPERATOR_BUNDLE).href);
+    const build = prepareEngine(options.commit);
+    const engine = await import(`${pathToFileURL(OPERATOR_BUNDLE).href}?sha256=${build.operatorBundleDigest}`);
     const result = options.mode === 'act'
-      ? await runAct(options, engine)
-      : await runShadow(options, engine);
+      ? await runAct(options, engine, build)
+      : await runShadow(options, engine, build);
     process.stdout.write(`${JSON.stringify({
       ok: true,
       mode: options.mode,

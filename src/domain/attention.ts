@@ -99,6 +99,22 @@ function latestDefined<K extends keyof AttentionEvent>(
   return undefined;
 }
 
+const KINDS = new Set<AttentionEventKind>(['opened', 'classified', 'escalated', 'resolved', 'reversed']);
+const REQUIREMENTS = new Set<AttentionRequirement>(['human-required', 'machine-candidate']);
+const AVOIDABILITY = new Set<AttentionAvoidability>(['avoidable', 'unavoidable', 'unknown']);
+const REVERSIBILITY = new Set<AttentionReversibility>(['reversible', 'irreversible']);
+const EXCEPTIONS = new Set<ExceptionBurden>(['none', 'routine', 'material']);
+const ATTRIBUTIONS = new Set<EscalationAttribution>(['policy', 'evidence', 'capability', 'external', 'system', 'unknown']);
+const EVIDENCE_KINDS = new Set<AttentionEvidenceKind>(['record', 'policy', 'test', 'external']);
+const BASE_FIELDS = ['id', 'at', 'workId', 'kind'] as const;
+const FIELDS_BY_KIND: Record<AttentionEventKind, ReadonlySet<string>> = {
+  opened: new Set(BASE_FIELDS),
+  classified: new Set([...BASE_FIELDS, 'requirement', 'avoidability', 'reversibility', 'exceptionBurden', 'confidence', 'evidence']),
+  escalated: new Set([...BASE_FIELDS, 'escalationAttribution']),
+  resolved: new Set(BASE_FIELDS),
+  reversed: new Set([...BASE_FIELDS, 'reverses']),
+};
+
 function statusOf(events: AttentionEvent[]): 'open' | 'resolved' {
   let status: 'open' | 'resolved' = 'open';
   for (const event of events) {
@@ -153,6 +169,13 @@ export function validateAttentionLog(log: AttentionLog): string[] {
   const ids = new Set<string>();
   const work = new Map<string, AttentionEvent[]>();
   for (const event of log) {
+    if (!event || typeof event !== 'object' || !KINDS.has(event.kind)) {
+      failures.push('event kind is missing or unknown');
+      continue;
+    }
+    for (const key of Object.keys(event)) {
+      if (!FIELDS_BY_KIND[event.kind].has(key)) failures.push(`field is not permitted on ${event.kind}: ${event.id || '(missing)'}.${key}`);
+    }
     if (!event.id || !event.workId) failures.push('event identity is missing');
     if (ids.has(event.id)) failures.push(`duplicate event id: ${event.id}`);
     ids.add(event.id);
@@ -162,17 +185,32 @@ export function validateAttentionLog(log: AttentionLog): string[] {
     }
     if (event.kind === 'classified') {
       if (!event.requirement) failures.push(`classification lacks requirement: ${event.id}`);
+      else if (!REQUIREMENTS.has(event.requirement)) failures.push(`classification has unknown requirement: ${event.id}`);
       if (!event.avoidability) failures.push(`classification lacks avoidability: ${event.id}`);
+      else if (!AVOIDABILITY.has(event.avoidability)) failures.push(`classification has unknown avoidability: ${event.id}`);
       if (!event.reversibility) failures.push(`classification lacks reversibility: ${event.id}`);
+      else if (!REVERSIBILITY.has(event.reversibility)) failures.push(`classification has unknown reversibility: ${event.id}`);
       if (!event.exceptionBurden) failures.push(`classification lacks exception burden: ${event.id}`);
+      else if (!EXCEPTIONS.has(event.exceptionBurden)) failures.push(`classification has unknown exception burden: ${event.id}`);
       if (event.confidence === undefined) failures.push(`classification lacks confidence: ${event.id}`);
       if (!event.evidence?.length) failures.push(`classification lacks evidence: ${event.id}`);
+      for (const evidence of event.evidence ?? []) {
+        if (
+          !evidence ||
+          typeof evidence !== 'object' ||
+          Object.keys(evidence).some((key) => key !== 'ref' && key !== 'kind') ||
+          typeof evidence.ref !== 'string' ||
+          !EVIDENCE_KINDS.has(evidence.kind)
+        ) failures.push(`classification has invalid evidence: ${event.id}`);
+      }
       if (event.requirement === 'machine-candidate' && event.reversibility === 'irreversible') {
         failures.push(`irreversible work cannot be a machine candidate: ${event.id}`);
       }
     }
     if (event.kind === 'escalated' && !event.escalationAttribution) {
       failures.push(`escalation lacks attribution: ${event.id}`);
+    } else if (event.kind === 'escalated' && !ATTRIBUTIONS.has(event.escalationAttribution!)) {
+      failures.push(`escalation has unknown attribution: ${event.id}`);
     }
     if (event.kind === 'reversed' && !event.reverses) {
       failures.push(`reversal lacks target: ${event.id}`);
@@ -201,19 +239,21 @@ export function readAttentionLedger(log: AttentionLog): AttentionLedger {
   const workIds = [...new Set(log.map((event) => event.workId))];
   const entries = workIds.map((workId): AttentionEntry => {
     const events = log.filter((event) => event.workId === workId).sort(byTimeThenId);
-    const evidence = latestDefined(events, 'evidence') ?? [];
+    const classifications = events.filter((event) => event.kind === 'classified');
+    const escalations = events.filter((event) => event.kind === 'escalated');
+    const evidence = latestDefined(classifications, 'evidence') ?? [];
     const base: Omit<AttentionEntry, 'priorityReasons'> = {
       workId,
       status: statusOf(events),
       openedAt: events.find((event) => event.kind === 'opened')?.at ?? events[0]?.at ?? '',
       lastAt: events.at(-1)?.at ?? '',
-      requirement: latestDefined(events, 'requirement') ?? null,
-      avoidability: latestDefined(events, 'avoidability') ?? null,
-      reversibility: latestDefined(events, 'reversibility') ?? null,
-      exceptionBurden: latestDefined(events, 'exceptionBurden') ?? null,
-      escalationAttribution: latestDefined(events, 'escalationAttribution') ?? null,
-      escalationCount: events.filter((event) => event.kind === 'escalated').length,
-      confidence: latestDefined(events, 'confidence') ?? null,
+      requirement: latestDefined(classifications, 'requirement') ?? null,
+      avoidability: latestDefined(classifications, 'avoidability') ?? null,
+      reversibility: latestDefined(classifications, 'reversibility') ?? null,
+      exceptionBurden: latestDefined(classifications, 'exceptionBurden') ?? null,
+      escalationAttribution: latestDefined(escalations, 'escalationAttribution') ?? null,
+      escalationCount: escalations.length,
+      confidence: latestDefined(classifications, 'confidence') ?? null,
       evidence,
     };
     return { ...base, priorityReasons: priorityReasons(base) };
@@ -253,7 +293,9 @@ export function readAttentionLedger(log: AttentionLog): AttentionLedger {
  * The narrow act lane: only a reversible, evidenced machine candidate with no
  * exception may move.  Returning null is the fail-closed decision.
  */
-export function boundedMachineCandidate(ledger: AttentionLedger): AttentionEntry | null {
+export function boundedMachineCandidate(log: AttentionLog): AttentionEntry | null {
+  if (validateAttentionLog(log).length > 0) return null;
+  const ledger = readAttentionLedger(log);
   return ledger.open.find(
     (entry) =>
       entry.requirement === 'machine-candidate' &&
