@@ -13,12 +13,7 @@
 // Typed against the DOM lib's Request/Response on purpose, so the app build
 // needs no @cloudflare/workers-types; the bindings the worker actually uses
 // are declared here by hand.
-import {
-  absorbBorderRows,
-  carriedArrivalIds,
-  fetchBorderRows,
-  mergeBorderArrivals,
-} from './server/border';
+import { fetchBorderRows, mergeBorderArrivals } from './server/border';
 import {
   CANONICAL_DOC_ID,
   commitAppend,
@@ -49,6 +44,7 @@ import {
   visibleTo,
 } from './server/courtroll';
 import { makeComplete as makeGuardedComplete } from './server/brain';
+import { handleCommand, type CommandEnv } from './server/command';
 // The fleet run + its brain doctrine live in the harness (shared with the Node
 // terminal fleet); the Worker calls the SAME runFleet against a user's vault.
 // eslint-disable-next-line import/extensions
@@ -58,7 +54,7 @@ import { brainFor } from '../harness/brain-doctrine.mjs';
 import { runGuardedModelWork } from '../harness/run-guard.mjs';
 import * as core from './operator-core';
 
-export interface Env extends AccessEnv {
+export interface Env extends AccessEnv, CommandEnv {
   SUPABASE_URL?: string;
   SUPABASE_SECRET_KEY?: string;
   /** Who holds the Crown — comma-separated Access emails. Absent ⇒ NO ONE is
@@ -91,7 +87,10 @@ export function createWorker(
     const { pathname } = new URL(request.url);
     const isCanonical = pathname === '/api/canonical/chronicle';
     const isPrivateApi =
-      pathname === '/api/chronicle' || pathname === '/api/court' || pathname === '/api/fleet';
+      pathname === '/api/chronicle' ||
+      pathname === '/api/court' ||
+      pathname === '/api/fleet' ||
+      pathname === '/api/command';
     let identity = '';
     if (isCanonical) {
       const access = await authenticateCanonicalCapability(request, env);
@@ -109,7 +108,7 @@ export function createWorker(
       // The fleet's door: run the clerks against this identity's vault.
       return handleFleet(request, env, identity, deps);
     }
-    if (pathname !== '/api/chronicle' && !isCanonical) {
+    if (pathname !== '/api/chronicle' && pathname !== '/api/command' && !isCanonical) {
       // Not the chronicle's door — the castle itself answers.
       return env.ASSETS.fetch(request);
     }
@@ -132,6 +131,10 @@ export function createWorker(
     // The document this verified identity owns.
     const docId = isCanonical ? CANONICAL_DOC_ID : docIdFor(identity);
 
+    if (pathname === '/api/command') {
+      return handleCommand(request, env, identity, { rest, headers, docId });
+    }
+
     if (request.method === 'GET') {
       const read = await vaultReadDoc(rest, headers, docId);
       if (read.status === 'error') {
@@ -152,6 +155,13 @@ export function createWorker(
     }
 
     if (request.method === 'PUT') {
+      // The canonical Chronicle has no generic writer. Its operational door is
+      // /api/command, where the server mints an authorized event batch. This
+      // legacy whole-document seam remains only on the per-identity simulation
+      // sandboxes while the browser migrates; it is not an authority boundary.
+      if (isCanonical) {
+        return new Response('typed commands only', { status: 405 });
+      }
       let doc: unknown;
       try {
         doc = JSON.parse(await request.text());
@@ -174,12 +184,9 @@ export function createWorker(
           headers: { 'content-type': 'application/json' },
         });
       }
-      // Committed. Retire the border rows this write carried (canonical only,
-      // best-effort — a refusal only means they fold in again next read).
-      if (isCanonical) {
-        await absorbBorderRows(rest, headers, carriedArrivalIds(doc), new Date().toISOString());
-      }
-      return new Response('ok');
+      return new Response('ok', {
+        headers: { 'x-landlord-write-boundary': 'simulation-whole-document' },
+      });
     }
 
     return new Response('method not allowed', { status: 405 });
