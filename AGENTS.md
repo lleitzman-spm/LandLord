@@ -3,10 +3,9 @@
 *Draft — awaiting the Regent's ratification (2026-07-19).*
 
 **Authority scope.** Shared orchestration lives only in
-`C:\Users\lleit\.agents\ORCHESTRATION.md`; cross-project current-work priority
-lives only in `C:\Users\lleit\.agents\work-hub\HUB.json`. This charter is a
-LandLord-local operating adapter. It does not own global orchestration or
-portfolio priority.
+`C:\Users\lleit\.agents\ORCHESTRATION.md`. The SPM work hub does not govern
+this project. This charter is a LandLord-local operating adapter. It does not
+own global orchestration or portfolio priority.
 
 This is the charter for any autonomous agent set to work on LandLord — **Kimi K3** first, but
 written for whatever brain drives the work; the brain is the swappable part. It is addressed to

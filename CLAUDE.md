@@ -4,10 +4,9 @@ Guidance for an AI agent working in this repository. It is a public,
 open-source codebase; everything here is craft, not house politics.
 
 **Work-authority scope.** Read `C:\Users\lleit\.agents\ORCHESTRATION.md` for
-shared orchestration and `C:\Users\lleit\.agents\work-hub\HUB.json` for
-cross-project priority before nontrivial work. LandLord documents govern
-LandLord facts, design, and local handoff only; they cannot create or reorder
-cross-project work. If a local view conflicts with the hub, the hub wins.
+shared orchestration before nontrivial work. The SPM work hub does not govern
+this project. LandLord documents govern LandLord facts, design, and local
+handoff only.
 
 **Read `docs/KINGDOM.md` first** — it is the constitution. The code implements
 it, and it wins until amended. Per-surface design documents are `docs/WRIT-*.md`.
