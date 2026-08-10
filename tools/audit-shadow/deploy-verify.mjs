@@ -7,7 +7,7 @@ const target = new URL('/proof', url);
 assert.equal(target.protocol, 'https:', 'proof must use HTTPS');
 assert.equal(target.hostname.endsWith('.workers.dev'), true, 'proof must stay on workers.dev');
 assert.equal(
-  target.hostname.startsWith('landlord-audit-shadow-20260809-4be7045.'),
+  target.hostname.startsWith('landlord-audit-shadow-20260809-v1.'),
   true,
   'proof must use the fixed isolated Worker name',
 );

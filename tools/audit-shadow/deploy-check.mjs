@@ -19,7 +19,7 @@ const allowedKeys = [
 
 assert.deepEqual(Object.keys(config).sort(), allowedKeys, 'config gained an unreviewed key');
 assert.match(config.name, /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/);
-assert.equal(config.name, 'landlord-audit-shadow-20260809-4be7045');
+assert.equal(config.name, 'landlord-audit-shadow-20260809-v1');
 assert.equal(config.main, './src/audit-shadow-worker.ts');
 assert.equal(config.workers_dev, true);
 assert.equal(config.preview_urls, false);
