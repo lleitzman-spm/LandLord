@@ -63,3 +63,9 @@ same morning, neither of them careless.
 The seat map, the real rails each seat calls, the phasing, the data gate's mechanics, and every
 figure. Those live in the sibling's copy of the bridge document. If you are working on something
 that needs them, you need that repository, not this note.
+
+## Company material has one home, and it is the sibling
+
+Ruled, standing. Anything company-specific found in this repository is deleted on sight — that is
+permission already given, not a question to ask again. A correction or note that cannot be public
+is written in the sibling repository, never parked here waiting for somewhere better.

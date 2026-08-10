@@ -33,15 +33,6 @@ shapes, which the boundary permits crossing. Adopting them is a session's work o
 **Note the shape of this one:** declining to guess is what made the `onFail` widening cost nothing
 when it came. Zero declarations meant zero migrations. See [[learned]].
 
-## Company material has no home
-
-The private repository this project forked from was deleted. There is now no private repository in
-the account, so anything that cannot be public has nowhere to live. One correction to the sibling
-boundary document is stranded because of it.
-
-Until a private repository exists, the answer to "where does this go" is sometimes *nowhere*, and
-the honest move is to say so rather than quietly widen what counts as public.
-
 ## `escape.ts` reads as binary to `file`
 
 `tools/leakcheck.mjs` flags `src/domain/escape.ts` for human review as binary content. It is valid

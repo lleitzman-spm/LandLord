@@ -59,19 +59,15 @@ blocker turned out to be built.** All green: `npm run build`, 442 tests,
 - **Write-loss surfacing was already built** — see the retirement note below. Two
   stale candidates in two sessions is now itself recorded as a pattern.
 
-**Open and unresolved — the frame question.** Luke, 2026-08-06: *"the real one
-shouldn't be a video game with video game score points."* The ribbon reads
-COFFERS · DELEGATION DEBT · PATRONS · ESCAPE RATE · *drive the debt to zero* —
-state counters with a win condition. The sibling's command bridge reads
-consequences with a date (ESCAPED TO ME · **ABOUT TO BREACH 2026-09-03** ·
-DRIFTING · UNTRUSTED). Nothing is decided and nothing was changed. Two things a
-next session should know before touching it: the objective line was added
-2026-07-29 answering *"once the game starts I'm still not sure what to do"* — the
-same need a bridge serves, reached for in game clothing — and `KINGDOM.md:552`
-ratifies the **War Game** as deliberately a game, which is separable from the main
-board's HUD. *Also: "bridge" names two unrelated things across these projects —
-the sibling's command bridge and LandLord's trust/corporate fee bridge. They were
-conflated in conversation; they are not the same idea.*
+**Ruled 2026-08-10 — the frame question is closed.** The main board's register
+is the **command bridge**: consequences with dates, not state counters with a
+win condition. The bridge is the MVP and comes first — it is the scaffolding
+everything else waits on. The game's clothing is built **around the working
+bridge after** that MVP, never before it. The war-game simulation is shelved
+entirely as a later phase; do not extend it. What the ribbon becomes is now a
+design task with a settled register, not an open question. *Still true: "bridge"
+names two unrelated things across these projects — the sibling's command bridge
+and LandLord's trust/corporate fee bridge. They are not the same idea.*
 
 **2026-08-06 — the operational graph, and every governing number made first-class.**
 All green: `npm run build`, 413 tests, `node tools/leakcheck.mjs` 0 findings,
