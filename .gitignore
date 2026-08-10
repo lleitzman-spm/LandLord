@@ -43,6 +43,7 @@ public/table-scene.json
 
 # The war-game dealer bundle — built by npm run build:wargame
 dist-wargame/
+.wrangler/
 
 # The rendered Great Book — 6MB and regenerable with `npm run book:html`.
 # Kept out of git so a stale render can never be mistaken for the current one.

@@ -56,6 +56,8 @@ jobs:
           node tools/compare-spm-audit-cli-test.mjs
       - name: Verify names-free shadow proof and reversal
         run: node tools/audit-shadow/run-audit-shadow-test.mjs
+      - name: Verify the bounded deployment contract
+        run: node tools/audit-shadow/deploy-check.mjs
       - name: Lint the Great Book graph
         run: npm run book:lint
       - name: Build the main surface

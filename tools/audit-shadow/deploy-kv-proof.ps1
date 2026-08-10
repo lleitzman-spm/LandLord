@@ -38,7 +38,9 @@ try {
     throw 'Remote KV read did not return the exact opaque proof value.'
   }
 
-  Invoke-Wrangler kv key delete $key --namespace-id $namespaceId --remote --config $workerConfig --force | Out-Null
+  # Wrangler 4.97.0 has no key-delete confirmation flag; passing --force is an error.
+  # Deleting the isolated namespace by id in finally remains the terminal cleanup.
+  Invoke-Wrangler kv key delete $key --namespace-id $namespaceId --remote --config $workerConfig | Out-Null
   Write-Output (ConvertTo-Json -Compress @{
     ok = $true
     requestedNamespaceName = $namespaceName

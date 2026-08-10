@@ -7,6 +7,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..', '..');
 const configPath = path.join(root, 'wrangler.audit-shadow.jsonc');
 const sourcePath = path.join(root, 'src', 'audit-shadow-worker.ts');
+const kvProofPath = path.join(root, 'tools', 'audit-shadow', 'deploy-kv-proof.ps1');
 
 const config = JSON.parse(await readFile(configPath, 'utf8'));
 const allowedKeys = [
@@ -55,6 +56,23 @@ const refusal = await worker.fetch(
 );
 assert.equal(refusal.status, 405);
 assert.equal(await refusal.text(), '');
+
+const kvProof = await readFile(kvProofPath, 'utf8');
+assert.match(
+  kvProof,
+  /Invoke-Wrangler kv key delete \$key --namespace-id \$namespaceId --remote --config \$workerConfig \| Out-Null/,
+  'the opaque proof key must be deleted explicitly',
+);
+assert.doesNotMatch(
+  kvProof,
+  /kv key delete[^\r\n]*--force/,
+  'Wrangler 4.97.0 rejects --force for kv key delete',
+);
+assert.match(
+  kvProof,
+  /kv namespace delete --namespace-id \$namespaceId --skip-confirmation --config \$workerConfig/,
+  'the isolated namespace must be deleted by returned id in finally',
+);
 
 console.log(JSON.stringify({
   ok: true,
