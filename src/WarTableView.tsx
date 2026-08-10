@@ -336,8 +336,9 @@ export default function WarTableView({
     goToLedger: (focusCase) => setPanel({ kind: 'ledger', focusCase }),
     goToRegent: () => setPanel({ kind: 'seat' }),
   };
-  // The living map is home. The old card board is one click away while the
-  // realm settles — the writ's safety net, removed once the map is solid.
+  // The realm is a secondary simulation projection. Remember which projection
+  // the operator last used, but never let that preference hide the decision
+  // bridge — the operator inbox remains the primary, standing surface.
   const [asCards, setAsCards] = useState(() => {
     try {
       return localStorage.getItem('landlord.board') === 'cards';
@@ -358,25 +359,16 @@ export default function WarTableView({
   const [clerksWorking, setClerksWorking] = useState(false);
   /** The palette — the one door that lists every other (⌘K / Ctrl+K, `/`, or `?`). */
   const [paletteOpen, setPaletteOpen] = useState(false);
-  /** Whether the Council stands beside the board (`c`). It used to be a
-   *  permanent 322px column — 19% of a 1440x900 screen and 23% of a 1280x800
-   *  one, at a FIXED width, so it ate proportionally more of a small screen.
-   *  Open by default so a first Regent is not left staring at a map with no
-   *  counsel, and remembered once closed, so the choice is made once. */
-  const [councilOpen, setCouncilOpen] = useState(() => {
-    try {
-      return localStorage.getItem('landlord.council') !== 'shut';
-    } catch {
-      return true;
-    }
-  });
-  const showCouncil = (v: boolean) => {
-    setCouncilOpen(v);
-    try {
-      localStorage.setItem('landlord.council', v ? 'open' : 'shut');
-    } catch {
-      /* a kingdom with no memory still works */
-    }
+  /** The operator inbox is primary and therefore cannot become a persisted
+   *  hidden default. The standing ribbon road focuses it on a desk and scrolls
+   *  to it on a hand-sized screen. */
+  const decisionBridgeRef = useRef<HTMLElement>(null);
+  const focusDecisionBridge = () => {
+    setPanel(null);
+    window.requestAnimationFrame(() => {
+      decisionBridgeRef.current?.focus({ preventScroll: true });
+      decisionBridgeRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
   };
   /** Whether each matter shows its reasoning beneath it. Off by default: the
    *  heads now carry the fact and the buttons name the act, so the prose is for
@@ -879,7 +871,7 @@ export default function WarTableView({
   // the persistent chrome go: nine rail glyphs and five footer buttons only had
   // to stand there because nothing else could reach what they reached.
   const commands: Command[] = [
-    { id: 'map', label: 'The Map', group: 'Surfaces', keys: 'g m', hint: 'the realm at a glance', run: () => { setPanel(null); showCards(false); } },
+    { id: 'map', label: 'The Map', group: 'Surfaces', keys: 'g m', hint: 'secondary simulation projection', run: () => { setPanel(null); showCards(false); } },
     { id: 'table', label: 'The Table', group: 'Surfaces', hint: 'the old card board', run: () => { setPanel(null); showCards(true); } },
     { id: 'throne', label: 'The Throne', group: 'Surfaces', keys: 'g t', hint: "the King's view", run: () => setPanel({ kind: 'throne' }) },
     { id: 'seat', label: "The Regent's Seat", group: 'Surfaces', keys: 'g s', hint: 'identify and delegate the work', run: () => setPanel({ kind: 'seat' }) },
@@ -891,11 +883,11 @@ export default function WarTableView({
     { id: 'marches', label: 'The Marches', group: 'Surfaces', keys: 'g r', hint: 'the border lands', run: () => setPanel({ kind: 'marches' }) },
     {
       id: 'council',
-      label: councilOpen ? 'Lower the Council' : 'Raise the Council',
+      label: 'Focus the Decision Bridge',
       group: 'Surfaces',
       keys: 'c',
       hint: alarms > 0 ? `${alarms} matter${alarms === 1 ? '' : 's'} pressing` : 'nothing presses',
-      run: () => showCouncil(!councilOpen),
+      run: focusDecisionBridge,
     },
     {
       id: 'detail',
@@ -1080,7 +1072,7 @@ export default function WarTableView({
     <DetailContext.Provider value={{ detail, toggle: () => setDetail((d) => !d) }}>
     <BoardName.Provider value={asCards ? 'the Table' : 'the Map'}>
     <div className="wt">
-      <div className={`wt-table${councilOpen ? '' : ' wt-table--nocouncil'}`}>
+      <div className="wt-table">
         {/* ── The ribbon ─────────────────────────────────────────────── */}
         <header className="wt-chrome wt-ribbon">
           <div className="wt-crest">
@@ -1163,32 +1155,18 @@ export default function WarTableView({
             </div>
           </button>
 
-          {/* WHAT THE GAME WANTS FROM YOU. This sentence already existed — but
-              only inside the legacy card view, and the map is the default board,
-              so the app stated its objective exactly once on a screen the
-              default player never visits (Edwin, 2026-07-29: *"once the game
-              starts I'm still not sure what to do"*). It was never that we had
-              no answer; the answer was filed where nobody goes.
-              It rides the ribbon rather than the map for two reasons: the map is
-              already carrying five overlays and a sixth covered the Crown
-              offices rail outright, and "drive the debt to zero" belongs BESIDE
-              the Delegation debt gauge it talks about (design law 6). It takes
-              the space the bare spacer used to hold. */}
-          {/* The IMPERATIVE only. The full sentence — "every owner in a knight's
-              care, every Crown office headed, every box of work on a real desk"
-              — is three lines of prose in a strip that has to stay one line
-              tall: at 1366px it wrapped the ribbon to 124px and gave back most
-              of the space the retired footer had just freed. So the standing
-              line is the five words that say what to DO, the whole sentence is
-              one hover away, and the current act is spelled out on the campaign
-              card in the Council. Said once each, at the length its place can
-              carry. */}
-          <p
-            className="wt-obj wt-obj-ribbon"
-            title="Every owner in a knight's care, every Crown office headed, every box of work on a real desk — that is the whole of it."
+          {/* The primary command names the human work, not a simulated score.
+              It focuses the standing decision bridge rather than navigating to
+              the secondary map projection. */}
+          <button
+            className="wt-obj wt-obj-ribbon wt-inbox-command"
+            onClick={focusDecisionBridge}
+            aria-controls="decision-bridge"
+            title="Review each pending decision with its evidence, authority and proposed act"
           >
-            <b>Objective</b> Drive the debt to zero
-          </p>
+            <b>Operator inbox</b> Review decisions &amp; evidence
+            {alarms > 0 && <span className="wt-councount">{alarms}</span>}
+          </button>
           <div className="wt-spacer" />
           {/* The war clock, and the only two acts done often enough to earn
               standing space. The reading is a door to the War Games, where the
@@ -1227,28 +1205,6 @@ export default function WarTableView({
               </>
             )}
           </div>
-          {/* THE COUNCIL'S DOOR — and yes, this is the third life of a control
-              that has been wrong twice. It is not the ⚑ button again, and the
-              difference is the whole point: that button was struck for
-              DUPLICATION, because the Council stood permanently on the right
-              while a button offered to show it to you. The Council is summoned
-              now, so this is not a second road to a visible thing — it is the
-              only road to a hidden one, which is the case the old button never
-              had. It carries the count because a hidden Council cannot. */}
-          <button
-            className={`wt-council-btn${councilOpen ? ' on' : ''}${alarms > 0 ? ' pressing' : ''}`}
-            onClick={() => showCouncil(!councilOpen)}
-            aria-pressed={councilOpen}
-            title={
-              councilOpen
-                ? 'Lower the Council — the board takes the space ( c )'
-                : `Raise the Council — ${alarms > 0 ? `${alarms} matter${alarms === 1 ? '' : 's'} pressing` : 'nothing presses'} ( c )`
-            }
-          >
-            <span aria-hidden="true">⚑</span>
-            <span className="wt-lbl">Council</span>
-            {alarms > 0 && <span className="wt-councount">{alarms}</span>}
-          </button>
           {/* The palette's own door. A surface reachable ONLY by an
               undocumented keystroke is not reachable — that is the first
               question the A/E/P check asks, and it is the one control that must
@@ -1277,21 +1233,9 @@ export default function WarTableView({
               space of anything here — and it was the item the ribbon wrapped
               onto a second row, costing 53px of board on every screen to hold a
               control almost nobody presses twice. */}
-          {/* THE ⚑ COUNCIL BUTTON IS GONE, and this is the second time this
-              control has been wrong (Edwin, 2026-07-29: *"the council button is
-              redundant to the council panel"*).
-              First it scrolled to an aside already on screen — a dead button.
-              The fix made it open a Council SURFACE, and that was worse: the
-              same `heraldScraps` array rendered twice, side by side, since the
-              aside is `grid-area: advisor` and the panel is `grid-area: board`.
-              Pressing it destroyed the map to show you a list six inches to the
-              right — and the panel dropped the campaign card, the one thing on
-              the board that says what to do next.
-              The aside stands in EVERY viewport (on a narrow screen it stacks
-              below the board), so there was never a case the button served. The
-              alarm count it carried now rides on the aside's own caption, beside
-              the heralds it counts. The right answer to a redundant control is
-              to remove it, not to give it somewhere new to go. */}
+          {/* The old Council toggle is gone. The bridge stays standing; its one
+              ribbon road focuses the human work on a desk and scrolls to it on
+              a narrow screen without hiding or duplicating the inbox. */}
         </header>
 
         {/* THE NINE-GLYPH RAIL IS GONE (Edwin, 2026-07-29: "still seems like a
@@ -1311,6 +1255,10 @@ export default function WarTableView({
         {/* ── The board ──────────────────────────────────────────────── */}
         {!panel && !asCards && (
           <main className="wt-board wt-board-realm">
+            <div className="wt-projection-label">
+              <strong>Simulation projection</strong>
+              <span>Navigation only · never authority</span>
+            </div>
             <FlatMapView
               scene={realmScene}
               onSelectFief={(id) => setPanel({ kind: 'pod', knightId: id })}
@@ -1389,8 +1337,8 @@ export default function WarTableView({
                 Regent of the realm
               </button>
               <div className="wt-obj">
-                Objective — every owner in a knight's care, every Crown office headed, every box of
-                work on a real desk. Drive the debt to zero.
+                Supporting simulation context. Answer human decisions from the Decision Bridge;
+                delegation debt remains a separate diagnostic.
               </div>
             </div>
 
@@ -1632,16 +1580,21 @@ export default function WarTableView({
             live on the War Games surface (g w) and in the palette. Nothing was
             dropped; each thing simply stands where its frequency earns it. */}
 
-        {/* ── The council feed ───────────────────────────────────────── */}
-        {councilOpen && (
-        <aside className="wt-advisor wt-chrome" aria-label="The Council">
+        {/* ── The Decision Bridge — the primary operator inbox ───────── */}
+        <aside
+          className="wt-advisor wt-chrome"
+          aria-label="Decision Bridge — operator inbox"
+          id="decision-bridge"
+          ref={decisionBridgeRef}
+          tabIndex={-1}
+        >
           {/* The count stands ON the thing it counts. It used to ride a ⚑ button
               in the ribbon whose only other job was to open a copy of this very
               list — so the count travelled away from the heralds and the button
               stayed to duplicate them. */}
           <div className="wt-acap">
             <span>
-              The Council ·{' '}
+              Decision Bridge · operator inbox ·{' '}
               {alarms > 0
                 ? `${alarms} ${alarms === 1 ? 'matter presses' : 'matters press'}`
                 : 'nothing presses'}
@@ -1661,14 +1614,6 @@ export default function WarTableView({
                 }
               >
                 Why
-              </button>
-              <button
-                className="wt-atog"
-                onClick={() => showCouncil(false)}
-                title="Lower the Council — the board takes the space ( c )"
-                aria-label="Lower the Council"
-              >
-                ✕
               </button>
             </span>
           </div>
@@ -1717,7 +1662,6 @@ export default function WarTableView({
           )}
           {heraldScraps}
         </aside>
-        )}
 
       {/* ── The overlay panels — a seat entered, over the board ──────── */}
       {panel?.kind === 'pod' && !openPod && (
@@ -1851,7 +1795,7 @@ export default function WarTableView({
           medallion="👑"
           ring={throne.debt === 0 ? 'var(--wt-green)' : 'var(--wt-red)'}
           title="The Throne"
-          sub="The King's seat — every fief lorded, every box on a real desk. Drive the debt to zero."
+          sub="The King's seat — delegation debt as a supporting diagnostic beside the operator's decision work."
           onClose={() => setPanel(null)}
         >
           <ThronePanel

@@ -73,10 +73,12 @@ must refuse; a generic privileged-event writer may not bypass typed commands; an
 exceptional money must refuse. Unattended sweeping stays disabled until case scope, exact-current-
 step enforcement, causal versioning and idempotency are proven through hostile tests.
 
-**This approval does not authorise activation.** No real records, credentials, money movement,
-unattended live action, live sibling bridge, shadow trial, production deployment, or widening of
-the identity wall is part of Gates 0–3. Publication of the integration branch and a draft PR is
-authorised; merging to `main` remains a separate act because this repository's herald deploys it.
+**Authority expanded later on 2026-08-09.** Approval of Gates 0–3 alone did not authorise
+activation. A subsequent explicit instruction authorises a names-free shadow and one gated,
+bounded, reversible external act. That expansion does **not** authorise real records, credentials,
+money movement, identity-wall widening, skipping any gate, or treating a shadow result as LIVE.
+Publication of the integration branch and a draft PR is authorised; merging to `main` remains a
+separate act because this repository's herald deploys it.
 
 **Gate 0 verification receipt:** `npm test` — 38 files / 476 tests passed; `npm run build` passed;
 `npm run leakcheck` — 1,400 tracked text files / 0 findings; `npm run book:lint` — 1,074 quotes
@@ -86,6 +88,15 @@ errors. A second browser drive entered the Ledger by keyboard and observed `ESCA
 EXPERIMENTAL` with its non-governing disclaimer and 0 console errors. A/E/P: the state is announced
 to assistive technology, visible without navigation, and adjacent to the product identity on every
 War Table surface.
+
+**Adversarial UI correction receipt:** the Decision Bridge is now the permanent first column on a
+desk and the first content block on a hand-sized screen; an old persisted `landlord.council=shut`
+value cannot hide it. The ribbon's primary command focuses that inbox, while the realm names itself
+`Simulation projection · Navigation only · never authority`. Headless Chrome measured bridge-before-
+map at 1366×768 and 390×844, keyboard focus landed on `#decision-bridge`, horizontal overflow was
+0px, and the console was clean. `npm run build` passed. The default 5-second Vitest limit timed out
+three existing grand-muster tests under concurrent load; each passed alone, and the full 476-test
+suite passed with `--testTimeout=30000`.
 
 **2026-08-07 — TWO LANES MERGED.** The rig lane
 (`claude/landlord-agent-rig-family-ualhub`) and the findings lane

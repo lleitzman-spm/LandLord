@@ -144,11 +144,11 @@ export default function OnboardingOverlay() {
                 </dd>
               </div>
               <div className="wt-onb-row">
-                <dt>⚑ Council</dt>
+                <dt>Decision Bridge</dt>
                 <dd>
-                  What presses, and the act for each — one line apiece. <b>c</b> raises and lowers
-                  it; <b>Why</b> shows the reasoning under every matter. Lower it and the board
-                  takes the whole screen.
+                  Your primary operator inbox: what presses, its evidence, and the act for each —
+                  one line apiece. <b>c</b> focuses it; <b>Why</b> shows the reasoning under every
+                  matter. The map beside it is a simulation projection for navigation only.
                 </dd>
               </div>
               <div className="wt-onb-row">

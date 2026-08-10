@@ -745,7 +745,7 @@ button.grand:disabled {
      below 900px reset this to auto, where scrolling the page IS the design. */
   height: 100dvh;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(248px, 322px);
+  grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
   /* minmax(0, …), NOT a bare 1fr. `1fr` is shorthand for `minmax(auto, 1fr)`,
      and an `auto` minimum is the CONTENT's size — so this row could never
      shrink below the map's intrinsic height. Measured at 1366x768, the most
@@ -761,7 +761,7 @@ button.grand:disabled {
   grid-template-rows: auto minmax(0, 1fr);
   grid-template-areas:
     'ribbon ribbon'
-    'board  advisor';
+    'advisor board';
   gap: 10px;
   padding: 12px;
   /* 2560, not 1500 and not unbounded. At 1500 a 1920 monitor threw away 420px
@@ -1344,6 +1344,25 @@ button.grand:disabled {
   border-left: 2px solid var(--wt-gold);
   padding-left: 12px;
 }
+.wt-inbox-command {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-top: 0;
+  border-right: 0;
+  border-bottom: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+.wt-inbox-command:hover {
+  color: var(--wt-ink);
+  border-left-color: var(--wt-gold-br);
+}
+.wt-inbox-command:focus-visible {
+  outline: 2px solid var(--wt-gold-br);
+  outline-offset: 3px;
+}
 .wt-obj-ribbon b {
   margin-right: 6px;
   color: var(--wt-gold-br);
@@ -1707,6 +1726,12 @@ button.wt-fav:hover {
   max-height: 100%;
   overflow-y: auto;
   min-height: 0;
+  border-color: color-mix(in srgb, var(--wt-gold) 70%, var(--wt-edge));
+  box-shadow: inset 0 1px 0 #ffffff0d, 0 8px 24px #0009, 0 0 0 1px #c7a44e24;
+}
+.wt-advisor:focus-visible {
+  outline: 2px solid var(--wt-gold-br);
+  outline-offset: 2px;
 }
 .wt-acap {
   font-family: var(--wt-disp);
@@ -2154,8 +2179,8 @@ button.wt-fav:hover {
     grid-template-rows: none;
     grid-template-areas:
       'ribbon'
-      'board'
-      'advisor';
+      'advisor'
+      'board';
   }
   .wt-advisor {
     position: static;
@@ -2815,6 +2840,29 @@ button.wt-fav:hover {
 .wt-board-realm {
   padding: 0;
   overflow: hidden;
+}
+.wt-projection-label {
+  position: absolute;
+  z-index: 40;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 7px 10px;
+  border: 1px solid var(--wt-edge);
+  border-radius: 8px;
+  background: #17140fd9;
+  color: var(--wt-ink-dim);
+  font-family: var(--wt-util);
+  font-size: 0.56rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+.wt-projection-label strong {
+  color: var(--wt-gold-br);
+  font-size: 0.62rem;
 }
 .wt-board-realm > canvas,
 .wt-board-realm .rl-root {
@@ -3492,49 +3540,7 @@ button.wt-fav:hover {
 }
 .wt-horn .wt-tide { flex: 1 1 100%; margin: 0; }
 
-/* ── The Council, lowered ──────────────────────────────────────────────────
-   When the Council is down its COLUMN goes with it, rather than the aside
-   floating over the board. Overlaying was the tempting version and it was
-   wrong: the map keeps its cartouche, its standing note and the board-swap
-   button all on the right edge at right:18px, and a drawer sliding over them
-   would have covered three controls at once — the exact fault caught twice
-   already this session. A grid column that ceases to exist cannot occlude
-   anything. */
-.wt-table--nocouncil {
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-areas:
-    'ribbon'
-    'board';
-}
-@media (max-width: 900px) {
-  .wt-table--nocouncil {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      'ribbon'
-      'board';
-  }
-}
-
-/* The Council's door in the ribbon, wearing its count. */
-.wt-council-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  flex-shrink: 0;
-  padding: 7px 10px;
-  border-radius: 8px;
-  border: 1px solid var(--wt-edge);
-  background: #ffffff0a;
-  color: var(--wt-ink);
-  font: inherit;
-  font-size: 0.78rem;
-  cursor: pointer;
-}
-.wt-council-btn:hover { background: #ffffff16; border-color: var(--wt-gold); }
-.wt-council-btn.on { border-color: var(--wt-gold); color: var(--wt-gold-br); }
-.wt-council-btn:focus-visible { outline: 2px solid var(--wt-gold-br); outline-offset: 2px; }
-/* The count is the one thing a lowered Council cannot say for itself, so it
-   wears the amber of a thing that wants answering — never red: red means
+/* A matter count wears amber because it wants answering — never red: red means
    distress and nothing else (the hue law). */
 .wt-councount {
   min-width: 18px;
@@ -3547,7 +3553,7 @@ button.wt-fav:hover {
   text-align: center;
 }
 
-/* The Council's own caption row — the "Why" toggle and the lowering. */
+/* The Decision Bridge's caption row and its one density toggle. */
 .wt-acap {
   display: flex;
   align-items: center;
@@ -3570,10 +3576,6 @@ button.wt-fav:hover {
 .wt-atog:hover { color: var(--wt-sepia); border-color: var(--wt-sepia-dim); }
 .wt-atog.on { color: #221a08; background: #d3c08f; border-color: #d3c08f; }
 .wt-atog:focus-visible { outline: 2px solid var(--wt-gold-br); outline-offset: 2px; }
-@media (max-width: 900px) {
-  .wt-council-btn .wt-lbl { display: none; }
-}
-
 /* The experimental Escape diagnostic's headline figure. It sits on its own card
    so it can carry its split and caveats without resembling a governing KPI. */
 .num-lg {
