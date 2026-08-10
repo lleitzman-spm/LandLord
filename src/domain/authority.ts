@@ -133,6 +133,7 @@ export type AuthorityRefusalCode =
   | 'replay'
   | 'unattended-refused'
   | 'proposal-already-pending'
+  | 'proposal-requires-ratification'
   | 'engine-refused';
 
 export type AuthorityDecision =
@@ -573,9 +574,16 @@ export async function evaluateCommand(
     return refuse('proposal-already-pending', 'this step already has a proposal awaiting judgment');
   }
 
+  if (command.type === 'complete-step' && reading.next.kind === 'proposed') {
+    return refuse(
+      'proposal-requires-ratification',
+      'a proposed step may advance only through approve or override with that capability',
+    );
+  }
+
   if (command.type === 'complete-step' && grant.actorKind === 'agent') {
     const modes = new Map(context.chronicle.catalog.map((row) => [row.key, row.mode]));
-    if (reading.next.kind === 'proposed' || !mayRunUnattended(reading.next.step, modes)) {
+    if (!mayRunUnattended(reading.next.step, modes)) {
       return refuse(
         'unattended-refused',
         'an agent may complete only an auto step with no outside wait or unresolved mode',

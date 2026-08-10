@@ -293,6 +293,21 @@ describe('the deny-by-default authority kernel', () => {
     ).toBe('human-only');
   });
 
+  it('does not let a human complete around the distinct approval capability', async () => {
+    const proposal = proposeStep(flow, instance.caseId, 0, ACTOR, {
+      at: '2026-08-09T17:30:00.000Z',
+      id: () => 'proposal-human-ratchet',
+    });
+    const c = chronicle([...instance.events, ...(proposal ? [proposal] : [])]);
+    const humanCompleteGrant = await grant({ actorKind: 'human', capabilities: ['step:complete'] });
+    expect(
+      await refusal(
+        { type: 'complete-step', expectedCaseVersion: await caseVersion(c.events, instance.caseId) },
+        { chronicle: c, grant: humanCompleteGrant },
+      ),
+    ).toBe('proposal-requires-ratification');
+  });
+
   it('refuses agent completion on human, outside-wait, and unresolved modes', async () => {
     for (const first of [
       { ...flow.steps[0], mode: 'human' as const },
