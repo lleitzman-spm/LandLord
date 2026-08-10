@@ -104,6 +104,23 @@ map at 1366×768 and 390×844, keyboard focus landed on `#decision-bridge`, hori
 three existing grand-muster tests under concurrent load; each passed alone, and the full 476-test
 suite passed with `--testTimeout=30000`.
 
+**Final audit-integration and bounded-proof receipt (2026-08-09):** proof-source
+`1bc3ddd333b8a2a4cbbbce5647142eead70485dd` (tree
+`abad32aa8fa1f5ef2fdc94b9f0850969e256c701`) is published in draft PR #1. Both push and PR CI passed
+the protected `leak check (no dependencies)` and `Book, type-check, test, and builds` contexts.
+The local matrix passed 44 test files / 529 tests, all three builds, type-check, the 1,494-file text
+leakcheck, Book integrity, comparison contracts, shadow hostile contracts and the deploy contract.
+The real SPM comparison stayed `comparison-gaps-present` on its five named topology/evidence gaps;
+nothing was promoted to LIVE.
+
+The authorised bounded act deployed only the fixed workers.dev proof with zero bindings or secrets,
+verified exact commit/tree provenance plus POST refusal, then created one isolated KV namespace and
+wrote/read/deleted one opaque value. The key and namespace were deleted, the Worker was deleted,
+deployment lookup returned Cloudflare code 10007, the proof URL returned 404 and KV namespace list
+returned `[]`. An earlier attempt failed closed on an invalid Wrangler single-key flag; its namespace
+and Worker were also removed before the corrected retry. No real records, identity-bearing data,
+credentials, money or operational authority entered either attempt. Merging remains a separate act.
+
 **2026-08-07 — TWO LANES MERGED.** The rig lane
 (`claude/landlord-agent-rig-family-ualhub`) and the findings lane
 (`claude/landlord-gameplay-loop-xzk8n3`) ran in parallel off the same fork point
