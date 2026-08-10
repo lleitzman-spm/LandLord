@@ -9,6 +9,7 @@
 // untyped fleet route stays disabled until it speaks this protocol.
 
 import type { Chronicle } from './chronicle';
+import type { Catalog } from './catalog';
 import type { KingdomEvent } from './events';
 import {
   approveStep,
@@ -79,6 +80,7 @@ export interface AuthorityGrant {
   actorKind: 'human' | 'agent';
   capabilities: AuthorityCapability[];
   caseIds: string[];
+  catalogSha256: string;
   flows: GrantedFlow[];
   stepPolicies: GrantedStepPolicy[];
   origins: string[];
@@ -110,6 +112,7 @@ export type AuthorityRefusalCode =
   | 'wrong-flow'
   | 'stale-flow'
   | 'flow-digest-mismatch'
+  | 'catalog-digest-mismatch'
   | 'missing-case'
   | 'stale-chronicle'
   | 'stale-case'
@@ -129,6 +132,7 @@ export type AuthorityRefusalCode =
   | 'stale-policy'
   | 'replay'
   | 'unattended-refused'
+  | 'proposal-already-pending'
   | 'engine-refused';
 
 export type AuthorityDecision =
@@ -196,6 +200,7 @@ const GRANT_KEYS = [
   'actorKind',
   'capabilities',
   'caseIds',
+  'catalogSha256',
   'flows',
   'stepPolicies',
   'origins',
@@ -339,6 +344,7 @@ function parseGrant(raw: unknown): AuthorityGrant | null {
     !stringArray(raw.capabilities) ||
     !raw.capabilities.every((capability) => CAPABILITIES.has(capability)) ||
     !stringArray(raw.caseIds) ||
+    !sha256Text(raw.catalogSha256) ||
     !grantedFlows(raw.flows) ||
     !grantedStepPolicies(raw.stepPolicies) ||
     !stringArray(raw.origins) ||
@@ -389,6 +395,12 @@ export async function caseVersion(
  * therefore a refusal, not a silent policy rewrite. */
 export async function flowDigest(template: FlowTemplate): Promise<string> {
   return sha256(template);
+}
+
+/** The catalog supplies inherited execution modes. Binding its complete bytes
+ * prevents a catalog-only human-to-auto flip from widening a standing grant. */
+export async function catalogDigest(catalog: Catalog): Promise<string> {
+  return sha256(catalog);
 }
 
 /** Flow versions are declarations, not guesses. Historical unversioned books
@@ -537,6 +549,12 @@ export async function evaluateCommand(
   if ((await flowDigest(template)) !== grantedFlow.sha256) {
     return refuse('flow-digest-mismatch', 'the loaded flow bytes do not match the trusted grant');
   }
+  if ((await catalogDigest(context.chronicle.catalog)) !== grant.catalogSha256) {
+    return refuse(
+      'catalog-digest-mismatch',
+      'the loaded catalog bytes do not match the trusted grant',
+    );
+  }
 
   const reading = readFlow(template, context.chronicle.events, command.caseId, context.now);
   if (!reading) return refuse('missing-case', 'the named case is not in the Chronicle');
@@ -549,6 +567,10 @@ export async function evaluateCommand(
   }
   if (command.attempt !== reading.next.failures + 1) {
     return refuse('wrong-attempt', 'the command names another attempt');
+  }
+
+  if (command.type === 'propose-step' && reading.next.kind === 'proposed') {
+    return refuse('proposal-already-pending', 'this step already has a proposal awaiting judgment');
   }
 
   if (command.type === 'complete-step' && grant.actorKind === 'agent') {

@@ -2,11 +2,13 @@ import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { exportJWK, generateKeyPair, SignJWT } from 'jose';
 import {
   caseVersion,
+  catalogDigest,
   flowDigest,
   type AuthorityGrant,
   type ExternalCommand,
 } from '../src/domain/authority';
 import { instantiateFlow, type FlowTemplate } from '../src/domain/flows';
+import { normalizeChronicle } from '../src/domain/chronicle';
 import { handleCommand } from '../src/server/command';
 import worker, { type Env } from '../src/worker';
 
@@ -64,6 +66,7 @@ async function setup() {
     actorKind: 'agent',
     capabilities: ['step:complete'],
     caseIds: [instance.caseId],
+    catalogSha256: await catalogDigest(normalizeChronicle(doc).catalog),
     flows: [{ key: flow.key, version: flow.version, sha256: await flowDigest(flow) }],
     stepPolicies: [
       { flowKey: flow.key, stepKey: 'work', purpose: 'demo-work', money: false },

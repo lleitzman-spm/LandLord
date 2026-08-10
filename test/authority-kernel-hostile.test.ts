@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   caseVersion,
+  catalogDigest,
   declaredFlowVersion,
   evaluateCommand,
   flowDigest,
@@ -62,6 +63,7 @@ async function grant(overrides: Partial<AuthorityGrant> = {}): Promise<Authority
     actorKind: 'agent',
     capabilities: ['step:complete', 'step:propose'],
     caseIds: [instance.caseId],
+    catalogSha256: await catalogDigest(chronicle().catalog),
     flows: [{ key: flow.key, version: flow.version, sha256: await flowDigest(flow) }],
     stepPolicies: [
       { flowKey: flow.key, stepKey: 'inspect', purpose: 'demo-work', money: false },
@@ -194,6 +196,40 @@ describe('the deny-by-default authority kernel', () => {
     expect(await refusal({}, { chronicle: c })).toBe('flow-digest-mismatch');
   });
 
+  it('binds inherited unattended mode to the complete catalog digest', async () => {
+    const inherited = {
+      ...flow,
+      steps: [{ ...flow.steps[0], mode: undefined }, flow.steps[1]],
+    } as FlowTemplate & { version: string };
+    const inheritedInstance = opened(inherited);
+    const autoCatalog = [
+      ...chronicle().catalog,
+      { key: 'demo.inspect', title: 'Demo inspect', mode: 'auto' as const },
+    ];
+    const allowed = normalizeChronicle({
+      events: inheritedInstance.events,
+      flows: [inherited],
+      catalog: autoCatalog,
+    });
+    const boundGrant = await grant({
+      catalogSha256: await catalogDigest(autoCatalog),
+      flows: [{ key: flow.key, version: flow.version, sha256: await flowDigest(inherited) }],
+    });
+    const mutated = normalizeChronicle({
+      events: inheritedInstance.events,
+      flows: [inherited],
+      catalog: autoCatalog.map((row) =>
+        row.key === 'demo.inspect' ? { ...row, mode: 'human' as const } : row,
+      ),
+    });
+    expect(
+      await refusal(
+        { expectedCaseVersion: await caseVersion(allowed.events, inheritedInstance.caseId) },
+        { chronicle: mutated, grant: boundGrant },
+      ),
+    ).toBe('catalog-digest-mismatch');
+  });
+
   it('refuses unversioned and migrated-legacy flows operationally', async () => {
     const record = { ...flow } as Record<string, unknown>;
     delete record.version;
@@ -292,6 +328,24 @@ describe('the deny-by-default authority kernel', () => {
         { chronicle: c },
       ),
     ).toBe('replay');
+  });
+
+  it('refuses a second proposal while one already awaits judgment', async () => {
+    const proposal = proposeStep(flow, instance.caseId, 0, ACTOR, {
+      at: '2026-08-09T17:30:00.000Z',
+      id: () => 'proposal-existing',
+    });
+    const c = chronicle([...instance.events, ...(proposal ? [proposal] : [])]);
+    expect(
+      await refusal(
+        {
+          type: 'propose-step',
+          idempotencyKey: 'proposal-fresh-key',
+          expectedCaseVersion: await caseVersion(c.events, instance.caseId),
+        },
+        { chronicle: c },
+      ),
+    ).toBe('proposal-already-pending');
   });
 
   it('refuses stale evidence and policy versions', async () => {
