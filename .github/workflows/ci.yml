@@ -50,6 +50,10 @@ jobs:
         run: npx tsc --noEmit
       - name: Test
         run: npm test
+      - name: Verify the offline sibling contract
+        run: node tools/compare-spm-audit-test.mjs
+      - name: Verify names-free shadow proof and reversal
+        run: node tools/audit-shadow/run-audit-shadow-test.mjs
       - name: Lint the Great Book graph
         run: npm run book:lint
       - name: Build the main surface
