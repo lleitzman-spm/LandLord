@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 
-const [url] = process.argv.slice(2);
-assert(url, 'usage: node tools/audit-shadow/deploy-verify.mjs <workers.dev-url>');
+const [url, expectedCommit, expectedTree] = process.argv.slice(2);
+assert(url && /^[0-9a-f]{40}$/.test(expectedCommit ?? '') && /^[0-9a-f]{40}$/.test(expectedTree ?? ''), 'usage: node tools/audit-shadow/deploy-verify.mjs <workers.dev-url> <commit> <tree>');
 
 const target = new URL('/proof', url);
 assert.equal(target.protocol, 'https:', 'proof must use HTTPS');
@@ -24,9 +24,12 @@ assert.deepEqual(await response.json(), {
   schema: 'audit-activation-proof/v1',
   provenance: 'SIMULATION',
   purpose: 'isolated-static-deployment-proof',
+  sourceCommit: expectedCommit,
+  sourceTree: expectedTree,
   applied: false,
   bindings: 0,
-  externalState: 'none',
+  deploymentExternalState: 'worker-script-only',
+  operationalExternalEffects: 'none',
 });
 
 const write = await fetch(target, {

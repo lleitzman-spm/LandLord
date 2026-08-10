@@ -6,13 +6,22 @@
  * that these reviewed bytes reached an isolated workers.dev address.
  */
 
+declare const AUDIT_SOURCE_COMMIT: string | undefined;
+declare const AUDIT_SOURCE_TREE: string | undefined;
+
+const sourceCommit = typeof AUDIT_SOURCE_COMMIT === 'string' ? AUDIT_SOURCE_COMMIT : 'local-unpinned';
+const sourceTree = typeof AUDIT_SOURCE_TREE === 'string' ? AUDIT_SOURCE_TREE : 'local-unpinned';
+
 export const AUDIT_SHADOW_PROOF = Object.freeze({
   schema: 'audit-activation-proof/v1',
   provenance: 'SIMULATION',
   purpose: 'isolated-static-deployment-proof',
+  sourceCommit,
+  sourceTree,
   applied: false,
   bindings: 0,
-  externalState: 'none',
+  deploymentExternalState: 'worker-script-only',
+  operationalExternalEffects: 'none',
 } as const);
 
 const PROOF_PATH = '/proof';

@@ -45,7 +45,10 @@ assert.deepEqual(await proof.json(), AUDIT_SHADOW_PROOF);
 assert.equal(AUDIT_SHADOW_PROOF.provenance, 'SIMULATION');
 assert.equal(AUDIT_SHADOW_PROOF.applied, false);
 assert.equal(AUDIT_SHADOW_PROOF.bindings, 0);
-assert.equal(AUDIT_SHADOW_PROOF.externalState, 'none');
+assert.equal(AUDIT_SHADOW_PROOF.sourceCommit, 'local-unpinned');
+assert.equal(AUDIT_SHADOW_PROOF.sourceTree, 'local-unpinned');
+assert.equal(AUDIT_SHADOW_PROOF.deploymentExternalState, 'worker-script-only');
+assert.equal(AUDIT_SHADOW_PROOF.operationalExternalEffects, 'none');
 
 const refusal = await worker.fetch(
   new Request('https://probe.invalid/proof', { method: 'PUT', body: '{}' }),

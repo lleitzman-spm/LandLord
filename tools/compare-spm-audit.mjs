@@ -112,6 +112,7 @@ export function validateProjection(payload, expectedProducerCommit) {
         throw forbiddenError(`transition contains an unrecognized value at $.lanes.${lane}.transitions[${index}]`);
       }
       if (![edge.consumes, edge.produces, edge.guardSlots].every(Array.isArray)) throw forbiddenError(`transition arrays are invalid at $.lanes.${lane}.transitions[${index}]`);
+      if (new Set(edge.consumes).size !== edge.consumes.length || new Set(edge.produces).size !== edge.produces.length) throw forbiddenError(`transition repeats a topology endpoint at $.lanes.${lane}.transitions[${index}]`);
       if ([...edge.consumes, ...edge.produces].some((id) => !/^p-[0-9]{4}$/.test(id)) || edge.guardSlots.some((slot) => !guardSlots.has(slot))) throw forbiddenError(`transition topology is invalid at $.lanes.${lane}.transitions[${index}]`);
       const placeIds = new Set(laneValue.places.map((place) => place.id));
       if ([...edge.consumes, ...edge.produces].some((id) => !placeIds.has(id))) throw forbiddenError(`transition references a place outside lane ${lane}`);

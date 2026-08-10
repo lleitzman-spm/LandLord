@@ -47,6 +47,20 @@ duplicate.lanes.G3.places.push(structuredClone(duplicate.lanes.G3.places[0]));
 delete duplicate.attestation.canonicalJsonSha256;
 duplicate.attestation.canonicalJsonSha256 = createHash('sha256').update(canonicalJson(duplicate)).digest('hex');
 assert.throws(() => validateProjection(duplicate, commit), /duplicate topology identifiers/);
+const repeatedEndpoint = structuredClone(payload);
+repeatedEndpoint.lanes.G3.transitions.push({
+  id: 't-0001',
+  taskFamily: 'maintenance-work-order',
+  abstractCapability: 'advance-case',
+  modeClaim: 'unresolved',
+  structuralKind: 'act',
+  consumes: ['p-0001', 'p-0001'],
+  produces: [],
+  guardSlots: ['precondition'],
+});
+delete repeatedEndpoint.attestation.canonicalJsonSha256;
+repeatedEndpoint.attestation.canonicalJsonSha256 = createHash('sha256').update(canonicalJson(repeatedEndpoint)).digest('hex');
+assert.throws(() => validateProjection(repeatedEndpoint, commit), /repeats a topology endpoint/);
 assert.throws(() => validateProjection(payload, 'c'.repeat(40)), /pinned snapshot mismatch/);
 
 console.log('compare-spm-audit: ok');

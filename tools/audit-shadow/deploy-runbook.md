@@ -1,6 +1,6 @@
 # Bounded activation proof
 
-This lane proves only that reviewed, names-free bytes can reach a new isolated
+This lane proves only that commit- and tree-pinned, names-free bytes can reach a new isolated
 Cloudflare Worker and that one opaque value can make a reversible round trip in
 a new temporary KV namespace. It does not prove an Operating Instrument, touch
 the vault, use an identity, load an operating graph, or apply an act.
@@ -47,12 +47,15 @@ or network error is not evidence that the name is free.
 ## Deploy and verify
 
 ```powershell
-npx.cmd --yes wrangler@4.97.0 deploy --config wrangler.audit-shadow.jsonc --message "Bounded static audit proof v1"
-node tools/audit-shadow/deploy-verify.mjs https://landlord-audit-shadow-20260809-v1.<ACCOUNT_SUBDOMAIN>.workers.dev
+$taskSha = (git rev-parse HEAD).Trim()
+$taskTree = (git rev-parse 'HEAD^{tree}').Trim()
+$deployReceipt = Join-Path $env:TEMP "landlord-audit-shadow-deploy-$taskSha.txt"
+npx.cmd --yes wrangler@4.97.0 deploy --config wrangler.audit-shadow.jsonc --message "Bounded static audit proof v1" --define "AUDIT_SOURCE_COMMIT:'$taskSha'" --define "AUDIT_SOURCE_TREE:'$taskTree'" | Tee-Object -FilePath $deployReceipt
+node tools/audit-shadow/deploy-verify.mjs https://landlord-audit-shadow-20260809-v1.<ACCOUNT_SUBDOMAIN>.workers.dev $taskSha $taskTree
 npx.cmd --yes wrangler@4.97.0 secret list --name landlord-audit-shadow-20260809-v1 --format json
 ```
 
-Record the exact URL printed by `deploy`; substitute its account subdomain in
+Record the exact deploy receipt and URL; substitute its account subdomain in
 the verification command. The secret list must be `[]`. The verifier proves the
 static response, `applied: false`, and refusal of `POST /proof`.
 
