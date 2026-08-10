@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, readFileSync, realpathSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, dirname, isAbsolute, relative, resolve, sep } from 'node:path';
@@ -100,23 +101,56 @@ export function validateProjection(payload, expectedProducerCommit) {
     if (lane === 'G2' && laneValue.status !== 'comparison-not-observed') throw forbiddenError('G2 status is not accepted');
     for (const [index, place] of laneValue.places.entries()) {
       exact(place, ['id', 'taskFamily', 'abstractCapability', 'modeClaim', 'structuralKind', 'guardSlots'], `$.lanes.${lane}.places[${index}]`);
-      if (!/^p-[0-9a-f]{16}$/.test(place.id) || place.taskFamily !== 'maintenance-work-order' || !capabilities.has(place.abstractCapability) || !modes.has(place.modeClaim) || !kinds.has(place.structuralKind)) {
+      if (!/^p-[0-9]{4}$/.test(place.id) || place.taskFamily !== 'maintenance-work-order' || !capabilities.has(place.abstractCapability) || !modes.has(place.modeClaim) || !kinds.has(place.structuralKind)) {
         throw forbiddenError(`place contains an unrecognized value at $.lanes.${lane}.places[${index}]`);
       }
       if (!Array.isArray(place.guardSlots) || place.guardSlots.some((slot) => !guardSlots.has(slot))) throw forbiddenError(`place guard slots are invalid at $.lanes.${lane}.places[${index}]`);
     }
     for (const [index, edge] of laneValue.transitions.entries()) {
       exact(edge, ['id', 'taskFamily', 'abstractCapability', 'modeClaim', 'structuralKind', 'consumes', 'produces', 'guardSlots'], `$.lanes.${lane}.transitions[${index}]`);
-      if (!/^t-[0-9a-f]{16}$/.test(edge.id) || edge.taskFamily !== 'maintenance-work-order' || !capabilities.has(edge.abstractCapability) || !modes.has(edge.modeClaim) || !kinds.has(edge.structuralKind)) {
+      if (!/^t-[0-9]{4}$/.test(edge.id) || edge.taskFamily !== 'maintenance-work-order' || !capabilities.has(edge.abstractCapability) || !modes.has(edge.modeClaim) || !kinds.has(edge.structuralKind)) {
         throw forbiddenError(`transition contains an unrecognized value at $.lanes.${lane}.transitions[${index}]`);
       }
       if (![edge.consumes, edge.produces, edge.guardSlots].every(Array.isArray)) throw forbiddenError(`transition arrays are invalid at $.lanes.${lane}.transitions[${index}]`);
-      if ([...edge.consumes, ...edge.produces].some((id) => !/^p-[0-9a-f]{16}$/.test(id)) || edge.guardSlots.some((slot) => !guardSlots.has(slot))) throw forbiddenError(`transition topology is invalid at $.lanes.${lane}.transitions[${index}]`);
+      if ([...edge.consumes, ...edge.produces].some((id) => !/^p-[0-9]{4}$/.test(id)) || edge.guardSlots.some((slot) => !guardSlots.has(slot))) throw forbiddenError(`transition topology is invalid at $.lanes.${lane}.transitions[${index}]`);
       const placeIds = new Set(laneValue.places.map((place) => place.id));
       if ([...edge.consumes, ...edge.produces].some((id) => !placeIds.has(id))) throw forbiddenError(`transition references a place outside lane ${lane}`);
     }
+    const placeIds = laneValue.places.map((place) => place.id);
+    const transitionIds = laneValue.transitions.map((edge) => edge.id);
+    if (new Set(placeIds).size !== placeIds.length || new Set(transitionIds).size !== transitionIds.length) {
+      throw forbiddenError(`lane ${lane} contains duplicate topology identifiers`);
+    }
   }
   return payload;
+}
+
+function verifyProducer(payload, repoPath, artifactPath, expectedCommit) {
+  const repo = realpathSync(resolve(repoPath));
+  if (isAbsolute(artifactPath) || artifactPath.split(/[\\/]+/).includes('..')) throw boundaryError('producer artifact must be a repository-relative path');
+  const head = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: repo, encoding: 'utf8' }).trim();
+  if (head !== expectedCommit || head !== payload.producer.commit) throw Object.assign(new Error('producer checkout does not match the pinned commit'), { exitCode: EXIT.mismatch });
+  const artifact = execFileSync('git', ['show', `${head}:${artifactPath.replaceAll('\\', '/')}`], { cwd: repo });
+  if (sha256(artifact) !== payload.producer.inputArtifactSha256) throw Object.assign(new Error('producer artifact digest does not match the pinned git object'), { exitCode: EXIT.mismatch });
+  return { commit: head, artifactDigest: sha256(artifact) };
+}
+
+function prepareOperatorBundle() {
+  const dirty = execFileSync('git', ['status', '--porcelain'], { cwd: REPO_ROOT, encoding: 'utf8' }).trim();
+  if (dirty) throw boundaryError('LandLord repository must be clean for a pinned comparison');
+  if (process.platform === 'win32') {
+    const npmCli = resolve(dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js');
+    execFileSync(process.execPath, [npmCli, 'run', 'build:operator'], { cwd: REPO_ROOT, stdio: 'pipe' });
+  } else {
+    execFileSync('npm', ['run', 'build:operator'], { cwd: REPO_ROOT, stdio: 'pipe' });
+  }
+  const bundle = realpathSync(resolve(REPO_ROOT, 'dist-operator/operator-core.mjs'));
+  if (!inside(REAL_REPO_ROOT, bundle)) throw boundaryError('operator bundle resolves outside LandLord');
+  return {
+    path: bundle,
+    consumerCommit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: REPO_ROOT, encoding: 'utf8' }).trim(),
+    digest: sha256(readFileSync(bundle)),
+  };
 }
 
 function histogram(items, key) {
@@ -191,8 +225,8 @@ function parseArgs(argv) {
 
 export async function main(argv = process.argv.slice(2)) {
   const args = parseArgs(argv);
-  if (!args.projection || !args['expected-producer-commit']) {
-    throw Object.assign(new Error('--projection and --expected-producer-commit are required'), { exitCode: EXIT.invalid });
+  if (!args.projection || !args['expected-producer-commit'] || !args['producer-repo'] || !args['producer-artifact']) {
+    throw Object.assign(new Error('--projection, --expected-producer-commit, --producer-repo, and --producer-artifact are required'), { exitCode: EXIT.invalid });
   }
   const projectionPath = resolve(args.projection);
   const realProjectionPath = realpathSync(projectionPath);
@@ -200,12 +234,20 @@ export async function main(argv = process.argv.slice(2)) {
     throw boundaryError('projection input must be an operating-system temp artifact outside the repository');
   }
   const payload = validateProjection(JSON.parse(readFileSync(realProjectionPath, 'utf8')), args['expected-producer-commit']);
+  const producer = verifyProducer(payload, args['producer-repo'], args['producer-artifact'], args['expected-producer-commit']);
 
-  const bundlePath = resolve(args.bundle || resolve(REPO_ROOT, 'dist-operator/operator-core.mjs'));
-  if (!inside(REPO_ROOT, bundlePath)) throw boundaryError('operator bundle must be inside the LandLord repository');
-  const operator = await import(`${pathToFileURL(bundlePath).href}?audit=${Date.now()}`);
+  if (args.bundle) throw boundaryError('custom operator bundles are not accepted');
+  const bundle = prepareOperatorBundle();
+  const operator = await import(`${pathToFileURL(bundle.path).href}?sha256=${bundle.digest}`);
   const flow = operator.FOUNDING_FLOWS?.find((candidate) => candidate.key === (args.flow || 'vendor-dispatch'));
   const report = compareProjection(payload, flow);
+  report.verification = {
+    producerArtifactVerified: true,
+    producerCommit: producer.commit,
+    producerArtifactDigest: producer.artifactDigest,
+    consumerCommit: bundle.consumerCommit,
+    operatorBundleDigest: bundle.digest,
+  };
 
   let outputPath;
   if (args.out) {
