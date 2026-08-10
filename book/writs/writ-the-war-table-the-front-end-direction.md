@@ -18,14 +18,14 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-*Edwin's direction brief, brought into the repo verbatim 2026-07-28 so the build has one durable spec rather than a chat attachment. Sections 2-7 are SETTLED — do not relitigate. Section 10 is the failure-mode list; read it twice. Claude's answers to the open items in section 12 are appended at the 
+*SUPERSEDED IN PART 2026-08-09 by `docs/KINGDOM.md`, "The operating boundary and the three provenances." This remains the historical build direction for the Proving Ground's visual craft. Its ruling that the map is the primary interface no longer governs: the decision bridge is primary, and the map 
 
 ## The source, verbatim
 
-> *Edwin's direction brief, brought into the repo verbatim 2026-07-28 so the build has
-> one durable spec rather than a chat attachment. Sections 2-7 are SETTLED — do not
-> relitigate. Section 10 is the failure-mode list; read it twice. Claude's answers to
-> the open items in section 12 are appended at the foot under `ANSWERED`.*
+> *SUPERSEDED IN PART 2026-08-09 by `docs/KINGDOM.md`, "The operating boundary and the three
+> provenances." This remains the historical build direction for the Proving Ground's visual craft.
+> Its ruling that the map is the primary interface no longer governs: the decision bridge is primary,
+> and the map is a secondary, non-authoritative projection and navigation aid.*
 
 *Verified against `docs/WRIT-THE-WAR-TABLE.md`:1 on every lint — no quote, no object.*
 
@@ -59,7 +59,7 @@ aliases:
 - [[A march promotes to a shire when three thresholds all hold]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a writ*
 - [[Realm and marches are not renamed despite the naming collision]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a writ*
 - [[The bar is charming, not AAA]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a writ*
-- [[The interface is a physical war table viewed from a fixed high angle]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a writ; this writ names "The interface is a physical war table viewed from a fixed high angle" literally*
+- [[The War Table remains the Proving Ground's visual craft, not its authority]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a writ*
 - [[THRONE folds into SEAT — one surface, a state and its acts]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a writ*
 
 ## Entities
@@ -86,7 +86,7 @@ aliases:
 - [[A march promotes to a shire when three thresholds all hold]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a writ rather than a decision*
 - [[Realm and marches are not renamed despite the naming collision]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a writ rather than a decision*
 - [[The bar is charming, not AAA]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a writ rather than a decision*
-- [[The interface is a physical war table viewed from a fixed high angle]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a writ rather than a decision*
+- [[The War Table remains the Proving Ground's visual craft, not its authority]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a writ rather than a decision*
 - [[THRONE folds into SEAT — one surface, a state and its acts]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a writ rather than a decision*
 
 ### Entities
@@ -101,7 +101,9 @@ aliases:
 
 *Files this page names by path. Again: a citation of the file, nothing more.*
 
+- [[docs/KINGDOM.md]]
 - [[src/domain/realm.ts]]
+- [[The Kingdom — Canon]]
 
 ---
 

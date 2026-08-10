@@ -1,5 +1,10 @@
 # Handoff — where things stand
 
+> **Project-local status only.** This file may describe LandLord facts, local
+> candidates, active lanes, and blockers. Cross-project priority and the
+> universal next-work selection live only in
+> `C:\Users\lleit\.agents\work-hub\HUB.json`; this file cannot outrank it.
+
 *The working-state document. `KINGDOM.md` is the constitution (what the kingdom
 **is**); this is the state of play (what is **done**, what is **next**, what is
 **stuck**). Much of the codebase points here, because a session that starts by

@@ -1,0 +1,116 @@
+{
+  "schema": "spm-work-registry/v1",
+  "authority": {
+    "scope": [
+      "task_identity",
+      "status",
+      "priority",
+      "rank",
+      "owner",
+      "next_action",
+      "blocker",
+      "closing_proof"
+    ],
+    "derived_surfaces_must_not_edit_task_state": true
+  },
+  "external_writes": false,
+  "tasks": [
+    {
+      "id": "LANDLORD-AUDIT-INTEGRATION-20260809",
+      "title": "Integrate the ratified LandLord audit through the bounded activation proof",
+      "status": "open",
+      "priority": "high",
+      "rank": 1,
+      "owner": "agent:codex",
+      "next_action": "Finish combined verification, remote review gates, branch protection, and the bounded reversible external proof; then record exact receipts and close.",
+      "blocker": null,
+      "closing_proof": "The ratified decisions and Gates 0-3 are implemented on the integration branch; hostile and full verification pass; the branch is pushed; a draft PR and required protection exist; one names-free bounded external act is verified and reversed; comparison gaps remain explicit rather than promoted to LIVE.",
+      "closure_receipt": null,
+      "external_writes": false,
+      "source_refs": [
+        "thread:019fe8d0-b03e-7db2-a2f5-54c25fb2cea9",
+        "gdrive:1Zc9nxntHmK9OSBXiM1U5RBw6BbWlWEQiGcw-0wUWXtg",
+        "git:codex/landlord-audit-integration"
+      ],
+      "lane_receipts": [
+        {
+          "lane": "gate0",
+          "owner": "agent:gate0",
+          "source_refs": ["git:19e41ac", "git:4514ceb"],
+          "objective_delta": {"introduced": [], "completed": ["Ratify decisions 1-9 and make the Decision Bridge primary while marking Escape experimental."], "remaining": ["Decision cards still need the future evidence and authority fields before operational classification."]},
+          "evidence_refs": ["test:476-pass", "browser:decision-bridge-desktop-mobile-pass"]
+        },
+        {
+          "lane": "book-ci",
+          "owner": "agent:book_ci",
+          "source_refs": ["git:1137fcb"],
+          "objective_delta": {"introduced": [], "completed": ["Make Great Book paths portable and require Book plus all builds in CI."], "remaining": []},
+          "evidence_refs": ["test:479-pass", "book:lint-pass", "build:main-operator-wargame-pass"]
+        },
+        {
+          "lane": "reconcile",
+          "owner": "agent:reconcile",
+          "source_refs": ["git:046ff2b", "git:45f8e0b", "git:4c04213", "git:7289bb8"],
+          "objective_delta": {"introduced": [], "completed": ["Reconcile gameplay and rig semantics with replay-safe current-step guards and ambient sweep disabled."], "remaining": ["Operational callers remain subject to the typed authority-adapter boundary."]},
+          "evidence_refs": ["test:490-pass", "build:main-operator-wargame-pass"]
+        },
+        {
+          "lane": "attention-shadow",
+          "owner": "agent:attention_shadow",
+          "source_refs": ["git:fbc21a8"],
+          "objective_delta": {"introduced": [], "completed": ["Build the names-free Attention Ledger and fail-closed simulated shadow proof."], "remaining": ["Simulation is not operational activation."]},
+          "evidence_refs": ["test:500-pass", "shadow:simulated-reversal-pass"]
+        },
+        {
+          "lane": "trust-kernel",
+          "owner": "agent:trust_kernel",
+          "source_refs": ["git:16e427a", "git:045c6d1", "git:fc6eac2"],
+          "objective_delta": {"introduced": [], "completed": ["Implement and harden the typed Worker authority seam with exact grants, digests, CAS, and generic-writer denial."], "remaining": ["UI, fleet, canonical Chronicle, court roll, and simulation adapters are not one shared operational kernel."]},
+          "evidence_refs": ["test:515-pass", "review:typed-seam-partial-only"]
+        },
+        {
+          "lane": "bounded-deploy",
+          "owner": "agent:bounded_deploy",
+          "source_refs": ["git:f221c5f"],
+          "objective_delta": {"introduced": [], "completed": ["Prepare an isolated workers.dev proof and reversible KV write-read-delete lane."], "remaining": ["Execute only after combined and remote gates pass, then prove cleanup."]},
+          "evidence_refs": ["wrangler:dry-run-pass", "test:audit-shadow-worker-3-pass"]
+        },
+        {
+          "lane": "adversarial-review",
+          "owner": "agent:adversarial_review",
+          "source_refs": ["review:authority-shadow-projection-release"],
+          "objective_delta": {"introduced": [], "completed": ["Find and drive closure of projection, shadow, version, UI, and typed-authority bypasses."], "remaining": ["Keep comparison gaps and partial adapter coverage explicit."]},
+          "evidence_refs": ["test:targeted-hostile-pass", "comparison:gaps-present"]
+        },
+        {
+          "lane": "final-authority-review",
+          "owner": "agent:final_authority_review",
+          "source_refs": ["git:231ac20"],
+          "objective_delta": {"introduced": [], "completed": ["Confirm the human complete-step ratification bypass is closed."], "remaining": ["Do not claim repo-wide shared enforcement."]},
+          "evidence_refs": ["test:authority-23-pass", "tsc:pass"]
+        },
+        {
+          "lane": "release-gate-review",
+          "owner": "agent:release_gate_review",
+          "source_refs": ["review:book-ci-cloudflare-protection"],
+          "objective_delta": {"introduced": [], "completed": ["Audit release gates, Cloudflare cleanup, CI check names, and branch-protection prerequisites."], "remaining": ["Run remote CI before protection and preserve exact rollback receipts."]},
+          "evidence_refs": ["github:main-unprotected", "book:warning-audit"]
+        },
+        {
+          "lane": "objective-authority",
+          "owner": "agent:objective_authority",
+          "source_refs": ["file:C:/Users/lleit/.agents/ORCHESTRATION.md", "file:C:/Users/lleit/.agents/work-hub/HUB.json", "git:8e3e24f"],
+          "objective_delta": {"introduced": [], "completed": ["Discover the LandLord registry, inbox routing, and global view closeout contract."], "remaining": ["Activate the canonical registry, route the inbox item, and refresh the hub after closure."]},
+          "evidence_refs": ["work-hub:check-pass-view-stale"]
+        },
+        {
+          "lane": "integration",
+          "owner": "agent:codex",
+          "source_refs": ["thread:019fe8d0-b03e-7db2-a2f5-54c25fb2cea9"],
+          "objective_delta": {"introduced": [], "completed": ["Integrate all approved audit decisions and gates without manufacturing LIVE claims."], "remaining": ["Finish the remote gates, bounded external proof, cleanup, and authority closeout."]},
+          "evidence_refs": ["git:codex/landlord-audit-integration"]
+        }
+      ]
+    }
+  ]
+}

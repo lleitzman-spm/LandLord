@@ -1,5 +1,9 @@
 # Open questions
 
+> **Evidence and questions only.** This file is not a task or decision queue.
+> Actionable work must appear once in LandLord's local handoff and be projected
+> through `C:\Users\lleit\.agents\work-hub\HUB.json`.
+
 *Decisions that are genuinely open, written down rather than settled quietly in
 a comment. The rule that feeds this file: **if a behaviour can only be justified
 by pointing at what one company does, it is probably wrong for a product** —

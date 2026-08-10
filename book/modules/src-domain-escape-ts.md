@@ -55,12 +55,10 @@ aliases:
 ### Modules
 
 - [[src/LedgerView.tsx]] — *imported by this file*
-- [[src/WarTableView.tsx]] — *imported by this file*
 
 ### Surfaces
 
 - [[LedgerView]] — *imported by this view*
-- [[WarTableView]] — *imported by this view*
 
 ### Invariants that enforce it
 

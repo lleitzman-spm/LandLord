@@ -20,7 +20,7 @@ aliases:
 > Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
 > *Declared in `knowledge/decisions.json`.*
 
-A lane edits only its own surface; before starting or shipping, git fetch and check the lanes table so a landed lane's work is adopted rather than overwritten.
+LandLord-local collision guidance only: a lane edits its assigned surface and reports to the integration owner. It cannot replace global orchestration or work priority.
 
 ## The source, verbatim
 

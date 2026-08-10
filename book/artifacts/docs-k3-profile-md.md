@@ -20,7 +20,7 @@ aliases:
 > Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
 > *Declared in `knowledge/artifacts.json`.*
 
-Kimi K3's capability profile and how to wield it — the numbers, the seam, the megamind law.
+Historical LandLord-local Kimi K3 capability and review evidence; it is not portable orchestration or task authority.
 
 ## The source, verbatim
 

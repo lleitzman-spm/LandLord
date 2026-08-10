@@ -18,14 +18,14 @@ aliases:
 > Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
 > *Declared in `knowledge/artifacts.json`.*
 
-*The working-state document. `KINGDOM.md` is the constitution (what the kingdom **is**); this is the state of play (what is **done**, what is **next**, what is **stuck**). Much of the codebase points here, because a session that starts by trusting a stale note is worse off than one that starts with 
+> **Project-local status only.** This file may describe LandLord facts, local > candidates, active lanes, and blockers. Cross-project priority and the > universal next-work selection live only in > `C:\Users\lleit\.agents\work-hub\HUB.json`; this file cannot outrank it.
 
 ## The source, verbatim
 
-> *The working-state document. `KINGDOM.md` is the constitution (what the kingdom
-> **is**); this is the state of play (what is **done**, what is **next**, what is
-> **stuck**). Much of the codebase points here, because a session that starts by
-> trusting a stale note is worse off than one that starts with nothing.*
+> > **Project-local status only.** This file may describe LandLord facts, local
+> > candidates, active lanes, and blockers. Cross-project priority and the
+> > universal next-work selection live only in
+> > `C:\Users\lleit\.agents\work-hub\HUB.json`; this file cannot outrank it.
 
 *Verified against `docs/HANDOFF.md`:1 on every lint — no quote, no object.*
 
@@ -36,6 +36,10 @@ aliases:
 - State of play
 - Next candidates
 - What needs a human
+
+## Decisions that touched it
+
+- [[The audit integrates semantically from the named frontier]] — *the same file `docs/HANDOFF.md`, seen as a decision rather than a writ*
 
 ## Entities
 
@@ -67,6 +71,10 @@ aliases:
 
 ## Backlinks
 
+### Decisions that touched it
+
+- [[The audit integrates semantically from the named frontier]] — *the same file `docs/HANDOFF.md`, seen as a writ rather than a decision*
+
 ### artifact
 
 - [[docs/HANDOFF.md]] — *the same file `docs/HANDOFF.md`, seen as a writ rather than a artifact*
@@ -86,12 +94,14 @@ aliases:
 - [[.gitattributes]]
 - [[.gitignore]]
 - [[CLAUDE.md]]
+- [[docs/KINGDOM.md]]
 - [[docs/OPEN-QUESTIONS.md]]
 - [[Open questions]]
 - [[src/domain/escape.ts]]
 - [[src/domain/flows.ts]]
 - [[src/domain/guilds.ts]]
 - [[src/domain/realm.ts]]
+- [[The Kingdom — Canon]]
 - [[The sibling boundary — who owns the process model]]
 - [[Writ — The Gate: the money law is written and nothing enforces it]]
 - [[Writ — The Knighthood: one seat, a Regent that is an agent, and the fief as a desk]]

@@ -1,7 +1,7 @@
 ---
 type: "invariant"
-id: "invariant:worker-013-a-blocked-fleet-prompt-never-calls-the-provider"
-title: "a blocked fleet prompt never calls the provider and never persists a proposal"
+id: "invariant:worker-013-keeps-the-legacy-fleet-disabled-until-it-uses-ty"
+title: "keeps the legacy fleet disabled until it uses typed commands"
 standing: "built"
 standing_source: "derived"
 source_path: "test/worker.test.ts"
@@ -9,20 +9,20 @@ source_line: 246
 origin: "derived"
 generator: "tools/vault/emit.mjs"
 aliases:
-  - "invariant:worker-013-a-blocked-fleet-prompt-never-calls-the-provider"
+  - "invariant:worker-013-keeps-the-legacy-fleet-disabled-until-it-uses-ty"
 ---
 
-# a blocked fleet prompt never calls the provider and never persists a proposal
+# keeps the legacy fleet disabled until it uses typed commands
 
 > **STANDING — BUILT**  
 > Implemented in code and checkable against the tree.  
 > *Derived from the tree — the code is there to be read.*
 
-worker — fleet context boundary — a blocked fleet prompt never calls the provider and never persists a proposal
+worker — fleet context boundary — keeps the legacy fleet disabled until it uses typed commands
 
 ## The source, verbatim
 
-> a blocked fleet prompt never calls the provider and never persists a proposal
+> keeps the legacy fleet disabled until it uses typed commands
 
 *Verified against `test/worker.test.ts`:246 on every lint — no quote, no object.*
 

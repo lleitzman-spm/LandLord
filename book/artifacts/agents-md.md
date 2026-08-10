@@ -20,7 +20,7 @@ aliases:
 > Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
 > *Declared in `knowledge/artifacts.json`.*
 
-The operating charter for any autonomous agent working on LandLord — mandate, latitude, and the gates that bind every hand alike. Its own header still reads draft-awaiting-ratification, but it is the operative charter in practice.
+LandLord-local operating charter, subordinate to the global orchestration and work-hub authorities. Its own header still reads draft-awaiting-ratification.
 
 ## The source, verbatim
 

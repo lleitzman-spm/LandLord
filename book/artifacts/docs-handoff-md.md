@@ -20,7 +20,7 @@ aliases:
 > Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
 > *Declared in `knowledge/artifacts.json`.*
 
-The working-state document — starts empty in the public repository on purpose, since its private predecessor named real people and live infrastructure.
+The LandLord-local working-state detail surface; it does not rank cross-project work. It starts empty publicly because its private predecessor named real people and infrastructure.
 
 ## The source, verbatim
 
@@ -32,6 +32,10 @@ The working-state document — starts empty in the public repository on purpose,
 
 - [[Handoff — where things stand]] — *the same file `docs/HANDOFF.md`, seen as a writ rather than a artifact*
 
+## Decisions that touched it
+
+- [[The audit integrates semantically from the named frontier]] — *the same file `docs/HANDOFF.md`, seen as a decision rather than a artifact*
+
 ## Backlinks
 
 ### Writs that specify it
@@ -41,6 +45,7 @@ The working-state document — starts empty in the public repository on purpose,
 ### Decisions that touched it
 
 - [[Run many sessions; coordinate through the repo's own docs, never through memory]] — *declared in `knowledge/decisions.json`*
+- [[The audit integrates semantically from the named frontier]] — *the same file `docs/HANDOFF.md`, seen as a artifact rather than a decision*
 
 ## Documents that cite this source
 

@@ -18,14 +18,13 @@ aliases:
 > Two sources disagree and no decision has been made. Do not act on it as settled.  
 > *Declared in `knowledge/artifacts.json`.*
 
-*Decisions that are genuinely open, written down rather than settled quietly in a comment. The rule that feeds this file: **if a behaviour can only be justified by pointing at what one company does, it is probably wrong for a product** — raise it here instead of shipping it.*
+> **Evidence and questions only.** This file is not a task or decision queue. > Actionable work must appear once in LandLord's local handoff and be projected > through `C:\Users\lleit\.agents\work-hub\HUB.json`.
 
 ## The source, verbatim
 
-> *Decisions that are genuinely open, written down rather than settled quietly in
-> a comment. The rule that feeds this file: **if a behaviour can only be justified
-> by pointing at what one company does, it is probably wrong for a product** —
-> raise it here instead of shipping it.*
+> > **Evidence and questions only.** This file is not a task or decision queue.
+> > Actionable work must appear once in LandLord's local handoff and be projected
+> > through `C:\Users\lleit\.agents\work-hub\HUB.json`.
 
 *Verified against `docs/OPEN-QUESTIONS.md`:1 on every lint — no quote, no object.*
 
@@ -35,15 +34,15 @@ aliases:
 - ~~The spend gate's default when urgency is unknown~~ — SETTLED 2026-08-06
 - Whether "artisan" should be a pledge or a relationship — ANSWERED, NOT YET BUILT
 - Trust-accounting rules that vary by jurisdiction — ANSWERED FOR TENANT ONE, OPEN FOR THE PRODUCT
-- Multi-tenancy, and what the per-identity vault rows actually are
+- ~~Multi-tenancy, and what the per-identity vault rows actually are~~ — SETTLED 2026-08-09
 
 ## Decisions that touched it
 
+- [[A single-tenant deployment carries one trust-accounting jurisdiction]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a decision rather than a writ*
 - [[Fee terms are currently one shape and probably need to be many]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a decision rather than a writ*
-- [[Whether a deployment ever spans two trust-accounting jurisdictions is open]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a decision rather than a writ*
+- [[LandLord optimises first for a private single-tenant operating system]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a decision rather than a writ*
 - [[Whether an unclassified spend estimate should default at the cap is open]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a decision rather than a writ*
 - [[Whether artisan should be a pledge or a relationship is open]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a decision rather than a writ*
-- [[Whether LandLord is single-tenant or multi-tenant is genuinely open]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a decision rather than a writ*
 
 ## Modules
 
@@ -58,11 +57,11 @@ aliases:
 
 ### Decisions that touched it
 
+- [[A single-tenant deployment carries one trust-accounting jurisdiction]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a writ rather than a decision*
 - [[Fee terms are currently one shape and probably need to be many]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a writ rather than a decision*
-- [[Whether a deployment ever spans two trust-accounting jurisdictions is open]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a writ rather than a decision*
+- [[LandLord optimises first for a private single-tenant operating system]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a writ rather than a decision*
 - [[Whether an unclassified spend estimate should default at the cap is open]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a writ rather than a decision*
 - [[Whether artisan should be a pledge or a relationship is open]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a writ rather than a decision*
-- [[Whether LandLord is single-tenant or multi-tenant is genuinely open]] — *the same file `docs/OPEN-QUESTIONS.md`, seen as a writ rather than a decision*
 
 ### artifact
 

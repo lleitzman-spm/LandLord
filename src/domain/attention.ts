@@ -86,6 +86,8 @@ export interface AttentionLedger {
   totals: AttentionTotals;
 }
 
+const MACHINE_CANDIDATE_CONFIDENCE = 0.8; // fact:attention-confidence-floor
+
 const byTimeThenId = (a: AttentionEvent, b: AttentionEvent): number =>
   a.at === b.at ? a.id.localeCompare(b.id) : a.at.localeCompare(b.at);
 
@@ -144,7 +146,7 @@ function priorityReasons(entry: Omit<AttentionEntry, 'priorityReasons'>): string
   if (entry.escalationCount > 0 && entry.escalationAttribution === 'unknown') {
     reasons.push('escalation-unattributed');
   }
-  if (entry.confidence == null || entry.confidence < 0.8) reasons.push('low-confidence');
+  if (entry.confidence == null || entry.confidence < MACHINE_CANDIDATE_CONFIDENCE) reasons.push('low-confidence');
   if (entry.evidence.length === 0) reasons.push('evidence-missing');
   return reasons;
 }
@@ -300,7 +302,9 @@ export function readAttentionLedger(log: AttentionLog): AttentionLedger {
     unattributedEscalations: open.filter(
       (entry) => entry.escalationCount > 0 && entry.escalationAttribution === 'unknown',
     ).length,
-    lowConfidence: open.filter((entry) => entry.confidence == null || entry.confidence < 0.8).length,
+    lowConfidence: open.filter(
+      (entry) => entry.confidence == null || entry.confidence < MACHINE_CANDIDATE_CONFIDENCE,
+    ).length,
     evidenceGaps: open.filter((entry) => entry.evidence.length === 0).length,
     unclassified: open.filter(
       (entry) =>
@@ -326,7 +330,7 @@ export function boundedMachineCandidate(log: AttentionLog): AttentionEntry | nul
       entry.reversibility === 'reversible' &&
       entry.exceptionBurden === 'none' &&
       entry.confidence !== null &&
-      entry.confidence >= 0.8 &&
+      entry.confidence >= MACHINE_CANDIDATE_CONFIDENCE &&
       entry.evidence.length > 0,
   ) ?? null;
 }

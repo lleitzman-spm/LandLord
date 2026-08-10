@@ -9,6 +9,10 @@ aliases:
 
 # The antechamber — memory the compiler does not own
 
+> **Evidence only.** This hand-written shelf preserves observations; it is not a
+> task queue or priority authority. Actionable work belongs in the LandLord-local
+> handoff and is projected through `C:\Users\lleit\.agents\work-hub\HUB.json`.
+
 *Everything else under `book/` is generated. This shelf is not. The compiler sweeps only the
 shelves it built — each one carries a `.generated-by-emit` marker — and it is written to
 `never sweep a shelf this compiler did not build`. There is no marker here, and `memory` is not

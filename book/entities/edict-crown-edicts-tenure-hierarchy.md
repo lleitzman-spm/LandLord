@@ -39,7 +39,7 @@ A realm's own regulatory obligation — licence status, CE hours, disclosure, tr
 - [[A march promotes to a shire when three thresholds all hold]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a entity*
 - [[Realm and marches are not renamed despite the naming collision]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a entity*
 - [[The bar is charming, not AAA]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a entity*
-- [[The interface is a physical war table viewed from a fixed high angle]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a entity*
+- [[The War Table remains the Proving Ground's visual craft, not its authority]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a entity*
 - [[THRONE folds into SEAT — one surface, a state and its acts]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a decision rather than a entity*
 
 ## artifact
@@ -57,7 +57,7 @@ A realm's own regulatory obligation — licence status, CE hours, disclosure, tr
 - [[A march promotes to a shire when three thresholds all hold]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a entity rather than a decision*
 - [[Realm and marches are not renamed despite the naming collision]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a entity rather than a decision*
 - [[The bar is charming, not AAA]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a entity rather than a decision*
-- [[The interface is a physical war table viewed from a fixed high angle]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a entity rather than a decision*
+- [[The War Table remains the Proving Ground's visual craft, not its authority]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a entity rather than a decision*
 - [[THRONE folds into SEAT — one surface, a state and its acts]] — *the same file `docs/WRIT-THE-WAR-TABLE.md`, seen as a entity rather than a decision*
 
 ### artifact

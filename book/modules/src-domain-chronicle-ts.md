@@ -18,7 +18,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-178 lines · 5 exported symbols.
+189 lines · 6 exported symbols.
 
 ## What the file says of itself
 
@@ -33,8 +33,8 @@ aliases:
 
 ## Shape
 
-- **Lines:** 178
-- **Exported symbols (5):** `Chronicle`, `FOUNDING_CHRONICLE`, `economyOf`, `isFoundingChronicle`, `normalizeChronicle`
+- **Lines:** 189
+- **Exported symbols (6):** `Chronicle`, `FOUNDING_CHRONICLE`, `LEGACY_FLOW_VERSION`, `economyOf`, `isFoundingChronicle`, `normalizeChronicle`
 
 ## Modules
 
@@ -63,6 +63,8 @@ aliases:
 
 ### Modules
 
+- [[src/domain/authority.ts]] — *imported by this file*
+- [[src/server/command.ts]] — *imported by this file*
 - [[src/store/chronicleMerge.ts]] — *imported by this file*
 - [[src/store/chronicleStore.ts]] — *imported by this file*
 - [[src/wargame-core.ts]] — *imported by this file*
@@ -142,6 +144,8 @@ aliases:
 - [[an urgency band this table does not know has no estimate either]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[and it stops REGARDLESS of the cap — the old default did not]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[balances within both books (the bridge)]] — *reached by the test FILE through its helper `test/invariants.ts` (shared source, not a claim about this one test)*
+- [[binds a trusted version to the complete flow digest]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[binds inherited unattended mode to the complete catalog digest]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[both books balance over the whole dealt money log]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[but LAND still moves both ways — the guard is not a wall around everything]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[but two fiefs under one lord IS a plurality]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -155,6 +159,10 @@ aliases:
 - [[counts each kind of override, and the house cap as one]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[deals six cascades, four boxes on the Regent, and two raw tickets]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[deals the scenario’s doors and knights]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[denies generic PUT on the canonical document too]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[denies generic PUT on the exact per-identity document used by commands]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[does not let a human complete around the distinct approval capability]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[does not replay an accepted command after a compare-and-set conflict]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[draws the Crown at the head, with its wards beneath it]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[estateLabel resolves a slug to its label, falling back to the raw slug]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[every catalog row an act names stands in the catalog]] — *imported by the test FILE (shared source, not a claim about this one test)*
@@ -187,8 +195,13 @@ aliases:
 - [[is meaningfully SMALLER than the grand muster]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[is null for an absent patch (founding, no setting)]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[is ordered heaviest FIRST — the docket never rises]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[is private at the Worker wall]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[is SOLVENT at rest, with a margin, and the Crown’s own coin is not gone]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[KEEPS a setting the other session loaded, when the base carried none]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[keeps approval and override human-only even if an agent grant lists them]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[keeps the untyped fleet writer shut]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[lets the server mint a complete, provenance-bearing batch]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[marks a present unversioned flow as legacy instead of inventing a current version]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[mtm %→flat : a flat-basis override splits 50/50 on the entered premium]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[mtm_fee balances across both books (the bridge)]] — *reached by the test FILE through its helper `test/invariants.ts` (shared source, not a claim about this one test)*
 - [[mtm_premium balances within the trust book (owner income collected)]] — *reached by the test FILE through its helper `test/invariants.ts` (shared source, not a claim about this one test)*
@@ -210,6 +223,7 @@ aliases:
 - [[overrides the mtm split ratio]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[ownerCents + firmCents always ties the fee (rounding lands on the owner)]] — *reached by the test FILE through its helper `test/invariants.ts` (shared source, not a claim about this one test)*
 - [[ownerCents + firmCents always ties the premium (rounding lands on the owner)]] — *reached by the test FILE through its helper `test/invariants.ts` (shared source, not a claim about this one test)*
+- [[persists only the server-minted event batch]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[re-settling the same WO is caught by the store guard (kind + sourceId)]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[readBankRecs folds every physical bank on a real grand muster; none overdrawn]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[reads a master once the office is founded and granted — the act STICKS]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -221,11 +235,22 @@ aliases:
 - [[reads undefined when the economy sets no house cap and the estate has no override]] — *reached by the test FILE through its helper `test/invariants.ts` (shared source, not a claim about this one test)*
 - [[reconcileById: a strike on one side is not resurrected by the other]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[refuses a missing/empty id or label, and a duplicate id]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[refuses a second proposal while one already awaits judgment]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[refuses agent completion on human, outside-wait, and unresolved modes]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[refuses an accepted idempotency key on the same current case]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[refuses forged actors, expired or mismatched grants, and missing capabilities]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[refuses future, repeated, and stale step claims]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[refuses missing, unknown, and correction command fields]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[refuses non-JSON, a non-array, a rowless shape, and unknown fields]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[refuses stale evidence and policy versions]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[refuses unversioned and migrated-legacy flows operationally]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[rejects caller-supplied event shape before any write]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[rejects malformed rows and bad number shapes]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[rejects non-JSON, a non-object, and an unknown top-level field]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[renames a GL account code and name by role]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[renewal flat→% : a new_rent-basis override yields a percentage of new rent via feeAmount]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[requires trusted opaque cause references]] — *imported by the test FILE (shared source, not a claim about this one test)*
+- [[requires trusted step money classification and an exact amount]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[returns the seeded harrow-c estate's own cap]] — *reached by the test FILE through its helper `test/invariants.ts` (shared source, not a claim about this one test)*
 - [[scalars overwrite; an unknown top-level field on the patch is ignored]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[seats all three Crown offices with their Chancellors]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
@@ -270,6 +295,7 @@ aliases:
 - [[undefined LEAVES a field; null on a brand-new rule just means absent]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[unionById keeps both sides, remote first, dedupes by id]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 - [[unions money and record books by id too (no owner/grant append lost)]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
+- [[uses collision-resistant case tokens]] — *imported by the test FILE (shared source, not a claim about this one test)*
 - [[with no game standing, upkeep falls back to the treasury rolls]] — *reached by the test FILE through its helper `test/fixtures.ts` (shared source, not a claim about this one test)*
 
 ## Documents that cite this source

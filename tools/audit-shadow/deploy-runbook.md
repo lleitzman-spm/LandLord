@@ -75,11 +75,12 @@ prints the exact namespace name for manual cleanup.
 ## Roll back the Worker
 
 ```powershell
-npx.cmd --yes wrangler@4.97.0 delete --name landlord-audit-shadow-20260809-v1 --config wrangler.audit-shadow.jsonc
+npx.cmd --yes wrangler@4.97.0 delete --force --name landlord-audit-shadow-20260809-v1 --config wrangler.audit-shadow.jsonc
 npx.cmd --yes wrangler@4.97.0 deployments list --name landlord-audit-shadow-20260809-v1 --json
 ```
 
-Confirm deletion when Wrangler asks. The second command must return the same
+Wrangler 4.97.0's `--force` skips its confirmation prompts; the fixed-new-name
+preflight and binding-free config bound the exact target. The second command must return the same
 script-not-found result as the preflight; an auth or network error is not proof
 of deletion. Also confirm that the temporary KV namespace name is absent from:
 
@@ -96,8 +97,10 @@ npx.cmd --yes wrangler@4.97.0 kv namespace list --config wrangler.audit-shadow.j
   short and remove both resources when the receipt is captured.
 - KV is eventually consistent. A just-deleted key can briefly be observed from
   a distant cache; deleting the entire isolated namespace is the final cleanup.
+- Cloudflare may prefix the requested KV namespace name in its displayed title;
+  the cleanup receipt therefore proves deletion by the returned namespace id.
 - A crash after namespace creation but before the script reads its generated id
-  can leave the fixed namespace behind. The script names it explicitly and will
+  can leave the requested fixed namespace behind. The script names it explicitly and will
   refuse to reuse it; remove it manually before any retry.
 - `wrangler delete` is irreversible for that isolated Worker. The fixed-name
   preflight is what keeps the target from overlapping an existing service.

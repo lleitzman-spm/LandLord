@@ -38,10 +38,10 @@ try {
     throw 'Remote KV read did not return the exact opaque proof value.'
   }
 
-  Invoke-Wrangler kv key delete $key --namespace-id $namespaceId --remote --config $workerConfig | Out-Null
+  Invoke-Wrangler kv key delete $key --namespace-id $namespaceId --remote --config $workerConfig --force | Out-Null
   Write-Output (ConvertTo-Json -Compress @{
     ok = $true
-    namespace = $namespaceName
+    requestedNamespaceName = $namespaceName
     namespaceId = $namespaceId
     key = $key
     wrote = $true
@@ -54,8 +54,8 @@ finally {
     Invoke-Wrangler kv namespace delete --namespace-id $namespaceId --skip-confirmation --config $workerConfig | Out-Null
     Write-Output (ConvertTo-Json -Compress @{
       cleanup = $true
-      deletedNamespace = $namespaceName
-      namespaceId = $namespaceId
+      requestedNamespaceName = $namespaceName
+      deletedNamespaceId = $namespaceId
     })
   }
 }

@@ -3,6 +3,10 @@
 *Ratified 2026-07-17. This document is the constitution of LandLord. The app implements this
 model; when the app and this document disagree, this document wins until amended.*
 
+> **Domain authority only.** The constitution and its build order define product
+> intent, not current task or cross-project priority. Current-work selection lives
+> in `C:\Users\lleit\.agents\work-hub\HUB.json`.
+
 *The product is **LandLord** — the
 kingdom, under the trade name that says what the kingdom does: the lord of the land. The
 kingdom's own vocabulary (the court, the Crown, the Marches) is untouched.*

@@ -1,5 +1,9 @@
 # War Games — the master plan
 
+> **DEPRECATED AS CURRENT-WORK AUTHORITY.** This is an initiative design record,
+> not a task queue. Activation and priority must come through LandLord's local
+> handoff and `C:\Users\lleit\.agents\work-hub\HUB.json`.
+
 *Named 2026-07-19 (Edwin). The realm's proving ground: a live simulation of the whole operation
 where knights (property managers) train against every scenario before real combat — and where the
 kingdom tests and hardens its own machine. Working names floated: War Games / Grand Melee / the

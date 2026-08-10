@@ -3742,6 +3742,28 @@
       "source_line": 575,
       "governs_step": "go-live",
       "governs_flow": "owner-onboarding"
+    },
+    {
+      "id": "fact:attention-confidence-floor",
+      "type": "fact",
+      "label": "Attention machine-candidate confidence floor",
+      "standing": "built",
+      "kind": "confidence-threshold",
+      "value": 0.8,
+      "unit": "ratio",
+      "scope": "Names-free audit attention classifications only; it is a promotion gate for the bounded machine-candidate proof, not a performance score or grant.",
+      "summary": "An open attention item is low-confidence below 0.8 and cannot enter the bounded machine-candidate proof unless its confidence is at least 0.8.",
+      "source_path": "src/domain/attention.ts",
+      "source_line": 72,
+      "quote": "const MACHINE_CANDIDATE_CONFIDENCE = 0.8",
+      "links": [
+        "module:src/domain/attention.ts"
+      ],
+      "tags": [
+        "attention-ledger",
+        "audit-shadow",
+        "promotion-gate"
+      ]
     }
   ],
   "residual": [

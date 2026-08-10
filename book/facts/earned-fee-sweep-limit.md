@@ -38,7 +38,7 @@ The state limit, in days, an earned fee may sit in trust before it must be swept
 
 ## Decisions that touched it
 
-- [[Whether a deployment ever spans two trust-accounting jurisdictions is open]] — *declared in `knowledge/facts.json`*
+- [[A single-tenant deployment carries one trust-accounting jurisdiction]] — *declared in `knowledge/facts.json`*
 
 ## Modules
 
@@ -48,7 +48,7 @@ The state limit, in days, an earned fee may sit in trust before it must be swept
 
 ### Decisions that touched it
 
-- [[Whether a deployment ever spans two trust-accounting jurisdictions is open]] — *declared in `knowledge/decisions.json`*
+- [[A single-tenant deployment carries one trust-accounting jurisdiction]] — *declared in `knowledge/decisions.json`*
 
 ### Entities
 

@@ -34,7 +34,7 @@ Per-identity vault rows are a sandbox, not tenant isolation — never described 
 
 ### Decisions that touched it
 
-- [[Whether LandLord is single-tenant or multi-tenant is genuinely open]] — *declared in `knowledge/decisions.json`*
+- [[LandLord optimises first for a private single-tenant operating system]] — *declared in `knowledge/decisions.json`*
 
 ---
 

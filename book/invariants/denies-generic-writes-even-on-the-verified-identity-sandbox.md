@@ -1,7 +1,7 @@
 ---
 type: "invariant"
-id: "invariant:worker-009-writes-only-to-the-verified-identity-sandbox"
-title: "writes only to the verified identity sandbox"
+id: "invariant:worker-009-denies-generic-writes-even-on-the-verified-ident"
+title: "denies generic writes even on the verified identity sandbox"
 standing: "built"
 standing_source: "derived"
 source_path: "test/worker.test.ts"
@@ -9,20 +9,20 @@ source_line: 208
 origin: "derived"
 generator: "tools/vault/emit.mjs"
 aliases:
-  - "invariant:worker-009-writes-only-to-the-verified-identity-sandbox"
+  - "invariant:worker-009-denies-generic-writes-even-on-the-verified-ident"
 ---
 
-# writes only to the verified identity sandbox
+# denies generic writes even on the verified identity sandbox
 
 > **STANDING — BUILT**  
 > Implemented in code and checkable against the tree.  
 > *Derived from the tree — the code is there to be read.*
 
-worker — verified Access identity — writes only to the verified identity sandbox
+worker — verified Access identity — denies generic writes even on the verified identity sandbox
 
 ## The source, verbatim
 
-> writes only to the verified identity sandbox
+> denies generic writes even on the verified identity sandbox
 
 *Verified against `test/worker.test.ts`:208 on every lint — no quote, no object.*
 

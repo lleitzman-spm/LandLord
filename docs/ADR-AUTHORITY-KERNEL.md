@@ -46,3 +46,5 @@ Higher initial migration cost and requires explicit event identity, but makes re
 ## Required proof
 
 Hostile tests cover wrong case, wrong/current-future step, stale case version, stale policy/evidence, duplicate command, expired or mismatched grant, unauthorized amount, forged actor, mutable flow/catalog bytes, generic writer bypass, double ratification, and cross-scope fleet work. The current proof applies to the typed Worker seam. Adapter equivalence remains a later promotion gate and must show the same command produces the same acceptance or refusal before any additional runtime is classified operational.
+
+The checkable implementation is `src/domain/authority.ts`, the single-attempt persistence adapter is `src/server/command.ts`, and the deployed route is wired in `src/worker.ts`. The hostile contract is pinned by `test/authority-kernel-hostile.test.ts` and `test/typed-command-door.test.ts`.
