@@ -129,6 +129,10 @@ function assertSyntheticInput(input) {
   if (input.classification !== 'synthetic-demo-only' || !Array.isArray(input.events)) {
     throw new ShadowFailure('shadow input is not marked synthetic-demo-only', EXIT.invalid);
   }
+  const topFields = Object.keys(input).sort();
+  if (topFields.join(',') !== 'classification,events,schema') {
+    throw new ShadowFailure('shadow input carries fields outside the names-free schema', EXIT.identity);
+  }
   assertNamesFree(input);
   for (const event of input.events) {
     if (!/^demo\/work\/[a-z0-9-]+(?:\/[a-z0-9-]+)?$/.test(event.workId)) {
