@@ -3,8 +3,8 @@
 > **DEPRECATED AS SHARED ORCHESTRATION AUTHORITY.** Retain this as historical,
 > LandLord-local model-selection evidence only. It may inform a hand choice but
 > may not assign work, choose the shared task authority, or replace
-> `C:\Users\lleit\.agents\ORCHESTRATION.md` and
-> `C:\Users\lleit\.agents\work-hub\HUB.json`.
+> `C:\Users\lleit\.agents\ORCHESTRATION.md` or LandLord's local
+> `method/work-registry.json`. The SPM work hub does not govern this project.
 
 *Written to be portable — it drops into any repository unchanged.
 Written plain on purpose so it drops into any repo. Snapshot **2026-07-19**, pulled from

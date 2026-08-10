@@ -18,14 +18,14 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-> **Dependency boundary only.** This file may prevent duplicate implementation; > it cannot assign or rank work. Shared orchestration and portfolio priority live > only in `C:\Users\lleit\.agents\ORCHESTRATION.md` and > `C:\Users\lleit\.agents\work-hub\HUB.json`.
+> **Dependency boundary only.** This file may prevent duplicate implementation; > it cannot assign or rank work. Shared orchestration lives only in > `C:\Users\lleit\.agents\ORCHESTRATION.md`; LandLord task state lives only in > `method/work-registry.json`. The SPM work hub does not govern this proj
 
 ## The source, verbatim
 
 > > **Dependency boundary only.** This file may prevent duplicate implementation;
-> > it cannot assign or rank work. Shared orchestration and portfolio priority live
-> > only in `C:\Users\lleit\.agents\ORCHESTRATION.md` and
-> > `C:\Users\lleit\.agents\work-hub\HUB.json`.
+> > it cannot assign or rank work. Shared orchestration lives only in
+> > `C:\Users\lleit\.agents\ORCHESTRATION.md`; LandLord task state lives only in
+> > `method/work-registry.json`. The SPM work hub does not govern this project.
 
 *Verified against `docs/SIBLING-BOUNDARY.md`:1 on every lint — no quote, no object.*
 
@@ -63,6 +63,7 @@ aliases:
 *Files this page names by path. Again: a citation of the file, nothing more.*
 
 - [[ALLOWLIST.md]]
+- [[method/]]
 - [[src/domain/escape.ts]]
 - [[src/domain/flows.ts]]
 - [[Writ — The Knighthood: one seat, a Regent that is an agent, and the fief as a desk]]

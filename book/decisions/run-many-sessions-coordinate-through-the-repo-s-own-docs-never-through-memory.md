@@ -20,7 +20,7 @@ aliases:
 > Superseded. Kept for history, never cited as current.  
 > *Declared in `knowledge/decisions.json`.*
 
-Retired for cross-project coordination on 2026-08-09. ORCHESTRATION.md and HUB.json are the successors; HANDOFF remains LandLord-local detail only.
+Retired for cross-project coordination on 2026-08-09. ORCHESTRATION.md governs shared orchestration, method/work-registry.json owns LandLord task state, and HANDOFF remains local detail only.
 
 ## The source, verbatim
 
@@ -46,6 +46,12 @@ Retired for cross-project coordination on 2026-08-09. ORCHESTRATION.md and HUB.j
 ### artifact
 
 - [[docs/PARALLEL-SESSIONS.md]] — *declared in `knowledge/artifacts.json`; the same file `docs/PARALLEL-SESSIONS.md`, seen as a decision rather than a artifact*
+
+## Sources this page cites
+
+*Files this page names by path. Again: a citation of the file, nothing more.*
+
+- [[method/]]
 
 ---
 

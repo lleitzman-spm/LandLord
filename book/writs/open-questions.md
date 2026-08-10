@@ -18,13 +18,14 @@ aliases:
 > Two sources disagree and no decision has been made. Do not act on it as settled.  
 > *Declared in `knowledge/artifacts.json`.*
 
-> **Evidence and questions only.** This file is not a task or decision queue. > Actionable work must appear once in LandLord's local handoff and be projected > through `C:\Users\lleit\.agents\work-hub\HUB.json`.
+> **Evidence and questions only.** This file is not a task or decision queue. > Actionable LandLord work must appear once in `method/work-registry.json`; > `docs/HANDOFF.md` may carry local detail. The SPM work hub does not govern, > project, or ingest this project.
 
 ## The source, verbatim
 
 > > **Evidence and questions only.** This file is not a task or decision queue.
-> > Actionable work must appear once in LandLord's local handoff and be projected
-> > through `C:\Users\lleit\.agents\work-hub\HUB.json`.
+> > Actionable LandLord work must appear once in `method/work-registry.json`;
+> > `docs/HANDOFF.md` may carry local detail. The SPM work hub does not govern,
+> > project, or ingest this project.
 
 *Verified against `docs/OPEN-QUESTIONS.md`:1 on every lint — no quote, no object.*
 
@@ -78,6 +79,9 @@ aliases:
 *Files this page names by path. Again: a citation of the file, nothing more.*
 
 - [[CLAUDE.md]]
+- [[docs/HANDOFF.md]]
+- [[Handoff — where things stand]]
+- [[method/]]
 
 ---
 

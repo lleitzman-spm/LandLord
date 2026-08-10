@@ -158,6 +158,7 @@ aliases:
 - [[docs/WRIT-TASK-LANGUAGE.md]]
 - [[docs/WRIT-THE-BROKERAGE.md]]
 - [[Handoff — where things stand]]
+- [[method/]]
 - [[src/domain/catalog.ts]]
 - [[src/domain/economy.ts]]
 - [[src/domain/flows.ts]]

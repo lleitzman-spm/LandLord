@@ -20,7 +20,7 @@ aliases:
 > Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
 > *Declared in `knowledge/artifacts.json`.*
 
-The LandLord-local working-state detail surface; it does not rank cross-project work. It starts empty publicly because its private predecessor named real people and infrastructure.
+The LandLord-local working-state detail surface; method/work-registry.json owns task state. It starts empty publicly because its private predecessor named real people and infrastructure.
 
 ## The source, verbatim
 
@@ -51,9 +51,17 @@ The LandLord-local working-state detail surface; it does not rank cross-project 
 
 *These name this FILE by its path. That is a citation of the source, not a claim about any one idea inside it — do not read a path citation as agreement, dependence or implementation.*
 
+- [[Open questions]]
 - [[The Kingdom — Canon]]
+- [[War Games — the master plan]]
 - [[Writ — the flow engine (the operator's spine)]]
 - [[Writ — the task-language, the consequences, and the Regent's seat]]
+
+## Sources this page cites
+
+*Files this page names by path. Again: a citation of the file, nothing more.*
+
+- [[method/]]
 
 ---
 

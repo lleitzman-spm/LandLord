@@ -18,15 +18,16 @@ aliases:
 > Superseded. Kept for history, never cited as current.  
 > *Declared in `knowledge/artifacts.json`.*
 
-> **DEPRECATED AS ORCHESTRATION AUTHORITY.** Do not use this document as a > portable, cross-project, or task-priority standard. Shared orchestration lives > only in `C:\Users\lleit\.agents\ORCHESTRATION.md`; cross-project current-work > authority lives only in `C:\Users\lleit\.agents\work-hub\HUB.j
+> **DEPRECATED AS ORCHESTRATION AUTHORITY.** Do not use this document as a > portable, cross-project, or task-priority standard. Shared orchestration lives > only in `C:\Users\lleit\.agents\ORCHESTRATION.md`; LandLord current-work > authority lives only in `method/work-registry.json`. The SPM work h
 
 ## The source, verbatim
 
 > > **DEPRECATED AS ORCHESTRATION AUTHORITY.** Do not use this document as a
 > > portable, cross-project, or task-priority standard. Shared orchestration lives
-> > only in `C:\Users\lleit\.agents\ORCHESTRATION.md`; cross-project current-work
-> > authority lives only in `C:\Users\lleit\.agents\work-hub\HUB.json`. The
-> > material below is retained only as historical LandLord-local lane guidance.
+> > only in `C:\Users\lleit\.agents\ORCHESTRATION.md`; LandLord current-work
+> > authority lives only in `method/work-registry.json`. The SPM work hub does not
+> > govern this project. The material below is retained only as historical
+> > LandLord-local lane guidance.
 
 *Verified against `docs/PARALLEL-SESSIONS.md`:1 on every lint — no quote, no object.*
 
@@ -85,6 +86,7 @@ aliases:
 
 - [[CLAUDE.md]]
 - [[docs/PARALLEL-SESSIONS.md]]
+- [[method/]]
 - [[src/domain/economy.ts]]
 
 ---

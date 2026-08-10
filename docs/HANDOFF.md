@@ -1,9 +1,10 @@
 # Handoff — where things stand
 
 > **Project-local status only.** This file may describe LandLord facts, local
-> candidates, active lanes, and blockers. Cross-project priority and the
-> universal next-work selection live only in
-> `C:\Users\lleit\.agents\work-hub\HUB.json`; this file cannot outrank it.
+> candidates, active lanes, and blockers. LandLord task state lives only in
+> `method/work-registry.json`; shared orchestration lives in
+> `C:\Users\lleit\.agents\ORCHESTRATION.md`. The SPM work hub does not govern,
+> project, or ingest this project.
 
 *The working-state document. `KINGDOM.md` is the constitution (what the kingdom
 **is**); this is the state of play (what is **done**, what is **next**, what is

@@ -1,9 +1,9 @@
 # The sibling boundary — who owns the process model
 
 > **Dependency boundary only.** This file may prevent duplicate implementation;
-> it cannot assign or rank work. Shared orchestration and portfolio priority live
-> only in `C:\Users\lleit\.agents\ORCHESTRATION.md` and
-> `C:\Users\lleit\.agents\work-hub\HUB.json`.
+> it cannot assign or rank work. Shared orchestration lives only in
+> `C:\Users\lleit\.agents\ORCHESTRATION.md`; LandLord task state lives only in
+> `method/work-registry.json`. The SPM work hub does not govern this project.
 
 *LandLord has a sibling project in a private repository. This note records the boundary between
 them, because on 2026-08-06 both built the same layer thirty-five minutes apart and neither knew.*

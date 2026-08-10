@@ -20,7 +20,7 @@ aliases:
 > Superseded. Kept for history, never cited as current.  
 > *Declared in `knowledge/artifacts.json`.*
 
-Retired cross-project doctrine retained only for historical LandLord-local lane context; ORCHESTRATION.md and HUB.json supersede it.
+Retired cross-project doctrine retained only for historical LandLord-local lane context; shared ORCHESTRATION.md and project-local method/work-registry.json supersede it.
 
 ## The source, verbatim
 
@@ -56,6 +56,12 @@ Retired cross-project doctrine retained only for historical LandLord-local lane 
 
 - [[The Kingdom — Canon]]
 - [[Working in parallel — the multi-session doctrine]]
+
+## Sources this page cites
+
+*Files this page names by path. Again: a citation of the file, nothing more.*
+
+- [[method/]]
 
 ---
 

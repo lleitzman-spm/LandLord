@@ -18,15 +18,15 @@ aliases:
 > Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
 > *Declared in `knowledge/artifacts.json`.*
 
-> **DEPRECATED AS SHARED ORCHESTRATION AUTHORITY.** Retain this as historical, > LandLord-local model-selection evidence only. It may inform a hand choice but > may not assign work, choose the shared task authority, or replace > `C:\Users\lleit\.agents\ORCHESTRATION.md` and > `C:\Users\lleit\.agents
+> **DEPRECATED AS SHARED ORCHESTRATION AUTHORITY.** Retain this as historical, > LandLord-local model-selection evidence only. It may inform a hand choice but > may not assign work, choose the shared task authority, or replace > `C:\Users\lleit\.agents\ORCHESTRATION.md` or LandLord's local > `method
 
 ## The source, verbatim
 
 > > **DEPRECATED AS SHARED ORCHESTRATION AUTHORITY.** Retain this as historical,
 > > LandLord-local model-selection evidence only. It may inform a hand choice but
 > > may not assign work, choose the shared task authority, or replace
-> > `C:\Users\lleit\.agents\ORCHESTRATION.md` and
-> > `C:\Users\lleit\.agents\work-hub\HUB.json`.
+> > `C:\Users\lleit\.agents\ORCHESTRATION.md` or LandLord's local
+> > `method/work-registry.json`. The SPM work hub does not govern this project.
 
 *Verified against `docs/K3-PROFILE.md`:1 on every lint — no quote, no object.*
 
@@ -81,6 +81,7 @@ aliases:
 - [[CLAUDE.md]]
 - [[docs/K3-PROFILE.md]]
 - [[docs/MODEL-DOCTRINE.md]]
+- [[method/]]
 - [[Wielding the models — the doctrine]]
 
 ---

@@ -21,7 +21,7 @@ aliases:
 > Implemented in code and checkable against the tree.  
 > *Declared in `knowledge/artifacts.json`.*
 
-The machine-readable LandLord work authority projected live into the cross-project work hub; derived surfaces may not edit its task state.
+The machine-readable LandLord-local work authority. It structurally reuses spm-work-registry/v1 but is not governed, projected, or ingested by the SPM work hub; derived surfaces may not edit its task state.
 
 ## The source, verbatim
 
@@ -32,6 +32,26 @@ The machine-readable LandLord work authority projected live into the cross-proje
 ## Backlinks
 
 *Nothing in the Book points here. An orphan page is worse than a missing one — it exists, it is correct, and no reader will ever reach it. `npm run book:lint` counts these.*
+
+## Documents that cite this source
+
+*These name this FILE by its path. That is a citation of the source, not a claim about any one idea inside it — do not read a path citation as agreement, dependence or implementation.*
+
+- [[A lane is a branch plus an owned surface plus a HANDOFF section]]
+- [[AGENTS.md]]
+- [[docs/HANDOFF.md]]
+- [[docs/PARALLEL-SESSIONS.md]]
+- [[Handoff — where things stand]]
+- [[Kimi K3 — capability profile & how to wield it]]
+- [[Open questions]]
+- [[Opus drives; the right hand builds; Opus reviews and verifies]]
+- [[Run many sessions; coordinate through the repo's own docs, never through memory]]
+- [[The Kingdom — Canon]]
+- [[The sibling boundary — who owns the process model]]
+- [[Use open-PRs-or-branches plus HANDOFF; no separate board to babysit]]
+- [[War Games — the master plan]]
+- [[Wielding the models — the doctrine]]
+- [[Working in parallel — the multi-session doctrine]]
 
 ---
 

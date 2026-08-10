@@ -3,8 +3,8 @@
 > **DEPRECATED AS SHARED ORCHESTRATION AUTHORITY.** Retain this as historical,
 > LandLord-local model-selection evidence only. It may inform a hand choice but
 > may not assign work, choose the shared task authority, or replace
-> `C:\Users\lleit\.agents\ORCHESTRATION.md` and
-> `C:\Users\lleit\.agents\work-hub\HUB.json`.
+> `C:\Users\lleit\.agents\ORCHESTRATION.md` or LandLord's local
+> `method/work-registry.json`. The SPM work hub does not govern this project.
 
 > **⚠ RETIRED FRAMING (Edwin, 2026-07-22): the greenfield/brownfield binary is gone.** Where this doc
 > below frames K3 as "#1 GREENFIELD / weak agentic / WANDERS on brownfield" and reserves brownfield for

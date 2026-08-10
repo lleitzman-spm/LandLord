@@ -2,7 +2,8 @@
 
 > **DEPRECATED AS CURRENT-WORK AUTHORITY.** This is an initiative design record,
 > not a task queue. Activation and priority must come through LandLord's local
-> handoff and `C:\Users\lleit\.agents\work-hub\HUB.json`.
+> `method/work-registry.json`; `docs/HANDOFF.md` may carry supporting detail. The
+> SPM work hub does not govern this project.
 
 *Named 2026-07-19 (Edwin). The realm's proving ground: a live simulation of the whole operation
 where knights (property managers) train against every scenario before real combat — and where the

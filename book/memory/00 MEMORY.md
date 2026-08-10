@@ -10,8 +10,8 @@ aliases:
 # The antechamber — memory the compiler does not own
 
 > **Evidence only.** This hand-written shelf preserves observations; it is not a
-> task queue or priority authority. Actionable work belongs in the LandLord-local
-> handoff and is projected through `C:\Users\lleit\.agents\work-hub\HUB.json`.
+> task queue or priority authority. Actionable LandLord work belongs in
+> `method/work-registry.json`; the SPM work hub does not govern or ingest it.
 
 *Everything else under `book/` is generated. This shelf is not. The compiler sweeps only the
 shelves it built — each one carries a `.generated-by-emit` marker — and it is written to

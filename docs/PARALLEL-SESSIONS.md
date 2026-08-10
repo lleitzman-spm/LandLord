@@ -2,9 +2,10 @@
 
 > **DEPRECATED AS ORCHESTRATION AUTHORITY.** Do not use this document as a
 > portable, cross-project, or task-priority standard. Shared orchestration lives
-> only in `C:\Users\lleit\.agents\ORCHESTRATION.md`; cross-project current-work
-> authority lives only in `C:\Users\lleit\.agents\work-hub\HUB.json`. The
-> material below is retained only as historical LandLord-local lane guidance.
+> only in `C:\Users\lleit\.agents\ORCHESTRATION.md`; LandLord current-work
+> authority lives only in `method/work-registry.json`. The SPM work hub does not
+> govern this project. The material below is retained only as historical
+> LandLord-local lane guidance.
 
 *How to run several Claude sessions at once — within a project and across all of them — and accomplish
 more without stepping on your own work. **Portable:** this doc is written to drop into any repo's `docs/`

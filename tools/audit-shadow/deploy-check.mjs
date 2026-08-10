@@ -73,6 +73,9 @@ assert.match(
   /kv namespace delete --namespace-id \$namespaceId --skip-confirmation --config \$workerConfig/,
   'the isolated namespace must be deleted by returned id in finally',
 );
+const finallyOffset = kvProof.indexOf('finally {');
+const namespaceDeleteOffset = kvProof.indexOf('kv namespace delete --namespace-id $namespaceId');
+assert(finallyOffset >= 0 && namespaceDeleteOffset > finallyOffset, 'namespace deletion must remain inside finally');
 
 console.log(JSON.stringify({
   ok: true,

@@ -18,14 +18,15 @@ aliases:
 > Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
 > *Declared in `knowledge/artifacts.json`.*
 
-> **Project-local status only.** This file may describe LandLord facts, local > candidates, active lanes, and blockers. Cross-project priority and the > universal next-work selection live only in > `C:\Users\lleit\.agents\work-hub\HUB.json`; this file cannot outrank it.
+> **Project-local status only.** This file may describe LandLord facts, local > candidates, active lanes, and blockers. LandLord task state lives only in > `method/work-registry.json`; shared orchestration lives in > `C:\Users\lleit\.agents\ORCHESTRATION.md`. The SPM work hub does not govern, > proj
 
 ## The source, verbatim
 
 > > **Project-local status only.** This file may describe LandLord facts, local
-> > candidates, active lanes, and blockers. Cross-project priority and the
-> > universal next-work selection live only in
-> > `C:\Users\lleit\.agents\work-hub\HUB.json`; this file cannot outrank it.
+> > candidates, active lanes, and blockers. LandLord task state lives only in
+> > `method/work-registry.json`; shared orchestration lives in
+> > `C:\Users\lleit\.agents\ORCHESTRATION.md`. The SPM work hub does not govern,
+> > project, or ingest this project.
 
 *Verified against `docs/HANDOFF.md`:1 on every lint — no quote, no object.*
 
@@ -83,7 +84,9 @@ aliases:
 
 *These name this FILE by its path. That is a citation of the source, not a claim about any one idea inside it — do not read a path citation as agreement, dependence or implementation.*
 
+- [[Open questions]]
 - [[The Kingdom — Canon]]
+- [[War Games — the master plan]]
 - [[Writ — the flow engine (the operator's spine)]]
 - [[Writ — the task-language, the consequences, and the Regent's seat]]
 
@@ -96,6 +99,7 @@ aliases:
 - [[CLAUDE.md]]
 - [[docs/KINGDOM.md]]
 - [[docs/OPEN-QUESTIONS.md]]
+- [[method/]]
 - [[Open questions]]
 - [[src/domain/escape.ts]]
 - [[src/domain/flows.ts]]

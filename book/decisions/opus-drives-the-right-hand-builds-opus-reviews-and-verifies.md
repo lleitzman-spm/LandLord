@@ -20,7 +20,7 @@ aliases:
 > Superseded. Kept for history, never cited as current.  
 > *Declared in `knowledge/decisions.json`.*
 
-Retired as shared orchestration law on 2026-08-09. Preserved only as historical LandLord model-review guidance; global orchestration and work selection now live in ORCHESTRATION.md and HUB.json.
+Retired as shared orchestration law on 2026-08-09. Preserved only as historical LandLord model-review guidance; shared orchestration lives in ORCHESTRATION.md and LandLord work selection in method/work-registry.json.
 
 ## The source, verbatim
 
@@ -45,6 +45,12 @@ Retired as shared orchestration law on 2026-08-09. Preserved only as historical 
 ### artifact
 
 - [[docs/MODEL-DOCTRINE.md]] — *declared in `knowledge/artifacts.json`; the same file `docs/MODEL-DOCTRINE.md`, seen as a decision rather than a artifact*
+
+## Sources this page cites
+
+*Files this page names by path. Again: a citation of the file, nothing more.*
+
+- [[method/]]
 
 ---
 

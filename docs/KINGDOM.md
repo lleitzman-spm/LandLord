@@ -4,8 +4,10 @@
 model; when the app and this document disagree, this document wins until amended.*
 
 > **Domain authority only.** The constitution and its build order define product
-> intent, not current task or cross-project priority. Current-work selection lives
-> in `C:\Users\lleit\.agents\work-hub\HUB.json`.
+> intent, not current task priority. LandLord current-work selection lives in
+> `method/work-registry.json`; shared orchestration lives in
+> `C:\Users\lleit\.agents\ORCHESTRATION.md`. The SPM work hub does not govern
+> this project.
 
 *The product is **LandLord** — the
 kingdom, under the trade name that says what the kingdom does: the lord of the land. The

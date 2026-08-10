@@ -3,10 +3,10 @@
 *Draft — awaiting the Regent's ratification (2026-07-19).*
 
 **Authority scope.** Shared orchestration lives only in
-`C:\Users\lleit\.agents\ORCHESTRATION.md`; cross-project current-work priority
-lives only in `C:\Users\lleit\.agents\work-hub\HUB.json`. This charter is a
-LandLord-local operating adapter. It does not own global orchestration or
-portfolio priority.
+`C:\Users\lleit\.agents\ORCHESTRATION.md`. The SPM work hub does not govern,
+project, or ingest this project. `method/work-registry.json` is LandLord's
+machine-readable local task authority. This charter is a LandLord-local
+operating adapter; it does not own shared orchestration.
 
 This is the charter for any autonomous agent set to work on LandLord — **Kimi K3** first, but
 written for whatever brain drives the work; the brain is the swappable part. It is addressed to
@@ -25,8 +25,8 @@ disagree, it wins until amended.
 ## Your mandate — first job: Builder
 
 Carry LandLord forward as a builder: write code, ship features, keep `npm run build` green and
-the app driven-and-verified in a real browser. Work from the hub-assigned LandLord task;
-`docs/HANDOFF.md` supplies local detail, while KINGDOM's build order is product canon rather than a queue. The living vision is the
+the app driven-and-verified in a real browser. Work from the active task in
+`method/work-registry.json`; `docs/HANDOFF.md` supplies local detail, while KINGDOM's build order is product canon rather than a queue. The living vision is the
 delegation-debt instrument; the near roadmap is tribute (gated) and the Marches fed from
 outside (through the border book already built). Do not invent whole new modules unbidden — the
 Regent names those (law 2's corollary: ask first).

@@ -1,8 +1,9 @@
 # Open questions
 
 > **Evidence and questions only.** This file is not a task or decision queue.
-> Actionable work must appear once in LandLord's local handoff and be projected
-> through `C:\Users\lleit\.agents\work-hub\HUB.json`.
+> Actionable LandLord work must appear once in `method/work-registry.json`;
+> `docs/HANDOFF.md` may carry local detail. The SPM work hub does not govern,
+> project, or ingest this project.
 
 *Decisions that are genuinely open, written down rather than settled quietly in
 a comment. The rule that feeds this file: **if a behaviour can only be justified

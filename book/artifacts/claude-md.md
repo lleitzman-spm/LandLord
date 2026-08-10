@@ -20,7 +20,7 @@ aliases:
 > Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
 > *Declared in `knowledge/artifacts.json`.*
 
-LandLord-local repository guidance — safety, conventions, and the A/E/P check — subordinate to global orchestration and portfolio priority.
+LandLord-local repository guidance — safety, conventions, and the A/E/P check — subordinate to shared ORCHESTRATION.md and project-local task authority.
 
 ## The source, verbatim
 

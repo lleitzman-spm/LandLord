@@ -20,7 +20,7 @@ aliases:
 > Decided by Edwin. Not open, not a finding. Do not raise it as a question.  
 > *Declared in `knowledge/artifacts.json`.*
 
-LandLord-local operating charter, subordinate to the global orchestration and work-hub authorities. Its own header still reads draft-awaiting-ratification.
+LandLord-local operating charter, subordinate to shared ORCHESTRATION.md and the project-local method/work-registry.json task authority. The SPM work hub does not govern LandLord.
 
 ## The source, verbatim
 
@@ -43,6 +43,12 @@ LandLord-local operating charter, subordinate to the global orchestration and wo
 - [[Writ — the Land: pods, knights, owners, and guilds (the realm remodeled)]]
 - [[Writ — the operator's hands (swing two, part one)]]
 - [[Writ — the task-language, the consequences, and the Regent's seat]]
+
+## Sources this page cites
+
+*Files this page names by path. Again: a citation of the file, nothing more.*
+
+- [[method/]]
 
 ---
 
