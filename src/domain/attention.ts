@@ -117,9 +117,16 @@ const FIELDS_BY_KIND: Record<AttentionEventKind, ReadonlySet<string>> = {
 
 function statusOf(events: AttentionEvent[]): 'open' | 'resolved' {
   let status: 'open' | 'resolved' = 'open';
+  let activeResolution: string | null = null;
   for (const event of events) {
-    if (event.kind === 'resolved') status = 'resolved';
-    if (event.kind === 'reversed') status = 'open';
+    if (event.kind === 'resolved' && status === 'open') {
+      status = 'resolved';
+      activeResolution = event.id;
+    }
+    if (event.kind === 'reversed' && status === 'resolved' && event.reverses === activeResolution) {
+      status = 'open';
+      activeResolution = null;
+    }
   }
   return status;
 }
@@ -222,13 +229,30 @@ export function validateAttentionLog(log: AttentionLog): string[] {
 
   for (const [workId, events] of work) {
     const sorted = [...events].sort(byTimeThenId);
-    if (!sorted.some((event) => event.kind === 'opened')) failures.push(`work was never opened: ${workId}`);
+    const openings = sorted.filter((event) => event.kind === 'opened');
+    if (openings.length !== 1 || sorted[0]?.kind !== 'opened') failures.push(`work must open exactly once before other events: ${workId}`);
+    let open = openings.length === 1 && sorted[0]?.kind === 'opened';
+    let activeResolution: string | null = null;
+    const reversedTargets = new Set<string>();
     for (const event of sorted) {
-      if (event.kind !== 'reversed') continue;
-      const target = sorted.find((candidate) => candidate.id === event.reverses);
-      if (!target || target.kind !== 'resolved' || target.at > event.at) {
-        failures.push(`reversal target is not an earlier resolution: ${event.id}`);
+      if (event.kind === 'opened') continue;
+      if (event.kind === 'resolved') {
+        if (!open) failures.push(`work resolved while already closed: ${event.id}`);
+        open = false;
+        activeResolution = event.id;
+        continue;
       }
+      if (event.kind === 'reversed') {
+        if (open || !event.reverses || event.reverses !== activeResolution || reversedTargets.has(event.reverses)) {
+          failures.push(`reversal target is not the active unreversed resolution: ${event.id}`);
+        } else {
+          reversedTargets.add(event.reverses);
+          open = true;
+          activeResolution = null;
+        }
+        continue;
+      }
+      if (!open) failures.push(`closed work received another event: ${event.id}`);
     }
   }
   return failures;

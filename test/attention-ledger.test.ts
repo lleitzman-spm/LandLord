@@ -154,6 +154,23 @@ describe('the narrow machine-act gate', () => {
     expect(boundedMachineCandidate(events)).toBeNull();
   });
 
+  it('rejects a duplicate reversal of an obsolete resolution', () => {
+    const workId = 'demo/work/double-reversal';
+    const events: AttentionEvent[] = [
+      opened(workId),
+      classified(workId, 'machine-candidate'),
+      { id: `${workId}/resolved-1`, at: '2026-08-09T00:02:00.000Z', workId, kind: 'resolved' },
+      { id: `${workId}/reversed-1`, at: '2026-08-09T00:03:00.000Z', workId, kind: 'reversed', reverses: `${workId}/resolved-1` },
+      { id: `${workId}/resolved-2`, at: '2026-08-09T00:04:00.000Z', workId, kind: 'resolved' },
+      { id: `${workId}/reversed-old`, at: '2026-08-09T00:05:00.000Z', workId, kind: 'reversed', reverses: `${workId}/resolved-1` },
+    ];
+    expect(validateAttentionLog(events)).toContain(
+      `reversal target is not the active unreversed resolution: ${workId}/reversed-old`,
+    );
+    expect(readAttentionLedger(events).entries[0].status).toBe('resolved');
+    expect(boundedMachineCandidate(events)).toBeNull();
+  });
+
   it('fails validation when evidence or confidence is absent', () => {
     const incomplete = classified('demo/work/incomplete', 'machine-candidate');
     delete incomplete.evidence;

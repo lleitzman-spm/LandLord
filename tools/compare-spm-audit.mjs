@@ -47,6 +47,9 @@ export function validateProjection(payload, expectedProducerCommit) {
   if (payload.producer?.repository !== 'SPM-Optimization' || !/^[0-9a-f]{40}$/.test(payload.producer?.commit || '')) {
     throw Object.assign(new Error('invalid producer provenance'), { exitCode: EXIT.invalid });
   }
+  if (!/^[0-9a-f]{64}$/.test(payload.producer?.inputArtifactSha256 || '')) {
+    throw forbiddenError('producer input artifact digest is invalid');
+  }
   if (expectedProducerCommit && payload.producer.commit !== expectedProducerCommit) {
     throw Object.assign(new Error(`pinned snapshot mismatch: expected ${expectedProducerCommit}, found ${payload.producer.commit}`), { exitCode: EXIT.mismatch });
   }
@@ -109,6 +112,8 @@ export function validateProjection(payload, expectedProducerCommit) {
       }
       if (![edge.consumes, edge.produces, edge.guardSlots].every(Array.isArray)) throw forbiddenError(`transition arrays are invalid at $.lanes.${lane}.transitions[${index}]`);
       if ([...edge.consumes, ...edge.produces].some((id) => !/^p-[0-9a-f]{16}$/.test(id)) || edge.guardSlots.some((slot) => !guardSlots.has(slot))) throw forbiddenError(`transition topology is invalid at $.lanes.${lane}.transitions[${index}]`);
+      const placeIds = new Set(laneValue.places.map((place) => place.id));
+      if ([...edge.consumes, ...edge.produces].some((id) => !placeIds.has(id))) throw forbiddenError(`transition references a place outside lane ${lane}`);
     }
   }
   return payload;

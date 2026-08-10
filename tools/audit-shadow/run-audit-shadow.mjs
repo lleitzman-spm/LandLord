@@ -93,8 +93,12 @@ function assertCommit(pinned) {
 
 function prepareEngine(pinned) {
   const repositoryCommit = assertCommit(pinned);
-  const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
-  execFileSync(npm, ['run', 'build:operator'], { cwd: ROOT, encoding: 'utf8', stdio: 'pipe' });
+  if (process.platform === 'win32') {
+    const npmCli = resolve(dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js');
+    execFileSync(process.execPath, [npmCli, 'run', 'build:operator'], { cwd: ROOT, encoding: 'utf8', stdio: 'pipe' });
+  } else {
+    execFileSync('npm', ['run', 'build:operator'], { cwd: ROOT, encoding: 'utf8', stdio: 'pipe' });
+  }
   const bytes = readFileSync(OPERATOR_BUNDLE);
   return { repositoryCommit, operatorBundleDigest: createHash('sha256').update(bytes).digest('hex') };
 }

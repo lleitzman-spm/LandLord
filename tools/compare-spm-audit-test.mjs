@@ -37,6 +37,11 @@ email.customerEmail = 'person@example.com';
 delete email.attestation.canonicalJsonSha256;
 email.attestation.canonicalJsonSha256 = createHash('sha256').update(canonicalJson(email)).digest('hex');
 assert.throws(() => validateProjection(email, commit), /schema fields differ/);
+const badDigest = structuredClone(payload);
+badDigest.producer.inputArtifactSha256 = 'person@example.com';
+delete badDigest.attestation.canonicalJsonSha256;
+badDigest.attestation.canonicalJsonSha256 = createHash('sha256').update(canonicalJson(badDigest)).digest('hex');
+assert.throws(() => validateProjection(badDigest, commit), /input artifact digest/);
 assert.throws(() => validateProjection(payload, 'c'.repeat(40)), /pinned snapshot mismatch/);
 
 console.log('compare-spm-audit: ok');
