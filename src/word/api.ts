@@ -67,6 +67,8 @@ export interface AudienceTurn {
   oaths: Oath[];
   revealed: TraitId[];
   via: 'model' | 'offline';
+  /** an aside from the Steward to show beside the reply (e.g. pressing for a ruling) */
+  aside?: string;
 }
 
 /** One conversation with a petitioner about one incident. */
@@ -107,6 +109,12 @@ export interface WordAPI {
   mic: MicAPI;
   /** recent exchanges, newest last */
   log(): Exchange[];
+  /** the server wants a court key and has not been given a right one */
+  needsCourtKey(): boolean;
+  /** 'quick' = fastest tier; 'default' = stronger and slower */
+  setWit(tier: 'quick' | 'default'): void;
+  /** which family of model is answering, or null when offline */
+  engine(): 'claude' | 'workers-ai' | null;
   onChange(cb: () => void): () => void;
 }
 

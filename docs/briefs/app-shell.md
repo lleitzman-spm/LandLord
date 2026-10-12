@@ -18,3 +18,13 @@ Expose `window.__ll = { sim, renderer, ui }` for debugging and automated play.
 **`README.md`**: what LandLord is (short, in voice), how to run (`npm install`, `npm run build`, `npx wrangler dev`), how to deploy, the layout of the source, and that it plays fully without any key. No hostnames or identifiers.
 
 **Verify.** `node tools/build.mjs` succeeds and prints sizes. `node tools/shot.mjs src/main.ts .tmp/app-shell.png --html index.html` shows whatever exists so far without an uncaught error (placeholders may make it sparse; the boot veil and error path must behave). Unit-test the Worker's request handling with a fake `fetch` and fake env (`npx tsx`), including every refusal path.
+
+## Additions since this brief was written
+
+- `AppAPI.saveInfo()` now exists in `src/ui/api.ts`: implement it (what Continue would resume, or null).
+- `src/sim/modes.ts` exports `reignRecord(s)`, `heirloomOf(s)` and `lastDemotion(s)`: use them for the Dynasty Hall entry and the heirloom, and pass the demotion's epitaph to the `gameover` screen. Write the Iron Crown dynasty entry the moment the reign ends (before opening `gameover`).
+- Open `gameover` with the `EndState` on `game_over`, and with `{ demotion: true, rank, epitaph }` on `demotion`.
+- Audio: call `audio.unlock()` on the first gesture, `handleEvents(events, state)` and `update(state, dt)` every frame, `setMood('title')` on the title screen.
+- Word: after `createWord`, call `word.setWit(settings.wit)` and again when the setting changes.
+- **The Worker answers without any key by using Cloudflare's own models.** Add an `ai` binding (`"ai": { "binding": "AI" }`) to `wrangler.jsonc`. Order of engines for `/api/word`: `ANTHROPIC_API_KEY` set → Claude (`engine: 'claude'`); else the `AI` binding → `env.AI.run(model, { messages, max_tokens })` with a current instruct model that has at least an 8k context window (env `WORKERS_AI_MODEL`, with a sensible default you confirm exists in Cloudflare's docs) → `engine: 'workers-ai'`; else `model: false`. `GET /api/court` returns `{ ok, model, gated, engine }`. Honour the client's `maxTokens` up to 700.
+- Everything else in the brief stands. Other agents have finished the sim, the word layer and audio, so `Sim.create`, `createWord` and `createAudio` are real now; `createRenderer` and `createUI` are being finished alongside you.

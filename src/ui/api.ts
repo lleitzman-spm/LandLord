@@ -23,6 +23,8 @@ export interface Settings { quality: 'low' | 'medium' | 'high'; master: number; 
 export interface AppAPI {
   newGame(opts: { ruler: string; realm: string; mode: Mode; seed?: number }): void;
   hasSave(): boolean;
+  /** what Continue would resume (null when there is no save) */
+  saveInfo(): { realm: string; ruler: string; rank: string; mode: Mode } | null;
   continueGame(): boolean;
   saveNow(): void;
   /** back to the title screen (saves first) */
