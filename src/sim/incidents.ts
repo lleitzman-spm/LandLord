@@ -217,7 +217,10 @@ function targetFits(s: GameState, r: Requires | undefined, w: Where): boolean {
   const needsHousehold = r.species || r.trade || r.trait || r.tag || r.hasPet !== undefined || r.pet
     || r.happinessBelow !== undefined || r.happinessAbove !== undefined || r.monthsHousedAbove !== undefined;
   if (!needsHousehold) return true;
-  const h = w.t ? viewOfTenant(s, w.t) : w.a ? viewOfApplicant(w.a) : null;
+  // whose household? Someone at the door of an empty unit is asked about as themselves (an applicant variant on
+  // target 'vacant' names the species, trade, tag or trait of the APPLICANT); otherwise it is whoever lives there.
+  const h = w.a && !(w.t && w.b && w.unit !== null && w.b.units[w.unit]?.tenantId === w.t.id) ? viewOfApplicant(w.a)
+    : w.t ? viewOfTenant(s, w.t) : null;
   if (!h) return false;
   if (r.species && !r.species.includes(h.species)) return false;
   if (r.trade && !r.trade.includes(h.trade)) return false;
@@ -272,10 +275,15 @@ function targetsFor(s: GameState, def: IncidentDef, busyB: Set<Id>, busyT: Set<I
     }
     case 'vacant': {
       const waiting = new Set(Object.values(s.applicants).map(a => a.buildingId + ':' + a.unit));
+      // An applicant variant drawn at random sends word for its own household (spawn() asks for the species and trade it
+      // names), so those two are not held against an empty doorway. A tag or a trait cannot be sent for: such a variant
+      // waits for the lettings pipeline to bring someone who has it (spawnDecision).
+      let rv = r;
+      if (r && def.decision === 'applicant' && (r.species || r.trade)) { rv = { ...r }; delete rv.species; delete rv.trade; }
       for (const v of vacancies(s)) {
         const b = v.building;
         if (busyB.has(b.id) || b.squatters || waiting.has(b.id + ':' + v.unit)) continue;
-        if (targetFits(s, r, { b, unit: v.unit, t: null, a: null })) out.push({ buildingId: b.id, unit: v.unit });
+        if (targetFits(s, rv, { b, unit: v.unit, t: null, a: null })) out.push({ buildingId: b.id, unit: v.unit });
       }
       break;
     }
@@ -634,7 +642,20 @@ export function spawnDecision(s: GameState, decision: DecisionType, target: Inci
       return true;
     };
     // (weight 0 marks a follow-up that only a chain may bring: not a fallback unless there is nothing else)
-    const plain = pool.filter(right).sort((a, b) => (Number(b.weight > 0) - Number(a.weight > 0)) || (Object.keys(a.requires ?? {}).length - Object.keys(b.requires ?? {}).length));
+    // Nor about the wrong household, while there is a variant that is not: "a dwarf has seen the place" is no use to an elf
+    // at the door. Judged on the household this ruling is about, the applicant's own before any tenant's (hidden traits count).
+    const who = probe.a ? viewOfApplicant(probe.a) : probe.t ? viewOfTenant(s, probe.t) : null;
+    const suits = (d: IncidentDef): boolean => {
+      const r = d.requires;
+      if (!r || !who) return true;
+      if (r.species && !r.species.includes(who.species)) return false;
+      if (r.trade && !r.trade.includes(who.trade)) return false;
+      if (r.trait && !r.trait.some(x => who.traits.includes(x))) return false;
+      if (r.tag && !r.tag.some(x => who.tags.includes(x))) return false;
+      return true;
+    };
+    const there = pool.filter(right);
+    const plain = (there.some(suits) ? there.filter(suits) : there).sort((a, b) => (Number(b.weight > 0) - Number(a.weight > 0)) || (Object.keys(a.requires ?? {}).length - Object.keys(b.requires ?? {}).length));
     def = plain.find(d => rankFits(s, d)) ?? plain[0] ?? null;
     if (!def) return null;
   }
@@ -938,6 +959,14 @@ function chained(s: GameState, p: Pending): void {
   if (def.target !== 'realm') {
     if (p.tenantId && s.tenants[p.tenantId] && def.target !== 'vacant') target.tenantId = p.tenantId;
     if (p.buildingId && s.buildings[p.buildingId]) target.buildingId = p.buildingId;
+    // The follow-up belongs to the household it was promised to. If they have left since, a matter about them went with
+    // them (the sheep are no longer this parish's griffin's doing), and a matter about the roof is about whoever is under
+    // it now. A household already gone when it was promised (a quarrel over the deposit) is still the right one.
+    const kept = target.tenantId ? s.tenants[target.tenantId]! : null;
+    if (kept && kept.status !== 'housed' && kept.leftDay !== null && typeof p.vars._at === 'number' && kept.leftDay > p.vars._at + 1e-6) {
+      if (def.target === 'tenant') return;
+      delete target.tenantId;
+    } else if (kept && def.target === 'building' && target.buildingId && kept.status === 'housed' && kept.buildingId !== target.buildingId) delete target.tenantId;
     if (def.target === 'vacant') {
       const b = target.buildingId ? s.buildings[target.buildingId] : null;
       const unit = b ? b.units.findIndex(u => !u.tenantId) : -1;

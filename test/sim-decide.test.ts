@@ -351,6 +351,75 @@ test('every incident def spawns on a fitting target; every outcome resolves; eve
   }
 });
 
+test('follow-ups in the real book: a spawn effect brings the same household and the same roof forward', () => {
+  type SpawnFx = Extract<Effect, { t: 'spawn' }>;
+  let links = 0, arrived = 0;
+  const unknown: string[] = [], wrong: string[] = [], lost: string[] = [];
+  for (const def of INCIDENTS.slice()) {
+    const runs = [...def.outcomes.map(o => ({ id: o.id, effects: o.effects, outcome: o as OutcomeDef | null })), { id: '(ignored)', effects: def.onExpire, outcome: null }];
+    for (const run of runs) {
+      for (const e of run.effects.filter((x): x is SpawnFx => x.t === 'spawn')) {
+        const name = `${def.id}.${run.id} -> ${e.id}`;
+        const dst = INCIDENT_BY_ID[e.id];
+        if (!dst) { unknown.push(name); continue; }
+        links++;
+        let rolled = false;
+        for (let attempt = 0; attempt < 60 && !rolled; attempt++) {                // a follow-up with a `chance` is rolled for
+          const { s, target } = fitted(def);
+          s.rng = (s.rng + attempt * 7919) >>> 0;
+          const inc = spawnIncident(s, def.id, target, { _ruler: 1 });
+          if (!inc) break;
+          const before = new Set(Object.keys(s.incidents));
+          if (run.outcome) { if (!resolveIncident(s, inc.id, run.outcome.id, 'ruler').ok) break; if (run.outcome.job) finishJob(s, inc); }
+          else { inc.expiresDay = s.day - 0.01; incidentsModule.step!(s, 0.01); }
+          const p = s.pending.find(x => x.defId === e.id);
+          if (!p) continue;
+          rolled = true;
+          if (inc.tenantId && p.tenantId !== inc.tenantId) wrong.push(`${name}: promised to ${p.tenantId}, not ${inc.tenantId}`);
+          if (inc.buildingId && p.buildingId !== inc.buildingId) wrong.push(`${name}: promised at ${p.buildingId}, not ${inc.buildingId}`);
+          const t = inc.tenantId ? s.tenants[inc.tenantId]! : null;
+          const stayed = !!t && t.status === 'housed';
+          s.day = p.day + 0.01; incidentsModule.step!(s, 0.01);                  // the day comes
+          const next = Object.values(s.incidents).find(i => i.defId === e.id && !before.has(i.id));
+          if (!next) {
+            // the one honest reason: it was about a household, and they have gone (or there never was one)
+            if (!(dst.target === 'tenant' && !stayed)) lost.push(name);
+            continue;
+          }
+          arrived++;
+          if (dst.target === 'realm') continue;
+          if (inc.buildingId && next.buildingId !== inc.buildingId) wrong.push(`${name}: landed at ${next.buildingId}, not ${inc.buildingId}`);
+          if (dst.target === 'tenant' && next.tenantId !== inc.tenantId) wrong.push(`${name}: landed on ${next.tenantId}, not ${inc.tenantId}`);
+          if (dst.target === 'building' && stayed && t!.buildingId === inc.buildingId && next.tenantId !== inc.tenantId) wrong.push(`${name}: the roof is right but the household is ${next.tenantId}, not ${inc.tenantId}`);
+          if (dst.target !== 'vacant' && next.tenantId) assert.equal(next.vars.tenant, s.tenants[next.tenantId]!.name, `${name}: and it names them`);
+          if (def.id === 'unauthorized_griffin' && e.id === 'griffin_sheep_claim') {
+            assert.equal(next.tenantId, inc.tenantId, 'the sheep are claimed against the household with the griffin');
+            assert.ok(s.tenants[next.tenantId!]!.pets.includes('griffin'), `${name}: who do keep a griffin`);
+          }
+        }
+        if (!rolled) lost.push(name + ' (never rolled in 60 tries)');
+      }
+    }
+  }
+  console.log(`      ${links} follow-up links in the book, ${arrived} arrived on the same household and roof`);
+  if (unknown.length) note(`${unknown.length} spawn effect(s) name an incident that is not in the book (the engine skips them): ${unknown.slice(0, 8).join(', ')}`);
+  assert.deepEqual(wrong.slice(0, 10), [], 'every follow-up lands where it was promised');
+  assert.deepEqual(lost.slice(0, 10), [], 'and none is lost on the way');
+  assert.ok(INCIDENT_BY_ID['griffin_sheep_claim'] && arrived > 0);
+
+  // a household that leaves before the day takes a matter about them with it; a matter about the roof falls to whoever is under it
+  const s = realm('baron');
+  const t = tenantIn(s, 'cottage'); const b = buildingOf(s, t);
+  applyEffects(s, [{ t: 'spawn', id: 'griffin_sheep_claim', delayDays: 5 }, { t: 'spawn', id: 'sys_repair_leak', delayDays: 5 }], { buildingId: b.id, tenantId: t.id });
+  assert.equal(s.pending.filter(p => p.tenantId === t.id && p.buildingId === b.id).length, 2);
+  s.day += 2; t.status = 'left'; t.leftDay = s.day; t.buildingId = null;
+  for (const u of b.units) if (u.tenantId === t.id) { u.tenantId = null; u.vacantSince = s.day; }
+  s.day += 4; incidentsModule.step!(s, 0.01);
+  assert.equal(Object.values(s.incidents).filter(i => i.defId === 'griffin_sheep_claim').length, 0, 'no sheep claim against a household that has gone');
+  const leak = Object.values(s.incidents).find(i => i.defId === 'sys_repair_leak');
+  assert.ok(leak && leak.buildingId === b.id && leak.tenantId !== t.id, 'the roof still leaks, on whoever is there now');
+});
+
 // ═════════════ 2. standing orders ═════════════
 
 test('"never evict a widow in winter" strikes evict, and only then', () => {
@@ -896,6 +965,54 @@ test('system decisions: one ruling per subject, variants by fit, the plainest as
   assert.equal(spawnDecision(s, 'late_rent', { tenantId: 'nope' }), null);
 });
 
+test('applicant variants are chosen for the household at the door: species, trade, tag, trait', () => {
+  const base = INCIDENT_BY_ID['sys_applicant']!;
+  const HEAVY = 1e9;                                                         // if a variant fits at all, it is the one drawn
+  const variant = (id: string, requires: NonNullable<IncidentDef['requires']>): IncidentDef => ({ ...base, id, weight: HEAVY, cooldownMonths: 1, minRank: 'reeve', requires });
+  const extra = [
+    variant('zz_app_dwarf', { species: ['dwarf', 'ogre'] }),
+    variant('zz_app_baker', { trade: ['baker'] }),
+    variant('zz_app_widow', { tag: ['widow'] }),
+    variant('zz_app_brawler', { trait: ['brawler'] }),
+  ];
+  const book = INCIDENTS.slice();
+  for (const d of extra) { INCIDENTS.push(d); INCIDENT_BY_ID[d.id] = d; }
+  const ask = (dress: (a: Applicant) => void, before?: (s: GameState) => void): string => {
+    const s = realm('reeve');
+    const a = applicantAt(s); dress(a);
+    // the household next door is everything the variants ask for, and lives in the realm: the question is not about them
+    const t = tenantIn(s, 'hovel'); t.species = 'dwarf'; t.trade = 'baker'; t.tags = ['widow']; t.traits = ['brawler'];
+    before?.(s);
+    const inc = spawnDecision(s, 'applicant', { applicantId: a.id, buildingId: a.buildingId, unit: a.unit });
+    assert.ok(inc, 'the pipeline gets its ruling');
+    assert.equal(inc.applicantId, a.id); assert.equal(inc.tenantId, null);
+    assert.equal(inc.vars.tenant, a.household.name); assert.equal(inc.vars.species, a.household.species);
+    assert.equal(fitsTarget(s, INCIDENT_BY_ID[inc.defId]!, { applicantId: a.id, buildingId: a.buildingId, unit: a.unit }), true);
+    return inc.defId;
+  };
+  try {
+    assert.ok(!ask(() => {}).startsWith('zz_app_'), 'a human carpenter, newly wed and handy: none of the variants is about them');
+    assert.equal(ask(a => { a.household.species = 'dwarf'; }), 'zz_app_dwarf');
+    assert.equal(ask(a => { a.household.species = 'ogre'; }), 'zz_app_dwarf', 'any one of the species named');
+    assert.equal(ask(a => { a.household.trade = 'baker'; }), 'zz_app_baker');
+    assert.equal(ask(a => { a.household.tags = ['elder', 'widow']; }), 'zz_app_widow');
+    assert.equal(ask(a => { a.household.traits = ['tidy', 'brawler']; a.household.revealed = []; }), 'zz_app_brawler', 'a trait counts before anyone has found it out');
+    assert.ok(!ask(a => { a.household.species = 'elf'; a.household.trade = 'bard'; a.household.tags = ['elder']; a.household.traits = ['tidy']; }).startsWith('zz_app_'));
+
+    // the fallback (nothing fits exactly: here the plain variants are struck from the book and the rest were all used this
+    // month) still minds who is at the door, and still gives the pipeline its ruling when nobody written suits
+    for (const d of book) if (d.system && d.decision === 'applicant') INCIDENTS.splice(INCIDENTS.indexOf(d), 1);
+    const used = (s: GameState): void => { for (const d of extra) s.incidentLog[d.id] = s.day - 1; };
+    assert.equal(ask(a => { a.household.trade = 'baker'; }, used), 'zz_app_baker', 'the one that suits, not the first in the book');
+    assert.equal(ask(a => { a.household.tags = ['widow']; }, used), 'zz_app_widow');
+    const s = realm('reeve'); const a = applicantAt(s); used(s);
+    assert.ok(spawnDecision(s, 'applicant', { applicantId: a.id, buildingId: a.buildingId, unit: a.unit }), 'and when nobody written suits, a ruling all the same');
+  } finally {
+    INCIDENTS.length = 0; INCIDENTS.push(...book);
+    for (const d of extra) delete INCIDENT_BY_ID[d.id];
+  }
+});
+
 test('an applicant who is asked about stays at the door for a real answer', () => {
   const s = realm('reeve');
   const ap = applicantAt(s);
@@ -1162,12 +1279,17 @@ test('loyalty follows the wage, the oaths and the countermands; the disloyal qui
   assert.ok(agnes.loyalty > 70, `generous pay builds it (${agnes.loyalty})`);
   assert.match(heraldText(s), /Hob has been heard pricing carts/);
 
-  const a0 = agnes.loyalty;
+  // Hob is held clear of the quitting line for this part: two broken oaths would take him under it, and whether he then
+  // walks out on day 40 or 41 is a roll of the die (which costs everyone else 2 as well). Quitting has its own part below.
+  hob.loyalty = STAFF_TUNE.quitBelow + 2 * STAFF_TUNE.oathBroken + 5;
+  const a0 = agnes.loyalty, h0 = hob.loyalty;
   s.stats.oathsBroken += 2;
   staffModule.onDay!(s, 40);
   assert.equal(agnes.loyalty, a0 - 2 * STAFF_TUNE.oathBroken, 'a broken oath is heard in the servants\' hall');
+  assert.equal(hob.loyalty, h0 - 2 * STAFF_TUNE.oathBroken, 'by everyone in it');
   staffModule.onDay!(s, 41);
   assert.equal(agnes.loyalty, a0 - 2 * STAFF_TUNE.oathBroken, 'once');
+  assert.ok(staffOf(s, 'mason'), 'and nobody has left over it yet');
 
   // skill
   assert.equal(experienceOf(s, hob), STAFF_TUNE.skillAt[2]! + 8 * STAFF_TUNE.xpPerMonth, 'eight months in the post taught a little');
@@ -1178,14 +1300,16 @@ test('loyalty follows the wage, the oaths and the countermands; the disloyal qui
   staffModule.onJobDone!(s, { assignee: hob.actorId, workDays: 6 } as Job);            // a wall built: a full lesson, and no more than one
   assert.equal(hob.jobsDone, done0 + 2); assert.equal(hob.skill, 4);
   assert.ok(Math.abs(experienceOf(s, hob) - (STAFF_TUNE.skillAt[3]! + 0.1)) < 1e-9, 'a job teaches between 0.2 and 1');
-  assert.match(heraldText(s), /Hob has got better at the work, and knows it\. A Mason of that skill is usually paid 23 crowns\./);
+  assert.ok(heraldText(s).includes(`Hob has got better at the work, and knows it. A Mason of that skill is usually paid ${fairWage(4)} crowns.`), 'the hint names the going wage, whatever the balance sheet says it is this week');
   staffModule.onJobDone!(s, { assignee: 'someone_else' } as Job);
 
   // quitting
   hob.loyalty = 2; s._events = []; s.heralds = [];
   let day = 50;
+  const hall = agnes.loyalty;
   while (staffOf(s, 'mason') && day < 120) staffModule.onDay!(s, day++);
   assert.equal(staffOf(s, 'mason'), null, 'he quit');
+  assert.equal(agnes.loyalty, hall - 2, 'and those who stayed thought a little less of the post');
   assert.equal(s.incidentLog['~staff.xp.' + hob.id], undefined, 'and took what he had learned with him');
   assert.ok(day < 90, 'within weeks, not months');
   assert.match(heraldText(s), /Hob Trowelsby has quit as your Mason\. "/);
@@ -1258,6 +1382,13 @@ test('the scheduler over three years: caps, cooldowns, seasons, ranks, once, qui
     synth('zz_needs_gold', { requires: { goldAbove: 1e9 }, cooldownMonths: 0 }),
     synth('zz_statue', { requires: { buildingType: ['statue'] }, cooldownMonths: 4 }),
   ];
+  // The pins must keep their share of the draw however much is written: against a few examples a weight of 2 was one draw in
+  // ten, against the real book it is one in fifty, and "came at least twice in three winters" would be a matter of luck.
+  // So they are weighed against the book as it stands today, to make up about half of what the scheduler has to choose from.
+  const written = INCIDENTS.reduce((n, d) => n + (!d.system && d.weight > 0 ? d.weight : 0), 0);
+  const pinned = extra.reduce((n, d) => n + d.weight, 0);
+  const scale = Math.max(1, written / pinned);
+  for (const d of extra) d.weight *= scale;
   for (const d of extra) { INCIDENTS.push(d); INCIDENT_BY_ID[d.id] = d; }
   const chainTargets = new Set<string>();
   for (const d of INCIDENTS) for (const o of d.outcomes) for (const e of [...o.effects, ...d.onExpire]) if (e.t === 'spawn') chainTargets.add(e.id);
@@ -1277,13 +1408,14 @@ test('the scheduler over three years: caps, cooldowns, seasons, ranks, once, qui
       const perMonth: number[] = [];
       const budget: number[] = [];                                           // what each month was planned at, from the households it began with
       const bad: string[] = [];
-      let audiences = 0, maxOpen = 0, maxCourt = 0;
+      let audiences = 0, maxOpen = 0, maxCourt = 0, winters = 0, seasonal = 0;
       HOOKS.onSpawn = (st, inc, def, openBefore, source) => {
         bySource[source]++;
         const cap = openCap(st);
         if (source === 'random') {
           const m = Math.floor(st.day / 30); perMonth[m] = (perMonth[m] ?? 0) + 1;
           if (def.audience) audiences++;
+          if (def.seasons?.length) { seasonal++; if (def.seasons.every(x => x === 'winter')) winters++; }   // the real book's as well as the pin
           if (def.system) bad.push(`${def.id}: a system def was drawn at random`);
           if (!(def.weight > 0)) bad.push(`${def.id}: weight 0 was drawn`);
           if (m < BAL.quietMonths) bad.push(`${def.id}: drawn in the quiet first month`);
@@ -1293,7 +1425,7 @@ test('the scheduler over three years: caps, cooldowns, seasons, ranks, once, qui
           if (last !== undefined && st.day - last < def.cooldownMonths * 30 - 1e-6) bad.push(`${def.id}: cooldown ${def.cooldownMonths}mo broken (${(st.day - last).toFixed(1)} days)`);
           if (last !== undefined && def.once) bad.push(`${def.id}: once, twice`);
           if (openBefore >= cap + 1 || (openBefore >= cap && def.urgency < 3)) bad.push(`${def.id}: drawn with ${openBefore} already open (cap ${cap}, urgency ${def.urgency})`);
-          if (!fitsTarget(st, def, { ...(inc.buildingId ? { buildingId: inc.buildingId } : {}), ...(inc.tenantId ? { tenantId: inc.tenantId } : {}), ...(inc.unit !== null ? { unit: inc.unit } : {}) })) bad.push(`${def.id}: drawn on a target that does not fit`);
+          if (!fitsTarget(st, def, { ...(inc.buildingId ? { buildingId: inc.buildingId } : {}), ...(inc.tenantId ? { tenantId: inc.tenantId } : {}), ...(inc.applicantId ? { applicantId: inc.applicantId } : {}), ...(inc.unit !== null ? { unit: inc.unit } : {}) })) bad.push(`${def.id}: drawn on a target that does not fit`);
           if (inc.buildingId && openIncidents(st).some(i => i.buildingId === inc.buildingId)) bad.push(`${def.id}: two matters at one door`);
           const cat = inc.buildingId ? BUILDINGS[st.buildings[inc.buildingId]!.type].category : null;
           if (def.target === 'building' && !def.requires?.buildingType && !def.requires?.buildingCategory && cat !== 'housing' && cat !== 'commercial') bad.push(`${def.id}: an unnamed building incident landed on ${st.buildings[inc.buildingId!]!.type}`);
@@ -1330,14 +1462,15 @@ test('the scheduler over three years: caps, cooldowns, seasons, ranks, once, qui
       const cap = openCap(s);
       assert.ok(maxOpen <= cap + 1, `${rank}: never more than cap + 1 open (saw ${maxOpen}, cap ${cap})`);
       assert.ok(maxCourt <= INC_TUNE.courtRoom, `${rank}: never more than ${INC_TUNE.courtRoom} petitioners at court (saw ${maxCourt})`);
-      assert.equal(count.zz_once, 1, `${rank}: the once-only incident came exactly once`);
+      // What must never happen is asked of these three years. What must happen (a winter incident does come, a vacancy does
+      // draw trouble) is asked below, of a book with only that pin in it: here it would hang on the luck of the draw.
+      assert.ok((count.zz_once ?? 0) <= 1, `${rank}: the once-only incident never came twice`);
       assert.equal(count.zz_needs_gold ?? 0, 0); assert.equal(count.zz_statue ?? 0, rank === 'reeve' ? 0 : count.zz_statue, 'no statue, no statue incident');
-      if (rank === 'reeve') { assert.equal(count.zz_knight ?? 0, 0); assert.ok((count.zz_reeve_only ?? 0) > 0); assert.equal(count.zz_statue ?? 0, 0); }
-      else { assert.ok((count.zz_knight ?? 0) > 0); assert.equal(count.zz_reeve_only ?? 0, 0); assert.ok((count.zz_statue ?? 0) > 0); }
-      assert.ok((count.zz_winter ?? 0) >= 2, `${rank}: winter incidents came in winter`);
-      assert.ok((count.zz_chain_dst ?? 0) > 0 && bySource.chain > 0, `${rank}: chained follow-ups arrive ${JSON.stringify(count)} ${JSON.stringify(bySource)}`);
+      if (rank === 'reeve') { assert.equal(count.zz_knight ?? 0, 0); assert.equal(count.zz_statue ?? 0, 0); }
+      else assert.equal(count.zz_reeve_only ?? 0, 0);
+      // (that none came out of season is in `bad` above, for every seasonal def in the book)
+      void winters; void seasonal;
       assert.ok((count.zz_chain_dst ?? 0) <= (count.zz_chain_src ?? 0), 'only as follow-ups');
-      assert.ok((count.zz_vacant ?? 0) > 0, `${rank}: vacant units draw their own trouble`);
       const span = 36 - BAL.quietMonths;
       const rate = budget.slice(BAL.quietMonths, 36).reduce((a, b) => a + (b ?? 0), 0) / span;
       const months = perMonth.slice(BAL.quietMonths, 36);
@@ -1354,9 +1487,94 @@ test('the scheduler over three years: caps, cooldowns, seasons, ranks, once, qui
       assertSane(s, rank + ' after three years');
       console.log(`      ${rank}: ${bySource.random} random (${mean.toFixed(2)}/month, budget ${rate.toFixed(2)}), ${(share * 100).toFixed(0)}% audiences, ${bySource.chain} chained, peak open ${maxOpen}/${cap}, peak at court ${maxCourt}`);
     }
+    // ── and what must happen does: each pin alone in the book (with the pipeline's own), so nothing rests on luck ──
+    const book = INCIDENTS.slice();
+    const pin = (id: string): IncidentDef => extra.find(d => d.id === id)!;
+    const alone = (rank: 'reeve' | 'knight' | 'baron', ids: string[], days = 360): { id: string; day: number; source: SpawnSource }[] => {
+      INCIDENTS.length = 0; INCIDENTS.push(...book.filter(d => d.system), ...ids.map(pin));
+      const s = realm(rank, 0.2);
+      s.seed = 5; s.rng = 777 + rankIndex(rank);
+      for (const t of Object.values(s.tenants)) { t.movedInDay = -30; if (t.lease) t.lease.startDay = 0; }
+      for (const id of Object.keys(s.applicants)) { const a = s.applicants[id]!; if (a.actorId) delete s.actors[a.actorId]; delete s.applicants[id]; }
+      incidentsModule.init!(s);
+      const log: { id: string; day: number; source: SpawnSource }[] = [];
+      HOOKS.onSpawn = (st, _inc, def, _open, source) => { if (def.id.startsWith('zz_')) log.push({ id: def.id, day: st.day, source }); };
+      try {
+        drive(s, days, st => {                                               // a ruler who sees to each of them the day it comes
+          for (const inc of Object.values(st.incidents)) if (inc.state === 'open' && inc.defId.startsWith('zz_')) resolveIncident(st, inc.id, 'do', 'ruler');
+          // standing in for the lettings: nobody comes to look at the empty hovel, and nobody climbs in at the back (a door
+          // with someone at it, or with faces at the window, is not "vacant" to the scheduler)
+          for (const a of Object.values(st.applicants)) { if (a.actorId) delete st.actors[a.actorId]; delete st.applicants[a.id]; }
+          for (const b of Object.values(st.buildings)) if (b.squatters && !incidentsAt(st, b.id).length) b.squatters = null;
+        });
+      } finally { HOOKS.onSpawn = null; INCIDENTS.length = 0; INCIDENTS.push(...book); }
+      return log;
+    };
+    const n = (log: { id: string }[], id: string): number => log.filter(x => x.id === id).length;
+    const winter = alone('reeve', ['zz_winter']);
+    assert.ok(n(winter, 'zz_winter') >= 2, `winter incidents came in winter (${n(winter, 'zz_winter')} in one winter)`);
+    assert.ok(winter.every(x => seasonOf(x.day) === 'winter'), 'and at no other time of year');
+    assert.equal(n(alone('reeve', ['zz_once']), 'zz_once'), 1, 'the once-only incident came exactly once');
+    assert.ok(n(alone('reeve', ['zz_reeve_only']), 'zz_reeve_only') > 0, 'a Reeve\'s troubles come to a Reeve');
+    assert.equal(n(alone('baron', ['zz_reeve_only']), 'zz_reeve_only'), 0, 'and not to a Baron');
+    assert.equal(n(alone('reeve', ['zz_knight', 'zz_statue', 'zz_needs_gold']), 'zz_knight'), 0, 'a Knight\'s do not');
+    const baron = alone('baron', ['zz_knight', 'zz_statue', 'zz_needs_gold']);
+    assert.ok(n(baron, 'zz_knight') > 0 && n(baron, 'zz_statue') > 0, 'a Baron has a Knight\'s troubles, and a statue to have trouble with');
+    assert.equal(n(baron, 'zz_needs_gold'), 0);
+    assert.ok(n(alone('reeve', ['zz_vacant']), 'zz_vacant') > 0, 'vacant units draw their own trouble');
+    const chain = alone('reeve', ['zz_chain_src', 'zz_chain_dst']);
+    assert.ok(n(chain, 'zz_chain_dst') > 0 && chain.filter(x => x.id === 'zz_chain_dst').every(x => x.source === 'chain'), `chained follow-ups arrive, and only as follow-ups (${JSON.stringify(chain.map(x => x.id + ':' + x.source))})`);
+    assert.ok(n(chain, 'zz_chain_dst') <= n(chain, 'zz_chain_src'));
   } finally {
     HOOKS.onSpawn = null;
-    for (const d of extra) { INCIDENTS.splice(INCIDENTS.indexOf(d), 1); delete INCIDENT_BY_ID[d.id]; }
+    for (const d of extra) { const i = INCIDENTS.indexOf(d); if (i >= 0) INCIDENTS.splice(i, 1); delete INCIDENT_BY_ID[d.id]; }
+  }
+});
+
+test('the scheduler never draws a follow-up (weight 0) or one of the pipeline\'s own, even when they are all there is', () => {
+  const book = INCIDENTS.slice();
+  const followUps = book.filter(d => !d.system && !(d.weight > 0));
+  assert.ok(followUps.length > 0 && followUps.some(d => d.id === 'griffin_sheep_claim'), 'the real book has follow-ups that only a chain may bring');
+  const year = (rank: 'reeve' | 'baron'): { random: string[]; other: string[] } => {
+    const s = realm(rank, 0.2);
+    s.seed = 7; s.rng = 99 + rankIndex(rank);
+    for (const t of Object.values(s.tenants)) { t.movedInDay = -30; if (t.lease) t.lease.startDay = 0; }
+    for (const id of Object.keys(s.applicants)) { const a = s.applicants[id]!; if (a.actorId) delete s.actors[a.actorId]; delete s.applicants[id]; }
+    incidentsModule.init!(s);
+    const random: string[] = [], other: string[] = [];
+    HOOKS.onSpawn = (_st, inc, def, _open, source) => {
+      (source === 'random' ? random : other).push(def.id);
+      if (source === 'random' && def.decision === 'applicant' && def.requires?.species) {
+        const who = inc.applicantId ? _st.applicants[inc.applicantId] : null;
+        assert.ok(who && def.requires.species.includes(who.household.species), `${def.id}: the household sent for is one of the species it names`);
+        assert.ok(fitsTarget(_st, def, { applicantId: who.id, buildingId: who.buildingId, unit: who.unit }));
+      }
+    };
+    // (standing in for tenants.ts: an applicant nobody shows round gives up and goes)
+    try { drive(s, 360, st => { for (const a of Object.values(st.applicants)) if (st.day > a.leavesDay) { if (a.actorId) delete st.actors[a.actorId]; delete st.applicants[a.id]; } }); } finally { HOOKS.onSpawn = null; }
+    return { random, other };
+  };
+  try {
+    for (const rank of ['reeve', 'baron'] as const) {
+      const full = year(rank);
+      assert.ok(full.random.length > 5, `${rank}: with the whole book the scheduler is busy (${full.random.length} drawn)`);
+      assert.deepEqual(full.random.filter(id => !(INCIDENT_BY_ID[id]!.weight > 0) || INCIDENT_BY_ID[id]!.system), [], `${rank}: none of them a follow-up or a system variant`);
+      INCIDENTS.length = 0; INCIDENTS.push(...book.filter(d => d.system || !(d.weight > 0)));
+      const bare = year(rank);
+      assert.deepEqual(bare.random, [], `${rank}: with nothing else to draw, it draws nothing`);
+      INCIDENTS.length = 0; INCIDENTS.push(...book);
+    }
+    // an applicant variant of the scheduler's own (not the pipeline's) sends for the household it names
+    const call: IncidentDef = { ...INCIDENT_BY_ID['sys_applicant']!, id: 'zz_app_call', system: false, weight: 1, cooldownMonths: 1, minRank: 'reeve', requires: { species: ['dwarf'] } };
+    const never: IncidentDef = { ...call, id: 'zz_app_never', requires: { tag: ['widow'] } };       // a tag cannot be sent for
+    INCIDENTS.length = 0; INCIDENTS.push(...book.filter(d => d.system), call, never); INCIDENT_BY_ID[call.id] = call; INCIDENT_BY_ID[never.id] = never;
+    const got = year('baron');
+    assert.ok(!got.random.includes('zz_app_never'), 'a variant that wants a widow waits for the pipeline to bring one');
+    if (!got.random.includes('zz_app_call')) note('the fixture has no door a dwarf could be sent to: the made-to-order applicant variant was not observed');
+  } finally {
+    HOOKS.onSpawn = null;
+    INCIDENTS.length = 0; INCIDENTS.push(...book);
+    delete INCIDENT_BY_ID['zz_app_call']; delete INCIDENT_BY_ID['zz_app_never'];
   }
 });
 
@@ -1594,7 +1812,10 @@ test('under pressure: when everything goes wrong at once the caps hold, and the 
       assert.deepEqual(bad.slice(0, 6), [], `${rank}: the caps held`);
       assert.equal(maxOpen, cap + 1, `${rank}: the table filled to the cap, and one urgent matter squeezed in (saw ${maxOpen}, cap ${cap})`);
       assert.ok(urgentOver > 0, `${rank}: an urgent matter did exceed the cap by one`);
-      assert.equal(maxCourt, INC_TUNE.courtRoom, `${rank}: the court filled to ${INC_TUNE.courtRoom} and no further (saw ${maxCourt})`);
+      // No further than the court's room at any rank. That it does fill is asked of the Baron only: a Reeve's table holds four
+      // matters at most, and whether three of those four are ever audiences at once depends on what the book happens to hold.
+      assert.ok(maxCourt <= INC_TUNE.courtRoom, `${rank}: the court never took more than ${INC_TUNE.courtRoom} (saw ${maxCourt})`);
+      if (rank === 'baron') assert.equal(maxCourt, INC_TUNE.courtRoom, `${rank}: the court filled to ${INC_TUNE.courtRoom} and no further (saw ${maxCourt})`);
       assert.ok(daysFull / ticks > 0.5, `${rank}: this really was pressure (${Math.round(100 * daysFull / ticks)}% of the year at or over the cap)`);
       assert.ok(draws < 16 * 11, `${rank}: slots that find the realm full are dropped at the month's end, not saved up (${draws} draws)`);
       assert.ok(s.pending.length < 40, `${rank}: nothing piles up in pending (${s.pending.length})`);

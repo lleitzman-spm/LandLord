@@ -25,7 +25,7 @@ export const WEATHER_INCIDENTS: IncidentDef[] = [
         reply: "A kettle each, at noon. The goblins have asked whether fourteen to a hovel means fourteen kettles. They would like it to.", result: "The realm thawed its own well with kettles at noon. Yours was counted. It was noted as being on the small side." },
     ],
     onExpire: [{ t: 'happiness', amount: -6, scope: 'all' }, { t: 'condition', amount: -6 }],
-    expireText: "The well stayed frozen until the weather relented. The man who went to check has not, and will not relent either.",
+    expireText: "The well stayed frozen until the weather relented. The man who went to check has thawed, but has not relented.",
   },
   {
     id: 'frost_split_butt', title: 'A Draught With Opinions', category: 'weather', decision: 'repair',
@@ -91,7 +91,7 @@ export const WEATHER_INCIDENTS: IncidentDef[] = [
     herald: "Hail the size of turnips has flattened the crop. {tenant} is at your door with a bucket of it, as evidence.",
     opening: [
       "This is what is left of the barley, {title}. I can pay this month in hail. I have a great deal of hail. It is going fast.",
-      "I counted eleven dents in the roof and one in the ram. The roof is yours. The ram is mine. We have both had a bad morning.",
+      "I counted nine dents in the roof and one in the ram. The roof is yours. The ram is mine. We have both had a bad morning.",
       "I am not asking to be let off. I am asking what the lease says about the sky.",
     ],
     stance: "A good payer hit by plain bad luck. Wants this month's rent eased or put back until after harvest. Too proud to plead twice. Will remember kindness for years, and will remember the phrase 'acts of the gods are the tenant's affair' for longer.",
@@ -215,7 +215,7 @@ export const WEATHER_INCIDENTS: IncidentDef[] = [
       { id: 'wait_for_thaw', label: 'Snow melts', say: "They have a roof, a fire and the rent. Snow melts. Leave them to it.",
         intent: 'The ruler does nothing and waits for the snow to melt.',
         effects: [{ t: 'happiness', amount: -7 }, { t: 'condition', amount: -3 }],
-        reply: "Very good. I will shout that down the chimney. I will then step back from the chimney.", result: "{building} thawed out after eleven days. {tenant} came out pale, with a finished scarf and several opinions." },
+        reply: "Very good. I will shout that down the chimney. I will then step back from the chimney.", result: "{building} thawed out after a fortnight. {tenant} came out pale, with a finished scarf and a great deal to say." },
     ],
     onExpire: [{ t: 'happiness', amount: -9 }, { t: 'condition', amount: -3 }, { t: 'visual', remove: 'snowed_in' }],
     expireText: "Nobody dug out {building}. {tenant} tunnelled to the lane alone and says the tunnel is theirs and is not in the lease.",
@@ -280,7 +280,7 @@ export const WEATHER_INCIDENTS: IncidentDef[] = [
     target: 'tenant', minRank: 'knight', weight: 0.8, cooldownMonths: 16, seasons: ['summer', 'autumn'],
     requires: { buildingCategory: ['housing'] },
     icon: 'tree', visual: 'hole_roof', urgency: 3, timerDays: 7, audience: false,
-    herald: "Lightning has split the old oak. Half lies in the lane. The other half is in {tenant}'s bedroom at {building}, smouldering a little.",
+    herald: "Lightning split the old oak. Half is in the lane. The rest is in {tenant}'s bedroom at {building}, smouldering a little.",
     outcomes: [
       { id: 'clear_and_mend', label: 'Clear it and mend the roof', say: "Get the tree out of their bedroom and mend the roof. The timber can be stacked for whoever wants it.", default: true,
         intent: 'The ruler pays to remove the fallen tree and repair the damage.',
@@ -355,7 +355,7 @@ export const WEATHER_INCIDENTS: IncidentDef[] = [
     target: 'tenant', minRank: 'reeve', weight: 1, cooldownMonths: 12, seasons: ['autumn'],
     requires: { buildingCategory: ['housing'], householdsAbove: 2 },
     icon: 'eye', urgency: 2, timerDays: 4, audience: false,
-    herald: "In this morning's fog {tenant} has lost {building}. They are sure it was here yesterday. They have let themselves into three wrong houses.",
+    herald: "In the fog {tenant} has lost {building}. It was here yesterday, surely. They have let themselves into three wrong houses.",
     outcomes: [
       { id: 'ring_them_home', label: 'Ring a bell at their door', say: "Stand at their door and ring the bell until they walk into it.", default: true,
         intent: 'The ruler sends someone to guide the lost tenant home by sound.',
@@ -427,6 +427,6 @@ export const WEATHER_INCIDENTS: IncidentDef[] = [
         reply: "Theirs. I will tell {first}. I expect they will deal with it the way that trade deals with anything, and sell it.", result: "{tenant} was told the icicle was theirs. They broke it up and sold it by the cup as 'winter cordial'. It did rather well." },
     ],
     onExpire: [{ t: 'happiness', amount: -8 }, { t: 'condition', amount: -5 }, { t: 'visual', remove: 'frozen' }],
-    expireText: "The icicle at {building} came down by itself at noon on market day, through a pie. The pie's owner is seeking the price of the pie.",
+    expireText: "The icicle at {building} came down by itself at noon on market day, through a pie. The pie's owner asks who owns the eaves, and has kept the pie as evidence.",
   },
 ];

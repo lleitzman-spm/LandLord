@@ -16,7 +16,9 @@ import { createWord } from '../src/word/index';
 import { parseReply, validateActions, loosen, proseLine, scrubIds } from '../src/word/interpret';
 import { parseOffline, numberize, prep, parseDue, weigh, describeAction, fillAck, clip } from '../src/word/offline';
 import { buildDigest, DIGEST_CAP, DIGEST_CAP_LEAN } from '../src/word/digest';
-import { buildOrderPrompt, ORDER_SYSTEM, ORDER_SYSTEM_LEAN, SPOKEN_ACTIONS } from '../src/word/prompts';
+import { buildOrderPrompt, listenerBlock, LISTENER_CAP, LISTENER_CAP_LEAN, ORDER_SYSTEM, ORDER_SYSTEM_LEAN, SPOKEN_ACTIONS } from '../src/word/prompts';
+import { TEMPERAMENT_DEFS } from '../src/data/temperaments';
+import { CHARACTERS } from '../src/data';
 import { detectModel, ModelError } from '../src/word/model';
 
 // ───────────────────────── harness ─────────────────────────
@@ -505,6 +507,47 @@ async function main(): Promise<void> {
     assert.equal(big.calls[0]!.system, ORDER_SYSTEM); assert.equal(w2.engine(), 'claude');
     assert.equal(createWord(c.deps, { model: NONE }).engine(), null);
   });
+  await test('offline: the verb "keep" does not name the Keep', () => {
+    const s = court('baron').state;
+    for (const said of ['never evict a widow in winter, and keep that in mind', 'always keep the late fee for goblins']) {
+      const r = JSON.stringify(parseOffline(said, { to: 'bailiff' }, s));
+      assert.ok(!r.includes('"building.id"'), `${said}: ${r}`);
+    }
+  });
+  await test('prompt: every listener block carries the real voice, blurb and quirk and keeps to its budget', () => {
+    for (const rank of ['knight', 'baron'] as const) {
+      const s = court(rank).state;
+      const targets: SpeakTarget[] = [COURT, { to: 'bailiff' }, { to: 'mason' }, { tenantId: Object.keys(s.tenants)[0]! }, { buildingId: Object.values(s.buildings).find(b => b.units.length)!.id }];
+      for (const t of targets) for (const lean of [false, true]) for (const said of ['collect the rents', 'mend the mill', 'what a morning']) {
+        const block = listenerBlock(s, t, lean, said), where = `${rank} ${JSON.stringify(t)} lean=${lean} "${said}"`;
+        assert.ok(block.length <= (lean ? LISTENER_CAP_LEAN : LISTENER_CAP), `${where}: ${block.length} characters`);
+        for (const l of block.split('\n')) assert.equal((l.split('"').length - 1) % 2, 0, `${where}: a quotation is cut short in: ${l}`);
+        const turn = buildOrderPrompt(s, said, t, { lean }).messages[0]!.content;
+        assert.ok(turn.length < (lean ? 6200 : 9500), `${where}: user turn is ${turn.length} characters`);
+        noDash(block);
+      }
+      const agnes = Object.values(s.staff).find(m => m.role === 'bailiff')!, def = TEMPERAMENT_DEFS[agnes.temperament];
+      // spoken to directly, or the likely answerer in a crowded room: the whole character
+      for (const block of [listenerBlock(s, { to: 'bailiff' }, true, 'collect the rents'), listenerBlock(s, COURT, false, 'collect the rents')]) {
+        assert.ok(block.includes(def.blurb) && block.includes(def.quirk), 'blurb and quirk');
+        assert.ok(block.includes(def.voice.split(' Sample: ')[0]!.slice(0, 120)), 'voice');
+        assert.doesNotMatch(block, /Left to their own judgment: Left/);
+      }
+      assert.ok(listenerBlock(s, { to: 'bailiff' }, true).includes(def.voice), 'the whole voice, sample and all, when addressed');
+      // a named household with a history, spoken to face to face: its own sheet comes first and the court gives way
+      const t = Object.values(s.tenants)[2]!;
+      t.memory = [{ day: 1, text: 'The ruler promised a new roof and then raised the rent instead, which the whole lane heard about.', valence: -2 }, { day: 2, text: 'A gift of ten crowns at midwinter, handed over at the door without a word.', valence: 2 }];
+      for (const ch of CHARACTERS) for (const lean of [false, true]) {
+        t.character = ch.id;
+        const block = listenerBlock(s, { tenantId: t.id }, lean, 'good morrow');
+        assert.ok(block.includes(ch.bio) && block.includes(ch.voice), ch.id);
+        assert.ok(block.length <= (lean ? LISTENER_CAP_LEAN : LISTENER_CAP), `${rank} ${ch.id} lean=${lean}: ${block.length} characters`);
+        const turn = buildOrderPrompt(s, 'I will mend your roof before winter', { tenantId: t.id }, { lean }).messages[0]!.content;
+        assert.ok(turn.length < (lean ? 6200 : 9500), `${rank} ${ch.id} lean=${lean}: user turn is ${turn.length} characters (digest ${buildDigest(s, { tenantId: t.id }, 'I will mend your roof before winter', lean ? DIGEST_CAP_LEAN : DIGEST_CAP).length}, listener ${block.length})`);
+        for (const role of ['mason', 'bailiff', 'crier', 'steward']) if (Object.values(s.staff).some(m => m.role === role)) assert.ok(block.includes(`\n ${role}: `), `${ch.id}: ${role} is still at court`);
+      }
+    }
+  });
   await test('speak: a sloppy but well-meant reply still does exactly what was asked', async () => {
     const c = court();
     const hovel = bId(c.state, 'The Leaning Hovel'), marta = tId(c.state, 'Old Marta Thistlewick');
@@ -650,7 +693,8 @@ async function main(): Promise<void> {
     one('order_job', (a: Extract<Action, { type: 'order_job' }>, s) => { assert.equal(a.kind, kind); for (const [k, v] of Object.entries(where(s))) assert.equal((a as Record<string, unknown>)[k], v, k); });
   const settle = (defId: string, outcomeId: string): Expect => one('resolve_incident', (a: Extract<Action, { type: 'resolve_incident' }>, s) => { assert.equal(s.incidents[a.incidentId]!.defId, defId); assert.equal(a.outcomeId, outcomeId); });
   const policy = (p: Record<string, unknown>): Expect => one('set_policy', (a: Extract<Action, { type: 'set_policy' }>) => assert.deepEqual(a.policy, p));
-  const rent = (name: string, n: number): Expect => one('set_rent', (a: Extract<Action, { type: 'set_rent' }>, s) => { assert.equal(a.buildingId, bId(s, name)); assert.equal(a.rent, n); });
+  // a relative change is checked against the fixture's own asking rent, which follows the balance tables
+  const rent = (name: string, n: number | ((asking: number) => number)): Expect => one('set_rent', (a: Extract<Action, { type: 'set_rent' }>, s) => { assert.equal(a.buildingId, bId(s, name)); assert.equal(a.rent, typeof n === 'number' ? n : n(s.buildings[bId(s, name)]!.rent)); });
   const order = (decision: string, rule: string, option: string, when: unknown[], to?: string): Expect => one('add_order', (a: Extract<Action, { type: 'add_order' }>) => {
     assert.equal(a.order.decision, decision); assert.equal(a.order.rule, rule); assert.equal(a.order.option, option); assert.deepEqual(a.order.when, when); if (to) assert.equal(a.order.to, to);
   });
@@ -682,11 +726,11 @@ async function main(): Promise<void> {
     ['nail a notice to quit on Lobelia\'s door', all(job('serve_notice', s => ({ tenantId: tId(s, 'Lobelia Greenhill') })), confirms)],
     // rents
     ['raise the rent at Thistle Cottage to 18', all(rent('Thistle Cottage', 18), direct)],
-    ['lower the rent at the Long Row by two', rent('The Long Row', 11)],
+    ['lower the rent at the Long Row by two', rent('The Long Row', r => r - 2)],
     ['set the rent at Underbough to twenty five crowns', rent('Underbough', 25)],
-    ['put up the rent at Caskhammer Hall by ten percent', rent('Caskhammer Hall', 29)],
-    ['raise the rent here by 3', rent('Thistle Cottage', 19), { buildingId: '@Thistle Cottage' }],
-    ['double the rent at the tavern', rent('The Late Payment', 92)],
+    ['put up the rent at Caskhammer Hall by ten percent', rent('Caskhammer Hall', r => Math.round(r * 1.1))],
+    ['raise the rent here by 3', rent('Thistle Cottage', r => r + 3), { buildingId: '@Thistle Cottage' }],
+    ['double the rent at the tavern', rent('The Late Payment', r => r * 2)],
     // letting
     ['list Damp End', one('set_listed', (a: Extract<Action, { type: 'set_listed' }>, s) => { assert.equal(a.buildingId, bId(s, 'Damp End')); assert.equal(a.listed, true); })],
     ['unlist the Long Row', one('set_listed', (a: Extract<Action, { type: 'set_listed' }>) => assert.equal(a.listed, false))],
@@ -736,7 +780,7 @@ async function main(): Promise<void> {
     ['I promise you will not be evicted this winter', one('swear_oath', (a: Extract<Action, { type: 'swear_oath' }>) => { assert.equal(a.oath.kind, 'no_evict'); assert.equal(a.oath.dueDay, 360); }), { tenantId: '@Pim Underbough' }],
     // talk, questions, and what cannot be done by word
     ['how much gold do we have?', talk(/coffers hold 412 crowns/)],
-    ['who is late', talk(/Lobelia Greenhill owes 26/)],
+    ['who is late', talk(/Lobelia Greenhill owes \d+/)],
     ['what needs mending', talk(/Damp End stands at 24/)],
     ['hello Hob', talk(/Sir/)],
     ['build me a tavern by the well', talk(/placed by hand/)],
@@ -788,8 +832,10 @@ async function main(): Promise<void> {
     const c = court(); withApplicantAndLateRent(c); const s = c.state;
     const bailiff = Object.values(s.staff).find(m => m.role === 'bailiff')!;
     const outcome = () => { const r = parseOffline('deal with the late payers', { to: 'bailiff' }, s); const m = r.moves.find(x => x.action.type === 'resolve_incident'); return m && m.action.type === 'resolve_incident' ? m.action.outcomeId : null; };
-    bailiff.temperament = 'iron'; assert.equal(outcome(), 'notice');
-    bailiff.temperament = 'soft'; assert.equal(outcome(), 'payment_plan');
+    // each takes the course their own temperament puts first (the content's `bias`), so the same words part ways
+    const first = (id: 'iron' | 'soft') => TEMPERAMENT_DEFS[id].bias.late_rent![0]!;
+    bailiff.temperament = 'iron'; assert.equal(outcome(), first('iron')); assert.ok(['notice', 'late_fee'].includes(outcome()!), `Iron chose ${outcome()}`);
+    bailiff.temperament = 'soft'; assert.equal(outcome(), first('soft')); assert.ok(['wait', 'payment_plan', 'forgive'].includes(outcome()!), `Soft chose ${outcome()}`);
     s.orders.push({ id: 'oz', to: 'bailiff', text: 'always forgive Wat', gist: 'Forgive Wat.', decision: 'late_rent', incidentDef: null, when: [{ field: 'tenant.name', op: '==', value: 'Wat Mudge' }], rule: 'choose', option: 'forgive', outcomeId: null, createdDay: 1, uses: 0 });
     assert.equal(outcome(), 'forgive');
     // the mason: the fixture's standing order says "always mend properly", so even a Bodger mends properly
@@ -810,13 +856,14 @@ async function main(): Promise<void> {
   });
   await test('offline: an ambiguous name is asked about, not guessed', () => {
     const { state } = court();
-    const r = parseOffline('raise the rent at the hovel to 9', COURT, state);
+    const up = Math.max(...Object.values(state.buildings).filter(b => b.type === 'hovel').map(b => b.rent)) + 3;
+    const r = parseOffline(`raise the rent at the hovel to ${up}`, COURT, state);
     assert.equal(r.understood, false); assert.match(r.reply, /Which house, Sir: /); assert.match(r.reply, /Leaning Hovel/); assert.match(r.reply, /Damp End/);
-    const every = parseOffline('raise the rent at every hovel to 9', COURT, state);
+    const every = parseOffline(`raise the rent at every hovel to ${up}`, COURT, state);
     assert.equal(every.moves.length, 3);
     assert.equal(every.confirm, true, 'one of the three is Wat\'s, whose rent the ruler swore not to raise'); assert.match(every.reply, /Mind your oath to Wat Mudge/);
     state.oaths = [];
-    assert.equal(parseOffline('raise the rent at every hovel to 9', COURT, state).confirm, false);
+    assert.equal(parseOffline(`raise the rent at every hovel to ${up}`, COURT, state).confirm, false);
   });
   await test('offline: several orders in one breath', () => {
     const { state } = court();
@@ -837,6 +884,25 @@ async function main(): Promise<void> {
     const { state } = court();
     const r = parseOffline('evict Wat', { to: 'mason' }, state);
     assert.equal(r.speaker, 'mason'); assert.match(r.reply, /Not my trade\. I will tell Agnes\./); assert.equal(r.confirm, true);
+    // the mason restates it plainly: none of a mason's own acks ("Back by supper") belong on a bailiff's errand
+    assert.match(r.reply, /^Put Wat Mudge out of Mudlark Hovel\. Not my trade\. I will tell Agnes\. /);
+  });
+  await test('offline: every temperament reads an order back whole, in its own acks, under 200 characters', () => {
+    const { state } = court('baron');
+    const asks: [SpeakTarget, string][] = [[{ to: 'mason' }, 'mend the leaning hovel'], [{ to: 'bailiff' }, 'collect the rents'], [{ to: 'bailiff' }, 'serve notice on Wat and Lobelia'], [{ to: 'crier' }, 'list damp end'], [{ to: 'steward' }, 'five days grace'], [{ to: 'steward' }, 'hold a feast']];
+    for (const def of Object.values(TEMPERAMENT_DEFS)) {
+      assert.equal(def.acks.length, 8, def.id); assert.equal(def.grumbles.length, 6, def.id);
+      for (const a of def.acks) assert.ok(a.includes('{order}'), `${def.id}: ${a}`);
+      const m = Object.values(state.staff).find(x => x.role === def.role)!; m.temperament = def.id;
+      for (const [to, text] of asks.filter(([t]) => 'to' in t && t.to === def.role)) for (let d = 0; d < 6; d++) {
+        state.day += 1;
+        const r = parseOffline(text, to, state), where = `${def.id} "${text}": ${r.reply}`;
+        assert.ok(r.understood && r.reply.length <= 200, where);
+        assert.doesNotMatch(r.reply, /\{|\}|\.\.|  | [.,;]|[—–]|undefined/, where); assert.match(r.reply, /^[A-Z].*[.!?]$/, where);
+      }
+    }
+    const many = parseOffline('serve notice on Wat and Lobelia', { to: 'bailiff' }, state);
+    assert.match(many.reply, /^Notice to Quit on the door of Wat Mudge and Lobelia Greenhill[.!]/);
   });
   await test('offline: a household answers a promise or a gift made to its face', () => {
     const { state } = court(); const marta = tId(state, 'Old Marta Thistlewick');
@@ -869,7 +935,8 @@ async function main(): Promise<void> {
     assert.equal(weigh([{ type: 'resolve_incident', incidentId: incId(state, 'sys_repair_leak'), outcomeId: 'fix' }], state).confirm, false);
     const w = weigh([{ type: 'resolve_incident', incidentId: incId(state, 'unauthorized_griffin'), outcomeId: 'pet_rent' }], state);
     assert.equal(w.confirm, true, 'pet rent raises a rent the ruler swore not to raise'); assert.equal(w.oaths.length, 1);
-    assert.match(describeAction({ type: 'set_rent', buildingId: bId(state, 'Thistle Cottage'), rent: 18 }, state), /^Asking rent at Thistle Cottage: 18 crowns, up from 16$/);
+    const asking = state.buildings[bId(state, 'Thistle Cottage')]!.rent;
+    assert.equal(describeAction({ type: 'set_rent', buildingId: bId(state, 'Thistle Cottage'), rent: asking + 2 }, state), `Asking rent at Thistle Cottage: ${asking + 2} crowns, up from ${asking}`);
   });
 
   // ── the digest and the prompt ────────────────────────────────────────────

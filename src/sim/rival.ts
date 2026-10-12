@@ -53,7 +53,7 @@ export const TUNE = {
   undercutHappiness: -3,
   undercutMax: 6,
   feastRenown: 3,
-  rumourRenown: -1,
+  rumourRenown: -0.5,
   /** a move that changes nothing is only worth a line if he has not been heard from in this long */
   idleQuietDays: 100,
   introDay: 4,

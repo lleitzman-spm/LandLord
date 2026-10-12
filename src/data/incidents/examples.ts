@@ -42,7 +42,7 @@ export const EXAMPLE_INCIDENTS: IncidentDef[] = [
     target: 'tenant', minRank: 'baron', weight: 0.7, cooldownMonths: 14,
     requires: { buildingType: ['wizard_tower'], trade: ['wizard', 'alchemist'], monthsHousedAbove: 6 },
     icon: 'wand', visual: 'purple_paint', urgency: 1, timerDays: 14, audience: true, petitioner: 'tenant',
-    herald: '{tenant} is moving out of {building} and wants the surety back. The tower is now purple. All of it. Including, somehow, the inside of the stones.',
+    herald: '{tenant} is leaving {building} and wants the surety back. The tower is now purple. All of it. Even the inside of the stones.',
     opening: [
       'It was purple when I arrived. Ask anyone. Ask anyone who has also been enchanted to remember it that way.',
       'Purple is a neutral colour in the higher planes. I have, if anything, added value.',

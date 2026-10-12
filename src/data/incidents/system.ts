@@ -227,7 +227,7 @@ export const SYSTEM_INCIDENTS: IncidentDef[] = [
     target: 'tenant', minRank: 'reeve', weight: 1, cooldownMonths: 0,
     requires: { hasPet: true },
     icon: 'paw', urgency: 1, timerDays: 12, audience: true, petitioner: 'tenant',
-    herald: 'It turns out {tenant} keeps a {pet} at {building}. The lease does not mention a {pet}. The {pet} has not read the lease.',
+    herald: '{tenant} keeps a {pet} at {building}. The lease does not mention a {pet}. The {pet} has not read the lease.',
     opening: [
       'That is not a {pet}. That is a very small lodger who pays in companionship.',
       'It followed me home. Four years ago. We are past the point of blame.',

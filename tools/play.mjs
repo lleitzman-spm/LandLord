@@ -44,13 +44,14 @@ page.on('console', m => { if (m.type() === 'error') { const s = m.text().slice(0
 page.on('pageerror', e => { const s = String(e && e.stack || e).slice(0, 900); errors.push('[pageerror] ' + s); console.log('[pageerror] ' + s); });
 // the game's own origin has no server here: /api/court answers 404 unless a step installs page.route itself
 await page.route('**/api/**', r => r.fulfill({ status: 404, contentType: 'application/json', body: '{"error":"no server","code":"not_found"}' }));
-await page.goto('file://' + path.join(tmp, 'index.html'));
+await page.route(/fonts\.(googleapis|gstatic)\.com/, r => r.abort());
+await page.goto('file://' + path.join(tmp, 'index.html'), { waitUntil: 'commit', timeout: 120000 });
 await page.waitForFunction(() => !!(window).__ll, null, { timeout: 60000 }).catch(() => console.log('[play] window.__ll never appeared'));
 const t = {
   errors,
   log: (...a) => console.log('[play]', ...a),
   wait: ms => page.waitForTimeout(ms),
-  shot: async name => { const f = path.join(root, '.tmp', name + '.png'); await page.screenshot({ path: f }); console.log('[play] wrote ' + f); },
+  shot: async name => { const f = path.join(root, '.tmp', name + '.png'); await page.screenshot({ path: f, timeout: 120000 }); console.log('[play] wrote ' + f); },
   ev: (fn, arg) => page.evaluate(fn, arg),
   newGame: async (o = {}) => { await page.evaluate(o => (window).__ll.app.newGame({ ruler: 'Luke', realm: 'Mudlark Hollow', mode: 'peace', seed: 4242, ...o }), o); await page.waitForTimeout(1200); },
   days: async n => { await page.evaluate(n => { const ll = (window).__ll; const s = ll.sim ?? ll.app?.sim?.(); s.advanceDays(n); }, n); await page.waitForTimeout(700); },

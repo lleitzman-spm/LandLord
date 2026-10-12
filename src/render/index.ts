@@ -240,6 +240,8 @@ export function createRenderer(deps: RendererDeps): CoreRenderer {
   let resScale = 1, slowFor = 0, fastFor = 0, climbAfter = 6;
   const governed = typeof navigator === 'undefined' || !navigator.webdriver;   // not under automation: screenshots stay full size
   function govern(real: number): void {
+    // dev switch: `window.__llNoGovernor = true` (any time) holds full resolution for look-dev shots
+    if ((globalThis as { __llNoGovernor?: boolean }).__llNoGovernor) { slowFor = 0; fastFor = 0; if (resScale !== 1) { resScale = 1; resize(); } return; }
     if (!governed || real > 0.25 || (typeof document !== 'undefined' && document.visibilityState === 'hidden')) { slowFor = 0; fastFor = 0; return; }
     if (fps < 50) { slowFor += real; fastFor = 0; }
     else if (fps > 57) { fastFor += real; slowFor = 0; }

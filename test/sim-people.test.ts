@@ -14,6 +14,7 @@ import {
 import { Sim, blankState } from '../src/sim/index';
 import { BUILDINGS } from '../src/data/buildings';
 import { BAL } from '../src/data/balance';
+import { RANKS } from '../src/data/ranks';
 import { CHARACTERS } from '../src/data/characters';
 import { TRAITS, SPECIES, type BuildingType, type TraitId } from '../src/data/ids';
 import { TRADE_DEFS } from '../src/data/trades';
@@ -236,7 +237,7 @@ test('the month closes, wages and upkeep are charged, the peak rent roll is trac
   assert.equal(s.gold, before - wages - upkeep);
   assert.equal(m1.rentDue, t.lease!.rent);
   assert.equal(s.stats.peakRentRoll, economy.rentRoll(s));
-  assert.equal(economy.monthlyOutgoings(s), wages + upkeep + Math.round(60 / 3));
+  assert.equal(economy.monthlyOutgoings(s), Math.round(wages + upkeep + RANKS.knight.tribute / 3));
 });
 
 test('market rent follows the formula; set_rent takes 1 to 5 times base and touches no lease', () => {
@@ -278,9 +279,10 @@ test('a gift costs gold, lifts the household, and is remembered; a feast lifts e
   const b = settle(s, addBuilding(s, 'hovel'), { happiness: 50 });
   const sim = new Sim(s);
   const g0 = s.gold, r0 = s.renown;
-  assert.equal(sim.dispatch({ type: 'gift', tenantId: a.id, amount: 8 }).ok, true);
-  assert.equal(s.gold, g0 - 8);
-  assert.equal(economy.currentBook(s).expense.gifts, 8);
+  const month = a.lease!.rent;                      // a month of their rent, whatever a hovel fetches these days
+  assert.equal(sim.dispatch({ type: 'gift', tenantId: a.id, amount: month }).ok, true);
+  assert.equal(s.gold, g0 - month);
+  assert.equal(economy.currentBook(s).expense.gifts, month);
   assert.ok(a.happiness >= 60, 'a month of rent as a gift should lift a good deal, got ' + a.happiness);
   assert.equal(a.memory.at(-1)!.valence, 2);
   assert.ok(s.renown > r0);
@@ -739,6 +741,52 @@ test('the gentler rulings: plan, forgive, mercy, coin for keys; and paying up cl
   rent.applyLateOption(s, keys.id, 'late_fee');
   rent.applyLateOption(s, 'nobody', 'notice');
   assertConsistent(s, 'gentle rulings');
+});
+
+test('the account and the pipeline: a bill mid-plan stretches the plan; a debt forgiven leaves a notice for cause up; a writ answered before the knock is not enforced', () => {
+  const s = realm(57);
+  const mk = (over: Partial<Tenant> = {}) => { const b = addBuilding(s, 'cottage'); b.units[0]!.listed = false; return settle(s, b, { reliability: 0, income: 80, ...over }); };
+  const billed = mk(), answered = mk(), cause = mk({ reliability: SURE });
+  untilDay(s, 33);
+  setAsideIncidents(s);
+  const R = billed.lease!.rent;
+  assert.equal(billed.lateStage, 'late'); assert.equal(answered.lateStage, 'late'); assert.equal(cause.arrears, 0);
+  for (const b of Object.values(s.buildings)) doJob(s, 'collect', { buildingId: b.id, unit: 0 });
+
+  // a notice served for other cause is not about money: an incident that forgives a debt does not take it down
+  rent.applyLateOption(s, cause.id, 'notice');
+  assert.equal(cause.lateStage, 'noticed');
+  rent.addArrears(s, cause.id, 5);
+  rent.forgiveArrears(s, cause.id);
+  assert.equal(cause.arrears, 0); assert.equal(cause.lateStage, 'noticed'); assert.ok(cause.courtDay !== null);
+  rent.applyLateOption(s, cause.id, 'mercy');
+
+  // a writ about money, answered while the Bailiff is on the road: nobody is put out, and no fresh notice goes up
+  rent.applyLateOption(s, answered.id, 'notice');
+  answered.lateStage = 'writ';
+  rent.applyLateOption(s, answered.id, 'evict');
+  assert.ok(Object.values(s.jobs).some(j => j.kind === 'evict' && j.tenantId === answered.id), 'the eviction is on its way');
+  rent.forgiveArrears(s, answered.id);
+  assert.equal(answered.lateStage, 'none');
+  assert.equal(finishJobs(s, ['evict']), 1);
+  assert.equal(answered.status, 'housed'); assert.equal(answered.lateStage, 'none'); assert.equal(answered.courtDay, null);
+  assert.ok(s.heralds.some(h => /had lapsed/.test(h.text)));
+  answered.reliability = SURE;
+
+  // a repair billed to a household on a plan: the instalments agreed do not cover it, so the plan runs on until they do
+  rent.applyLateOption(s, billed.id, 'payment_plan');
+  const each = billed.plan!.each;
+  billed.reliability = SURE;
+  rent.addArrears(s, billed.id, R * 2);
+  const home = s.buildings[billed.buildingId!]!;
+  for (const d of [63, 93, 123]) { untilDay(s, d); doJob(s, 'collect', { buildingId: home.id, unit: 0 }); setAsideIncidents(s); }
+  assert.ok(billed.arrears > 0, 'three instalments did not cover the bill as well');
+  assert.equal(billed.lateStage, 'plan', 'the plan runs on rather than ending with the debt standing and nobody asking');
+  assert.ok(billed.plan && billed.plan.each >= each && billed.plan.left * billed.plan.each >= billed.arrears);
+  assert.ok(s.heralds.some(h => /the plan runs on/.test(h.text)));
+  for (let d = 153; billed.arrears > 0 && d < 600; d += 30) { untilDay(s, d); doJob(s, 'collect', { buildingId: home.id, unit: 0 }); setAsideIncidents(s); }
+  assert.equal(billed.arrears, 0); assert.equal(billed.plan, null); assert.equal(billed.lateStage, 'none');
+  assertConsistent(s, 'account and pipeline');
 });
 
 test('jobs ordered by hand: serve_notice starts the clock; evict without a writ becomes a notice', () => {
@@ -1200,7 +1248,7 @@ test('renown and favor clamp and announce; renown drifts toward a blend of 50 an
   const sour = mk(10, 50); renown.renownModule.onMonth!(sour, 1);
   assert.ok(sour.renown < 50);
   const empty = realm(83); empty.renown = 80; renown.renownModule.onMonth!(empty, 1);
-  assert.ok(empty.renown < 80 && empty.renown > 78, 'with nobody housed it settles toward 50');
+  assert.ok(empty.renown < 80 && empty.renown >= 80 - BAL.renownDrift * 3 - 1e-9, 'with nobody housed it settles toward 50, slowly: ' + empty.renown);
 });
 
 test('a long-empty unit draws squatters; a fresh or newly shown one does not', () => {
@@ -1491,7 +1539,12 @@ test('the whole Sim: a household that will not pay goes by way of the court, and
   assert.ok(eventsOf('rent_late').some(e => e.tenantId === t.id));
   const late = openDecision(s, 'late_rent', { tenantId: t.id });
   assert.ok(late, 'the ruler is asked what to do');
-  rule(sim, late, 'notice');
+  if (INCIDENT_BY_ID[late.defId]!.outcomes.some(o => o.option === 'notice')) rule(sim, late, 'notice');
+  else {
+    // not every excuse comes with a notice among its answers (a harvest, a feast): the ruler lets it lie and sends one by hand
+    rule(sim, late, 'wait');
+    assert.equal(sim.dispatch({ type: 'order_job', kind: 'serve_notice', tenantId: t.id }).ok, true, 'a notice can always be ordered by hand');
+  }
   assert.ok(playUntil(sim, 5, () => t.lateStage === 'noticed', daily), 'the notice was nailed up');
   assert.ok(t.courtDay !== null && t.courtDay > s.day + BAL.courtDays - 6);
   assert.ok(playUntil(sim, 10, () => t.lateStage === 'court', daily), 'the court took the matter up');
@@ -1535,13 +1588,24 @@ test('the whole Sim: a household leaves, the place is looked over, and the suret
   assert.ok(inc, 'the surety is put to the ruler');
   const damage = tenants.auxOf(t).damage;
   assert.ok(damage > 0, 'sixteen points past honest wear cost something to put right');
-  const kept = Math.min(D, damage);
+  // Which household this is depends on the dice, and each people has its own way of leaving: the plain
+  // ruling keeps exactly the damage, a halfling's keeps the price of a door once the Mason has squared it.
+  // So read what "fair" means from the matter actually opened, and wait out any errand it sends someone on.
+  const fair = INCIDENT_BY_ID[inc.defId]!.outcomes.find(o => o.option === 'fair');
+  assert.ok(fair, `${inc.defId} offers a fair ruling`);
+  const eff = fair.effects.find(e => e.t === 'deposit');
+  assert.ok(eff && eff.t === 'deposit', `${inc.defId}: the fair ruling settles the surety`);
+  const kept = eff.keepPct < 0 ? Math.min(D, damage) : Math.round(D * Math.min(100, eff.keepPct) / 100);
+  assert.ok(kept >= 0 && kept < D, 'a fair ruling never keeps the lot');
   const gold = s.gold, returned = economy.currentBook(s).expense.deposits_returned;
   rule(sim, inc, 'fair');
+  if (fair.job) assert.ok(playUntil(sim, 8, () => tenants.auxOf(t).dep === 3, () => quietRealm(s)), 'the errand was run and the surety settled');
   assert.equal(t.lease!.deposit, 0);
+  assert.equal(tenants.auxOf(t).dep, 3, 'the matter is closed');
   assert.equal(economy.currentBook(s).expense.deposits_returned - returned, D - kept);
-  assert.equal(gold - s.gold, D - kept, 'exactly the damage was kept, and no more than the surety');
+  if (!fair.job) assert.equal(gold - s.gold, D - kept, 'exactly the damage was kept, and no more than the surety');
   assert.equal(b.units[t.unit]!.listed, true, 'and the place is to let again');
+  assertConsistent(s, 'sim surety');
 });
 
 /** A plain player: fetches purses, shows applicants round, takes the first reasonable ruling on everything. */

@@ -209,7 +209,14 @@ function payNow(s: GameState, t: Tenant, all: boolean): number {
   aux.due = 0; aux.payDay = -1;
   if (t.plan && toward > 0) {
     t.plan.left -= 1;
-    if (t.plan.left <= 0 || t.arrears <= 0) t.plan = null;
+    if (t.arrears <= 0) t.plan = null;
+    else if (t.plan.left <= 0) {
+      // more was put on the account after the plan was drawn (a repair billed to them, a purse left to spoil):
+      // the plan runs on until the whole is paid, rather than ending with the debt standing and nobody asking
+      const each = Math.max(1, t.plan.each, Math.round((Number.isFinite(t.income) ? t.income : 0) * TUNE.catchUpShare));
+      t.plan = { left: Math.max(1, Math.ceil(t.arrears / each)), each };
+      herald(s, 'info', `${t.name} has paid the last instalment, but more went on the account since. ${crowns(t.arrears)} still stand; the plan runs on at ${Math.min(each, t.arrears)} a month.`, refsOf(t));
+    }
   }
   if (t.arrears <= 0 && wasInCourt && !aux.cause) {
     t.arrears = 0;                                       // the notice was never about money: paying does not lift it
@@ -376,7 +383,7 @@ function rentDaySummary(s: GameState): void {
   }
   const names = missing.slice(0, 2).map(t => t.name).join(' and ');
   const more = missing.length > 2 ? ` and ${missing.length - 2} more` : '';
-  herald(s, 'info', `Rent Day is done. ${paid} of ${all.length} households have paid. Not heard from: ${names}${more}.`);
+  herald(s, 'info', all.length === 1 ? `Rent Day is done. The one household has not paid: ${names}.` : `Rent Day is done. ${paid} of ${all.length} households have paid. Not heard from: ${names}${more}.`);
 }
 
 // ───────────── the late pipeline ─────────────
@@ -462,7 +469,11 @@ export function forgiveArrears(s: GameState, tenantId: Id): void {
   const t = s.tenants[tenantId];
   if (!t) return;
   t.arrears = 0;
-  if (t.status === 'housed') clearCase(t);
+  if (t.status !== 'housed') return;
+  // a notice served for other cause was never about money: forgiving a debt does not take it off the door
+  const inCourt = t.lateStage === 'noticed' || t.lateStage === 'court' || t.lateStage === 'writ';
+  if (inCourt && !auxOf(t).cause) return;
+  clearCase(t);
 }
 
 /** Carry out a late-rent option on a household: wait | late_fee | payment_plan | forgive | notice | cash_for_keys | evict | mercy. */
@@ -941,6 +952,10 @@ function evictJobDone(s: GameState, job: Job): void {
     evict(s, t.id);
   } else if (t.lateStage === 'noticed' || t.lateStage === 'court') {
     herald(s, 'info', `The court has not yet ruled on ${t.name}, so nobody was put out of ${b?.name ?? 'the house'}. A stern look was delivered instead.`, refsOf(t));
+  } else if (!job.byRuler) {
+    // sent on a writ that has since been answered (paid, forgiven, or shown mercy): there is nothing left to enforce,
+    // and a household that has just settled is not handed a fresh Notice to Quit for its trouble
+    herald(s, 'info', `The writ against ${t.name} had lapsed before anyone reached ${b?.name ?? 'the house'}. Nobody was put out. The door was knocked on anyway, for form.`, refsOf(t));
   } else {
     serveNoticeDone(s, t);
     herald(s, 'info', `There is no writ against ${t.name}, ${rulerTitle(s)}, so a Notice to Quit went up instead. Evictions go by way of the court.`, refsOf(t));

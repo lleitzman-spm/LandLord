@@ -44,6 +44,11 @@ export const LIMITS = {
   upstreamTimeoutMs: 25_000,
 } as const;
 
+/**
+ * Claude ids as listed on platform.claude.com (models overview, model deprecations).
+ * Workers AI: Llama 3.3 70B fp8-fast, 24,000-token context, takes `{ messages, max_tokens }`
+ * and answers `{ response }` (developers.cloudflare.com/workers-ai/models/).
+ */
 export const DEFAULTS = {
   quick: 'claude-haiku-4-5-20251001',
   strong: 'claude-sonnet-5-5',
@@ -175,6 +180,8 @@ export function createHandler(deps: Partial<Deps> = {}): (req: Request, env: Env
     const model = env.WORKERS_AI_MODEL || DEFAULTS.workersAi;
     try {
       const out = await env.AI!.run(model, { messages: [{ role: 'system', content: system }, ...messages], max_tokens: maxTokens }) as unknown;
+      // Llama-family models answer `{ response }`; newer chat models (for example Gemma 4) answer
+      // OpenAI-style `{ choices: [{ message: { content } }] }`. Either is accepted.
       const o = out as { response?: unknown; result?: { response?: unknown }; choices?: { message?: { content?: unknown } }[] } | string | null;
       const got = typeof o === 'string' ? o : o?.response ?? o?.result?.response ?? o?.choices?.[0]?.message?.content;
       const text = typeof got === 'string' ? got : got && typeof got === 'object' ? JSON.stringify(got) : '';

@@ -19,6 +19,8 @@
  * This file also holds the small text helpers the four crown modules share
  * (`proclaim`, `numWord`, `crowns`, `spanText`), because it sits last in the order,
  * and what the app wants at the end of a reign (`reignRecord`, `heirloomOf`, `lastDemotion`).
+ * At the start of the next one, `heirloomBoon` (called from `init`) pays an heir a
+ * modest windfall for the heirloom handed down, once.
  */
 import {
   DAYS_PER_MONTH, DAYS_PER_YEAR, MONTHS_PER_YEAR,
@@ -63,6 +65,9 @@ export const TUNE = {
   /** day of the month on which a tribute the coffers cannot meet is warned of */
   tributeWarnDom: 24,
   heraldCap: 150,
+  /** an heir's boon: this share of the starting coffers, and never more than the cap */
+  heirloomBoonShare: 0.25,
+  heirloomBoonCap: 40,
   /** how far back in the feed a line's wording is remembered, so as not to repeat it */
   heraldRecall: 80,
 } as const;
@@ -82,6 +87,7 @@ export const FLAGS = {
   demotionCause: 'demotion.cause',
   demotionEpitaph: 'demotion.epitaph',
   demotionCount: 'demotion.count',
+  heirloomRedeemed: 'heirloom.redeemed',
 } as const;
 
 const SPEEDS: readonly Speed[] = [0, 0.1, 1, 2, 4];
@@ -250,6 +256,16 @@ function lenderVars(s: GameState, extra: Record<string, string | number> = {}): 
   if (who !== 'the moneylender') { v.lender_short = 'the moneylender'; v.Lender_short = 'The moneylender'; }
   return v;
 }
+/**
+ * For the line that opens an account: his name and his trade together ("Ambrose
+ * Wendle the moneylender"), so that a name new to the feed is not a stranger's.
+ * Where that will not fit the line, the name alone.
+ */
+function introduced(v: Record<string, string | number>): Record<string, string | number> {
+  const who = String(v.lender);
+  if (who === 'the moneylender') return v;
+  return { ...v, lender: `${who} the moneylender`, Lender: `${capFirst(who)} the moneylender`, lender_short: who, Lender_short: capFirst(who) };
+}
 
 // ───────────────────────────── debt ─────────────────────────────
 
@@ -337,12 +353,12 @@ function coverShortfall(s: GameState): void {
     proclaim(s, 'bad', [
       '{Lender} is not lending to you. {He} has, however, mislaid {amount} crowns in your coffers, and made a note of where.',
       'The coffers ran dry again. {Lender} will not call it a loan. {He} calls the {amount} crowns "a courtesy". It bears interest.',
-    ], vars);
+    ], introduced(vars));
   } else if (before <= 0) {
     proclaim(s, 'bad', [
       'The coffers ran dry, so {lender} has quietly made up the {amount} crowns. "No need to thank me," {he} says. "Not yet."',
       'The coffers are empty. {Lender} has covered {amount} crowns unasked. "We are friends now," {he} explains, softly.',
-    ], vars);
+    ], introduced(vars));
   } else if (crossedCap) {
     proclaim(s, 'urgent', [
       '{Lender} has covered {amount} crowns, which is past what {he} lends a {title}. "At {rate} in the hundred," {he} says. "For my nerves."',
@@ -405,7 +421,8 @@ function collectTribute(s: GameState): void {
     'The tribute of {amount} crowns fell due and the coffers could not meet it. The Crown has written the date down.',
     'The Crown\'s cart came for {amount} crowns and left empty. The driver said nothing, in a way that will be reported.',
   ], vars);
-  const room = Math.max(0, loanCap(s) - debtOf(s));
+  const owedBefore = debtOf(s);
+  const room = Math.max(0, loanCap(s) - owedBefore);
   addPrincipal(s, Math.min(amount, room), BAL.loan.ratePctMonth);
   addPrincipal(s, amount - Math.min(amount, room), TUNE.hardRatePctMonth);
   earn(s, amount, 'loan', 'Tribute settled by the moneylender');
@@ -413,7 +430,9 @@ function collectTribute(s: GameState): void {
   proclaim(s, 'bad', [
     '{Lender} has settled the tribute on your behalf. "A small thing between friends," {he} says, and opens a new page.',
     'The tribute is paid after all, by {lender}. You owe {him} {debt} crowns now. {He} seems pleased for you both.',
-  ], lenderVars(s, { amount: crowns(amount), debt: crowns(debtOf(s)) }));
+  ], owedBefore <= 0
+    ? introduced(lenderVars(s, { amount: crowns(amount), debt: crowns(debtOf(s)) }))
+    : lenderVars(s, { amount: crowns(amount), debt: crowns(debtOf(s)) }));
   s.flags[FLAGS.coverHeraldDay] = s.day;
 }
 
@@ -581,6 +600,27 @@ export function reignRecord(s: GameState): {
 }
 const st0 = (v: number): number => (Number.isFinite(v) ? v : 0);
 
+/**
+ * The heir's starting boon (a reign after the first, with an heirloom handed
+ * down): a modest sum into the coffers and one line in the feed. Called once at
+ * the start of a reign; it marks the state so that it can never pay twice.
+ * Returns the crowns paid (0 when there is nothing to pay or it is already paid).
+ */
+export function heirloomBoon(s: GameState): number {
+  const heirloom = (s.realm.heirloom ?? '').trim().replace(/[.\s]+$/, '').slice(0, 80);
+  if (!heirloom || !(s.realm.reign > 1) || s.ended) return 0;
+  if (s.flags[FLAGS.heirloomRedeemed] !== undefined) return 0;
+  const amount = Math.max(1, Math.min(TUNE.heirloomBoonCap, Math.round(BAL.startGold * TUNE.heirloomBoonShare)));
+  s.flags[FLAGS.heirloomRedeemed] = amount;
+  earn(s, amount, 'windfall', 'An heirloom, pawned and redeemed');
+  const brief = heirloom.split(',')[0]!.trim();
+  proclaim(s, 'good', [
+    'Handed down: {heirloom}. Pawned for {amount} crowns and redeemed the same week. Nobody will say by whom.',
+    'You inherit {heirloom}. It was pawned once, for {amount} crowns, and came home anyway. The crowns stayed.',
+  ], { heirloom, heirloom_short: brief && brief !== heirloom ? brief : undefined, amount: crowns(amount) });
+  return amount;
+}
+
 // ───────────────────────────── demotion and the end ─────────────────────────────
 
 function endReign(s: GameState, reason: EndState['reason']): void {
@@ -720,6 +760,10 @@ const wholeAmount = (v: unknown): number => (typeof v === 'number' && Number.isF
 export const modesModule: SimModule = {
   name: 'modes',
 
+  init(s) {
+    heirloomBoon(s);                        // last in module order: the coffers are open and the proclamation read
+  },
+
   onDay(s, day) {
     if (s.ended) return;
     coverShortfall(s);
@@ -751,13 +795,16 @@ export const modesModule: SimModule = {
           ? `${capFirst(lender())} will lend ${article(rulerTitle(s))} ${crownsOf(room)} more and not a crown beyond. ${lenderPronouns().He} says it kindly.`
           : `${capFirst(lender())} will go no higher than ${crowns(loanCap(s))} crowns for ${article(rulerTitle(s))}. ${lenderPronouns().He} says it very kindly.`);
       }
+      const fresh = debtOf(s) <= 0;
       addPrincipal(s, amount, BAL.loan.ratePctMonth);
       earn(s, amount, 'loan', 'Borrowed from the moneylender');
       emit(s, { type: 'sfx', id: 'coins' });
       proclaim(s, 'info', [
         '{Lender} counts out {amount} crowns. "{rate} in the hundred, monthly," {he} says. "There is no hurry. There is never any hurry."',
         '{Lender} lends you {amount} crowns and writes it down twice. "Once for the ledger," {he} says, "and once for me."',
-      ], lenderVars(s, { amount: crowns(amount), rate: capFirst(numWord(BAL.loan.ratePctMonth)) }));
+      ], fresh
+        ? introduced(lenderVars(s, { amount: crowns(amount), rate: capFirst(numWord(BAL.loan.ratePctMonth)) }))
+        : lenderVars(s, { amount: crowns(amount), rate: capFirst(numWord(BAL.loan.ratePctMonth)) }));
       return { ok: true };
     },
 

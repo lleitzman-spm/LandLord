@@ -200,7 +200,7 @@ export function create(ctx: UICtx): Screen {
           g.done ? waxSeal('check', hashStr(g.id)) : h('span', { class: 'll-chr-goal-open', 'aria-hidden': 'true' })));
       }
       const all = goals.length > 0 && met === goals.length;
-      setText(tallyEl, !goals.length ? '' : all ? 'All met, and sealed.' : `${capFirst(numberWord(met))} of ${numberWord(goals.length)} met. The Crown checks daily, and without warmth.`);
+      setText(tallyEl, !goals.length ? '' : all ? 'All met, and sealed.' : `${met === 0 ? 'None' : capFirst(numberWord(met))} of ${numberWord(goals.length)} met. The Crown checks daily, and without warmth.`);
       readyEl.hidden = !(state.charter.ready && nextRankOf(state.realm.rank));
       tallyEl.hidden = !readyEl.hidden;      // the banner says it better
     }

@@ -65,7 +65,7 @@ export const CHARACTERS: CharacterDef[] = [
     look: { hair: 'red, tied back', hat: 'white kerchief', feature: 'flour on her nose' },
   },
   {
-    id: 'tobias_nell_fenwick', name: 'Tobias and Nell Fenwick', first: 'Tobias', species: 'human', trade: 'farmer', household: 2,
+    id: 'tobias_nell_fenwick', name: 'Tobias Fenwick', first: 'Tobias', species: 'human', trade: 'farmer', household: 2,
     traits: ['flighty', 'musician', 'forgetful'], tags: ['newlyweds'], pets: ['chicken'], minRank: 'reeve',
     bio: 'Newly married and newly arrived, the Fenwicks have one cart, two chickens and no idea how a lease works. They sing in the evenings and forget the rent in the mornings. They want a first home and a landlord who explains things slowly.',
     voice: 'Two voices finishing each other\'s sentences. Earnest, giggly, apologetic. Sample: "We thought rent was yearly. Nell thought. I agreed. We were both wrong."',

@@ -30,11 +30,16 @@ npx tsx src/app/worker.test.ts          # the Worker's request handling
 
 ## Deploy it
 
-`wrangler.jsonc` ships disarmed: no route, no account, no hostname. To host your own court:
+`wrangler.jsonc` ships disarmed: no route, no account, no hostname. To host your own court (Wrangler 4.36 or later, and a hostname in a zone on your Cloudflare account):
 
-1. Give it a route of your own (or set `workers_dev` to `true`) in `wrangler.jsonc`, then `npm run deploy`.
-2. Optional: `npx wrangler secret put ANTHROPIC_API_KEY` lets Claude speak for the court. Without it the Worker uses Workers AI through its `ai` binding. Without either, the game says so quietly and carries on.
-3. Optional: `npx wrangler secret put COURT_KEY` keeps strangers from spending your allowance. Players type the same key under Settings.
+```
+npx wrangler login
+npm run deploy -- --domain <your-host>       # build, upload, attach the custom domain
+npx wrangler secret put ANTHROPIC_API_KEY    # optional: Claude speaks for the court
+npx wrangler secret put COURT_KEY            # optional: players must type this key under Settings
+```
+
+Pass the same `--domain` on every deploy, or put `"routes": [{ "pattern": "<your-host>", "custom_domain": true }]` in `wrangler.jsonc`. Without `ANTHROPIC_API_KEY` the Worker uses Workers AI through its `ai` binding; without either, the game says so quietly and carries on.
 
 For local secrets, copy `.dev.vars.example` to `.dev.vars`. Keys live in Worker secrets only, never in this repository.
 

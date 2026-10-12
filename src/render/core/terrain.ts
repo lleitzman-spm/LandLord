@@ -166,7 +166,7 @@ export function createTerrain(ctx: RenderCtx, envMap: THREE.Texture): Terrain {
 
   const C_DIRT = new THREE.Color(PAL.dirt), C_DIRTD = new THREE.Color(PAL.dirtDark), C_ROAD = new THREE.Color(PAL.road);
   const C_FLOOR = new THREE.Color(mixHex(PAL.dirtDark, 0x47552f, 0.55)), C_SCREE = new THREE.Color(mixHex(PAL.rock, PAL.dirt, 0.45));
-  const C_SOIL = new THREE.Color(0x77573a), C_BANK = new THREE.Color(0x8a7a58), C_BED = new THREE.Color(0x35504e);
+  const C_SOIL = new THREE.Color(0x9a7446), C_BANK = new THREE.Color(0x8a7a58), C_BED = new THREE.Color(0x35504e);
 
   function paintVertex(ix: number, iz: number): void {
     const px = ix / S, py = iz / S;
@@ -407,7 +407,7 @@ export function createTerrain(ctx: RenderCtx, envMap: THREE.Texture): Terrain {
     let nRock = 0;
     for (let y = 0; y < MAP_H; y++) for (let x = 0; x < MAP_W; x++) {
       const i = y * MAP_W + x, k = kind[i]!, v = seedV[i]!;
-      const dim = ownedAt(x, y) ? 1 : 0.7;
+      const dim = ownedAt(x, y) ? 1 : 0.86;
       const wx = x + 0.5 - HALF_W, wz = y + 0.5 - HALF_D;
       const h = (n: number) => hash01(i * 31 + v * 7 + n);
       if (built[i]) continue;

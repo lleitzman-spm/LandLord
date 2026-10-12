@@ -164,8 +164,9 @@ export function createInput(dom: HTMLCanvasElement, host: InputHost): Input {
     if (tool.kind === 'place') {
       if (!t) return;
       const f = footprint(tool.btype, tool.rot, t);
-      if (host.canPlace(tool.btype, f.x, f.y, tool.rot)) host.emit('place', tool.btype, f.x, f.y, tool.rot);
-      else host.ghostRefuse();
+      // a refused spot is reported too: the sim refuses it again, and that refusal carries the reason the player reads
+      if (!host.canPlace(tool.btype, f.x, f.y, tool.rot)) host.ghostRefuse();
+      host.emit('place', tool.btype, f.x, f.y, tool.rot);
       ghostTile = null;
     } else if (tool.kind === 'clear') {
       if (t) host.emit('clear', t[0], t[1]);

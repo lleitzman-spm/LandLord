@@ -456,7 +456,8 @@ test('rotation swaps the footprint, and fields and roads may be built on (the ro
   const [qx, qy] = findTile(s, (x, y) => tileAt(s, x, y)!.t === 'field' && !tileAt(s, x, y)!.b);
   accepted(w.dispatch({ type: 'place_building', btype: 'well', x: qx, y: qy, rot: 0 }));
   // a rotated townhouse really occupies its rotated footprint
-  s.realm.rank = 'baron';
+  s.realm.rank = BUILDINGS.townhouse.minRank;
+  s.gold = Math.max(s.gold, BUILDINGS.townhouse.cost);   // the purse follows the price list, whatever it says this week
   const [tx, ty] = freeSpot(s, 'townhouse', 1);
   const th = s.buildings[accepted(w.dispatch({ type: 'place_building', btype: 'townhouse', x: tx, y: ty, rot: 1 }))!]!;
   assert.deepEqual([th.w, th.h, th.rot], [3, 2, 1]);
@@ -468,7 +469,7 @@ test('rotation swaps the footprint, and fields and roads may be built on (the ro
 console.log('\nbuilding');
 
 test('a hovel is paid for, walked to and built by the Reeve with a hammer', () => {
-  const w = new WorldSim(7, { gold: 200 });
+  const w = new WorldSim(7, { gold: BUILDINGS.hovel.cost + 160 });
   const s = w.s;
   const r = rulerActor(s);
   // as far from the seat as the hamlet allows, so there is a walk in it
@@ -478,7 +479,7 @@ test('a hovel is paid for, walked to and built by the Reeve with a hammer', () =
   const mark = w.events.length;
   const id = accepted(w.dispatch({ type: 'place_building', btype: 'hovel', x: spot![0], y: spot![1], rot: 0 }))!;
   const b = s.buildings[id]!;
-  assert.equal(s.gold, 200 - BUILDINGS.hovel.cost, 'the cost is charged at once');
+  assert.equal(s.gold, 160, 'the cost is charged at once');
   assert.equal(b.state, 'building'); assert.equal(b.progress, 0); assert.equal(b.units.length, 0);
   assert.ok(b.name.length > 2 && b.name !== 'Hovel');
   const job = jobsAt(s, id)[0]!;
@@ -504,7 +505,7 @@ test('a hovel is paid for, walked to and built by the Reeve with a hammer', () =
   assert.equal(b.units.length, 1);
   assert.deepEqual(b.units[0], { tenantId: null, vacantSince: b.units[0]!.vacantSince, listed: true, purse: 0, purseDay: 0 });
   assert.ok(b.rent >= 1);
-  assert.equal(s.gold, 200 - BUILDINGS.hovel.cost, 'and is not charged twice');
+  assert.equal(s.gold, 160, 'and is not charged twice');
   assert.equal(job.state, 'done'); assert.equal(r.jobId, null); assert.equal(r.state, 'idle');
   assert.equal(w.done[job.id], 1, 'core.notifyJobDone ran exactly once');
   const evs = w.since(mark);
@@ -523,7 +524,7 @@ test('a hovel is paid for, walked to and built by the Reeve with a hammer', () =
 });
 
 test('a site can be abandoned (timber sold back) but a build job cannot simply be cancelled', () => {
-  const w = new WorldSim(7, { gold: 200 });
+  const w = new WorldSim(7, { gold: BUILDINGS.cottage.cost + 115 });
   const s = w.s;
   const [x, y] = freeSpot(s, 'cottage', 0, (px, py) => px >= 8 && px < 15 && py >= 8 && py < 15);
   const id = accepted(w.dispatch({ type: 'place_building', btype: 'cottage', x, y, rot: 0 }))!;
@@ -534,7 +535,7 @@ test('a site can be abandoned (timber sold back) but a build job cannot simply b
   accepted(w.dispatch({ type: 'demolish', buildingId: id }));
   assert.equal(s.buildings[id], undefined);
   assert.equal(tileAt(s, x, y)!.b, null);
-  assert.equal(s.gold, 200 - BUILDINGS.cottage.cost + Math.round(BUILDINGS.cottage.cost * BUILD_TUNE.demolish.refundShare));
+  assert.equal(s.gold, 115 + Math.round(BUILDINGS.cottage.cost * BUILD_TUNE.demolish.refundShare));
   assert.equal(job.state, 'cancelled');
   assert.equal(rulerActor(s).jobId, null);
   assert.ok(w.since(mark).some(e => e.type === 'building_removed' && e.buildingId === id && e.btype === 'cottage' && e.w === 2));
@@ -603,7 +604,7 @@ test('upgradeSeat raises the level and keeps the footprint', () => {
 console.log('\nroads and land');
 
 test('roads: a crown a tile on your own land, a bridge where they meet water, and they can be taken up', () => {
-  const w = new WorldSim(21, { gold: 100 });
+  const w = new WorldSim(21, { gold: 3 * WORLD_TUNE.roadCost + WORLD_TUNE.bridgeCost + 50 });
   const s = w.s;
   const free = (x: number, y: number) => ownedAt(s, x, y) && tileAt(s, x, y)!.t === 'grass' && !tileAt(s, x, y)!.b;
   const tiles: [number, number][] = [];
@@ -611,7 +612,7 @@ test('roads: a crown a tile on your own land, a bridge where they meet water, an
   const mark = w.events.length;
   accepted(w.dispatch({ type: 'place_road', tiles: [...tiles, tiles[0]!] }));
   for (const [x, y] of tiles) assert.equal(tileAt(s, x, y)!.t, 'road');
-  assert.equal(s.gold, 100 - 3 * WORLD_TUNE.roadCost);
+  assert.equal(s.gold, WORLD_TUNE.bridgeCost + 50);
   assert.ok(w.since(mark).some(e => e.type === 'tiles_changed' && e.tiles.length === 3));
   refused(w.dispatch({ type: 'place_road', tiles }), 'invalid');                       // already road
   refused(w.dispatch({ type: 'place_road', tiles: [[2, 2]] }), 'not_owned');
@@ -642,7 +643,7 @@ test('roads: a crown a tile on your own land, a bridge where they meet water, an
 });
 
 test('clearing: a tree or a stone on your own land becomes grass after a small job', () => {
-  const w = new WorldSim(5, { gold: 50 });
+  const w = new WorldSim(5, { gold: WORLD_TUNE.clearForest.cost + 40 });
   const s = w.s;
   ownEverything(s);
   const r = rulerActor(s);
@@ -663,7 +664,7 @@ test('clearing: a tree or a stone on your own land becomes grass after a small j
   assert.deepEqual([job.kind, job.role, job.cost], ['clear_land', 'mason', WORLD_TUNE.clearForest.cost]);
   const mark = w.events.length;
   w.until(() => tileAt(s, tx, ty)!.t === 'grass', 10);
-  assert.equal(s.gold, 50 - WORLD_TUNE.clearForest.cost);
+  assert.equal(s.gold, 40);
   assert.ok(Math.max(Math.abs(r.x - (tx + 0.5)), Math.abs(r.y - (ty + 0.5))) <= 1.01, 'he stood beside the tree to fell it');
   assert.ok(w.since(mark).some(e => e.type === 'tiles_changed' && e.tiles.some(t => t[0] === tx && t[1] === ty)));
   assert.equal(w.done[jid], 1);
@@ -1274,7 +1275,7 @@ test('the queue: the ruler\'s explicit orders first, then priority, then age; on
 });
 
 test('a purse on the doorstep interrupts the building of a wall, and the wall is finished afterwards', () => {
-  const w = new WorldSim(7, { gold: 300 });
+  const w = new WorldSim(7, { gold: BUILDINGS.cottage.cost + 215 });
   const s = w.s;
   const r = rulerActor(s);
   const [a, b] = hovels(s);
@@ -1304,7 +1305,7 @@ test('a purse on the doorstep interrupts the building of a wall, and the wall is
   // (in the whole game rent.ts empties the purse when the collect job is done; here nobody does, so clear them)
   a!.units[0]!.purse = 0; b!.units[0]!.purse = 0;
   w.until(() => cot.state === 'ready', 20, 0.05);
-  assert.equal(s.gold, 300 - BUILDINGS.cottage.cost, 'the cottage was paid for once');
+  assert.equal(s.gold, 215, 'the cottage was paid for once');
   assert.equal(w.done[build.id], 1);
   // a purse that is gone before anyone fetches it cancels the errand
   a!.units[0]!.purse = 8;

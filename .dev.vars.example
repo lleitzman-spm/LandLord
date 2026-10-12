@@ -1,11 +1,12 @@
 # Copy to .dev.vars for `npx wrangler dev`. Never commit .dev.vars.
 # Every line is optional: with none of them the game plays in full, offline.
 
-# Lets Claude speak for the court.
-ANTHROPIC_API_KEY=your-anthropic-api-key
+# Lets Claude speak for the court. Uncomment and fill in; a placeholder left in place
+# counts as a key and every answer fails.
+# ANTHROPIC_API_KEY=your-anthropic-api-key
 
 # If set, players must enter the same key under Settings before the court will listen.
-COURT_KEY=choose-a-phrase
+# COURT_KEY=choose-a-phrase
 
 # Model overrides. Leave out to use the defaults in src/server/worker.ts.
 # WORD_MODEL=

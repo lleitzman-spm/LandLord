@@ -33,6 +33,7 @@ import { mount as mountBubbles } from './parts/bubbles';
 import { mount as mountBuildmenu } from './parts/buildmenu';
 import { mount as mountInspector } from './parts/inspector';
 import { mount as mountWordbar } from './parts/wordbar';
+import { mount as mountHints } from './parts/hints';
 import { create as createTitle } from './screens/title';
 import { create as createAudience } from './screens/audience';
 import { create as createLedger } from './screens/ledger';
@@ -499,6 +500,7 @@ export function createUI(deps: UIDeps): UI {
   mountPart('inspector', mountInspector, slots.inspector);
   mountPart('heralds', mountHeralds, slots.heralds);
   mountPart('wordbar', mountWordbar, slots.word);
+  mountPart('hints', mountHints, frameLayer);
 
   const makers: [ScreenName, (c: UICtx) => Screen][] = [
     ['title', createTitle], ['audience', createAudience], ['ledger', createLedger], ['council', createCouncil],

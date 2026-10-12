@@ -8,7 +8,7 @@
  * out in full, and the rest is kept as a one-line index of ids and names so
  * nothing named is ever unknown.
  */
-import type { GameState, Building, Tenant, StaffRole, Incident, Id, Season } from '../sim/types';
+import type { GameState, Building, Tenant, StaffRole, Incident, Id, Season, StandingOrder } from '../sim/types';
 import { STAFF_ROLES, RANK_ORDER } from '../sim/types';
 import { BUILDINGS, RANKS, BAL, TEMPERAMENT_DEFS, ROLE_TITLES } from '../data';
 import { dateOf, fmtDate } from '../sim/core';
@@ -51,14 +51,14 @@ function header(s: GameState): string[] {
   const debt = s.loans.reduce((n, l) => n + l.principal, 0);
   const p = s.policies;
   return [
-    `TODAY is day ${today}: the ${fmtDate(s.day)} (${d.season}). A month is 30 days, a year 360. Next Rent Day: day ${rentDay}. ${seasons.map(([n, x]) => `${n} begins day ${x}`).join(', ')}.`,
+    `TODAY is day ${today}: the ${fmtDate(s.day)} (${d.season}). A month is 30 days, a year 360. Next Rent Day: day ${rentDay}. ${seasons.map(([n, x], i) => `${n} ${i ? '' : 'begins '}day ${x}`).join(', ')}. Year ends day ${yearStart + 359}.`,
     `RULER ${s.realm.ruler}, ${rank.title} of ${s.realm.name || 'the realm'}. Addressed as "${rank.address}".`,
     `COFFERS ${Math.round(s.gold)} crowns (a tenth is ${Math.max(0, Math.round(s.gold / 10))}). Rent roll ${roll} a month. Renown ${Math.round(s.renown)}, Crown favour ${Math.round(s.favor)}. A feast costs ${BAL.feastCost[s.realm.rank]}.${debt > 0 ? ` Owed to the moneylender: ${Math.round(debt)}.` : ''}`,
     `POLICIES graceDays ${p.graceDays}, lateFeePct ${p.lateFeePct}, depositMonths ${p.depositMonths}, askPct ${p.askPct}, renewalCapPct ${p.renewalCapPct}, pets ${p.pets}, screening ${p.screening}.`,
   ];
 }
 
-function delegates(s: GameState): string[] {
+function delegates(s: GameState, lean = false): string[] {
   const out: string[] = ['DELEGATES'];
   const rankIdx = RANK_ORDER.indexOf(s.realm.rank);
   let any = false;
@@ -76,7 +76,7 @@ function delegates(s: GameState): string[] {
     const where = job?.buildingId ? s.buildings[job.buildingId]?.name : null;
     const busy = job ? `busy (${spoken(job.kind)}${where ? ' at ' + mid(where) : ''})` : actor?.state === 'working' ? 'busy' : 'free';
     const temper = TEMPERAMENT_DEFS[m.temperament];
-    out.push(` ${role}: ${m.first} (${m.name}, ${ref(m.id)}), ${temper?.name || m.temperament}, skill ${m.skill}, wage ${m.wage}, loyalty ${Math.round(m.loyalty)}, ${busy}`);
+    out.push(` ${role}: ${m.first} (${m.name}, ${ref(m.id)}), ${temper?.name || m.temperament}, skill ${m.skill}, wage ${m.wage}${lean ? '' : `, loyalty ${Math.round(m.loyalty)}`}, ${busy}`);
   }
   if (!any) out.push(' No one is hired. The ruler does every job in person, and the herald reads back.');
   return out;
@@ -130,7 +130,9 @@ function buildingFull(b: Building, s: GameState): string {
   return ' ' + bits[0] + ': ' + bits.slice(1).join('; ');
 }
 function buildingBrief(b: Building): string {
-  return `${ref(b.id)} ${b.name}${kindNote(b)} c${Math.round(b.condition)}${b.units.length ? ` r${b.rent}` : ''}`;
+  // a building site has no condition worth quoting: say what it is, as the full line does
+  const state = b.state === 'building' ? ` being built (${Math.round(b.progress * 100)}%)` : ` c${Math.round(b.condition)}`;
+  return `${ref(b.id)} ${b.name}${kindNote(b)}${state}${b.units.length ? ` r${b.rent}` : ''}`;
 }
 
 function tenantFull(t: Tenant, s: GameState, deep: boolean): string {
@@ -155,7 +157,18 @@ function tenantFull(t: Tenant, s: GameState, deep: boolean): string {
   }
   return ' ' + bits.join('; ');
 }
-function tenantBrief(t: Tenant): string { return `${ref(t.id)} ${t.name}${t.buildingId ? ' in ' + ref(t.buildingId) : ''}${t.arrears > 0 ? ', owes ' + t.arrears : ''}`; }
+function tenantBrief(t: Tenant): string {
+  const late = t.status === 'housed' ? lateWord(t) : '';
+  return `${ref(t.id)} ${t.name}${t.buildingId ? ' in ' + ref(t.buildingId) : ''}${t.arrears > 0 ? ', owes ' + t.arrears : ''}${late ? ', ' + late : ''}`;
+}
+
+/** One standing order with what it binds: "#o3 to bailiff: eviction_ready never evict when tenant.tags includes widow and season == winter". */
+function orderLine(o: StandingOrder, gist = 70): string {
+  const what = o.decision && o.decision !== 'custom' ? o.decision : o.incidentDef ? `def ${o.incidentDef}` : 'any matter';
+  const pick = o.option ?? o.outcomeId ?? '';
+  const when = o.when.length ? ` when ${o.when.map(c => `${c.field} ${c.op} ${String(c.value)}`).join(' and ')}` : ', always';
+  return ` ${ref(o.id)} to ${o.to}: ${what} ${o.rule}${pick ? ' ' + pick : ''}${clip(when, 110)}. "${clip(o.gist || o.text, gist)}"`;
+}
 
 /** What the addressee and the ruler's words make worth writing out in full. Higher first. */
 function relevance(s: GameState, target: SpeakTarget, text: string): { b: Map<Id, number>; t: Map<Id, number> } {
@@ -197,7 +210,7 @@ function relevance(s: GameState, target: SpeakTarget, text: string): { b: Map<Id
  */
 export function buildDigest(s: GameState, target: SpeakTarget, text = '', cap = DIGEST_CAP): string {
   const lean = cap <= DIGEST_CAP_LEAN;
-  const fixed: string[] = [...header(s), ...delegates(s)];
+  const fixed: string[] = [...header(s), ...delegates(s, lean)];
 
   const incs = openIncidents(s);
   const rel = relevance(s, target, text);
@@ -211,7 +224,7 @@ export function buildDigest(s: GameState, target: SpeakTarget, text = '', cap = 
 
   const role = 'to' in target && target.to !== 'court' ? target.to : null;
   const orders = s.orders.slice().sort((a, b) => Number(b.to === role) - Number(a.to === role) || b.createdDay - a.createdDay);
-  const orderLines = ['STANDING ORDERS (they bind the delegates until revoked)', ...(orders.length ? orders.slice(0, maxOrders).map(o => ` ${ref(o.id)} to ${o.to}: ${clip(o.gist || o.text, 90)}`) : [' none'])];
+  const orderLines = ['STANDING ORDERS (id to whom: decision, rule, option, conditions)', ...(orders.length ? orders.slice(0, maxOrders).map(o => orderLine(o, lean ? 50 : 70)) : [' none'])];
   if (orders.length > maxOrders) orderLines.push(` and ${orders.length - maxOrders} more`);
 
   const open = s.oaths.filter(o => o.state === 'open').sort((a, b) => a.dueDay - b.dueDay);
@@ -244,7 +257,7 @@ export function buildDigest(s: GameState, target: SpeakTarget, text = '', cap = 
     ...listed.map(b => ({ kind: 'b' as const, id: b.id, score: rel.b.get(b.id) ?? 0, full: buildingFull(b, s), brief: buildingBrief(b) })),
     ...allT.map(t => ({ kind: 't' as const, id: t.id, score: (rel.t.get(t.id) ?? 0) + 1, full: tenantFull(t, s, t.id === deepId), brief: tenantBrief(t) })),
   ].sort((a, b) => b.score - a.score);
-  const H_B = 'BUILDINGS', H_T = 'HOUSEHOLDS', H_BI = 'OTHER BUILDINGS (id name, c = condition, r = asking rent): ', H_TI = 'OTHER HOUSEHOLDS (id name, home): ';
+  const H_B = 'BUILDINGS', H_T = 'HOUSEHOLDS', H_BI = 'OTHER BUILDINGS (id name, c = condition, r = asking rent): ', H_TI = 'OTHER HOUSEHOLDS (id name, home, debt): ';
   let size = base.length + H_B.length + H_T.length + H_BI.length + H_TI.length + 8 + entries.reduce((n, e) => n + e.brief.length + 2, 0);
   const full = new Set<string>();
   for (const e of entries) {
@@ -260,8 +273,10 @@ export function buildDigest(s: GameState, target: SpeakTarget, text = '', cap = 
   const tBrief = entries.filter(e => e.kind === 't' && !full.has('t' + e.id)).sort(byId).map(e => e.brief);
 
   const parts = [
-    ...fixed, H_B, ...(bFull.length ? bFull : [' none in full']), ...(bBrief.length ? [H_BI + bBrief.join('; ')] : []),
-    H_T, ...(tFull.length ? tFull : [allT.length ? ' none in full' : ' none']), ...(tBrief.length ? [H_TI + tBrief.join('; ')] : []),
+    ...fixed,
+    // with nothing written out in full there is one list, under its own plain heading, and no empty one above it
+    ...(bFull.length ? [H_B, ...bFull, ...(bBrief.length ? [H_BI + bBrief.join('; ')] : [])] : bBrief.length ? [H_BI.replace('OTHER ', '') + bBrief.join('; ')] : [H_B, ' none']),
+    ...(tFull.length ? [H_T, ...tFull, ...(tBrief.length ? [H_TI + tBrief.join('; ')] : [])] : tBrief.length ? [H_TI.replace('OTHER ', '') + tBrief.join('; ')] : [H_T, ' none']),
     ...appLines, ...matters, ...orderLines, ...oathLines, ...candLines,
   ];
   return parts.join('\n');

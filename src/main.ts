@@ -102,24 +102,8 @@ function boot(): void {
     else quiet(() => audio.setMood('title'));
   };
 
-  /** One small boon for the heir, to match what was handed down. Applied through actions only. */
-  const applyBoon = (heirloom: string | null): void => {
-    if (!heirloom) return;
-    // No action mints gold, so the boon is paid in what actions can give: the
-    // founding households begin with a fond memory of the handing down, and an
-    // heirloom that is a book of records also brings the last reign's notes
-    // (one hidden trait of each household is already known).
-    const records = /ledger|oath/i.test(heirloom);
-    const kind = records ? 'records' : 'goodwill';
-    sim.dispatch({ type: 'set_flag', key: 'heirloom.boon', value: kind });
-    for (const t of Object.values(sim.state.tenants)) {
-      sim.dispatch({ type: 'remember', tenantId: t.id, text: `Saw ${heirloom} handed down, and took it for a good sign.`, valence: 1 });
-      if (records) {
-        const hidden = t.traits.find(tr => !t.revealed.includes(tr));
-        if (hidden) sim.dispatch({ type: 'reveal_trait', tenantId: t.id, trait: hidden });
-      }
-    }
-  };
+  /** The heir's boon is paid by the engine at init (`heirloomBoon` in src/sim/modes.ts). Nothing is added here. */
+  const applyBoon = (_heirloom: string | null): void => {};
 
   const app: AppAPI = {
     newGame(opts) {

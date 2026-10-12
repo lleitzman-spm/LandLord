@@ -79,6 +79,8 @@ async function main(): Promise<void> {
     const msgs = calls[0].input.messages as { role: string; content: string }[];
     ok(calls[0].model === DEFAULTS.workersAi && msgs[0].role === 'system' && msgs[0].content.startsWith(GUARD) && msgs[1].content === 'Mend the roof.', 'word: workers-ai request shape');
     ok(calls[0].input.max_tokens === LIMITS.defaultTokens, 'word: workers-ai max_tokens');
+    const chat = await read(await h(post(good), { AI: { run: async () => ({ id: 'c1', object: 'chat.completion', choices: [{ index: 0, message: { role: 'assistant', content: '{"say":"So."}' } }] }) } }));
+    ok(chat.text === '{"say":"So."}', 'word: workers-ai OpenAI-style choices accepted');
     const bad = createHandler();
     const r2 = await bad(post(good), { AI: { run: async () => { throw new Error('secret detail'); } } });
     ok(r2.status === 502 && !(await r2.text()).includes('secret detail'), 'word: workers-ai failure is not echoed');
@@ -96,6 +98,9 @@ async function main(): Promise<void> {
     ok(await code(await h(post(good, { 'sec-fetch-site': 'cross-site' }), env)) === '403:origin', 'refuse: cross-site');
     const bare = new Request(ORIGIN + '/api/word', { method: 'POST', body: JSON.stringify(good) });
     ok(await code(await h(bare, env)) === '403:origin', 'refuse: no Origin at all');
+    const noFetchMeta = new Request(ORIGIN + '/api/word', { method: 'POST', headers: { 'content-type': 'application/json', origin: ORIGIN }, body: JSON.stringify(good) });
+    ok((await createHandler({ fetch: upstream(claudeOk).fetch })(noFetchMeta, env)).status === 200, 'allow: same Origin without Sec-Fetch-Site (older browsers, plain-http LAN)');
+    ok(await code(await h(post(good, { 'sec-fetch-site': 'same-site' }), env)) === '403:origin', 'refuse: same-site but not same-origin');
     ok(await code(await h(post(good), {})) === '503:no_model', 'refuse: no engine');
     ok(await code(await h(post(null, {}, 'x'.repeat(LIMITS.bodyBytes + 10)), env)) === '413:too_large', 'refuse: body too large');
     ok(await code(await h(post(null, {}, '{not json'), env)) === '400:bad_json', 'refuse: not JSON');

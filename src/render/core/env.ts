@@ -40,20 +40,20 @@ const K = (p: number, hex: number, i: number, el: number): Stop => ({ p, c: new 
 /** key light through the "day" part of the month (phase may be negative: first light before the 1st) */
 const SUN: Stop[] = [
   K(-0.036, 0xff8466, 0.0, 6),
-  K(-0.012, 0xffa27e, 1.3, 10),
-  K(0.0, 0xffb48a, 2.6, 15),      // dawn: Rent Day
-  K(0.05, 0xffcc9c, 3.2, 24),
+  K(-0.012, 0xffb08a, 1.7, 12),
+  K(0.0, 0xffc496, 3.2, 19),      // dawn: Rent Day
+  K(0.05, 0xffd4a6, 3.4, 27),
   K(0.16, 0xffe2bd, 3.4, 40),
   K(0.36, 0xfff0d6, 3.5, 57),
   K(0.56, 0xffdfb2, 3.4, 44),     // the long warm afternoon
   K(0.68, 0xffc587, 3.2, 27),
-  K(0.75, 0xff9c58, 2.8, 15),     // orange dusk
-  K(0.80, 0xf47a5e, 1.4, 9),
+  K(0.75, 0xffa364, 3.0, 17),     // orange dusk
+  K(0.80, 0xf6846a, 1.8, 11),
   K(0.842, 0xc0587e, 0.0, 5),
 ];
 const SUN_START = SUN[0]!.p, SUN_END = SUN[SUN.length - 1]!.p;
 const MOON_DIR = new THREE.Vector3(-0.46, 0.78, -0.42).normalize();
-const MOON_COLOR = new THREE.Color(0x86a6ff);
+const MOON_COLOR = new THREE.Color(0x9ab4ff);
 
 const SEASON_INDEX: Record<Season, number> = { spring: 0, summer: 1, autumn: 2, winter: 3 };
 /** per season: light tint, sun elevation offset (deg), key strength */
@@ -66,9 +66,9 @@ const SEASON_LIGHT: { tint: THREE.Color; el: number; k: number }[] = [
 const OVERCAST: Record<WeatherKind, number> = { clear: 0, heat: -0.15, rain: 0.55, storm: 0.85, snow: 0.5, fog: 0.62, hail: 0.6 };
 const WIND: Record<WeatherKind, number> = { clear: 0.22, heat: 0.06, rain: 0.5, storm: 1.0, snow: 0.3, fog: 0.05, hail: 0.72 };
 
-const DAY_SKY = new THREE.Color(0xb9cdf0), DUSK_SKY = new THREE.Color(0xa58fc4), DAWN_SKY = new THREE.Color(0xc9a9c0), NIGHT_SKY = new THREE.Color(0x2c4285);
-const DAY_GROUND = new THREE.Color(0x76553a), DUSK_GROUND = new THREE.Color(0x6a4a44), NIGHT_GROUND = new THREE.Color(0x191624);
-const DAY_FILL = new THREE.Color(0x8fa9dc), NIGHT_FILL = new THREE.Color(0x4563b4);
+const DAY_SKY = new THREE.Color(0xb9cdf0), DUSK_SKY = new THREE.Color(0xa58fc4), DAWN_SKY = new THREE.Color(0xe6cdb6), NIGHT_SKY = new THREE.Color(0x4460b0);
+const DAY_GROUND = new THREE.Color(0x76553a), DUSK_GROUND = new THREE.Color(0x6a4a44), NIGHT_GROUND = new THREE.Color(0x23203a);
+const DAY_FILL = new THREE.Color(0x8fa9dc), NIGHT_FILL = new THREE.Color(0x5674c8);
 const GREY = new THREE.Color(0x9aa3b0);
 const _c = new THREE.Color();
 
@@ -151,7 +151,7 @@ export class EnvModel {
       moon = smoothstep(0.85, 0.885, p) * (1 - smoothstep(0.93, 0.958, p));
       sky.sunDir.copy(MOON_DIR);
       sky.keyColor.copy(MOON_COLOR);
-      sky.keyIntensity = 0.62 * moon;
+      sky.keyIntensity = 1.5 * moon;
     }
     sky.day = clamp01(1 - smoothstep(0.76, 0.85, p) + smoothstep(0.962, 1.0, p));
 
@@ -170,10 +170,10 @@ export class EnvModel {
     sky.hemiSky.copy(DAY_SKY).lerp(dawnTint > 0 ? DAWN_SKY : DUSK_SKY, dusk).lerp(NIGHT_SKY, n).lerp(GREY, ocP * 0.4 * (1 - n));
     sky.hemiGround.copy(DAY_GROUND).lerp(DUSK_GROUND, dusk).lerp(NIGHT_GROUND, n);
     if (env.snow > 0) sky.hemiGround.lerp(_c.set(0x8d9bb5), env.snow * 0.6 * (1 - n * 0.5));   // snow bounces cold light up
-    sky.hemiIntensity = lerp(lerp(0.66, 0.92, dusk), 0.5, n) * (1 + ocP * 0.3) * (1 + env.snow * 0.12);
-    sky.fillColor.copy(DAY_FILL).lerp(NIGHT_FILL, Math.max(n, dusk * 0.5));
-    sky.fillIntensity = lerp(lerp(0.42, 0.6, dusk), 0.34, n) * (1 + ocP * 0.25);
-    sky.candle = 0.5 + 0.8 * Math.max(n, dusk * 0.45) + ocP * 0.15;
-    sky.exposure = lerp(lerp(0.95, 1.2, dusk), 1.16, n) * (1 - ocP * 0.04) * (1 - 0.1 * env.snow * sky.day);
+    sky.hemiIntensity = lerp(lerp(0.76, 1.2 + 0.28 * dawnTint, dusk), 0.95, n) * (1 + ocP * 0.3) * (1 + env.snow * 0.12);
+    sky.fillColor.copy(DAY_FILL).lerp(NIGHT_FILL, Math.max(n, (dusk - dawnTint * 0.6) * 0.5));
+    sky.fillIntensity = lerp(lerp(0.46, 0.8 + 0.12 * dawnTint, dusk), 0.72, n) * (1 + ocP * 0.25);
+    sky.candle = 0.58 + 0.85 * Math.max(n, dusk * 0.45) + ocP * 0.15;
+    sky.exposure = lerp(lerp(1.02, 1.2, dusk), 1.28, n) * (1 - ocP * 0.04) * (1 - 0.1 * env.snow * sky.day);
   }
 }

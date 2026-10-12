@@ -1007,7 +1007,15 @@ function conditionsOf(c: Clause, cx: Cx, decision: DecisionType): Condition[] {
     if (BUILDINGS[type].category === 'amenity' || BUILDINGS[type].category === 'staff' || type === 'seat') continue;
     for (const a of typeAliases(type)) each(new RegExp(`\\b(?:in|at|on|for|from) (?:the |a |an |any |all |every )?${a.join(' ')}s?\\b`, 'g'), x => add('building.type', '==', type, x.index));
   }
-  for (const h of c.b) if (h.w >= 2) add('building.id', '==', h.item.id, 0);
+  for (const h of c.b) {
+    if (h.w < 2) continue;
+    // the seat's level names are common words ("the Keep"): as a verb ("keep that in mind") they name no building
+    if (h.item.type === 'seat') {
+      const last = h.item.name.toLowerCase().replace(/[^a-z ]/g, '').trim().split(' ').pop() ?? '';
+      if (!last || !new RegExp(`\\b(?:at|in|of|for|from|about|on|by|near|inside|outside|to the) (?:the |my |our )?(?:[a-z]+ )?${last}\\b`).test(m.toLowerCase())) continue;
+    }
+    add('building.id', '==', h.item.id, 0);
+  }
   for (const h of c.t) if (h.w >= 2) add('tenant.name', '==', h.item.name, 0);
   return when;
 }
@@ -1646,7 +1654,8 @@ const TENANT_LOST = ['I did not follow that, {title}. Is it about the rent?', 'Y
 /** Put a restated order into an ack template, minding capitals and full stops. */
 export function fillAck(template: string, order: string, title: string): string {
   const o = order.replace(/[.!?]+$/, '');
-  let t = template.replace(/\{title\}/g, title);
+  // the temperament lines were written with "my lord"; a Knight is "Sir", as the closing question already says
+  let t = template.replace(/\{title\}/g, title).replace(/\bmy lord\b/g, title);
   if (!t.includes('{order}')) return tidy(`${t} ${cap(o)}.`);
   const keepCap = KEEP_CAP.test(o);
   // a capital after a full stop, none after a colon or in mid-sentence
@@ -1658,26 +1667,40 @@ export function fillAck(template: string, order: string, title: string): string 
 export function grumbleOf(s: GameState, role: StaffRole | 'herald' | 'tenant', seed: string): string {
   const def = role !== 'herald' && role !== 'tenant' ? temperamentOf(staffByRole(s, role)) : null;
   const pool = def?.grumbles?.length ? def.grumbles : HERALD_GRUMBLES;
-  return tidy(pickStable(pool, seed).replace(/\{title\}/g, titleOf(s)).replace(/\{order\}/g, 'that'));
+  return tidy(pickStable(pool, seed).replace(/\{title\}/g, titleOf(s)).replace(/\bmy lord\b/g, titleOf(s)).replace(/\{order\}/g, 'that'));
 }
 
 const KEEP_CAP = /^(Notice to Quit|Sworn\b|\d)/;
 const soft = (o: string) => (KEEP_CAP.test(o) ? o : lower1(o));
+
+/** Orders that differ only in a closing name are said once: "A call on Wat Mudge and Tam Reedy". */
+function gather(says: string[]): string[] {
+  if (says.length < 2) return says;
+  const words = says.map(x => x.split(' '));
+  let n = 0;
+  while (words.every(w => n < w.length - 1 && w[n] === words[0]![n])) n++;
+  const rest = words.map(w => w.slice(n).join(' '));
+  if (n < 2 || rest.some(r => /[,;:.!?]/.test(r)) || new Set(rest).size !== rest.length) return says;
+  const names = rest.length > 4 ? `${rest.slice(0, 3).join(', ')} and ${rest.length - 3} more` : `${rest.slice(0, -1).join(', ')} and ${rest[rest.length - 1]}`;
+  return [`${words[0]!.slice(0, n).join(' ')} ${names}`];
+}
 
 /**
  * A read-back for moves the listener understood, in their voice: the order
  * restated inside one of their `acks`, then any asides (an oath in the way, a
  * hand-over), then the question that waits for the "aye". Fits 200 characters.
  */
-export function readBack(s: GameState, role: StaffRole | 'herald', says: string[], confirm: boolean, seed: string, asides: string[] = [], shortAsides: string[] = asides, legwork = false): string {
+export function readBack(s: GameState, role: StaffRole | 'herald', says: string[], confirm: boolean, seed: string, asides: string[] = [], shortAsides: string[] = asides, legwork = false, plain = false): string {
   const title = titleOf(s);
+  says = gather(says);
   const staff = role === 'herald' ? null : staffByRole(s, role);
   const def = temperamentOf(staff);
   let pool = def?.acks?.length ? def.acks : HERALD_ACKS;
   // a Reeve has no household: work that means walking somewhere is the Reeve's own, and the clerk sometimes says so
   if (legwork && !staff && s.realm.rank === 'reeve' && !Object.keys(s.staff).length && !confirm && pickStable([0, 1, 2], seed + 'r') === 0) pool = REEVE_ACKS;
   const ask = confirm ? ' ' + pickStable(CONFIRM_TAILS, seed + 'c').replace(/\{title\}/g, title) : '';
-  const template = pickStable(pool, seed);
+  // `plain`: the work is someone else's, so the speaker restates it without promising how they would go about it
+  const template = plain ? '{order}.' : pickStable(pool, seed);
   const join = (xs: string[]) => (xs.length ? ' ' + xs.join(' ') : '');
   // an aside is said in full when there is room, and in brief when there is not
   const tail = (line: string) => (line.length + join(asides).length + ask.length <= 200 ? join(asides) : join(shortAsides)) + ask;
@@ -1810,7 +1833,7 @@ export function parseOffline(text: string, target: SpeakTarget, s: GameState, se
     ? [`Not my trade. I will tell ${staffByRole(s, owner)!.first}.`] : [];
   const legwork = moves.some(x => x.action.type === 'order_job' || x.action.type === 'collect_all' || x.action.type === 'collect_purse'
     || (x.action.type === 'resolve_incident' && !!defOf(s.incidents[x.action.incidentId] ?? ({ defId: '' } as Incident))?.outcomes.find(o => o.id === (x.action as { outcomeId: string }).outcomeId)?.job));
-  const reply = readBack(s, speaker, moves.map(x => x.say), confirm, sd, [...weight.warnings, ...handOver], [...weight.oaths.map(o => oathWarning(o, true)), ...handOver], legwork);
+  const reply = readBack(s, speaker, moves.map(x => x.say), confirm, sd, [...weight.warnings, ...handOver], [...weight.oaths.map(o => oathWarning(o, true)), ...handOver], legwork, handOver.length > 0);
   return { understood: true, speaker, tenantId: null, moves, confirm, reply, mood: confirm ? 'worried' : 'neutral' };
 }
 

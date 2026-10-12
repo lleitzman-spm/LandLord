@@ -78,6 +78,8 @@ export class LightRig {
     _right.crossVectors(UP, dir).normalize();
     _up.crossVectors(dir, _right).normalize();
     const texel = (2 * R) / this.mapSize;
+    // a low sun rakes the roofs: push the receiver off its own facets by about two texels, or thatch goes blotchy
+    this.key.shadow.normalBias = clamp(texel * (1.5 + 1.6 * (1 - clamp(dir.y * 1.6, 0, 1))), 0.03, 0.2);
     const sx = Math.round(center.dot(_right) / texel) * texel;
     const sy = Math.round(center.dot(_up) / texel) * texel;
     const sz = center.dot(dir);

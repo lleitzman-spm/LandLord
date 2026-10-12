@@ -29,7 +29,7 @@ export const TUNE = {
   /** favor granted with a new rank */
   promotionFavor: 10,
   /** crowns the Crown sends with the new title, by the rank attained */
-  promotionGift: { reeve: 0, knight: 100, baron: 300, duke: 800, king: 2000 } as Record<RankId, number>,
+  promotionGift: { reeve: 0, knight: 150, baron: 300, duke: 800, king: 2000 } as Record<RankId, number>,
   /** days the herald waits at the gate before he is heard rehearsing */
   readyNagDays: 15,
   /** after a demotion: days before the Crown will consider promoting again */

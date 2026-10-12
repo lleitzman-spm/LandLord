@@ -118,7 +118,8 @@ function serverModel(f: typeof fetch, gated: boolean, readKey: () => string, eng
     async complete(req: ModelRequest, signal?: AbortSignal): Promise<string> {
       const k = key(true);
       if ((gated && !k) || (rejected !== null && k === rejected)) throw new ModelError('court_key', 'The court key is missing or was refused.');
-      const body = JSON.stringify({ system: req.system, messages: req.messages, maxTokens: req.maxTokens ?? 500, tier: req.tier ?? 'quick', ...(k ? { key: k } : {}) });
+      // the Worker turns the whole request away (400) for one turn with nothing in it
+      const body = JSON.stringify({ system: req.system, messages: req.messages.filter(m => m.content.trim()), maxTokens: req.maxTokens ?? 500, tier: req.tier ?? 'quick', ...(k ? { key: k } : {}) });
       const link = linked(signal, SERVER_TIMEOUT_MS);
       let r: Response;
       try {

@@ -19,7 +19,7 @@ import { rankModule, METRICS, measure, refreshCharter, nextRank, isUnlocked, rol
 import { rivalModule, nextMoveDay, poachChance, TUNE as RIVAL_TUNE } from '../src/sim/rival';
 import {
   modesModule, debtOf, loanCap, creditLeft, bankruptcyLine, monthlyInterest, nextTribute, lastDemotion, writeEpitaph,
-  spanText, numWord, crowns, crownsOf, clipLine, overhear, heirloomOf, reignRecord, pronounsFor, TUNE as MODES_TUNE,
+  spanText, numWord, crowns, crownsOf, clipLine, overhear, heirloomOf, reignRecord, pronounsFor, heirloomBoon, TUNE as MODES_TUNE,
 } from '../src/sim/modes';
 import { serialize, deserialize } from '../src/sim/save';
 import { spend, lastFeastDay } from '../src/sim/economy';
@@ -29,6 +29,7 @@ import { fill, baseVars } from '../src/sim/core';
 import { RANKS } from '../src/data/ranks';
 import { BAL } from '../src/data/balance';
 import { REALM_NAMES, RIVAL_NAMES, NPC_DEFS } from '../src/data/characters';
+import { INCIDENT_BY_ID } from '../src/data/incidents/index';
 
 // ───────────────────────────── harness ─────────────────────────────
 
@@ -96,6 +97,12 @@ function withMetrics(forced: Partial<Record<GoalMetric, number>>, fn: () => void
   const saved = { ...METRICS };
   for (const k of Object.keys(forced) as GoalMetric[]) METRICS[k] = () => forced[k]!;
   try { fn(); } finally { Object.assign(METRICS, saved); }
+}
+/** What a rank's charter asks, by metric, read from the data so that a balance pass does not break the tests. */
+function targetsOf(rank: keyof typeof RANKS): Partial<Record<GoalMetric, number>> {
+  const out: Partial<Record<GoalMetric, number>> = {};
+  for (const g of RANKS[rank].goals) out[g.metric] = Math.max(out[g.metric] ?? 0, g.target);
+  return out;
 }
 
 // ───────────────────────────── oaths ─────────────────────────────
@@ -433,20 +440,24 @@ test('promotion from Reeve through Baron (and on to Duke and King) by forcing th
   const s = fixture('reeve');
   rankModule.init!(s); drain(s);                       // a fresh Reeve charter on a furnished hamlet
   s.renown = 40; s.favor = 52; s.gold = 86;
-  const forced: Partial<Record<GoalMetric, number>> = { households: 6, rentRoll: 40, renown: 40, favor: 52, staff: 0, oathsKept: 0 };
+  const reeve = targetsOf('reeve') as { households: number; rentRoll: number; renown: number };
+  // every metric any charter asks for is stood in for from the start (withMetrics reads the keys once)
+  const forced: Partial<Record<GoalMetric, number>> = {};
+  for (const r of Object.values(RANKS)) for (const g of r.goals) forced[g.metric] = 0;
+  Object.assign(forced, { households: reeve.households, rentRoll: reeve.rentRoll - 1, renown: reeve.renown - 1, favor: 52 });
   withMetrics(forced, () => {
     s.day += 1; rankModule.onDay!(s, s.day);
     let evs = drain(s);
     assert.deepEqual(ofType(evs, 'goal').map(e => e.goalId), ['reeve_households']);
     assert.equal(s.charter.ready, false);
     // a goal once met stays met
-    forced.households = 3; forced.rentRoll = 75;
+    forced.households = reeve.households - 1; forced.rentRoll = reeve.rentRoll;
     s.day += 1; rankModule.onDay!(s, s.day); evs = drain(s);
     assert.deepEqual(ofType(evs, 'goal').map(e => e.goalId), ['reeve_rentroll']);
     assert.equal(s.charter.goals.find(g => g.id === 'reeve_households')!.done, true);
-    assert.ok(s.charter.goals.find(g => g.id === 'reeve_households')!.value >= 6, 'a sealed goal reads as met');
+    assert.ok(s.charter.goals.find(g => g.id === 'reeve_households')!.value >= reeve.households, 'a sealed goal reads as met');
     assert.equal(dispatch(s, { type: 'accept_promotion' }).ok, false);
-    forced.renown = 55;
+    forced.renown = reeve.renown;
     s.day += 1; rankModule.onDay!(s, s.day); evs = drain(s);
     assert.deepEqual(ofType(evs, 'goal').map(e => e.goalId), ['reeve_renown']);
     assert.equal(ofType(evs, 'charter_ready').length, 1);
@@ -472,7 +483,7 @@ test('promotion from Reeve through Baron (and on to Duke and King) by forcing th
     assert.ok(s.candidates.length > 0, 'candidates are on offer');
 
     // Knight → Baron
-    Object.assign(forced, { households: 16, rentRoll: 320, renown: 60, favor: 50, staff: 3 });
+    Object.assign(forced, targetsOf('knight'));
     s.day += 1; rankModule.onDay!(s, s.day); evs = drain(s);
     assert.equal(ofType(evs, 'goal').length, RANKS.knight.goals.length);
     assert.equal(ofType(evs, 'charter_ready').length, 1);
@@ -481,12 +492,12 @@ test('promotion from Reeve through Baron (and on to Duke and King) by forcing th
     assert.ok(isUnlocked(s, 'townhouse')); assert.ok(rolesUnlocked(s).includes('steward'));
 
     // Baron → Duke → King: thin on content, sound in mechanism
-    Object.assign(forced, { households: 36, rentRoll: 1000, renown: 70, favor: 60, oathsKept: 10 });
+    Object.assign(forced, targetsOf('baron'));
     s.day += 1; rankModule.onDay!(s, s.day); drain(s);
     assert.equal(s.charter.ready, true);
     assert.equal(dispatch(s, { type: 'accept_promotion' }).ok, true); drain(s);
     assert.equal(s.realm.rank, 'duke');
-    Object.assign(forced, { households: 80, rentRoll: 3000 });
+    Object.assign(forced, targetsOf('duke'));
     s.day += 1; rankModule.onDay!(s, s.day); drain(s);
     assert.equal(dispatch(s, { type: 'accept_promotion' }).ok, true); drain(s);
     assert.equal(s.realm.rank, 'king'); assert.equal(nextRank(s), null);
@@ -621,7 +632,7 @@ test('Steward\'s Peace: three months past the cap costs a rank and wipes the deb
   assert.match(d.epitaph, /forgave [\d,]+ crowns/);
   assert.equal(seatOf(s).level, RANKS.knight.seatLevel, 'the manor is not pulled down');
   // the Crown will not hear of promotion for a while, however well things go
-  withMetrics({ households: 6, rentRoll: 70, renown: 55 }, () => {
+  withMetrics(targetsOf('reeve'), () => {
     s.day += 1; rankModule.onDay!(s, s.day);
     assert.equal(s.charter.ready, false);
     s.day += RANK_TUNE.probationDays; rankModule.onDay!(s, s.day);
@@ -736,6 +747,8 @@ test('the moneylender goes by his name once the cast gives him one, and by his t
     const hers = ofType(drain(f), 'herald').map(e => e.herald.text);
     assert.equal(hers.length, 2);
     for (const line of hers) { assert.match(line, /Mistress Prudence Tallow/); assert.doesNotMatch(line, /\b(he|his|him)\b/i, line); }
+    assert.match(hers[0]!, /Mistress Prudence Tallow the moneylender/, 'the line that opens the account says who she is');
+    assert.doesNotMatch(hers[1]!, /the moneylender/, 'after that the name will do');
     assert.match(hers.join(' '), /\b(she|her)\b/i);
   } finally { def.name = was; }
   assert.equal(pronounsFor('Baron Aldous Vane').his, 'his'); assert.equal(pronounsFor('Baroness Hale').his, 'her');
@@ -789,6 +802,44 @@ test('epitaphs are built from the record', () => {
   for (const text of [e, a, writeEpitaph(s, 'charter_revoked'), writeEpitaph(s, 'demoted_debt', { from: 'baron', to: 'knight', debt: 1800 }), writeEpitaph(s, 'demoted_favor', { from: 'baron', to: 'knight' })]) {
     assert.ok(!/[–—{}]|undefined|NaN/.test(text), text);
     assert.ok(text.length < 330, `${text.length}: ${text}`);
+  }
+});
+
+test('an heir with an heirloom starts with a modest boon, once; a founder does not', () => {
+  const heirloom = 'the ribbon from the charter, the Crown having kept the rest';
+  const founder = Sim.create({ seed: 5, ruler: 'Luke', mode: 'iron' }).state;
+  const sim = Sim.create({ seed: 5, ruler: 'Luke', mode: 'iron', heirloom, reign: 2 }); const s = sim.state;
+  const boon = s.gold - founder.gold;
+  assert.ok(boon > 0 && boon <= 40, `a modest sum: ${boon}`);
+  assert.equal(boon, Math.min(MODES_TUNE.heirloomBoonCap, Math.round(BAL.startGold * MODES_TUNE.heirloomBoonShare)));
+  assert.equal(MODES_TUNE.heirloomBoonCap, 40);
+  const entry = s.ledger.txns.filter(x => x.cat === 'windfall');
+  assert.deepEqual(entry.map(x => [x.amount, x.memo]), [[boon, 'An heirloom, pawned and redeemed']]);
+  const said = s.heralds.filter(h => h.text.includes('the ribbon from the charter'));
+  assert.equal(said.length, 1, 'one line, naming it');
+  assert.ok(said[0]!.text.includes(heirloom) && said[0]!.text.includes(`${boon} crowns`), said[0]!.text);
+  assert.ok(said[0]!.text.length <= MODES_TUNE.heraldCap && !/[–—{}]|undefined/.test(said[0]!.text), said[0]!.text);
+  assert.equal(s.heralds.indexOf(said[0]!), s.heralds.length - 1, 'it follows the proclamation');
+  note(`heirloom: "${said[0]!.text}"`);
+  // never twice: not when asked again, not after a save and a load, not as the days go by
+  const gold = s.gold;
+  assert.equal(heirloomBoon(s), 0); assert.equal(s.gold, gold);
+  const back = deserialize(serialize(s));
+  assert.equal(heirloomBoon(back), 0); assert.equal(back.gold, gold);
+  sim.advanceDays(45);
+  assert.equal(s.ledger.txns.filter(x => x.cat === 'windfall' && /heirloom/.test(x.memo)).length, 1);
+  assert.equal(s.heralds.filter(h => h.text.includes('the ribbon from the charter')).length, 1);
+  // a founder has nothing to redeem, and neither has an heir who was left nothing
+  assert.equal(founder.ledger.txns.filter(x => x.cat === 'windfall').length, 0);
+  assert.equal(Sim.create({ seed: 5, ruler: 'Luke', mode: 'iron', heirloom, reign: 1 }).state.gold, founder.gold);
+  assert.equal(Sim.create({ seed: 5, ruler: 'Luke', mode: 'iron', heirloom: null, reign: 3 }).state.gold, founder.gold);
+  // every heirloom the engine can hand down fits the line, and so does one it did not write
+  for (const h of ['the Ledger of Oaths, every page of it kept', 'a coffer with an excellent lock and nothing in it', 'x'.repeat(30) + ', ' + 'y'.repeat(70) + '.']) {
+    const f = fixture('reeve'); f.realm.heirloom = h; f.realm.reign = 4; const was = f.gold;
+    assert.equal(heirloomBoon(f), boon); assert.equal(f.gold, was + boon);
+    const line = f.heralds[f.heralds.length - 1]!;
+    assert.equal(line.kind, 'good'); assert.ok(line.text.length <= MODES_TUNE.heraldCap && line.text.includes(h.split(',')[0]!), line.text);
+    assert.equal(heirloomBoon(f), 0); drain(f);
   }
 });
 
@@ -872,7 +923,7 @@ test('when he cannot poach, each temperament does its own mischief, in its own v
     assert.equal(householdCount(s), housed(s).length);
     if (temperament === 'grasping') assert.ok(housed(s).reduce((a, t) => a + t.happiness, 0) < mood, 'undercut: the overcharged are restless');
     if (temperament === 'charming') assert.ok(s.rival.renown > hisRenown + 1, 'his feast raises his name');
-    if (temperament === 'ruthless') assert.equal(s.renown, 50 + RIVAL_TUNE.rumourRenown, 'a rumour: your renown -1');
+    if (temperament === 'ruthless') assert.equal(s.renown, 50 + RIVAL_TUNE.rumourRenown, 'a rumour costs you renown');
   }
   assert.equal(new Set(Object.values(lines)).size, 3);
   // each in his own register: prices, parties, whispers
@@ -1058,6 +1109,49 @@ test('round trip is exact on a simulated reign, and the loaded reign carries on 
     assert.ok(!crownDiffers(sim.state, loaded.state), 'crown-owned state diverged after load: ' + diff(plain(sim.state), plain(loaded.state)).join(' | '));
     note('after loading, the reign diverged in state the crown modules do not own (state kept outside GameState by another module?): ' + diff(plain(sim.state), plain(loaded.state)).slice(0, 4).join(' | '));
   }
+});
+
+/** A simple steward for a long reign: collects, lists, settles what comes up by its first answer, borrows and repays. */
+function stewardDay(sim: Sim): void {
+  const s = sim.state; const day = Math.floor(s.day);
+  if (day % 3 === 0) sim.dispatch({ type: 'collect_all' });
+  for (const inc of Object.values(s.incidents)) {
+    const def = INCIDENT_BY_ID[inc.defId];
+    if (inc.state === 'open' && !inc.outcomeId && def?.outcomes[0]) sim.dispatch({ type: 'resolve_incident', incidentId: inc.id, outcomeId: def.outcomes[0].id });
+  }
+  for (const b of Object.values(s.buildings)) if (b.units.some(u => !u.tenantId && !u.listed)) sim.dispatch({ type: 'set_listed', buildingId: b.id, listed: true });
+  if (day % 30 === 3) sim.dispatch({ type: 'accept_promotion' });
+  if (day === 9 || day % 200 === 130) {
+    const t = housed(s)[0];
+    if (t) sim.dispatch({ type: 'swear_oath', oath: { kind: day === 9 ? 'repair' : 'no_evict', text: 'You have my word.', toTenantId: t.id, toName: t.name, buildingId: null, buildingType: null, amount: null, dueDay: s.day + 80 } });
+  }
+  if (day % 170 === 60) sim.dispatch({ type: 'take_loan', amount: 40 });
+  if (day % 170 === 120) sim.dispatch({ type: 'repay_loan', amount: 25 });
+  if (day % 240 === 100) sim.dispatch({ type: 'hold_feast' });
+  sim.drain();
+}
+
+test('three years with the real content, saved and loaded every 50 days: exact each time, and the same reign as one never saved', () => {
+  const start = (): Sim => Sim.create({ seed: 7, ruler: 'Luke', mode: 'peace', heirloom: 'the keys to the seat, on a piece of string', reign: 2 });
+  let sim = start(); const twin = start();
+  let saves = 0; const lost = new Set<string>(); let busiest = 0;
+  for (let d = 1; d <= 1080 && !sim.state.ended; d++) {
+    sim.advanceDays(1); stewardDay(sim); twin.advanceDays(1); stewardDay(twin);
+    if (d % 50 !== 0) continue;
+    const json = sim.save(); saves++;
+    const loaded = Sim.load(json);
+    assert.equal(loaded.save(), json, `exact round trip on day ${d}`);
+    for (const p of diff(plain(loaded.state), plain(sim.state))) lost.add(p.split(':')[0]!.replace(/\d+/g, '#'));
+    busiest = Math.max(busiest, housed(sim.state).length + Object.keys(sim.state.incidents).length + Object.keys(sim.state.jobs).length);
+    sim = loaded;                                           // the reign carries on from the save
+  }
+  assert.equal(saves, 21); assert.ok(busiest >= 3, 'there was something to save');
+  assert.deepEqual([...lost], [], 'fields outside the GameState contract were dropped by the save');
+  if (sim.save() !== twin.save()) {
+    assert.ok(!crownDiffers(sim.state, twin.state), 'crown-owned state diverged across the saves: ' + diff(plain(sim.state), plain(twin.state)).join(' | '));
+    note('across 21 saves the reign diverged from its unsaved twin in state the crown modules do not own: ' + diff(plain(sim.state), plain(twin.state)).slice(0, 4).join(' | '));
+  }
+  note(`three years: ${saves} saves of about ${Math.round(sim.save().length / 1024)} kB, day ${Math.floor(sim.state.day)}, ${sim.state.realm.rank}, ${housed(sim.state).length} households, ${sim.state.heralds.length} herald lines`);
 });
 
 // ───────────────────────────── determinism ─────────────────────────────

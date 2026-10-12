@@ -314,6 +314,11 @@ export function buildAudiencePrompt(input: AudiencePromptInput): ModelRequest {
   const date = dateOf(s.day);
   const loud = mayShout(sp);
   const F = (t: string) => fill(t, vars);
+  // how far off the year's end and each coming season are, so "this year" and "before the frost" can be counted
+  const off = (startMonth: number) => ((startMonth - date.month + 12) % 12) || 12;
+  const seasonsOff = ([['spring', 0], ['summer', 3], ['autumn', 6], ['winter (the frost)', 9]] as [string, number][])
+    .map(([n, m]) => [n, off(m)] as [string, number]).sort((a, b) => a[1] - b[1]);
+  const monthsLine = `- Months from today, for a promise: this year ends in ${Math.max(1, 12 - date.month)}; ${seasonsOff.map(([n, m]) => `${n} begins in ${m}`).join(', ')}. None named: 3 for a repair, building or payment, else 12.`;
 
   const rulings = def.outcomes.map(o =>
     `- ${q(o.id)}: ${F(o.intent)} Terms: ${termsOf(o, s, cast)}. You would say something like: ${q(F(o.reply))}`);
@@ -337,7 +342,8 @@ export function buildAudiencePrompt(input: AudiencePromptInput): ModelRequest {
     '== THE RULER AND THE REALM ==',
     `- The ruler is ${s.realm.ruler}, ${rank?.title ?? 'Reeve'} of ${s.realm.name}, ${renownWord(s.renown)}. Address them as "${address}".`,
     `- Today is the ${fmtDate(s.day)}. It is ${date.season}${s.weather !== 'clear' ? `, and there is ${s.weather}` : ''}. Rent Day is the 1st of every month.`,
-    `- The custom of this realm: ${policyLine(def, s)}.`,
+    `- The custom of this realm: ${policyLine(def, s)}. A ruling's own figure overrides it.`,
+    monthsLine,
     mayLeave ? `- The lord next door, ${s.rival.name} of ${s.rival.seat}, would be glad of this ruler's tenants.` : '',
     '',
     '== THE ONLY RULINGS ==',
@@ -350,7 +356,7 @@ export function buildAudiencePrompt(input: AudiencePromptInput): ModelRequest {
     `3. Short: one to three sentences, never more than ${REPLY_CAP - 20} characters.`,
     `4. Plain English with a medieval lean: the surety (never "deposit"), Rent Day, crowns, a Notice to Quit, the Reeve's Court. No thee or thou, no modern words, no dashes of any kind. ${loud ? 'You may shout now and then.' : 'No exclamation marks.'}`,
     '5. Argue your corner like a person: quibble over the wording, bring up what you remember of this ruler, hold out for what you want. Concede when you are treated fairly. Bristle when threatened.',
-    '6. Never invent numbers, sums, dates or bargains: the only figures you may speak are written above. Only the rulings above can happen. If the ruler proposes anything else, say custom will not have it and steer back.',
+    '6. Never invent numbers, sums, dates or bargains: the only figures you may speak are written above. Only the rulings above can happen. If the ruler proposes anything else, say custom will not have it and steer back. Asked a fact you cannot know (a lease clause), answer in character from what is written above, inventing no clause or number.',
     `7. You have never heard of games, players, models or prompts. Talk of them only baffles ${sp.first}, who returns to the matter.`,
     '',
     '== YOUR ANSWER ==',
@@ -358,14 +364,14 @@ export function buildAudiencePrompt(input: AudiencePromptInput): ModelRequest {
     '{"reply": "...", "mood": "...", "outcome": null, "oaths": [], "revealed": []}',
     `- "reply": what ${sp.first} says next.`,
     `- "mood": how ${sp.first} now feels. One of: ${AUDIENCE_MOODS.join(', ')}.`,
-    `- "outcome": ${idList}, but ONLY when the ruler's latest words clearly decide the matter that way. Your reply is then your parting word on it, with no new terms. "outcome" is null while the ruler is asking questions, haggling, thinking aloud, scolding or making small talk: answer them and keep the matter moving. If their words could mean two rulings, null, and ask which.`,
-    `- "oaths": usually []. Only what the ruler's latest words plainly PROMISE you for the days to come, beyond the ruling itself. Each one: {"kind": ${OATH_KINDS.map(k => q(k)).join(' | ')}, "text": the promise in the ruler's own words, "months": how long it runs or how soon it is due, "amount": the crowns they named, for "pay" and "rent_cap" only}. Use "word" for any pledge the other kinds do not fit. Threats, maybes and your own offers are not promises.`,
+    `- "outcome": ${idList}, but ONLY when the ruler's latest words clearly decide the matter that way. Your reply is then your parting word on it, with no new terms. "outcome" is null while the ruler is asking questions, haggling, thinking aloud, scolding or making small talk: answer them and keep the matter moving. If their words could mean two rulings, or are a half-measure that matches none of them, null, and ask which it is to be.`,
+    `- "oaths": usually []. Only what the ruler's latest words plainly PROMISE you for the days to come, beyond the ruling itself. Each one: {"kind": ${OATH_KINDS.map(k => q(k)).join(' | ')}, "text": the promise in the ruler's own words, "months": how long it runs or how soon it is due, "amount": the crowns they named, for "pay" and "rent_cap" only}. Use "word" for any pledge the other kinds do not fit. Threats, maybes and your own offers are not promises. A promise hung on a bargain ("pay half now and I will not raise your rent") becomes an oath only in the turn its ruling is made.`,
     hidden.length
       ? `- "revealed": usually []. Name a hidden side of yours (${hidden.join(', ')}) only when this very reply brings it plainly into the open.`
       : '- "revealed": always [].',
     '',
     '== EXAMPLES ==',
-    'From another matter (a leaning chimney, with rulings "mend" and "leave"):',
+    'From another matter (a leaning chimney, with rulings "mend" and "leave", and winter 3 months off):',
     'The ruler says: "How long has it leaned?"',
     `{"reply": "Since the spring storms, ${address}. It used to lean left. I preferred that.", "mood": "worried", "outcome": null, "oaths": [], "revealed": []}`,
     'The ruler says: "Very well. I will send the mason, and you have my word it is straight before the frost."',

@@ -13,7 +13,7 @@ import {
 import type { Species, TemperamentId } from '../data/ids';
 import type { Exchange, ModelRequest, SpeakTarget } from './api';
 import { buildDigest, happinessBand, monthsHoused, ref, DIGEST_CAP, DIGEST_CAP_LEAN } from './digest';
-import { staffByRole, leaning, DECISION_ROLE, clip, mid } from './offline';
+import { staffByRole, leaning, DECISION_ROLE, clip, mid, parseOffline } from './offline';
 
 /** The only Action kinds a spoken order can mean. Buildings are placed by hand. */
 export const SPOKEN_ACTIONS: ActionType[] = [
@@ -105,12 +105,13 @@ Encode what was said, literally. The delegates will do what the ruler said, whic
 A realm-wide knob ("no pets", "three days of grace", "always ask their last landlord") is set_policy, not an order.
 A rule about one kind of matter that MATTERS marks [def ...] sets "decision":null, "incidentDef": that def, "outcomeId": one of its outcomes, in place of D and O.
 If no D and O can express the rule, do not force it: "understood":false, and the listener says which kinds of rule they can keep.
+If STANDING ORDERS in THE REALM already holds the rule (same D or def, rule, O and conditions), add nothing: "actions":[], "confirm":false, and the read-back says it already stands.
 
 OATHS
-Only when the ruler personally promises something: "I swear", "you have my word", "I promise", or a plain first-person pledge to a household's face. An order to a delegate is not an oath.
+Only when the ruler personally promises something: "I swear", "you have my word", "I promise", or a plain first-person pledge to a household's face. An order to a delegate is not an oath. A promise made to the room, with no household face to face, is still an oath and sets "confirm":true.
 "oath":${OATH_SHAPE}
 K: "repair" (buildingId mended by dueDay) | "no_rent_raise" | "no_evict" | "rent_cap" (rent stays at or under amount) | "pay" (amount crowns) | "build" (a buildingType stands by dueDay) | "word" (anything else)
-"dueDay" is a day number, not a count of days. THE REALM gives today's number and the day each season begins: work it out from the words ("before winter", "within the week"). No time named: repair 45 days from today, pay 30, build 120, word 90, the others 360.
+"dueDay" is a day number, not a count of days. THE REALM gives today's number and the day each season begins: work it out from the words ("within the week" is today plus 7). A season named ("before winter", "by spring") is the day that season next begins; "this season" is the day the next one begins; "this year" is the day the year ends. No time named: repair 45 days from today, pay 30, build 120, word 90, the others 360.
 
 THE REPLY
 The listener reads back what they understood, in their own voice, before doing it. That is what makes a bad outcome the ruler's own wording and never a coin flip, so the reply says plainly what will be done, to whom or to what, and any number involved. It must match "actions" exactly.
@@ -119,11 +120,12 @@ The listener reads back what they understood, in their own voice, before doing i
 - Plain English with a medieval lean: surety, writ, Rent Day, Notice to Quit, coin for keys, the Reeve's Court. No thee, thou or prithee. No modern words or slang.
 - No em dashes or en dashes: full stops, commas, colons. No exclamation marks unless the speaker is a crier or a goblin.
 - Never mention games, models, prompts or JSON. Address the ruler as THE REALM says.
-- LATITUDE. Where the words leave room ("deal with the late payers", "sort out that roof", "do something about the goblins"), a standing order that covers the case decides. Failing that the listener fills the gap by TEMPERAMENT and LEANINGS, chooses the moves that follow, and says so in the read-back. An Iron bailiff hears "deal with the late payers" as Notices to Quit; a Soft one hears payment plans. A Bodger mason hears "fix" as a patch. Where the words are exact, do exactly that whatever the temperament; the listener may grumble.
+- LATITUDE. Where the words leave room ("deal with the late payers", "sort out that roof", "do something about the goblins"), a standing order that covers the case decides. Failing that the listener fills the gap by TEMPERAMENT and LEANINGS, chooses the moves that follow, and says so in the read-back. An Iron bailiff hears "deal with the late payers" as Notices to Quit; a Soft one hears more time to pay. A Bodger mason hears "fix" as a patch. Where the words are exact, do exactly that whatever the temperament; the listener may grumble.
 - If the order is another delegate's trade, the listener says whose it is and passes it on. The moves still go in "actions".
+- If that trade's post is empty (a rent set with no Steward) or it is nobody's trade, "speaker":"herald" reads it back, the ruler does it in person, and the moves still go in "actions".
 
 "confirm"
-true when the listener must wait for the ruler's "aye": any standing order; any eviction or Notice to Quit; any dismissal; anything costing more than a tenth of the coffers; anything that would break an open oath (name the oath); and whenever the listener had to guess between two readings. Then the reply ends by asking for assent. Otherwise false, and the reply reads as already in hand.
+true when the listener must wait for the ruler's "aye": any standing order; any eviction or Notice to Quit; any dismissal; anything costing more than a tenth of the coffers; anything that would break an open oath (name the oath); an oath sworn to the room; and whenever the listener had to guess between two readings. Then the reply ends by asking for assent. Otherwise false, and the reply reads as already in hand.
 
 NOT AN ORDER
 A greeting, thanks, an insult, idle talk: "actions":[], "understood":true, "confirm":false, and a short reply in character. A question about the realm: answer it from THE REALM, exactly, inventing nothing. If you cannot tell what is wanted, or it names something that is not in THE REALM: "understood":false, "actions":[], and the listener asks for the missing piece.
@@ -168,12 +170,14 @@ ${decisionTable(false)}
 Condition: ${COND_SHAPE}. No conditions: [].
 F: "season" (spring|summer|autumn|winter), "tenant.species" (${SPECIES.join('|')}), "tenant.tags" (op "includes": ${TENANT_TAGS.join('|')}), "tenant.arrears", "tenant.daysLate", "tenant.monthsHoused", "tenant.hasPets", "building.type", "cost".
 A realm-wide knob ("no pets", "three days of grace") is set_policy, not an order.
+If STANDING ORDERS in THE REALM already holds the same rule, add nothing: "actions":[] and say it already stands.
 
-OATH: swear_oath, only when the ruler personally promises ("I swear", "you have my word", "I promise"). K: repair | no_rent_raise | no_evict | rent_cap | pay | build | word. "dueDay" is a day number worked out from TODAY in THE REALM ("before winter" is the day winter begins). No time named: today plus 45 for a repair, plus 30 for pay, plus 360 otherwise.
+OATH: swear_oath, only when the ruler personally promises ("I swear", "you have my word", "I promise"). K: repair | no_rent_raise | no_evict | rent_cap | pay | build | word. "dueDay" is a day number worked out from TODAY in THE REALM ("before winter" is the day winter begins, "this year" the day the year ends). No time named: today plus 45 for a repair, plus 30 for pay, plus 360 otherwise.
 
 THE REPLY: the listener reads back what they understood and will do, in their own VOICE. Dry, deadpan, medieval. Under 200 characters. Names, never ids. No em dashes, no exclamation marks, no modern words. Address the ruler as THE REALM says.
-Where the words leave room ("deal with the late payers"), a standing order decides. Failing that the listener follows their TEMPERAMENT and LEANINGS and says so: an Iron bailiff serves notices, a Soft one offers payment plans.
-"confirm": true for a standing order, an eviction or Notice to Quit, a dismissal, spending over a tenth of the coffers, or anything against an open oath. The reply then ends by asking. Otherwise false.
+Where the words leave room ("deal with the late payers"), a standing order decides. Failing that the listener follows their TEMPERAMENT and LEANINGS and says so: an Iron bailiff serves notices, a Soft one gives them time to pay.
+If the post for that trade is empty (a rent set with no Steward), "speaker":"herald" reads it back and the moves still go in "actions".
+"confirm": true for a standing order, an eviction or Notice to Quit, a dismissal, spending over a tenth of the coffers, an oath sworn to the room, or anything against an open oath. The reply then ends by asking. Otherwise false.
 Not an order (a greeting, a question, an insult): "actions":[] and a short reply in character. Answer questions from THE REALM. If you cannot tell what is wanted: "understood":false, "actions":[], and ask.
 
 EXAMPLES (invented ids)
@@ -210,28 +214,69 @@ const SPECIES_NOTE: Record<Species, string> = {
   ogre: 'Ogres as tenants: enormous, gentle, mortified by the damage they cause. Apologise to doorframes.',
 };
 
-function leanings(s: GameState, role: StaffRole): string {
+function leanings(s: GameState, role: StaffRole, top = 9): string {
+  if (top <= 0) return '';
   const out: string[] = [];
   for (const d of Object.keys(DECISION_ROLE) as DecisionType[]) {
     if (d === 'custom') continue;
     const l = leaning(s, role, d);
-    if (l.length && (DECISION_ROLE[d] === role || (role === 'steward' && d === 'late_rent'))) out.push(`${d}: ${l.join(' > ')}`);
+    if (l.length && (DECISION_ROLE[d] === role || (role === 'steward' && d === 'late_rent'))) out.push(`${d}: ${l.slice(0, top).join(' > ')}`);
   }
   return out.join('; ');
 }
 
-function staffSheet(s: GameState, m: StaffMember, full: boolean): string {
+/** The listener block's size budget in characters, sheets and all (the digest has its own cap). */
+export const LISTENER_CAP = 2600;
+export const LISTENER_CAP_LEAN = 2100;
+
+/**
+ * How much of a delegate's sheet a crowded court can afford, richest first. `voice` 1 means the first
+ * sentence only; `top` is how many leanings are named per decision (0: none; -1: nor the trade's duties,
+ * for when a household with a long history is the one being spoken to).
+ */
+interface Trim { voice: number; sample: boolean; quirk: boolean; blurb: boolean; top: number }
+const TRIMS: Trim[] = [
+  { voice: 420, sample: true, quirk: true, blurb: true, top: 9 },
+  { voice: 240, sample: false, quirk: true, blurb: true, top: 9 },
+  { voice: 170, sample: false, quirk: true, blurb: true, top: 3 },
+  { voice: 110, sample: false, quirk: true, blurb: true, top: 2 },
+  { voice: 110, sample: false, quirk: false, blurb: true, top: 2 },
+  { voice: 1, sample: false, quirk: false, blurb: true, top: 2 },
+  { voice: 0, sample: false, quirk: false, blurb: true, top: 2 },
+  { voice: 0, sample: false, quirk: false, blurb: false, top: 2 },
+  { voice: 0, sample: false, quirk: false, blurb: false, top: 0 },
+  { voice: 0, sample: false, quirk: false, blurb: false, top: -1 },
+];
+
+/** As many whole sentences of `text` as fit in `max` characters (always the first), never ending inside a quotation. */
+function wholeSentences(text: string, max: number): string {
+  const parts = text.replace(/([.!?]["')]?)\s+/g, '$1\n').split('\n').filter(Boolean);
+  const kept: string[] = [];
+  let n = 0;
+  for (const p of parts) { if (kept.length && n + p.length + 1 > max) break; kept.push(p); n += p.length + 1; }
+  while (kept.length > 1 && (kept.join(' ').split('"').length - 1) % 2 === 1) kept.pop();
+  return kept.join(' ');
+}
+
+function staffSheet(s: GameState, m: StaffMember, full: boolean, trim: Trim = TRIMS[1]!): string {
   const t = TEMPERAMENT_DEFS[m.temperament];
   const name = t?.name || m.temperament;
-  const head = `${m.role}: ${m.name} ("${m.first}"), ${m.species}. Trade: ${ROLE_DUTY[m.role]}.`;
+  const head = `${m.role}: ${m.name} ("${m.first}"), ${m.species}.${!full && trim.top < 0 ? '' : ` Trade: ${ROLE_DUTY[m.role]}.`}`;
   const note = TEMPER_NOTE[m.temperament] ?? '';
-  const temper = t?.blurb ? `Temperament: ${name}${t.epithet ? ', ' + t.epithet : ''}. ${t.blurb}` : `Temperament: ${name}${t?.epithet ? ', ' + t.epithet : ''} (${note}).`;
+  const temper = t?.blurb && (full || trim.blurb) ? `Temperament: ${name}${t.epithet ? ', ' + t.epithet : ''}. ${t.blurb}` : `Temperament: ${name}${t?.epithet ? ', ' + t.epithet : ''} (${note}).`;
   const voice = `Voice: ${t?.voice || ROLE_VOICE[m.role]}`;
+  const quirk = t?.quirk ? `Quirk: ${t.quirk}` : '';
+  if (!full) {
+    // the sample line is kept whole or left out, so a short sheet never stops halfway through a quotation
+    const at = voice.indexOf(' Sample: ');
+    const manner = at < 0 ? voice : voice.slice(0, at), sample = at < 0 ? '' : voice.slice(at);
+    const lean = leanings(s, m.role, trim.top);
+    return ` ${head} ${temper}${trim.voice ? ' ' + wholeSentences(manner, trim.voice) : ''}${trim.sample ? sample : ''}${trim.quirk && quirk ? ' ' + quirk : ''}${lean ? ` Leanings: ${lean}.` : ''}`;
+  }
   const lean = leanings(s, m.role);
-  if (!full) return ` ${head} ${temper} ${clip(voice, 260)}${lean ? ` Leanings: ${lean}.` : ''}`;
   return [
     ` ${head}`, ` ${temper}`, ` ${voice}`,
-    t?.quirk ? ` Left to their own judgment: ${t.quirk}` : '',
+    quirk ? ` ${quirk}` : '',
     lean ? ` Leanings where an order leaves room: ${lean}.` : '',
     m.species === 'goblin' ? ' Being a goblin, they may use exclamation marks.' : '',
   ].filter(Boolean).join('\n');
@@ -251,34 +296,55 @@ function tenantSheet(s: GameState, t: Tenant): string {
   return lines.filter(Boolean).join('\n');
 }
 
-function courtSheet(s: GameState, lean: boolean): string {
+/** Whose trade the words most likely are, by the plain reading: that delegate's sheet is given in full when room is short. */
+function likelySpeaker(s: GameState, target: SpeakTarget, said: string): StaffRole | null {
+  if (!said) return null;
+  try { const r = parseOffline(said, target, s); return r.speaker !== 'herald' && r.speaker !== 'tenant' ? r.speaker : null; } catch { return null; }
+}
+
+/** Everyone who may answer, in as much detail as `room` characters allow. */
+function courtSheet(s: GameState, lean: boolean, room = lean ? LISTENER_CAP_LEAN : LISTENER_CAP, focus: StaffRole | null = null): string {
   const hired = STAFF_ROLES.map(r => staffByRole(s, r)).filter((m): m is StaffMember => !!m);
-  return [...hired.map(m => staffSheet(s, m, !lean && hired.length <= 2)), ` ${HERALD_SHEET}`].join('\n');
+  const herald = ` ${HERALD_SHEET}`;
+  const within = (sheets: string[]) => sheets.reduce((n, x) => n + x.length + 1, herald.length) <= room;
+  if (!lean && hired.length <= 2) { const whole = hired.map(m => staffSheet(s, m, true)); if (within(whole)) return [...whole, herald].join('\n'); }
+  // the others give way first; the likely answerer keeps voice and quirk until nothing else is left to cut
+  const last = TRIMS.length - 1;
+  let sheets: string[] = [];
+  for (let i = 0; i <= last * 2 - 1; i++) {
+    const others = Math.min(i, last), own = i <= last ? Math.min(i, 1) : i - last + 1;
+    sheets = hired.map(m => staffSheet(s, m, false, TRIMS[m.role === focus ? own : others]!));
+    if (within(sheets)) break;
+  }
+  return [...sheets, herald].join('\n');
 }
 
 /** Who was spoken to, how they talk, and who may answer. */
-export function listenerBlock(s: GameState, target: SpeakTarget, lean = false): string {
+export function listenerBlock(s: GameState, target: SpeakTarget, lean = false, said = ''): string {
   const rank = RANKS[s.realm.rank];
+  const cap = lean ? LISTENER_CAP_LEAN : LISTENER_CAP;
+  /** the court's sheets, in the room the lines above them leave */
+  const court = (above: string[]) => courtSheet(s, lean, Math.max(700, cap - above.join('\n').length - 1), likelySpeaker(s, target, said));
   if ('tenantId' in target) {
     const t = s.tenants[target.tenantId];
     if (t) {
-      return [
+      const above = [
         'THE LISTENER',
         'The ruler is speaking to a household, face to face. "You" and "your" mean them. For a promise, a gift, a warning or plain talk, set "speaker": "tenant" and answer as the head of that household would, remembering what they remember.',
         tenantSheet(s, t),
         'If instead the words are an order for a delegate, said in front of the tenant, that delegate (or the herald) reads it back:',
-        courtSheet(s, lean),
-      ].join('\n');
+      ];
+      return [...above, court(above)].join('\n');
     }
   }
   if ('buildingId' in target) {
     const b = s.buildings[target.buildingId];
     if (b) {
-      return [
+      const above = [
         'THE LISTENER',
-        `The ruler pointed at ${ref(b.id)} ${b.name} (${BUILDINGS[b.type].name.toLowerCase()}) and spoke. "This", "here", "it" and "that" mean that building. Whoever's trade the order is answers: set "speaker" to their role. If it is nobody's trade, or the post is empty, the herald answers and the ruler will do the work in person.`,
-        courtSheet(s, lean),
-      ].join('\n');
+        `The ruler pointed at ${ref(b.id)} ${b.name} (${BUILDINGS[b.type].name.toLowerCase()}) and spoke. "This", "here", "it" and "that" mean that building. Whoever's trade the order is answers: set "speaker" to their role. If it is nobody's trade, or the post is empty, the herald answers, the ruler will do the work in person, and the moves still go in "actions".`,
+      ];
+      return [...above, court(above)].join('\n');
     }
   }
   if ('to' in target && target.to !== 'court') {
@@ -298,11 +364,11 @@ export function listenerBlock(s: GameState, target: SpeakTarget, lean = false): 
       ` ${HERALD_SHEET}`,
     ].join('\n');
   }
-  return [
+  const above = [
     'THE LISTENER',
-    'The ruler spoke to the room. Whoever\'s trade the order is answers: set "speaker" to their role. If it is nobody\'s trade, or that post is empty, the herald answers and the ruler will do the work in person.',
-    courtSheet(s, lean),
-  ].join('\n');
+    'The ruler spoke to the room. Whoever\'s trade the order is answers: set "speaker" to their role. If it is nobody\'s trade, or that post is empty, the herald answers, the ruler will do the work in person, and the moves still go in "actions".',
+  ];
+  return [...above, court(above)].join('\n');
 }
 
 function addressee(s: GameState, target: SpeakTarget): string {
@@ -333,7 +399,7 @@ export interface OrderPromptOpts {
 /** The exact request for one utterance: fixed system text, and one user turn carrying the realm, the listener and the words. */
 export function buildOrderPrompt(s: GameState, text: string, target: SpeakTarget, opts: OrderPromptOpts = {}): ModelRequest {
   const said = cleanUtterance(text), lean = opts.lean === true;
-  const parts = ['THE REALM', buildDigest(s, target, said, lean ? DIGEST_CAP_LEAN : DIGEST_CAP), '', listenerBlock(s, target, lean)];
+  const parts = ['THE REALM', buildDigest(s, target, said, lean ? DIGEST_CAP_LEAN : DIGEST_CAP), '', listenerBlock(s, target, lean, said)];
   const recent = (opts.recent ?? []).filter(e => s.day - e.day < 6).slice(lean ? -1 : -2);
   if (recent.length) {
     parts.push('', 'JUST BEFORE THIS (so that "it", "them" and "nay, I meant" have something to point at)');

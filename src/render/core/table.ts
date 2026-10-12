@@ -149,7 +149,7 @@ export function createTable(ctx: RenderCtx, envMap: THREE.Texture): Table {
     }
     topGeo.setAttribute('color', new THREE.BufferAttribute(col, 3));
   }
-  const topMat = new THREE.MeshStandardMaterial({ map: oakMap, bumpMap: oakBump, bumpScale: 1.4, roughness: 0.5, metalness: 0, vertexColors: true, envMap, envMapIntensity: 0.22 });
+  const topMat = new THREE.MeshStandardMaterial({ map: oakMap, bumpMap: oakBump, bumpScale: 1.4, roughness: 0.5, metalness: 0, vertexColors: true, envMap, envMapIntensity: 0.36 });
   const top = new THREE.Mesh(topGeo, topMat);
   top.position.y = TABLE_Y; top.receiveShadow = true;
   group.add(top);

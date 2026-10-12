@@ -271,7 +271,13 @@ test('the prompt carries the person, the matter, the realm, the rules and the ta
   assert.ok(sys.includes('The Unauthorized Griffin') && sys.includes('It has eaten a weathervane.'));
   assert.ok(sys.includes('argues like a lawyer about the wording of the lease'), 'the stance');
   for (const o of def.outcomes) assert.ok(sys.includes(`- "${o.id}": ${o.intent}`), `ruling ${o.id} with its intent`);
-  assert.ok(sys.includes('the rent rises from 8 to 10 crowns a month'), 'the true figures, so none are invented');
+  // the figures come from the lease and the outcome's own effect, so a balance pass cannot stale them
+  const rentNow = tenant.lease!.rent;
+  const rise = def.outcomes.flatMap(o => o.effects).find((e): e is Extract<typeof e, { t: 'rent' }> => e.t === 'rent' && e.pct > 0);
+  assert.ok(rise, 'the griffin matter has a ruling that raises the rent');
+  const rentThen = rentNow * (1 + rise.pct / 100);
+  const thenWords = Number.isInteger(rentThen) ? `${rentThen} crown${rentThen === 1 ? '' : 's'}` : `about ${Math.max(1, Math.round(rentThen))} crown${Math.max(1, Math.round(rentThen)) === 1 ? '' : 's'}`;
+  assert.ok(sys.includes(`the rent rises from ${rentNow} to ${thenWords} a month`), 'the true figures, so none are invented');
   assert.ok(sys.includes(`${c.state.realm.ruler}, Knight of ${c.state.realm.name}`) && sys.includes('Address them as "Sir"'));
   assert.match(sys, /It is spring/);
   assert.ok(sys.includes('animals are allowed for pet rent'), 'the policy that bears on it');

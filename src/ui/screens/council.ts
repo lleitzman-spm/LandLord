@@ -33,10 +33,11 @@ const DOMAIN: Record<StaffRole, string> = { mason: 'repairs', bailiff: 'late ren
 const LINE: Record<StaffRole, string> = { mason: 'walls, roofs and drains', bailiff: 'debts, doors and trespass', crier: 'lettings and the square', steward: 'money and the books' };
 /** something one might say to each, offered under the speaking box */
 const SAYINGS: Record<StaffRole, string[]> = {
-  mason: ['Always mend leaks properly. No patching.', 'If a proper repair costs over forty crowns, patch it.'],
-  bailiff: ['Never serve notice on a widow in winter.', 'If they owe under ten crowns, give them more time.'],
-  crier: ['Ask the last landlord of anyone who applies.', 'Never turn anyone away for being a goblin.'],
-  steward: ['Keep only what the damage cost from any surety.', 'Hold the rent at renewal for anyone here over two years.'],
+  // worded so the offline parser reads each one as a standing order too (checked against parseOffline)
+  mason: ['Always mend leaks properly. No patching.', 'Always patch when the repair costs over forty crowns.'],
+  bailiff: ['Never serve notice on a widow in winter.', 'Always give more time when they owe under ten crowns.'],
+  crier: ['Always ask the last landlord of anyone who applies.', 'Never turn anyone away for being a goblin.'],
+  steward: ['Always deduct only the damage from a surety.', 'Never raise the rent at renewal for anyone here over two years.'],
 };
 const JOB_TO: Record<JobKind, string> = {
   build: 'build', repair: 'mend it', renovate: 'renovate it', demolish: 'pull it down', clear_land: 'clear the ground',

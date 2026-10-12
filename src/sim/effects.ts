@@ -65,7 +65,12 @@ export function fillText(template: string, vars: Record<string, string | number 
     const an = VOWEL.test(v) && !CONSONANT_SOUND.test(v);
     return `${article[0]}${an ? 'n' : ''}${gap}{${key}}`;
   });
-  return fill(minded, vars);
+  // a placeholder that opens a sentence ("{title}", "{mason}" as "my lord", "the Mason") is capitalised there
+  const opened = minded.replace(/(^|[.!?]["']?\s+)\{(\w+)\}/g, (whole, pre: string, key: string) => {
+    const v = vars[key];
+    return typeof v === 'string' && /^[a-z]/.test(v) ? `${pre}${v[0]!.toUpperCase()}${v.slice(1)}` : whole;
+  });
+  return fill(opened, vars);
 }
 
 // ───────────── the owner's hands, where the owner offers them ─────────────
@@ -283,7 +288,8 @@ function applyOne(sc: Scope, e: Effect, all: Effect[]): void {
     case 'spawn': {
       if (e.chance !== undefined && rand(s) >= e.chance) return;
       const t = primaryTenant(sc); const b = buildingOf(sc);
-      s.pending.push({ defId: e.id, day: s.day + Math.max(0, e.delayDays), buildingId: b?.id ?? null, tenantId: t?.id ?? null, vars: {} });
+      // the follow-up is about the same household under the same roof; `_at` lets incidents.ts tell who has left since
+      s.pending.push({ defId: e.id, day: s.day + Math.max(0, e.delayDays), buildingId: b?.id ?? null, tenantId: t?.id ?? null, vars: { _at: s.day } });
       return;
     }
     case 'oath': {

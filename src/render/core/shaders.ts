@@ -55,7 +55,8 @@ export function patchGround(mat: THREE.MeshStandardMaterial, u: TerrainUniforms)
 varying vec4 vMix; varying vec3 vWPos;
 uniform vec3 uGrassA; uniform vec3 uGrassB; uniform vec3 uSnowCol; uniform float uSnow;
 uniform float uOwned[12]; uniform vec4 uGrid;
-${NOISE}`)
+${NOISE}
+float llOwn(vec2 p) { p = clamp(p, vec2(0.0), vec2(3.0, 2.0)); return uOwned[int(p.y) * 4 + int(p.x)]; }`)
       .replace('#include <color_fragment>', /* glsl */ `#include <color_fragment>
 {
   vec2 wp = vWPos.xz;
@@ -64,18 +65,29 @@ ${NOISE}`)
   float fw = max(fwidth(wp.x), fwidth(wp.y));
   float fine = (llNoise(wp * 15.0) - 0.5) * (1.0 - smoothstep(0.015, 0.07, fw));
   vec3 grass = mix(uGrassA, uGrassB, clamp(vMix.y * 0.8 + n1 * 0.5 - 0.15, 0.0, 1.0));
-  grass *= 0.8 + 0.15 * n2 + 0.12 * fine;
+  // broad drifts so a parcel is never one flat green: lighter rises, sun-dried and lusher patches
+  float n0 = llNoise(wp * 0.23 + 17.3);
+  grass *= 0.76 + 0.15 * n2 + 0.12 * fine + 0.18 * n0;
+  grass = mix(grass, grass * vec3(1.13, 1.03, 0.78), smoothstep(0.5, 0.85, llNoise(wp * 0.47 + 31.0)) * 0.55);
+  grass = mix(grass, grass * vec3(0.8, 0.96, 0.9), smoothstep(0.55, 0.9, llNoise(wp * 0.61 + 53.0)) * 0.5);
   vec3 c = mix(diffuseColor.rgb * (0.92 + 0.12 * n2 + 0.14 * fine), grass, vMix.x);
   // ploughed furrows on field tiles
-  c *= 1.0 + vMix.w * (sin(wp.y * 18.8496) * 0.17 - 0.04);
+  // tilled strips: each strip of a field its own colour (bare loam, straw, a green ley), ridge and furrow across it
+  float strip = llHash(vec2(floor(wp.y * 1.5) + 0.37, floor((wp.x + 16.0) / 4.0) + 0.61));
+  vec3 tilled = strip < 0.34 ? c * vec3(1.02, 0.98, 0.94) : strip < 0.67 ? mix(c, vec3(0.62, 0.5, 0.25), 0.42) : mix(c, grass * vec3(0.95, 1.0, 0.85), 0.5);
+  tilled *= 1.08 + sin(wp.y * 18.8496) * 0.12 + 0.06 * (n2 - 0.5);
+  c = mix(c, tilled, vMix.w);
   // lying snow, patchy as it comes and goes
   float sn = smoothstep(0.34, 0.66, uSnow * vMix.z * 1.3 + (n1 - 0.5) * 0.42 * (1.0 - uSnow * 0.6) + (n2 - 0.5) * 0.14);
   c = mix(c, uSnowCol * (0.93 + 0.07 * n2), sn);
   // land not yet bought lies dimmer and greyer
-  vec2 pc = clamp(floor((wp + vec2(16.0, 12.0)) / 8.0), vec2(0.0), vec2(3.0, 2.0));
-  float own = uOwned[int(pc.y) * 4 + int(pc.x)];
+  // (cooler and a little dimmer, never dead), easing across the boundary over about a tile
+  vec2 pf = (wp + vec2(16.0, 12.0)) / 8.0 - 0.5;
+  vec2 p0 = floor(pf);
+  vec2 pe = smoothstep(vec2(0.42), vec2(0.58), fract(pf) + (vec2(n2, n1) - 0.5) * 0.05);
+  float own = mix(mix(llOwn(p0), llOwn(p0 + vec2(1.0, 0.0)), pe.x), mix(llOwn(p0 + vec2(0.0, 1.0)), llOwn(p0 + vec2(1.0, 1.0)), pe.x), pe.y);
   float lum = dot(c, vec3(0.3, 0.59, 0.11));
-  c = mix(mix(vec3(lum), c, 0.55) * 0.66, c, own);
+  c = mix(mix(vec3(lum), c, 0.86) * vec3(0.76, 0.86, 0.9), c, own);
   // the surveyor's grid, only where a tool is working
   if (uGrid.z > 0.001) {
     vec2 g = abs(fract(wp + 0.5) - 0.5);
