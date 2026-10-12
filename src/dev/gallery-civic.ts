@@ -145,6 +145,33 @@ function stats(): unknown {
   });
 }
 
+
+/** build every type over many variants and seasons, animate each a few frames; returns failures and footprint overhangs */
+function robust(): string[] {
+  const out: string[] = [];
+  const box = new THREE.Box3();
+  const seasons: Env['season'][] = ['spring', 'summer', 'autumn', 'winter'];
+  for (const type of ORDER) {
+    const b = CIVIC_BUILDERS[type];
+    if (!b) { out.push(`${type}: no builder`); continue; }
+    let worst = 0;
+    for (let v = 0; v < 24; v++) {
+      try {
+        const look = lookFor(type, v);
+        const e: Env = { ...env, season: seasons[v % 4], night: (v % 3) / 2, wind: (v % 5) / 4, monthPhase: (v % 7) / 7 };
+        const body = b(look, { ...ctx, env: e });
+        for (let f = 0; f < 4; f++) { e.time += 0.37; e.dt = 0.05; body.animate?.(e); }
+        box.setFromObject(body.group);
+        const over = Math.max(box.max.x - look.w / 2, -look.w / 2 - box.min.x, box.max.z - look.h / 2, -look.h / 2 - box.min.z);
+        worst = Math.max(worst, over);
+        if (!isFinite(body.anchors.top) || body.walls.length + body.roofs.length === 0) out.push(`${type} v${v}: anchors/top or walls/roofs empty`);
+      } catch (err) { out.push(`${type} v${v}: THREW ${String((err as Error)?.stack || err).slice(0, 300)}`); }
+    }
+    out.push(`${type}: worst overhang ${worst.toFixed(3)} (footprint edge = 0, margin target -0.15)`);
+  }
+  return out;
+}
+
 function resize(): void { renderer.setSize(innerWidth, innerHeight, false); labels(); }
 addEventListener('resize', resize);
 resize();
@@ -186,4 +213,4 @@ function frame(): void {
 
 show('all', 1);
 frame();
-(window as unknown as { __dev: unknown }).__dev = { show, view, light, env, stats, anchors, camOpts };
+(window as unknown as { __dev: unknown }).__dev = { show, view, light, env, stats, anchors, camOpts, robust };

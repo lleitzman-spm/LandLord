@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>LandLord</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e0a08">
+<meta name="description" content="A small medieval kingdom, run on rent. You hold the keys.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230e0a08'/%3E%3Cpath d='M19 21l-3-11 8 6 8-9 8 9 8-6-3 11z' fill='%23e3c05a' stroke='%237a5e12' stroke-width='1.5' stroke-linejoin='round'/%3E%3Ccircle cx='32' cy='33' r='9' fill='none' stroke='%23c9a227' stroke-width='5'/%3E%3Cpath d='M32 42v15M32 49h8M32 56h6' fill='none' stroke='%23c9a227' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='14' r='2' fill='%239e2b25'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=UnifrakturMaguntia&display=swap">
+<style>
+html,body{height:100%;margin:0;background:#0e0a08;color:#efe3c4;overflow:hidden}
+#app{position:fixed;inset:0;overflow:hidden}
+#app canvas#c{position:absolute;inset:0;width:100%;height:100%;display:block}
+#ui{position:absolute;inset:0;pointer-events:none}
+#veil{position:fixed;inset:0;z-index:9000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+  background:radial-gradient(ellipse at 50% 58%,#2a1a0f 0%,#150e09 46%,#0e0a08 78%);
+  font-family:'IM Fell English','Hoefler Text','Iowan Old Style',Georgia,serif;transition:opacity .9s ease;padding:24px;text-align:center}
+#veil.is-lit{opacity:0;pointer-events:none}
+#veil .v-name{font-family:'UnifrakturMaguntia','Old English Text MT',serif;font-size:clamp(44px,9vw,84px);line-height:1;color:#e3c05a;
+  text-shadow:0 2px 0 #3a2a08,0 0 34px rgba(227,192,90,.28);letter-spacing:.01em}
+#veil .v-line{font-style:italic;font-size:19px;color:#cdbb90;opacity:.9}
+#veil .v-flame{width:14px;height:22px;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;background:radial-gradient(ellipse at 50% 72%,#fff3c4 0%,#f6c453 38%,#d9731c 72%,rgba(217,115,28,0) 100%);
+  box-shadow:0 0 26px 8px rgba(246,196,83,.32);transform-origin:50% 100%;animation:v-flick 1.7s ease-in-out infinite}
+#veil .v-wick{width:10px;height:34px;margin-top:-16px;border-radius:2px;background:linear-gradient(#efe3c4,#b89f6c)}
+@keyframes v-flick{0%,100%{transform:scale(1,1) rotate(-2deg)}30%{transform:scale(.92,1.08) rotate(3deg)}62%{transform:scale(1.06,.94) rotate(-4deg)}}
+@media (prefers-reduced-motion:reduce){#veil .v-flame{animation:none}#veil{transition:none}}
+noscript{position:fixed;inset:auto 0 12% 0;z-index:9100;text-align:center;font-family:Georgia,serif;font-style:italic;color:#efe3c4;padding:0 24px}
+</style>
+</head>
+<body>
+<div id="app"><canvas id="c" tabindex="-1" aria-label="The realm, laid out on the table"></canvas><div id="ui"></div></div>
+<div id="veil" role="status" aria-live="polite">
+  <div class="v-flame" aria-hidden="true"></div><div class="v-wick" aria-hidden="true"></div>
+  <div class="v-name">LandLord</div>
+  <div class="v-line">Lighting the candles…</div>
+</div>
+<noscript>The realm runs on JavaScript, which is switched off. The tenants have been told. They are not surprised.</noscript>
+<script src="game.js"></script>
+</body>
+</html>

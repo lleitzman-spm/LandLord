@@ -200,7 +200,7 @@ function devSim(state: GameState): SimLike {
 const noop = () => {};
 const fakeRenderer = new Proxy({}, { get: (_t, k) => k === 'anchor' ? () => ({ x: 0, y: 0, visible: false, scale: 1 }) : k === 'stats' ? () => ({ fps: 0, calls: 0, tris: 0 }) : noop }) as unknown as Renderer;
 const fakeAudio: AudioAPI = { unlock: noop, sfx: noop, handleEvents: noop, update: noop, setMood: noop, voice: () => ({ stop: noop }), setVolumes: noop, volumes: () => ({ master: 1, music: 1, sfx: 1, voice: 1 }), dispose: noop };
-const fakeApp: AppAPI = { newGame: noop, hasSave: () => false, continueGame: () => false, saveNow: noop, toTitle: noop, dynasty: () => [], settings: () => ({ quality: 'medium', master: 1, music: 1, sfx: 1, voice: 1, wit: 'quick', courtKey: '', hints: true }), setSettings: noop, inGame: () => true };
+const fakeApp: AppAPI = { newGame: noop, hasSave: () => false, continueGame: () => false, saveNow: noop, toTitle: noop, dynasty: () => [], settings: () => ({ quality: 'medium', master: 1, music: 1, sfx: 1, voice: 1, wit: 'quick', courtKey: '', hints: true }), setSettings: noop, inGame: () => true, saveInfo: () => null };
 
 let sim: SimLike = devSim(scenarioState('baron'));
 const fakeWord: WordAPI = {
@@ -218,6 +218,7 @@ const fakeWord: WordAPI = {
   openAudience: () => null,
   mic: { supported: true, listening: false, start: noop, stop: noop },
   log: () => [], onChange: () => noop,
+  needsCourtKey: () => false, setWit: noop, engine: () => null,
 };
 
 const app = document.getElementById('app')!;

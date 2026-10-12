@@ -80,9 +80,13 @@ const fakeAudio: AudioAPI = {
   unlock() {}, sfx() {}, handleEvents() {}, update() {}, setMood() {}, voice() { return { stop() {} }; },
   setVolumes() {}, volumes() { return { master: 1, music: 1, sfx: 1, voice: 1 }; }, dispose() {},
 };
+/** the dev court: any key that is not empty is the right one */
+let devCourtKey = '';
+const devKeyListeners = new Set<() => void>();
 const fakeApp: AppAPI = {
-  newGame() {}, hasSave: () => false, continueGame: () => false, saveNow() {}, toTitle() {}, dynasty: () => [],
-  settings: () => ({ quality: 'medium', master: 1, music: 1, sfx: 1, voice: 1, wit: 'quick', courtKey: '', hints: true }), setSettings() {}, inGame: () => true,
+  newGame() {}, hasSave: () => false, saveInfo: () => null, continueGame: () => false, saveNow() {}, toTitle() {}, dynasty: () => [],
+  settings: () => ({ quality: 'medium', master: 1, music: 1, sfx: 1, voice: 1, wit: 'quick', courtKey: devCourtKey, hints: true }),
+  setSettings(patch) { if (typeof patch.courtKey === 'string') { devCourtKey = patch.courtKey; devKeyListeners.forEach(f => f()); } }, inGame: () => true,
 };
 
 function fakeMic(supported: boolean): MicAPI {
@@ -102,7 +106,7 @@ function fakeMic(supported: boolean): MicAPI {
   return m;
 }
 
-function fakeWord(st: () => GameState, opts: { canned?: Canned; online?: boolean; mic?: boolean } = {}): WordAPI {
+function fakeWord(st: () => GameState, opts: { canned?: Canned; online?: boolean; mic?: boolean; wantsKey?: boolean } = {}): WordAPI {
   const log: Exchange[] = [];
   const subs = new Set<() => void>();
   const notify = (): void => subs.forEach(f => f());
@@ -145,7 +149,10 @@ function fakeWord(st: () => GameState, opts: { canned?: Canned; online?: boolean
     openAudience: () => null,
     mic: fakeMic(opts.mic ?? true),
     log: () => log,
-    onChange(cb) { subs.add(cb); return () => subs.delete(cb); },
+    needsCourtKey: () => !!opts.wantsKey && (!devCourtKey || devCourtKey === 'wrong'),
+    setWit() {},
+    engine: () => (opts.online === false ? null : 'claude'),
+    onChange(cb) { subs.add(cb); devKeyListeners.add(cb); return () => { subs.delete(cb); devKeyListeners.delete(cb); }; },
   };
 }
 
@@ -256,7 +263,7 @@ const byName = (st: GameState, name: string): Id => Object.values(st.buildings).
 const tenantAt = (st: GameState, name: string, unit = 0): Id => st.buildings[byName(st, name)]!.units[unit]!.tenantId!;
 
 async function sayIn(wordbarEl: HTMLElement, text: string, settle = true): Promise<void> {
-  const input = wordbarEl.querySelector('input')!;
+  const input = wordbarEl.querySelector<HTMLInputElement>('.ll-wb-input')!;
   input.value = text;
   input.dispatchEvent(new Event('input', { bubbles: true }));
   input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
@@ -378,10 +385,16 @@ const scenes: Record<string, () => Promise<void>> = {
     f.build.openBook('land');
     await frames(3);
   },
+  async 'frame-key'() {
+    devCourtKey = '';
+    const f = frame('baron', { online: false, wantsKey: true });
+    await frames(4);
+    void f;
+  },
   async 'frame-road'() {
     const f = frame('knight', { online: false, mic: false });
     (f.build.el.querySelector('[data-tool="road"]') as HTMLElement).click();
-    f.wordbar.el.querySelector('input')!.focus();
+    f.wordbar.el.querySelector<HTMLInputElement>('.ll-wb-input')!.focus();
     await frames(3);
   },
 
@@ -418,6 +431,7 @@ const scenes: Record<string, () => Promise<void>> = {
       box.appendChild(w.el); ui.appendChild(box);
       await pose(w, rig);
     };
+    await cell('a saying sent from the help screen (ll:speak)', {}, async w => { window.dispatchEvent(new CustomEvent('ll:speak', { detail: { text: 'Raise the rent at the Leaning Hovel by two crowns.' } })); await frames(2); w.el.querySelector<HTMLInputElement>('.ll-wb-input')!.blur(); });
     await cell('idle, a household selected', {}, (w, rig) => { rig.select({ tenantId: tenantAt(rig.sim.state, 'The Leaning Hovel') }); });
     await cell('offline: dim candle, its note, no mic', { online: false, mic: false }, async w => { await frames(3); (w.el.querySelector('.ll-wb-candle') as HTMLElement).click(); });
     await cell('listening (hold to talk)', {}, async w => { (w.el.querySelector('.ll-wb-mic') as HTMLElement).dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })); await wait(900); });
@@ -427,6 +441,7 @@ const scenes: Record<string, () => Promise<void>> = {
     await cell('after the aye, with an oath entered', { canned: 'rich' }, async w => { await sayIn(w.el, 'Tell Wat his roof will be mended before the first frost.'); });
     await cell('refused', { canned: 'refused' }, async w => { await sayIn(w.el, 'Hold a feast for the whole town.'); });
     await cell('unclear', { canned: 'unclear' }, async w => { await sayIn(w.el, 'Do the thing with the whatsit, mumble'); });
+    await cell('the court wants its key', { online: false, wantsKey: true }, async w => { await frames(3); void w; });
     await cell('the log', { canned: 'cycle' }, async w => {
       await sayIn(w.el, 'Hob, mend the roof at the Leaning Hovel.');
       await sayIn(w.el, 'Agnes, never evict a widow in winter.');
@@ -733,6 +748,32 @@ async function selftest(): Promise<string[]> {
   check('and the dictation key is mentioned, once', /dictation key/.test(q(ow.el, '.ll-wb-note')!.textContent ?? '') && !q(ow.el, '.ll-wb-note')!.hidden, q(ow.el, '.ll-wb-note')?.textContent ?? '');
   q<HTMLInputElement>(ow.el, '.ll-wb-input')!.blur();
   rigs = rigs.filter(r => r !== off); ow.dispose(); ow.el.remove();
+  // the help screen's saying, sent over the window bus
+  window.dispatchEvent(new CustomEvent('ll:speak', { detail: { text: 'Collect the rents.' } }));
+  check('ll:speak puts a saying in the box', box.value === 'Collect the rents.' && document.activeElement === box, box.value);
+  box.value = ''; box.dispatchEvent(new Event('input', { bubbles: true })); box.blur();
+  check('no key prompt while the court asks for none', q(wordbar.el, '.ll-wb-key')!.hidden);
+  // a court that wants its key
+  devCourtKey = '';
+  const kr = makeRig(h('div'), 'knight', { online: false, wantsKey: true });
+  const kw = mountWord(kr.ctx); document.body.appendChild(kw.el); kr.parts.push(kw); rigs.push(kr);
+  await wait(700);
+  const kEl = q(kw.el, '.ll-wb-key')!, kIn = q<HTMLInputElement>(kw.el, '.ll-wb-keyinput')!;
+  check('the court key prompt shows when a key is wanted', !kEl.hidden && /wants the key/.test(kEl.textContent ?? ''), kEl.textContent ?? '');
+  btn(kEl, 'Later')!.click();
+  check('Later puts the prompt away', kEl.hidden);
+  q(kw.el, '.ll-wb-candle')!.click();
+  check('the candle brings it back', !kEl.hidden && document.activeElement === kIn);
+  kIn.value = 'wrong';
+  btn(kEl, 'Offer it')!.click();
+  check('an offered key is tried', devCourtKey === 'wrong' && /Trying it/.test(kEl.textContent ?? ''), kEl.textContent ?? '');
+  await wait(3400);
+  check('a key the court refuses is said to be wrong', !kEl.hidden && kEl.classList.contains('is-bad') && /does not turn/.test(kEl.textContent ?? ''), kEl.textContent ?? '');
+  kIn.value = 'open-sesame';
+  btn(kEl, 'Offer it')!.click();
+  await wait(700);
+  check('offering a good key saves it and the prompt goes', devCourtKey === 'open-sesame' && kEl.hidden && /has your key/.test(q(kw.el, '.ll-wb-note')!.textContent ?? ''), devCourtKey + ' / ' + (q(kw.el, '.ll-wb-note')?.textContent ?? ''));
+  rigs = rigs.filter(r => r !== kr); kw.dispose(); kw.el.remove(); devCourtKey = '';
   const fails = out.filter(l => l.startsWith('FAIL')).length;
   out.push(`${out.length - fails} passed, ${fails} failed`);
   return out;

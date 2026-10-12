@@ -430,6 +430,7 @@ button.ldg-item:hover{background:rgba(201,162,39,.14)}
 .cnc-mic .ll-icon{width:18px;height:18px}
 @keyframes cnc-listen{0%,100%{box-shadow:0 0 0 0 rgba(158,43,37,.45)}50%{box-shadow:0 0 0 5px rgba(158,43,37,0)}}
 .cnc-sayings{display:flex;flex-direction:column;gap:3px}
+.cnc-sayings[hidden],.cnc-veil [hidden],.ldg-veil [hidden]{display:none!important}
 .cnc-sayings .lab{font-family:var(--f-head);font-size:12px;letter-spacing:.1em;color:var(--ink-3)}
 .cnc-saying{text-align:left;border:0;border-left:2px solid rgba(158,43,37,.5);background:rgba(255,250,235,.35);padding:4px 8px;font:inherit;font-size:13.5px;font-style:italic;line-height:1.3;color:var(--ink-2);cursor:pointer;border-radius:0 2px 2px 0}
 .cnc-saying:hover{color:var(--rubric);background:rgba(201,162,39,.16)}

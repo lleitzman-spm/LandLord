@@ -51,6 +51,8 @@ const CANDLE = '<svg class="ll-wb-candlesvg" viewBox="0 0 20 30" aria-hidden="tr
   + '<path class="ll-wb-wick" d="M10 11.2v2.3"/>'
   + '<path class="ll-wb-wax" d="M6.6 13.5h6.8v11.5h-6.8Z"/><path class="ll-wb-drip" d="M6.6 16q1.3 1 1.3 2.6"/>'
   + '<path class="ll-wb-dish" d="M3.5 25h13q-.5 3-6.5 3t-6.5-3Z"/></svg>';
+const KEY_ICON = '<svg viewBox="0 0 30 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'
+  + '<circle cx="7" cy="8" r="4.7"/><circle cx="7" cy="8" r="1.4"/><path d="M11.7 8H27M21.5 8v4.2M25 8v3.2"/></g></svg>';
 
 const AYE = /^\s*(aye|yes|yea|so be it|do it|go on|make it so|agreed)\b[\s.!]*$/i;
 const NAY = /^\s*(nay|no|stop|wait|hold|never mind|not that)\b[\s.!]*$/i;
@@ -115,6 +117,10 @@ export function mount(ctx: UICtx): WordBarPart {
   let micDead = false;
   let micNoted = false;
   let offlineNoted = false;
+  let keyLater = false;
+  let keyTriedAt = 0;
+  let keyWas = false;
+  let keyBad = false;
   let autoTimer = 0;
   let noteTimer = 0;
   let spaceTimer = 0;
@@ -141,7 +147,14 @@ export function mount(ctx: UICtx): WordBarPart {
     logList);
   const cardEl = h('section', { class: 'll-wb-ex ll-parch', hidden: true, 'aria-live': 'polite' });
   const noteEl = h('p', { class: 'll-wb-note', hidden: true, role: 'status' });
-  const above = h('div', { class: 'll-wb-above' }, logEl, cardEl, noteEl);
+  // the court's door: shown only when the server asks for a key it has not been given
+  const keyInput = h('input', { class: 'll-wb-keyinput', type: 'password', autocomplete: 'off', maxLength: 200, placeholder: 'The court key', 'aria-label': 'The court key' });
+  const keyMsg = h('span', { class: 'll-wb-keymsg' }, 'The court keeps its door locked. It wants the key.');
+  const keyEl = h('form', { class: 'll-wb-key ll-parch', hidden: true, 'aria-label': 'The court key', onsubmit: (e: Event) => { e.preventDefault(); offerKey(); } },
+    h('span', { class: 'll-wb-keyico', html: KEY_ICON }), keyMsg, keyInput,
+    h('button', { class: 'll-btn ll-btn-primary ll-wb-keygo', type: 'submit' }, 'Offer it'),
+    h('button', { class: 'll-btn ll-btn-quiet ll-wb-keylater', type: 'button', onclick: () => { keyLater = true; renderKey(); } }, 'Later'));
+  const above = h('div', { class: 'll-wb-above' }, logEl, cardEl, keyEl, noteEl);
 
   const chipsEl = h('div', { class: 'll-wb-chips', role: 'radiogroup', 'aria-label': 'Who you are addressing' });
   const candle = h('button', { class: 'll-wb-candle', type: 'button', html: CANDLE, 'aria-label': 'The court is listening', onclick: () => candleNote() });
@@ -159,7 +172,7 @@ export function mount(ctx: UICtx): WordBarPart {
   const narrow = (): boolean => window.matchMedia?.('(max-width: 699px)').matches ?? false;
   let aboveH = -1;
   function publishAbove(): void {
-    const shown = !cardEl.hidden || !logEl.hidden || !noteEl.hidden;
+    const shown = !cardEl.hidden || !logEl.hidden || !noteEl.hidden || !keyEl.hidden;
     const hpx = shown && visible ? Math.round(above.offsetHeight) : 0;
     if (hpx === aboveH) return;
     aboveH = hpx;
@@ -228,6 +241,11 @@ export function mount(ctx: UICtx): WordBarPart {
   }
   const OFFLINE_TIP = 'No one at court can hear free speech. Plain commands and whispers still work.';
   function candleNote(): void {
+    if (keyWanted()) {
+      keyLater = false; renderKey(); keyInput.focus();
+      if (!online) note('The court wants its key before it will hear free speech. Plain commands still work.', 5000);
+      return;
+    }
     if (!ready) note('The court is still settling into its seats.', 3500);
     else if (online) note('The court is listening. Speak as you would to people.', 4000);
     else note(OFFLINE_TIP);
@@ -242,6 +260,52 @@ export function mount(ctx: UICtx): WordBarPart {
     candle.setAttribute('aria-label', lit ? 'The court is listening' : 'The court cannot hear free speech');
     candle.setAttribute('data-tip', lit ? 'The court is listening. Speak as you would to people.' : OFFLINE_TIP);
   }
+
+  // ── the court key: a small prompt above the bar while the court asks for one
+  function keyWanted(): boolean { try { return !!ctx.word.needsCourtKey(); } catch { return false; } }
+  function offerKey(): void {
+    const v = keyInput.value.trim();
+    if (!v) { keyInput.focus(); return; }
+    keyTriedAt = performance.now();
+    setText(keyMsg, 'Trying it in the lock.');
+    setClass(keyEl, 'is-bad', false);
+    sfx('quill');
+    try { ctx.app.setSettings({ courtKey: v }); } catch { /* the shell is not there to keep it */ }
+    renderKey();
+  }
+  /** the key the shell is holding for us, if any */
+  function heldKey(): string { try { return (ctx.app.settings().courtKey ?? '').trim(); } catch { return ''; } }
+  const KEY_ASK = 'The court keeps its door locked. It wants the key.';
+  const KEY_BAD = 'That key does not turn. Try another.';
+  function renderKey(): void {
+    const wanted = keyWanted();
+    if (!wanted) {
+      // the court asks for nothing more: it will try what it was given when next spoken to
+      if (keyWas && keyTriedAt) { keyInput.value = ''; note('The court has your key. It will try it when you next speak.', 5000); }
+      keyLater = false; keyTriedAt = 0; keyBad = false;
+    } else if (keyTriedAt && performance.now() - keyTriedAt < 2600) {
+      // just offered: give the lock a moment before judging it
+    } else {
+      keyTriedAt = 0;
+      // a court that holds a key and still wants one has refused it
+      const bad = heldKey() !== '';
+      if (bad && !keyBad) keyLater = false;
+      if (bad !== keyBad || keyMsg.textContent === 'Trying it in the lock.') {
+        keyBad = bad;
+        setText(keyMsg, bad ? KEY_BAD : KEY_ASK);
+        setClass(keyEl, 'is-bad', bad);
+        if (bad && document.activeElement === keyInput) keyInput.select();
+      }
+    }
+    keyWas = wanted;
+    const show = visible && wanted && !keyLater;
+    if (keyEl.hidden === !show) return;
+    keyEl.hidden = !show;
+    if (show) clearTheFloor();
+    publishAbove();
+  }
+  keyInput.addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Escape') { keyLater = true; renderKey(); keyInput.blur(); } });
+  keyInput.addEventListener('keyup', e => e.stopPropagation());
 
   // ── the crawl: the world slows while the ruler is speaking
   function syncCrawl(): void {
@@ -635,11 +699,12 @@ export function mount(ctx: UICtx): WordBarPart {
   let unsub: (() => void) | null = null;
   try {
     unsub = ctx.word.onChange(() => {
+      renderKey();
       if (logOpen) renderLog();
       if (card?.ex && card.finished && card.ex.status !== card.status) finishCard();
     });
   } catch { /* the word layer is not there yet */ }
-  try { void ctx.word.ready.then(() => { ready = true; renderCandle(); }, () => { ready = true; renderCandle(); }); } catch { ready = true; }
+  try { void ctx.word.ready.then(() => { ready = true; renderCandle(); renderKey(); }, () => { ready = true; renderCandle(); renderKey(); }); } catch { ready = true; }
 
   cardEl.addEventListener('pointerenter', () => { hoverCard = true; });
   cardEl.addEventListener('pointerleave', () => { hoverCard = false; });
@@ -651,6 +716,7 @@ export function mount(ctx: UICtx): WordBarPart {
   if (!micOk()) micBtn.hidden = true;
   renderChips(ctx.state());
   renderCandle();
+  renderKey();
 
   return {
     el,
@@ -659,7 +725,7 @@ export function mount(ctx: UICtx): WordBarPart {
       renderChips(st);
       if (input.placeholder !== placeholder(st)) input.placeholder = placeholder(st);
       candleAcc += dt;
-      if (candleAcc > 0.5) { candleAcc = 0; renderCandle(); if (!micDead && micBtn.hidden && micOk()) micBtn.hidden = false; }
+      if (candleAcc > 0.5) { candleAcc = 0; renderCandle(); renderKey(); if (!micDead && micBtn.hidden && micOk()) micBtn.hidden = false; }
       if (awaiting && performance.now() - sentAt > 30000) { seq++; awaiting = false; if (card) lostCard(card.text); }
       const c = card;
       if (c?.ex && !c.finished) {
@@ -685,6 +751,7 @@ export function mount(ctx: UICtx): WordBarPart {
     setVisible(on: boolean): void {
       visible = on; el.hidden = !on;
       if (!on) { cancelAuto(); if (listening) stopListen(); toggleLog(false); if (document.activeElement === input) input.blur(); }
+      renderKey();
       publishAbove();
       syncCrawl();
     },

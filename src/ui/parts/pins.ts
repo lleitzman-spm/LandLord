@@ -14,7 +14,7 @@
  * token with a count, which opens a list.
  */
 import type { GameState, SimEvent, Id, Incident, Job, JobKind } from '../../sim/types';
-import { fill } from '../../sim/core';
+import { fillText } from '../../sim/effects';
 import { INCIDENT_BY_ID, BAL } from '../../data';
 import type { IconId } from '../../data/ids';
 import type { IncidentDef, OutcomeDef } from '../../data/schema';
@@ -430,7 +430,7 @@ export function mount(ctx: UICtx): Part {
     const hot = left !== null && left < 2;
     openPop(pin, panel({ title: def.title, class: 'll-pop-in', onClose: closePop },
       h('p', { class: 'll-pop-where' + (hot ? ' is-hot' : '') }, `${b ? b.name + '. ' : ''}${timeLeft(left)}`.trim()),
-      h('p', { class: 'll-pop-text' }, fill(def.herald, inc.vars)),
+      h('p', { class: 'll-pop-text' }, fillText(def.herald, inc.vars)),
       h('div', { class: 'll-pop-opts' }, opts)), incidentId, viaKey);
   }
   function openCluster(pin: Pin, viaKey: boolean): void {

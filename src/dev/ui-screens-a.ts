@@ -46,7 +46,7 @@ function withShell(): void {
   const audio: AudioAPI = { unlock: noop, sfx: noop, handleEvents: noop, update: noop, setMood: noop, voice: () => ({ stop: noop }), setVolumes: (v) => Object.assign(vols, v), volumes: () => ({ ...vols }), dispose: noop };
   const app: AppAPI = {
     newGame(o) { log.push('newGame ' + JSON.stringify(o)); inGame = true; },
-    hasSave: () => true,
+    hasSave: () => true, saveInfo: () => ({ realm: 'Mudlark Hollow', ruler: 'Luke', rank: 'knight', mode: 'peace' as const }),
     continueGame() { log.push('continue'); inGame = true; return true; },
     saveNow() { log.push('saveNow'); },
     toTitle() { log.push('toTitle'); inGame = false; },

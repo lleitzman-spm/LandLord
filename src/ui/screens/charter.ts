@@ -15,7 +15,8 @@ import { h, clear, addStyle, setText, button, meter, num } from '../kit';
 import { crest, doodle, dropCap, flourish, MARGINALIA_CSS } from '../marginalia';
 import { createPortrait, type Portrait } from '../portraits';
 import { RANKS, BUILDINGS, SPECIES_DEFS, NPC_DEFS, ROLE_TITLES, BAL } from '../../data';
-import { fill, baseVars, fmtDate } from '../../sim/core';
+import { baseVars, fmtDate } from '../../sim/core';
+import { fillText as fill } from '../../sim/effects';
 import { SCREENS_B_CSS } from '../css/screens-b';
 import { TYPING, art, icon, numberWord, reducedMotion, styledRuler, typeOut, waxSeal, hashStr, type Typer } from './audience';
 

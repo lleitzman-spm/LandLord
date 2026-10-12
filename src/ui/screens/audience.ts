@@ -21,7 +21,8 @@ import {
   INCIDENT_BY_ID, RANKS, NPC_DEFS, CHARACTERS, SPECIES_DEFS, TRADE_DEFS, TRAIT_DEFS, TAG_DEFS,
   TEMPERAMENT_DEFS, ROLE_TITLES, RANK_TITLES,
 } from '../../data';
-import { fill, baseVars, fmtDate } from '../../sim/core';
+import { baseVars, fmtDate } from '../../sim/core';
+import { fillText as fill } from '../../sim/effects';
 import { SCREENS_B_CSS } from '../css/screens-b';
 
 // ───────────────────────── shared small pieces ─────────────────────────
@@ -341,6 +342,8 @@ export function create(ctx: UICtx): Screen {
   let typing: { t: Typer | null; over: boolean } | null = null;
   let dotsLine: HTMLElement | null = null;
   let lastWho: string | null = null;
+  /** how much of session.lines has been looked through for the Steward's asides */
+  let seenLines = 0;
   let releaseCrawl: (() => void) | null = null;
   let unsubWord: (() => void) | null = null;
   let enterTimer = 0;
@@ -425,6 +428,7 @@ export function create(ctx: UICtx): Screen {
   }
   function addLine(whoIs: 'ruler' | 'petitioner' | 'steward', text: string, typed = false): Promise<void> {
     stopTyping(true);
+    if (whoIs === 'steward') { addAside(text); return Promise.resolve(); }
     const { line, p } = lineEl(whoIs);
     if (!(typed && whoIs === 'petitioner')) { p.textContent = text; toBottom(); return Promise.resolve(); }
     line.classList.add('is-typing');
@@ -446,6 +450,28 @@ export function create(ctx: UICtx): Screen {
     if (!run.over) { typing = run; line.onclick = () => t.skip(); }
     toBottom();
     return t.done;
+  }
+  /** The Steward leans in: a murmur at the ruler's shoulder, set apart from the speech. */
+  function addAside(text: string): void {
+    const said = text.trim(); if (!said) return;
+    const { line, p } = lineEl('steward');
+    line.classList.add('is-aside');
+    const st = Object.values(ctx.state().staff).find(m => m.role === 'steward')?.first;
+    p.append(h('b', null, st ? `${st}, aside:` : 'At your shoulder:'), ' ', said);
+    lastWho = null;
+    toBottom();
+  }
+  /** Asides that came with this turn: the turn's own, and any the session wrote into its lines. */
+  function newAsides(turn: AudienceTurn): string[] {
+    const out: string[] = [];
+    const s = session;
+    if (s) {
+      for (const ln of s.lines.slice(seenLines)) if (ln.who === 'steward' && ln.text.trim()) out.push(ln.text.trim());
+      seenLines = s.lines.length;
+    }
+    const own = turn.aside?.trim();
+    if (own && !out.includes(own)) out.push(own);
+    return out;
   }
   function addRecord(label: string, text: string, small?: string): void {
     stopTyping(true);
@@ -735,8 +761,10 @@ export function create(ctx: UICtx): Screen {
       whispersEl.hidden = true;
       queueSig = '';
     }
+    const asides = newAsides(turn);
     if (turn.reply.trim()) await addLine('petitioner', turn.reply, true);
     if (tok !== token || !isOpen) return;
+    for (const say of asides) addAside(say);
     if (turn.done) {
       if (!TYPING.instant) await wait(420);
       if (tok !== token || !isOpen) return;
@@ -905,6 +933,7 @@ export function create(ctx: UICtx): Screen {
       if (!s && d) { s = localSession(ctx, inc, d, speakerOf(state, inc, d)); local = true; }
     }
     session = s; incId = inc?.id ?? null; def = d ?? null; speaker = s?.speaker ?? null;
+    seenLines = s?.lines.length ?? 0;
 
     el.classList.remove('is-entering'); void el.offsetWidth; el.classList.add('is-entering');
     enterTimer = window.setTimeout(() => el.classList.remove('is-entering'), 2200);

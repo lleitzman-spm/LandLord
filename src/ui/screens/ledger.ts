@@ -477,7 +477,7 @@ export function create(ctx: UICtx): Screen {
       h('div', { class: 'ldg-lines' }, h('div', { class: 'ldg-colh' }, 'Received'), inLines.length ? inLines : line('Nothing yet', '0', 'is-empty'), line('Total', num(inTotal), 'is-total')),
       h('div', { class: 'ldg-lines' }, h('div', { class: 'ldg-colh' }, 'Paid out'), outLines.length ? outLines : line('Nothing yet', '0', 'is-empty'), line('Total', num(outTotal), 'is-total')),
     );
-    const netBox = h('div', { class: 'ldg-net' }, h('span', { class: 'k' }, isCurrent ? 'Net, so far' : 'Net'), h('span', { class: 'v ' + (net > 0 ? 'ldg-good' : net < 0 ? 'ldg-bad' : '') }, signed(net) + (Math.abs(Math.round(net)) === 1 ? ' crown' : ' crowns')));
+    const netBox = h('div', { class: 'ldg-net' }, h('span', { class: 'k' }, isCurrent ? 'Net, so far' : 'Net'), h('span', { class: 'v ' + (net > 0 ? 'ldg-good' : net < 0 ? 'ldg-bad' : '') }, (Math.round(net) === 0 ? 'Even' : signed(net) + (Math.abs(Math.round(net)) === 1 ? ' crown' : ' crowns'))));
     const pct = sum.rentDue > 0 ? Math.round(100 * sum.rentCollected / sum.rentDue) : null;
     const rentLine = h('p', { class: 'ldg-p ldg-small' },
       sum.rentDue > 0
@@ -572,7 +572,7 @@ export function create(ctx: UICtx): Screen {
           h('div', { class: 'ldg-coffers' }, coin, h('div', null, h('div', { class: 'ldg-small', style: 'font-family:var(--f-head);letter-spacing:.1em' }, 'In the coffers'), h('div', { class: 'ldg-big ' + (s.gold < 0 ? 'ldg-bad' : '') }, crowns(s.gold))))),
         h('div', { class: 'ldg-block' },
           h('p', { class: 'ldg-proj' }, projText, h('span', { class: 'ldg-small', style: 'display:block;margin-top:3px;font-style:normal' },
-            `${signed(proj.soFar)} so far this month${projParts.length ? ', with ' + projParts.join(', ') : ''}. Coffers at month end: about ${num(endCoffers)}.`))),
+            `${Math.round(proj.soFar) === 0 ? 'Nothing in or out so far this month' : signed(proj.soFar) + ' so far this month'}${projParts.length ? ', with ' + projParts.join(', ') : ''}. Coffers at month end: about ${num(endCoffers)}.`))),
         h('div', { class: 'ldg-block' }, h2('Net, month by month', series.length > 1 ? `crowns, ${series.length} months` : 'crowns, this month'), netSvg,
           h('div', { class: 'ldg-legend' }, h('span', null, h('i', { class: 'sw-pos' }), 'Gain'), h('span', null, h('i', { class: 'sw-neg' }), 'Loss'), h('span', null, h('i', { class: 'sw-cur' }), 'This month so far'))),
         h('div', { class: 'ldg-block' }, h2('Rent due against collected', 'crowns'), rentSvg,
@@ -937,7 +937,7 @@ export function create(ctx: UICtx): Screen {
           h('p', { class: 'ldg-p ldg-small' }, people.length ? `${content} content, ${people.length - content - sour} middling, ${sour} sour.${sour ? ' The sour ones talk to the rival.' : ''}` : 'There is nobody to be unhappy yet.'))),
       h('div', { class: 'ldg-block' }, h2('Standing'),
         h('div', { class: 'ldg-stand' }, h('div', { class: 'hd' }, h('span', { class: 'nm' }, 'Renown'), h('span', { class: 'v' }, String(Math.round(s.renown)))), meter(s.renown, { kind: 'gold' }), h('span', { class: 'ldg-small' }, 'Your name among tenants. What is being said:'), moveList('renown', ['good', 'bad', 'oath', 'rival'])),
-        h('div', { class: 'ldg-stand' }, h('div', { class: 'hd' }, h('span', { class: 'nm' }, 'Favour of the Crown'), h('span', { class: 'v ' + (s.favor < 25 ? 'ldg-bad' : '') }, String(Math.round(s.favor)))), meter(s.favor, { kind: s.favor < 25 ? 'bad' : 'gold' }), h('span', { class: 'ldg-small' }, s.mode === 'iron' ? 'At nothing, the charter is revoked and the reign ends. From the Crown, lately:' : 'At nothing, the charter is in danger. From the Crown, lately:'), moveList('favor', ['crown'])),
+        h('div', { class: 'ldg-stand' }, h('div', { class: 'hd' }, h('span', { class: 'nm' }, 'Favour of the Crown'), h('span', { class: 'v ' + (s.favor < 25 ? 'ldg-bad' : '') }, String(Math.round(s.favor)))), meter(s.favor, { kind: s.favor < 25 ? 'bad' : 'gold' }), h('span', { class: 'ldg-small' }, s.mode === 'iron' ? 'At nothing, the charter is revoked and the reign ends. From the Crown, lately:' : 'At nothing, the Crown takes a rank back. From the Crown, lately:'), moveList('favor', ['crown'])),
         tug),
       h('div', { class: 'ldg-block' }, h2('Lifetime tallies'), tallies),
     ])];

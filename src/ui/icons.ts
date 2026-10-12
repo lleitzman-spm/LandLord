@@ -69,6 +69,7 @@ function arcD(cx: number, cy: number, rad: number, a0: number, a1: number): stri
 const sealCache = new Map<string, string>();
 /** The icon embossed on an irregular wax seal (map pins, round buttons). `color` is a CSS colour. */
 export function sealSvg(id: IconId, color = 'var(--rubric)', size = 34): string {
+  if (!Number.isFinite(size) || size <= 0) size = 34;
   const key = `${id}|${color}|${size}`;
   const hit = sealCache.get(key);
   if (hit) return hit;

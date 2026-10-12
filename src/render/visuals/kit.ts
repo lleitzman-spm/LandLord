@@ -356,7 +356,7 @@ export const SHAPE = {
   spark: (): THREE.BufferGeometry => geo('spark', () => {
     const p: number[] = [], k = 0.13;
     for (const [sx, sy, sz] of [[1, k, k], [k, 1, k], [k, k, 1]]) {
-      const o = new THREE.OctahedronGeometry(1, 0).scale(sx, sy, sz).toNonIndexed();
+      const made = new THREE.OctahedronGeometry(1, 0).scale(sx, sy, sz), o = made.index ? made.toNonIndexed() : made;
       p.push(...(o.attributes.position.array as Float32Array)); o.dispose();
     }
     const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(p, 3)); g.computeVertexNormals(); return g;

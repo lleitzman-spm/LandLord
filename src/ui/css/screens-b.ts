@@ -114,6 +114,9 @@ export const SCREENS_B_CSS = `
 .ll-aud-line.is-you p{font-style:italic;color:var(--lapis);font-size:17px}
 .ll-aud-line.is-steward{align-self:center;text-align:center;max-width:86%}
 .ll-aud-line.is-steward p{font-size:var(--fs-s);font-style:italic;color:var(--ink-2)}
+.ll-aud-line.is-aside{align-self:flex-start;text-align:left;max-width:78%;margin-left:26px;padding:5px 12px 6px;background:rgba(176,137,46,.09);border-left:2px solid var(--gold-ink);border-radius:0 3px 3px 0}
+.ll-aud-line.is-aside p{color:var(--ink-2)}
+.ll-aud-line.is-aside p b{margin-right:2px}
 .ll-aud-line.is-usher{padding:0 0 2px}
 .ll-aud-line.is-usher p{font-size:var(--fs-s);color:var(--ink-3);letter-spacing:.01em;text-wrap:balance}
 .ll-aud-line.is-usher p::before,.ll-aud-line.is-usher p::after{content:'';display:inline-block;width:22px;height:1px;background:var(--parch-edge);vertical-align:middle;margin:0 10px}

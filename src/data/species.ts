@@ -1,9 +1,132 @@
-/** OWNER: content-core agent. Replace the generated placeholders with real data. */
+/** OWNER: content-core agent. Hand-written peoples of the realm, as tenants. */
 import type { SpeciesDef } from './schema';
-import { SPECIES, type Species } from './ids';
-const title = (id: string) => id.replace(/\b\w/g, c => c.toUpperCase());
-const MIN = { human: 'reeve', halfling: 'reeve', dwarf: 'knight', goblin: 'knight', elf: 'baron', ogre: 'baron' } as const;
-export const SPECIES_DEFS = Object.fromEntries(SPECIES.map(id => [id, {
-  id, name: title(id), plural: title(id) + 's', adjective: id, minRank: MIN[id], weight: 1, householdRange: [1, 5], traitBias: {},
-  cares: '', blurb: '', firstNames: ['Alder', 'Bram', 'Cecily', 'Dunstan', 'Edith', 'Marta', 'Osric', 'Wynn'], surnames: ['Thistlewick', 'Mudge', 'Underbough', 'Cask', 'Fenn', 'Harrow'],
-} satisfies SpeciesDef])) as Record<Species, SpeciesDef>;
+import type { Species } from './ids';
+
+export const SPECIES_DEFS: Record<Species, SpeciesDef> = {
+  human: {
+    id: 'human', name: 'Human', plural: 'Humans', adjective: 'human',
+    minRank: 'reeve', weight: 1.0, householdRange: [1, 5],
+    traitBias: { forgetful: 0.3, complainer: 0.3, gossip: 0.4, pet_lover: 0.3, brawler: 0.2, haggler: 0.2 },
+    cares: 'the fence line, the chicken run, whether the neighbours have a bigger window, and a roof that keeps the worst of it off',
+    blurb: 'The baseline mess. Pay most months, feud over fences, keep chickens they did not mention, and have an excuse ready that is at least half true.',
+    firstNames: [
+      'Aldric', 'Bettrys', 'Cuthwin', 'Dorcas', 'Ebba', 'Fulk', 'Gunnild', 'Hamo', 'Ivetta', 'Jory',
+      'Kenelm', 'Lettice', 'Mabyn', 'Noll', 'Osbert', 'Petronel', 'Quenby', 'Rohese', 'Sim', 'Tibba',
+      'Ulric', 'Wat', 'Agnet', 'Barnaby', 'Clemency', 'Dunstan', 'Elfreda', 'Godric', 'Hawise', 'Joss',
+      'Malkin', 'Nesta', 'Odo', 'Piers', 'Rook', 'Sabeline', 'Tamsin', 'Walden', 'Wilmot', 'Avice',
+      'Emmot', 'Gilbey', 'Hob', 'Maud', 'Nab', 'Edwy', 'Grisel',
+    ],
+    surnames: [
+      'Thistlewick', 'Mudge', 'Harrow', 'Fenn', 'Cobbledick', 'Ploughwright', 'Ditchley', 'Nettlebed', 'Grimsditch', 'Puddifoot',
+      'Turnbuckle', 'Oddbody', 'Sallowmere', 'Burdock', 'Cropley', 'Muckleroy', 'Dimmock', 'Pennyfeather', 'Bramblecote', 'Scattergood',
+      'Hartshorn', 'Fallowfield', 'Clodd', 'Tolley', 'Sheepwash', 'Goodenough', 'Muddle', 'Crake', 'Foxhole', 'Haybarrow',
+      'Thrupp', 'Bunce', 'Pellet', 'Nethercott', 'Gammage', 'Furlong', 'Peasgood', 'Bodkin', 'Clatworthy', 'Blewett',
+      'Wetherby', 'Gristwood', 'Smallbone', 'Lambkin', 'Coldharbour', 'Pigeonby', 'Mousley',
+    ],
+  },
+  halfling: {
+    id: 'halfling', name: 'Halfling', plural: 'Halflings', adjective: 'halfling',
+    minRank: 'reeve', weight: 0.8, householdRange: [2, 6],
+    traitBias: { punctual: 0.6, tidy: 0.5, gardener: 0.8, generous: 0.5, subletter: 0.5, hoarder: 0.2, nocturnal: -0.4 },
+    cares: 'the size of the pantry, the warmth of the kitchen, the roundness of the door, and whether there is room for a seventh meal',
+    blurb: 'Model tenants who pay in full, often with a seed cake. Will sublet the pantry if the pantry is large enough to sublet, and it always is.',
+    firstNames: [
+      'Pimpernel', 'Hollyhock', 'Tansy', 'Mungo', 'Fennel', 'Clover', 'Barleycorn', 'Posy', 'Dumpling', 'Marjoram',
+      'Tuppence', 'Rosehip', 'Basil', 'Bunty', 'Crumpet', 'Sorrel', 'Pudding', 'Honeysuckle', 'Figgy', 'Lovage',
+      'Nutmeg', 'Wilberforce', 'Tumbly', 'Hazel', 'Teasel', 'Plumley', 'Caraway', 'Muffet', 'Cowslip', 'Parsnip',
+      'Chervil', 'Toddy', 'Pockle', 'Mallow', 'Bobbin', 'Saffron', 'Quince', 'Trefoil', 'Rhubarb', 'Dill',
+      'Peony', 'Merrin', 'Tolly', 'Bramwell', 'Gooseberry', 'Sage', 'Bartleby',
+    ],
+    surnames: [
+      'Underbough', 'Puddingfoot', 'Crumbsworth', 'Butterbank', 'Hearthwarm', 'Pantrybright', 'Teacosy', 'Larderly', 'Mossbottom', 'Honeyhill',
+      'Kettleby', 'Muffinwhistle', 'Plumpwell', 'Tuckerbury', 'Sconehaven', 'Goodsupper', 'Bramblebelly', 'Picklethwaite', 'Crumblecake', 'Applewhistle',
+      'Fernbottle', 'Toastwell', 'Elevenses', 'Warmfoot', 'Heatherhob', 'Puddlecombe', 'Gingerbatch', 'Breadcrumb', 'Snugglebury', 'Treacleby',
+      'Cobnut', 'Hollowcheese', 'Saltcellar', 'Biscuitfoot', 'Downymead', 'Tumblebrook', 'Oatcake', 'Seedcake', 'Larkhollow', 'Stewpot',
+      'Jamjar', 'Dunkwell', 'Pippleworth', 'Custardbank', 'Crumpetwood', 'Gravyboat', 'Secondhelping',
+    ],
+  },
+  dwarf: {
+    id: 'dwarf', name: 'Dwarf', plural: 'Dwarves', adjective: 'dwarven',
+    minRank: 'knight', weight: 0.7, householdRange: [1, 4],
+    traitBias: { punctual: 0.8, litigious: 0.5, handy: 0.8, proud: 0.5, stoic: 0.4, flighty: -0.5, forgetful: -0.4 },
+    cares: 'the thickness of the walls, the depth of the cellar, the exact wording of the lease, and whether anything was built after their grandfather',
+    blurb: 'Contract literalists and compulsive renovators. Pay to the minute, read every clause aloud, and dig a cellar you did not authorise and will not find.',
+    firstNames: [
+      'Durga', 'Brokka', 'Hask', 'Grunhild', 'Ottrek', 'Bolga', 'Bruni', 'Kettla', 'Morda', 'Grimbald',
+      'Thessa', 'Ulfra', 'Brannoc', 'Kald', 'Hegga', 'Odrun', 'Stigga', 'Varn', 'Borra', 'Gundrik',
+      'Halla', 'Ingot', 'Mardek', 'Rukka', 'Skarl', 'Tolvi', 'Brask', 'Dorvin', 'Frenna', 'Hulda',
+      'Jarnka', 'Kolbrand', 'Lodda', 'Mungrim', 'Norra', 'Orrik', 'Pellka', 'Rendolf', 'Tessrik', 'Ungrid',
+      'Wenna', 'Bodric', 'Dunvik', 'Grindla', 'Haldra', 'Krummel', 'Thorka',
+    ],
+    surnames: [
+      'Caskhammer', 'Anvilsworn', 'Deepdelve', 'Ironclause', 'Stonecount', 'Coppermouth', 'Grudgekeeper', 'Flintwhistle', 'Mortarbeard', 'Hardledger',
+      'Seamfinder', 'Bellowsbreath', 'Chiselbrow', 'Oreweigh', 'Tunnelright', 'Pewterpot', 'Gravelgut', 'Slatehand', 'Lodestone', 'Cellardigger',
+      'Plumbline', 'Quarrysworn', 'Rivetbrook', 'Shaftwarden', 'Tallowbeard', 'Underdeep', 'Whetstone', 'Bedrock', 'Forgecount', 'Granitejaw',
+      'Ingotfast', 'Kilnbright', 'Leadfoot', 'Millstone', 'Nailcounter', 'Ruleboot', 'Sootwhisker', 'Tinbeard', 'Vaultkeeper', 'Wedgewright',
+      'Grudgeholm', 'Deedstone', 'Clausehammer', 'Mattockson', 'Gritbeard', 'Ironledger', 'Lintelbrow',
+    ],
+  },
+  goblin: {
+    id: 'goblin', name: 'Goblin', plural: 'Goblins', adjective: 'goblin',
+    minRank: 'knight', weight: 0.8, householdRange: [4, 10],
+    traitBias: { litigious: 0.6, snitch: 0.6, entrepreneur: 0.5, nocturnal: 0.5, haggler: 0.4, subletter: 0.3, punctual: 0.3, stoic: -0.3 },
+    cares: 'whether the lease comes in triplicate, how many can lawfully sleep in the loft, the quality of the seal, and receipts for everything, including receipts',
+    blurb: 'Chaotic lovers of bureaucracy. Fourteen to a hovel "for efficiency", each with a title. Scrupulous about rules, chiefly ones they wrote themselves at the last meeting.',
+    firstNames: [
+      'Snik', 'Grobnik', 'Skrit', 'Wizzle', 'Narg', 'Bliz', 'Tikka', 'Fruzz', 'Zagwort', 'Nibbet',
+      'Krikket', 'Plorp', 'Snaggle', 'Gobbet', 'Rinkle', 'Twitch', 'Mizz', 'Grunkle', 'Skivvy', 'Blort',
+      'Nitch', 'Spratt', 'Zib', 'Klepp', 'Drib', 'Fizzick', 'Grizzle', 'Jitt', 'Krunk', 'Libbet',
+      'Neeble', 'Oggle', 'Prunt', 'Quibb', 'Rikk', 'Sneb', 'Tazz', 'Ublet', 'Vrik', 'Wix',
+      'Yarp', 'Zoggle', 'Bink', 'Crimp', 'Glimp', 'Izzik', 'Nubbin',
+    ],
+    surnames: [
+      'of the Good Pen', 'Stamp-Twice', 'Files-Early', 'of the Third Committee', 'Countersign', 'Ink-Thumb', 'Receipt-Keeper', 'Wax-and-Seal', 'Minutes-Taker', 'of the Long Queue',
+      'Quorum', 'Subclause', 'Amended', 'In-Triplicate', 'Pending', 'of the Upper Ledger', 'Duly-Noted', 'Seconded', 'Motion-Carried', 'Point-of-Order',
+      'Tally-Stick', 'Approved-in-Principle', 'Forms-Before-Breakfast', 'of the Small Print', 'Twice-Initialled', 'Clerk-of-Clerks', 'Margin-Note', 'Appendix', 'Docket', 'of the Forty Stamps',
+      'Agenda', 'Under-Review', 'Signed-Here', 'Postscript', 'Overleaf', 'of the Inner Drawer', 'See-Attached', 'Filed-Under-G', 'Abstained', 'Proxy',
+      'Waxfinger', 'Ledgerling', 'Quillbiter', 'Notwithstanding', 'Aforesaid', 'Hereinafter', 'Carried-Unanimously',
+    ],
+  },
+  elf: {
+    id: 'elf', name: 'Elf', plural: 'Elves', adjective: 'elven',
+    minRank: 'baron', weight: 0.5, householdRange: [1, 2],
+    traitBias: { complainer: 0.6, proud: 0.7, loyal: 0.6, gardener: 0.5, musician: 0.4, tidy: 0.4, flighty: -0.6, messy: -0.5 },
+    cares: 'the age of the trees, the line of the view, the provenance of the timber, and whether the lease runs for at least four hundred years',
+    blurb: 'Insufferably long-term. Ask for a lease of four centuries, notice that the oak was pruned in the wrong one, and are polite in a way that feels like being marked down.',
+    firstNames: [
+      'Ffion', 'Aerinth', 'Belisande', 'Seraphel', 'Ilvaine', 'Oriel', 'Vaelis', 'Lisanthe', 'Myrrhine', 'Saelan',
+      'Faerith', 'Elowen', 'Aubrielle', 'Ninuel', 'Quillon', 'Raelith', 'Sylvarel', 'Ysmay', 'Caradel', 'Anthelis',
+      'Briallen', 'Eirlys', 'Thandrel', 'Ivoriel', 'Melisaunt', 'Aldwyn', 'Emrisel', 'Feyrith', 'Halcyon', 'Ilsabet',
+      'Jessamine', 'Kestrel', 'Mirelle', 'Nerys', 'Quenra', 'Rhosyn', 'Sorrelith', 'Valerian', 'Wynfrith', 'Yselde',
+      'Zephrine', 'Elsifer', 'Maelis', 'Corwyth', 'Tavriel', 'Liriope', 'Amaranth',
+    ],
+    surnames: [
+      'Alderlight', 'Willowmere', 'Moonquill', 'Silverbough', 'Starfallow', 'Mistvale', 'Ashenleaf', 'Dewglimmer', 'Thornwhisper', 'Larkspire',
+      'Fernshade', 'Hollowsong', 'Duskmantle', 'Evenbloom', 'Glimmerdell', 'Heronwade', 'Ivyreach', 'Lindenshade', 'Mossgleam', 'Nightsilver',
+      'Palehaven', 'Quietbrook', 'Rowanmere', 'Swanfeather', 'Larchwhisper', 'Yewbright', 'Willowsigh', 'Seldomfrost', 'Ferngrace', 'Aspenveil',
+      'Brackenlight', 'Cedarsong', 'Everdusk', 'Featherfall', 'Gladeweaver', 'Hazelmoon', 'Juniperhall', 'Leafwarden', 'Starwillow', 'Umbervale',
+      'Vesperwind', 'Whisperwold', 'Yarrowmere', 'Slowbloom', 'Longleaf', 'Centurymoss', 'Patientoak',
+    ],
+  },
+  ogre: {
+    id: 'ogre', name: 'Ogre', plural: 'Ogres', adjective: 'ogrish',
+    minRank: 'baron', weight: 0.4, householdRange: [1, 3],
+    traitBias: { stoic: 0.6, loyal: 0.5, generous: 0.5, sleepwalker: 0.4, pet_lover: 0.4, pious: 0.2, brawler: -0.4, litigious: -0.5 },
+    cares: 'the height of the lintel, the strength of the floor, whether the stairs can be avoided entirely, and room for the children of the street to visit',
+    blurb: 'Enormous, gentle, and mortified by the damage they cause. Apologise to doorframes by name. Excellent with children, terrible with stairs, and pay on time out of sheer embarrassment.',
+    firstNames: [
+      'Grub', 'Mossback', 'Little Ern', 'Big Ern', 'Lump', 'Pudd', 'Old Hob', 'Boulder', 'Dimp', 'Gorm',
+      'Tumbler', 'Mudlark', 'Bodge', 'Wobble', 'Clod', 'Hummock', 'Turnip', 'Lunk', 'Small Agnes', 'Thud',
+      'Bramble', 'Mother Oak', 'Knuckle', 'Stump', 'Grumble', 'Pebble', 'Haystack', 'Dumpy', 'Tor', 'Slab',
+      'Gentle Wat', 'Barrow', 'Mungle', 'Pothole', 'Lintel', 'Bundle', 'Rumble', 'Tiny', 'Moss', 'Ogg',
+      'Cob', 'Nudge', 'Rubble', 'Fen', 'Puddle', 'Granny Thump', 'Bog',
+    ],
+    surnames: [
+      'Stoopwell', 'Softstep', 'Ducklow', 'Sorrybones', 'Mindhead', 'Gentlefist', 'Hugstone', 'Boulderkind', 'Lintelbump', 'Tiptoe',
+      'Doorsorry', 'Beamwary', 'Mossfoot', 'Quietknee', 'Heavyheart', 'Kindlump', 'Slowturn', 'Bendlow', 'Stairshy', 'Mudbrook',
+      'Underbridge', 'Hillshoulder', 'Barrowback', 'Bigmitten', 'Carefulstep', 'Archbump', 'Thatchbrush', 'Floorworry', 'Pardonfoot', 'Rockcradle',
+      'Grassbelly', 'Fencelean', 'Lowbeam', 'Gladhand', 'Woolhead', 'Puddlestep', 'Tallshadow', 'Wellmeaning', 'Gentlebulk', 'Oopsy',
+      'Ditchsitter', 'Moorstone', 'Stillwater', 'Rootsure', 'Childminder', 'Dentwall', 'Ploddington',
+    ],
+  },
+};

@@ -118,7 +118,7 @@ function griffinSession(state: GameState, inc: Incident, dispatch: (a: Action) =
   const blank = { outcomeId: null, done: false, resultText: null, oaths: [], revealed: [], via: 'model' as const };
   const canned: AudienceTurn[] = [
     { ...blank, reply: 'One weathervane. And it was a poor likeness of a cockerel. Gerald has, if anything, improved the skyline.', mood: 'worried' },
-    { ...blank, reply: 'A surety against the thatch. That I can do. He is very light on his feet, for a creature the size of a hay cart.', mood: 'pleased' },
+    { ...blank, reply: 'A surety against the thatch. That I can do. He is very light on his feet, for a creature the size of a hay cart.', mood: 'pleased', aside: 'He will pay. Name the sum and have done.' },
     { reply: fill(petRent.reply, vars), mood: 'delighted', outcomeId: petRent.id, done: true, resultText: fill(petRent.result, vars), oaths: [oath], revealed: ['pet_lover'], via: 'model' },
   ];
   let n = 0;
@@ -135,7 +135,7 @@ function griffinSession(state: GameState, inc: Incident, dispatch: (a: Action) =
       const turn = canned[Math.min(k, canned.length - 1)]!;
       s.busy = true;
       return new Promise(resolve => setTimeout(() => {
-        s.busy = false; s.lines.push({ who: 'petitioner', text: turn.reply });
+        s.busy = false; s.lines.push({ who: 'petitioner', text: turn.reply }); if (turn.aside) s.lines.push({ who: 'steward', text: turn.aside });
         if (turn.done) { s.done = true; s.outcomeId = turn.outcomeId; dispatch({ type: 'resolve_incident', incidentId: inc.id, outcomeId: turn.outcomeId! }); dispatch({ type: 'swear_oath', oath }); }
         resolve(turn);
       }, opts.delay));
@@ -190,10 +190,13 @@ function makeFrame(host: HTMLElement, opts: DevOpts, tweak?: (s: GameState) => v
     },
     mic: fakeMic(),
     log: () => [],
+    needsCourtKey: () => false,
+    setWit() { /* dev */ },
+    engine: () => (opts.transport === 'none' ? null : 'claude'),
     onChange: () => () => { /* nothing changes here */ },
   };
   const app: AppAPI = {
-    newGame() { /* dev */ }, hasSave: () => false, continueGame: () => false, saveNow() { /* dev */ }, toTitle() { /* dev */ }, dynasty: () => [],
+    newGame() { /* dev */ }, hasSave: () => false, continueGame: () => false, saveNow() { /* dev */ }, toTitle() { /* dev */ }, dynasty: () => [], saveInfo: () => null,
     settings: () => ({ quality: 'medium', master: 0.8, music: 0.5, sfx: 0.8, voice: 0.7, wit: 'quick', courtKey: '', hints: true }), setSettings() { /* dev */ }, inGame: () => true,
   };
   const ctx: UICtx = {

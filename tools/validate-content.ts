@@ -75,7 +75,8 @@ for (const d of INCIDENTS) {
     for (const x of r.trait ?? []) if (!TRAITS.includes(x)) E(`requires: unknown trait ${x}`);
     for (const x of r.tag ?? []) if (!TENANT_TAGS.includes(x)) E(`requires: unknown tag ${x}`);
     for (const x of r.pet ?? []) if (!PET_KINDS.includes(x)) E(`requires: unknown pet ${x}`);
-    if ((r.species || r.trade || r.trait || r.tag || r.hasPet !== undefined || r.pet || r.happinessBelow !== undefined || r.happinessAbove !== undefined || r.monthsHousedAbove !== undefined) && d.target !== 'tenant') E(`requires uses household conditions but target is '${d.target}'`);
+    const applicantVariant = d.target === 'vacant' && d.decision === 'applicant' && !r.hasPet && !r.pet && r.happinessBelow === undefined && r.happinessAbove === undefined && r.monthsHousedAbove === undefined;
+    if ((r.species || r.trade || r.trait || r.tag || r.hasPet !== undefined || r.pet || r.happinessBelow !== undefined || r.happinessAbove !== undefined || r.monthsHousedAbove !== undefined) && d.target !== 'tenant' && !applicantVariant) E(`requires uses household conditions but target is '${d.target}'`);
     if (r.vacantDaysAbove !== undefined && d.target !== 'vacant') E("requires.vacantDaysAbove needs target 'vacant'");
   }
   for (const [where, text, cap] of texts(d)) {

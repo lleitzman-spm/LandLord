@@ -1,0 +1,32 @@
+{
+  // LandLord ships disarmed: no route, no account id, no hostname.
+  // To host your own court, three things:
+  //   1. Deploy with a route of your own. Either add
+  //        "routes": [{ "pattern": "your.domain.example", "custom_domain": true }]
+  //      below, or set "workers_dev": true to use your account's workers.dev address.
+  //      Then: npm run build && npx wrangler deploy
+  //   2. To let Claude speak for the court:   npx wrangler secret put ANTHROPIC_API_KEY
+  //      Without it the court uses Workers AI through the "ai" binding below, and
+  //      without that the game still plays in full with its own offline parser.
+  //   3. Optionally, to keep strangers out:    npx wrangler secret put COURT_KEY
+  //      Players then type the same key under Settings.
+  // Optional plain vars (see .dev.vars.example): WORD_MODEL, WORD_MODEL_DEFAULT_TIER, WORKERS_AI_MODEL.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "landlord",
+  "main": "src/server/worker.ts",
+  "compatibility_date": "2026-09-01",
+  "workers_dev": false,
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  "ai": { "binding": "AI" },
+  // Per-address limit on /api/word: 20 calls a minute. The namespace id is any
+  // number unique within your account; it identifies nothing outside it.
+  "ratelimits": [
+    { "name": "WORD_LIMIT", "namespace_id": "1001", "simple": { "limit": 20, "period": 60 } }
+  ],
+  "observability": { "enabled": true }
+}

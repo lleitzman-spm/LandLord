@@ -144,10 +144,13 @@ const word: WordAPI = {
   mic: { supported: false, listening: false, start(hd) { hd.onError?.('unsupported'); }, stop() {} },
   log: () => [],
   onChange: () => () => {},
+  needsCourtKey: () => false,
+  setWit() {},
+  engine: () => null,
 };
 let settings: Settings = { quality: 'medium', master: 0.8, music: 0.5, sfx: 0.8, voice: 0.7, wit: 'quick', courtKey: '', hints: true };
 const appApi: AppAPI = {
-  newGame() {}, hasSave: () => false, continueGame: () => false, saveNow() {}, toTitle() {}, dynasty: () => [],
+  newGame() {}, hasSave: () => false, saveInfo: () => null, continueGame: () => false, saveNow() {}, toTitle() {}, dynasty: () => [],
   settings: () => settings, setSettings(p) { settings = { ...settings, ...p }; }, inGame: () => true,
 };
 const ui = createUI({ root: app, sim, renderer, word, audio: createAudio(), app: appApi });

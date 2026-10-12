@@ -136,9 +136,9 @@ page.appendChild(el('p', 'gp-intro', 'Every tenant, delegate and visitor to cour
   const sec = section('court', 'Visitors to court', 'Fixed and memorable. The adjuster is in fact a small dragon.');
   const g = grid('repeat(8, 1fr)');
   NPCS.forEach(id => {
-    g.appendChild(face({ species: id === 'goblin_chief' ? 'goblin' : 'human', seed: 77, npc: id, size: 168, frame: true }, nice(id)).cell);
+    g.appendChild(face({ species: id === 'goblin_chief' ? 'goblin' : 'human', seed: 77, npc: id, size: 140, frame: true }, nice(id)).cell);
   });
-  g.appendChild(face({ species: 'human', seed: 31337, npc: 'rival_lord', size: 168, frame: true }, 'rival lord, another reign').cell);
+  g.appendChild(face({ species: 'human', seed: 31337, npc: 'rival_lord', size: 140, frame: true }, 'rival lord, another reign').cell);
   sec.appendChild(g);
 }
 

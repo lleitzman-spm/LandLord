@@ -228,6 +228,7 @@ function stats() {
 function fxCalls(): { scene: number; withFx: number; fx: number } {
   const root = scene.getObjectByName('fx');
   if (!root) return { scene: 0, withFx: 0, fx: 0 };
+  renderer.render(scene, camera);            // warm-up
   renderer.render(scene, camera);
   const withFx = renderer.info.render.calls;
   root.visible = false;
@@ -359,6 +360,7 @@ function sheet(names: string[], cols = 2): unknown {
     renderer.setViewport(cx, gy, cw, ch); renderer.setScissor(cx, gy, cw, ch);
     const caption = setup(nm);
     const root = scene.getObjectByName('fx')!;
+    renderer.render(scene, camera);            // warm-up: first frame after a set-up can carry one-off passes
     root.visible = false; renderer.render(scene, camera);
     const bare = renderer.info.render.calls;
     root.visible = true; renderer.render(scene, camera);

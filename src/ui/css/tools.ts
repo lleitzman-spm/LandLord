@@ -348,6 +348,19 @@ const WORD_CSS = `
 .ll-wb-note{margin:0;align-self:center;max-width:100%;padding:4px 13px 5px;font-size:14px;font-style:italic;color:var(--parch);background:rgba(20,14,10,.8);border:1px solid rgba(184,159,108,.5);border-radius:14px;text-align:center;line-height:1.25}
 .ll-wb-note[hidden]{display:none}
 
+/* the court key: a small strip, only while the court asks for one */
+.ll-wb-key{align-self:stretch;max-width:100%;box-sizing:border-box;display:flex;flex-wrap:wrap;align-items:center;gap:6px 9px;padding:7px 10px 7px 12px;animation:ll-wb-rise .22s ease-out}
+.ll-wb-key[hidden]{display:none}
+.ll-wb-keyico{flex:none;width:30px;height:16px;color:var(--rubric);display:inline-flex}
+.ll-wb-keyico svg{width:100%;height:100%;display:block}
+.ll-wb-keymsg{flex:1 1 calc(100% - 45px);min-width:0;font-size:15px;font-style:italic;color:var(--ink-2);line-height:1.25}
+.ll-wb-key.is-bad .ll-wb-keymsg{color:var(--bad);font-style:normal}
+.ll-wb-keyinput{flex:1 1 150px;min-width:0;height:30px;box-sizing:border-box;border:0;border-bottom:1.5px solid var(--ink-3);border-radius:0;background:transparent;font-family:var(--f-body);font-size:16px;letter-spacing:.08em;color:var(--ink);padding:2px 2px 0;outline:none;user-select:text;-webkit-user-select:text}
+.ll-wb-keyinput::placeholder{color:var(--ink-3);font-style:italic;letter-spacing:0}
+.ll-wb-keyinput:focus{border-bottom-color:var(--rubric)}
+.ll-wb-key.is-bad .ll-wb-keyinput{border-bottom-color:var(--bad)}
+.ll-wb-keygo,.ll-wb-keylater{flex:none;padding:4px 10px}
+
 /* the answer */
 .ll-wb-ex{position:relative;padding:9px 34px 10px 12px;display:flex;flex-direction:column;gap:7px;animation:ll-wb-rise .22s ease-out}
 .ll-wb-ex[hidden]{display:none}

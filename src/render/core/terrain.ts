@@ -293,7 +293,7 @@ export function createTerrain(ctx: RenderCtx, envMap: THREE.Texture): Terrain {
   const pines = mkInst(treeGeos[4]!, woodMat, MAXT, true, true);
   const oaks: TreeInst[] = [], birches: TreeInst[] = [], pineList: TreeInst[] = [];
 
-  const rockGeo = keep(jitter(new THREE.IcosahedronGeometry(1, 0), 0.42, 5).scale(1, 0.72, 1).toNonIndexed());
+  const rockGeo = keep(jitter(new THREE.IcosahedronGeometry(1, 0), 0.42, 5).scale(1, 0.72, 1));
   rockGeo.computeVertexNormals();
   const rockMat = keep(new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.95 }));
   patchSnow(rockMat, U);

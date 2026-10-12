@@ -10,7 +10,8 @@
  * At most three bubbles at once; the rest queue. Bubbles never take clicks.
  */
 import type { GameState, SimEvent, Id, Tenant, Building } from '../../sim/types';
-import { dateOf, fill, rulerTitle } from '../../sim/core';
+import { dateOf, rulerTitle } from '../../sim/core';
+import { fillText } from '../../sim/effects';
 import { BARKS, INCIDENT_BY_ID } from '../../data';
 import type { BarkKey } from '../../data/schema';
 import type { AnchorRef } from '../../render/api';
@@ -143,7 +144,7 @@ export function mount(ctx: UICtx): Part {
     if (!pool.length) return null;
     const raw = pool[Math.floor(Math.random() * pool.length)]!;
     recent.push(raw); if (recent.length > 10) recent.shift();
-    return fill(raw, { title: rulerTitle(st), ruler: st.realm.ruler, realm: st.realm.name });
+    return fillText(raw, { title: rulerTitle(st), ruler: st.realm.ruler, realm: st.realm.name });
   }
   /** a household whose figure is in view says its piece */
   function bark(st: GameState, key?: BarkKey, tenantId?: Id): boolean {

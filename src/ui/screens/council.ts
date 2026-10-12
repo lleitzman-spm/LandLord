@@ -170,6 +170,7 @@ export function create(ctx: UICtx): Screen {
         log.append(h('p', { class: 'cnc-note good' }, ex.orders.length ? 'Written among the standing orders.' : 'It is in hand.'));
         lastSig = ''; render();
       }
+      if (box.el.isConnected) reveal(box.el.querySelector('.cnc-acts:last-child') ?? box.el);
     };
     const form = h('form', { onsubmit: send as EventListener }, input);
     const mic = ctx.word.mic;
@@ -260,10 +261,15 @@ export function create(ctx: UICtx): Screen {
             button(`Dismiss ${m.first}`, () => { confirmDismiss = null; speaking.delete(m.id); boxes.get(m.id)?.stop(); boxes.delete(m.id); act({ type: 'dismiss_staff', staffId: m.id }, 'door'); }, { kind: 'danger' })))
         : isSpeaking ? speakBox(m).el
         : h('div', { class: 'cnc-acts' },
-          button('Speak', () => { speaking.add(m.id); render(); requestAnimationFrame(() => boxes.get(m.id)?.input.focus()); }, { kind: 'primary', title: `Give ${m.first} an order` }),
-          button('Dismiss', () => { confirmDismiss = m.id; render(); }, { kind: 'danger', title: `Let ${m.first} go` })),
+          button('Speak', () => { speaking.add(m.id); render(); requestAnimationFrame(() => { const b = boxes.get(m.id); b?.input.focus({ preventScroll: true }); reveal(b?.el); }); }, { kind: 'primary', title: `Give ${m.first} an order` }),
+          button('Dismiss', () => { confirmDismiss = m.id; render(); requestAnimationFrame(() => reveal(hall.querySelector('.cnc-confirm'))); }, { kind: 'danger', title: `Let ${m.first} go` })),
     );
     return card;
+  }
+
+  /** bring a panel that has just opened under a seat into view, without jumping the whole hall */
+  function reveal(target: Element | null | undefined): void {
+    (target as HTMLElement | null | undefined)?.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   }
 
   function candidateCard(s: GameState, c: Candidate, canHire: boolean, why: string, i: number): HTMLElement {

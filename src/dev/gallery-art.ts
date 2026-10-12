@@ -111,8 +111,8 @@ sample.appendChild(el('div', 'll-panel ll-illum ga-panel', `
     ${flourish(360, 3)}
     <div class="ll-row"><span class="ll-tag ll-tag-gold">kept</span><span class="ll-note">Two oaths kept, none broken. The pigeons remain unconvinced.</span>${doodle('snail_knight', 4, 64)}</div>
   </div>`));
-sample.appendChild(el('div', 'll-parch ll-vine-r ga-vinecol', `<p class="ll-body" style="margin:0 0 8px 12px">The same vine on the other margin, for a scribe who writes the other way round.</p>${doodle('any', 17, 120)}`));
 sample.appendChild(el('div', 'll-parch ll-vine-l ga-vinecol', `<p class="ll-body" style="margin:0 12px 8px 0">A vine runs down the margin of this page, as vines do when the scribe has run out of things to say about rent.</p><p class="ll-note" style="margin:0 12px 0 0">Tenants: four. Griffins: one, unauthorized.</p>${crest(4242, 72)}`));
+sample.appendChild(el('div', 'll-parch ll-vine-r ga-vinecol', `<p class="ll-body" style="margin:0 0 8px 12px">The same vine on the other margin, for a scribe who writes the other way round.</p>${doodle('any', 17, 120)}`));
 const narrow = el('div', 'll-panel ll-illum', `<div class="ll-panel-body"><p class="ll-body" style="margin:0">A small illuminated note.</p></div>`);
 narrow.style.width = '200px';
 sample.appendChild(narrow);
