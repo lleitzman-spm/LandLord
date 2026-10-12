@@ -1,12 +1,26 @@
-/** OWNER: render-creatures agent. Incident visuals (griffin on the roof, goblins at the windows...). Placeholder. */
-import * as THREE from 'three';
-import type { VisualHandle, VisualHost, RenderCtx, Env } from '../api';
+/** Incident visuals: what the player sees on or around a building while an incident lasts. */
+import type { VisualHandle, VisualHost, RenderCtx } from '../api';
 import type { VisualId } from '../../data/ids';
-import { PAL, mat } from '../palette';
+import { runVisual, type Build } from './kit';
+import { griffinRoof } from './griffin';
+import { goblinsWindows } from './goblins';
+import { smallDragon } from './dragon';
+import { ghost } from './ghost';
+import { fire, blackSmoke } from './fire';
+import { taxCart } from './cart';
+import { rats, chickens, sheep, bees, bats, storkNest } from './critters';
+import { purplePaint, sparkles, curseCloud, cauldron, toadstoolRing, mushrooms, vines, gargoyle } from './magic';
+import { bunting, party, crownBanner, laundry, scarecrow } from './festive';
+import { leak, holeRoof, crackedWall, boarded, flood, mud, snowedIn, frozen, quarantine, graffiti } from './trouble';
 
-export function createVisual(_id: VisualId, host: VisualHost, _ctx: RenderCtx): VisualHandle {
-  const group = new THREE.Group();
-  const m = new THREE.Mesh(new THREE.OctahedronGeometry(0.15), mat(PAL.magic, { emissive: PAL.magic, emissiveIntensity: 0.6 }));
-  m.position.copy(host.visual.anchors.roof).add(new THREE.Vector3(0, 0.3, 0)); group.add(m);
-  return { group, update(e: Env) { m.rotation.y = e.time; }, leave(done) { done(); }, dispose() {} };
+const BUILDERS: Record<VisualId, Build> = {
+  griffin_roof: griffinRoof, goblins_windows: goblinsWindows, small_dragon: smallDragon, ghost, fire, black_smoke: blackSmoke, tax_cart: taxCart,
+  rats, chickens, sheep, bees, bats, stork_nest: storkNest,
+  leak, hole_roof: holeRoof, cracked_wall: crackedWall, boarded, flood, mud, snowed_in: snowedIn, frozen, quarantine, graffiti,
+  purple_paint: purplePaint, sparkles, curse_cloud: curseCloud, cauldron, toadstool_ring: toadstoolRing, mushrooms, vines, gargoyle,
+  bunting, party, crown_banner: crownBanner, laundry, scarecrow,
+};
+
+export function createVisual(id: VisualId, host: VisualHost, ctx: RenderCtx): VisualHandle {
+  return runVisual(id, host, ctx, BUILDERS[id] || (() => ({ update() { /* nothing */ } })));
 }
