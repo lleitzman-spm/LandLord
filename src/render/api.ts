@@ -130,6 +130,8 @@ export interface Fx {
   /** continuous chimney smoke; returns a stopper */
   smoke(at: THREE.Vector3, opts?: { dark?: boolean; rate?: number }): { stop(): void; move(at: THREE.Vector3): void };
   setWeather(kind: WeatherKind): void;
+  /** 0..1 lightning flash right now (storms); the renderer adds it to its fill light */
+  flash: number;
   update(env: Env): void;
   dispose(): void;
 }

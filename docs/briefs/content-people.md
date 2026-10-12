@@ -1,0 +1,14 @@
+# Brief: content-people (named households, the court's visitors, delegates, barks)
+
+**Your files:** `src/data/characters.ts`, `src/data/barks.ts`.
+**Read:** `src/data/schema.ts` (CharacterDef, NpcDef, StaffNameDef, BarkKey, BarkTable), `ids.ts` (species, trades, traits, tags, pets, NPCS: frozen), `buildings.ts`, `ranks.ts`, `src/data/incidents/system.ts` and `examples.ts` (tone), `docs/STYLE.md` (your character sheets), `docs/BIBLE.md`.
+
+Keep every export name and type; replace the placeholders with the real cast. These are the people the player will talk to, so each needs a point of view a model can play and a player can remember.
+
+- **`CHARACTERS`: 48 named households**, spread across species (about 16 human, 9 halfling, 8 dwarf, 7 goblin, 4 elf, 4 ogre) with `minRank` matching when that species arrives, and across trades (several for commercial premises: bakers, a smith, millers, innkeepers, an alchemist, market traders). Each: traits and tags that will generate incidents, a two or three sentence `bio` (who they are and what they want from a landlord), a `voice` note (diction, tics, a sample), six `lines` (greet, pay, late, complain, thanks, leave), and `look` hints. Give them things to argue about: the widow who has outlived three landlords, the dwarf who bills you for improvements you did not ask for, the goblin notary, the retired adventurer whose trophies are still alive, the elf who remembers when your manor was a pond, the ogre who is frightened of mice.
+- **`NPC_DEFS`: all 15**, each a distinct comic authority: the Crown's herald (reads everything as a proclamation), the royal assessor (clipboard, sighs), the tax collector, the rival lord (written generically: the sim supplies his name), the moneylender (soft, patient, alarming), the bishop, the guild inspector, a travelling wizard, the goblin chief (committee-minded), the Warden of the Commons (the busybody of busybodies), the dragon adjuster (a small dragon who assesses fire claims and is very sorry for your loss), the Reeve's Court judge (slow), a wandering knight, a mysterious stranger, and your mother (who thinks you should have gone into the church).
+- **`STAFF_NAMES`: 14 candidates per role**, mixed species, each with a one-line `pitch` that hints at a temperament without naming it.
+- **`RIVAL_NAMES`: 8** rival lords with seats, across the three temperaments. **`REALM_NAMES`: 60** hamlet names ("Mudlark Hollow", "Lesser Dripping", "Nether Puddock", "Thistle-under-Wold").
+- **`BARKS`: every `BarkKey`, at least 14 lines each**, each under 70 characters: overheard one-liners for speech bubbles. `{title}` and `{ruler}` are the only placeholders allowed. They should make the town feel like it is talking about you.
+
+No names from existing books, films or games. Check with `node tools/check.mjs src/data` and a throwaway script in `.tmp/` asserting counts, id validity (every trait, tag, trade, pet exists), lengths and no em or en dashes.

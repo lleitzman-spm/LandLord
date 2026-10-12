@@ -426,7 +426,7 @@ export interface MonthBook {
   rentCollected: number;
 }
 
-export interface Txn { day: number; amount: number; cat: IncomeCat | ExpenseCat; memo: string }
+export interface Txn { day: number; amount: number; cat: IncomeCat | ExpenseCat; memo: string; tenantId?: Id; buildingId?: Id }
 
 export interface Ledger {
   months: MonthBook[];           // capped history, newest last
