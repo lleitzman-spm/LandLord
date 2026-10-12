@@ -1,10 +1,8 @@
-/** OWNER: sim-rule agent. Standing orders, policies, and how a delegate decides when you are not asked. */
+/** OWNER: sim-decide agent. Standing orders, policies, and how a delegate decides when you are not asked. PLACEHOLDER bodies. */
 import type { GameState, SimModule, Incident, ResolvedBy, Id, StandingOrder } from './types';
-import { notImplemented } from './core';
-const W = 'sim-rule';
-/** Who settles this incident without the ruler, and how? Order first, then a delegate with authority
+/** Who settles this incident without the ruler, and how? An order first, then a delegate with authority
  *  following temperament, else null (it waits for the ruler). */
-export function decide(s: GameState, inc: Incident): { outcomeId: string; by: ResolvedBy; orderId?: Id } | null { return notImplemented(W, 'decide'); }
+export function decide(_s: GameState, _inc: Incident): { outcomeId: string; by: ResolvedBy; orderId?: Id } | null { return null; }
 /** Orders that apply to this incident right now (conditions evaluated). */
-export function ordersFor(s: GameState, inc: Incident): StandingOrder[] { return notImplemented(W, 'ordersFor'); }
+export function ordersFor(_s: GameState, _inc: Incident): StandingOrder[] { return []; }
 export const ordersModule: SimModule = { name: 'orders' };

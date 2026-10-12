@@ -10,7 +10,8 @@ src/
     index.ts   Sim class: module order, stepping, action dispatch          (integrator)
     world.ts path.ts buildings.ts actors.ts jobs.ts        → sim-world agent
     economy.ts tenants.ts rent.ts renown.ts                → sim-people agent
-    staff.ts incidents.ts effects.ts orders.ts oaths.ts rank.ts rival.ts modes.ts save.ts → sim-rule agent
+    staff.ts incidents.ts effects.ts orders.ts             → sim-decide agent
+    oaths.ts rank.ts rival.ts modes.ts save.ts             → sim-crown agent
   data/     typed content, no logic. ids.ts is FROZEN. schema.ts is the content contract.
   render/   three.js diorama. api.ts is the contract; palette.ts is the look.
   ui/       DOM manuscript interface. api.ts, kit.ts, css/base.ts are the contract.
@@ -27,7 +28,7 @@ test/       node tests for the sim (run with: npx tsx test/<file>.ts)
 
 1. **Stay in your files.** You own the files named in your brief. Do not edit anyone else's file, the contract files (`sim/types.ts`, `sim/core.ts`, `sim/index.ts`, `data/ids.ts`, `data/schema.ts`, `render/api.ts`, `render/palette.ts`, `ui/api.ts`, `ui/kit.ts`, `ui/css/base.ts`, `word/api.ts`, `audio/api.ts`), or `package.json`. Many agents are working in this tree at the same moment. If a contract is wrong or missing something you truly need, do not change it: work around it locally and say so clearly in your final report under "CONTRACT REQUESTS".
 2. **Keep every exported signature that already exists in your files** (other modules import them). You may add exports.
-3. **Other modules may still be stubs that throw.** Never "fix" them. For tests, build what you need from `src/dev/fixture.ts` or your own small mocks.
+3. **Other modules start as thin placeholders** (they run, but do the bare minimum) and are being replaced by their owners while you work. Never edit them. Code against the documented behaviour in this file, not against what the placeholder happens to do. For tests, build what you need from `src/dev/fixture.ts`, `Sim.create()`, or your own small state.
 4. **Typecheck only your paths:** `node tools/check.mjs src/your/path`. It prints only your errors. Zero errors in your paths before you finish. Errors elsewhere are not yours.
 5. **The machine has 2 cores and is shared.** Do not run `npm install`, dev servers, watchers, or anything long-lived. Do not run more than one heavy command at a time. Screenshots and typechecks queue behind a lock; be patient, and do not take more than about 15 screenshots in total.
 6. **No new dependencies.** Only `three` (0.170) at runtime. No fonts or assets fetched at runtime except Google Fonts in index.html. No image, audio or model files: everything is drawn or synthesised in code.
@@ -56,13 +57,13 @@ test/       node tests for the sim (run with: npx tsx test/<file>.ts)
 | economy (sim-people) | `gold`, `ledger`, `stats.rentCollected/peakRentRoll` | set_rent, gift, hold_feast |
 | tenants/rent (sim-people) | `tenants`, `applicants`, `units[].tenantId/vacantSince/purse/purseDay` | reveal_trait, remember |
 | renown (sim-people) | `renown`, `favor` | |
-| staff (sim-rule) | `staff`, `candidates` | hire, dismiss_staff, set_wage, refresh_candidates |
-| incidents/effects (sim-rule) | `incidents`, `incidentLog`, `pending`, `weather` | resolve_incident, dismiss_incident |
-| orders (sim-rule) | `orders`, `policies` | add_order, revoke_order, set_policy |
-| oaths (sim-rule) | `oaths`, `stats.oaths*` | swear_oath, release_oath |
-| rank (sim-rule) | `realm.rank`, `charter` | accept_promotion |
-| rival (sim-rule) | `rival` | |
-| modes (sim-rule) | `loans`, `ended`, `stats.daysInDebt` | take_loan, repay_loan, abdicate, set_speed, mark_seen, set_flag |
+| staff (sim-decide) | `staff`, `candidates` | hire, dismiss_staff, set_wage, refresh_candidates |
+| incidents/effects (sim-decide) | `incidents`, `incidentLog`, `pending`, `weather` | resolve_incident, dismiss_incident |
+| orders (sim-decide) | `orders`, `policies` | add_order, revoke_order, set_policy |
+| oaths (sim-crown) | `oaths`, `stats.oaths*` | swear_oath, release_oath |
+| rank (sim-crown) | `realm.rank`, `charter` | accept_promotion |
+| rival (sim-crown) | `rival` | |
+| modes (sim-crown) | `loans`, `ended`, `stats.daysInDebt` | take_loan, repay_loan, abdicate, set_speed, mark_seen, set_flag |
 
 When you need to change something you do not own, call the owner's exported function (signatures are already in the stub files with doc comments). When you need a new cross-module function, add it to *your* file and report it.
 
@@ -83,15 +84,19 @@ Higher `priority` first, then oldest. `byRuler` jobs are never auto-cancelled. W
 - Vacancies: listed units attract applicants at a rate driven by renown, desirability against asking rent, a Crier, a notice board. `tenants.spawnApplicant` puts their actor at the gate walking to the door. Someone must `show` the unit (role 'crier', falls to the ruler). Then `spawnDecision(s, 'applicant', { applicantId, buildingId, unit })`; the outcome returns through `rent.applyLease` / `rent.screen`.
 - Empty more than 40 days and not listed-and-shown recently: chance of `spawnDecision(s, 'squatters', { buildingId, unit })`.
 
-**Incidents (sim-rule).** `spawnIncident` creates the instance, fills `vars` from `core.baseVars` plus the def's needs, sets `expiresDay`, adds the def's `visual` to the building, sends the herald line, and for `audience: true` spawns a petitioner actor who walks to the seat door and waits (state 'waiting'). Then it asks `orders.decide(s, inc)`: if an order or a delegate with authority settles it, resolve at once and herald what they did (`reported`). Otherwise it waits for the ruler (`resolve_incident`). `resolveIncident` either applies the outcome's effects now, or, when the outcome has a `job`, enqueues an `incident` job and applies them in `onJobDone`. Effects are applied by `effects.applyEffects`, which calls the owners (`economy.earn/spend`, `tenants.changeHappiness`, `rent.applyLateOption`, `buildings.damageBuilding`...). On resolve/expire: remove the visual unless the effects say otherwise, despawn the petitioner (walks back home), herald the `result` / `expireText`, emit events, bump stats.
+**Incidents (sim-decide).** `spawnIncident` creates the instance, fills `vars` from `core.baseVars` plus the def's needs, sets `expiresDay`, adds the def's `visual` to the building, sends the herald line, and for `audience: true` spawns a petitioner actor who walks to the seat door and waits (state 'waiting'). Then it asks `orders.decide(s, inc)`: if an order or a delegate with authority settles it, resolve at once and herald what they did (`reported`). Otherwise it waits for the ruler (`resolve_incident`). `resolveIncident` either applies the outcome's effects now, or, when the outcome has a `job`, enqueues an `incident` job and applies them in `onJobDone`. Effects are applied by `effects.applyEffects`, which calls the owners (`economy.earn/spend`, `tenants.changeHappiness`, `rent.applyLateOption`, `buildings.damageBuilding`...). On resolve/expire: remove the visual unless the effects say otherwise, despawn the petitioner (walks back home), herald the `result` / `expireText`, emit events, bump stats.
 The random scheduler (monthly budget from `BAL.incidentRate`, spread across the month) picks defs that are not `system`, fit the rank and season, are off cooldown, and whose `requires` fit some target; weight by `weight`. Never more than about 6 open at once at Baron (3 at Reeve).
 Scripted first beats for a new reign: day 2 a leak at an occupied hovel (teaches repair); around day 12 an applicant for the vacant hovel if it is listed; month 2 the first audience.
 
-**Deciding without the ruler (sim-rule, `orders.decide`).** Gather standing orders matching the incident (`decision` type and/or `incidentDef`, all `when` conditions true for the context). `never` rules strike options. A `choose` rule picks its option/outcome (most specific first, then newest). If none chooses: is there a delegate whose domain this is (repair → mason; late_rent, eviction_ready, squatters → bailiff; applicant → crier; move_out_deposit, rent_renewal, pet → steward) with enough `authority`? Authority 0 handles only *routine dispatch* (non-audience incidents: their default outcome, or temperament `bias`); authority 1+ also settles audience incidents by temperament bias. Otherwise return null: it waits for the ruler. Staff gain authority 1 when the ruler becomes Baron.
+**Deciding without the ruler (sim-decide, `orders.decide`).** Gather standing orders matching the incident (`decision` type and/or `incidentDef`, all `when` conditions true for the context). `never` rules strike options. A `choose` rule picks its option/outcome (most specific first, then newest). If none chooses: is there a delegate whose domain this is (repair → mason; late_rent, eviction_ready, squatters → bailiff; applicant → crier; move_out_deposit, rent_renewal, pet → steward) with enough `authority`? Authority 0 handles only *routine dispatch* (non-audience incidents: their default outcome, or temperament `bias`); authority 1+ also settles audience incidents by temperament bias. Otherwise return null: it waits for the ruler. Staff gain authority 1 when the ruler becomes Baron.
 
-**Rank (sim-rule).** Recompute charter goals daily. When all are met: `charter.ready`, herald, event `charter_ready`; `accept_promotion` raises the rank, upgrades the seat, unlocks, re-rolls candidates, sets new goals, emits `promotion`. 
+**Oaths (sim-crown).** `swear` records a promise. Each day check open oaths: `repair` kept when the building's condition is 80+ (or a repair/renovate job on it completed) before `dueDay`; `no_rent_raise` / `rent_cap` broken the moment the lease rent rises (above the cap) before `dueDay`, kept at `dueDay`; `no_evict` broken if the household is served notice or evicted before `dueDay`; `build` kept when a ready building of that type exists; `pay` kept by a `gift` of at least the amount; `word` kept at `dueDay`. Kept: renown +, that household's happiness and a fond memory, `stats.oathsKept`. Broken: renown and happiness fall hard, a bitter memory, neighbours hear of it, `stats.oathsBroken`. Emit `oath` events and herald both.
 
-**Modes (sim-rule).** Tribute due on the 1st of months 0, 3, 6, 9 (`RANKS[rank].tribute`), paid automatically if affordable, else favor falls. Negative gold converts to a loan from the moneylender (up to the rank's cap) with a herald; interest monthly. Peace: debt past the cap for three months → demotion (never below Reeve) with debts cleared. Iron: debt past `cap * BAL.bankruptcyMult`, or favor at 0, ends the reign (`ended`, event `game_over`).
+**Rival (sim-crown).** Roll a rival at init from `RIVAL_NAMES`. His renown drifts. Monthly, if his renown exceeds yours, he may poach the unhappiest household (`tenants.moveOut(…, 'poached')`) with a herald in his temperament; a feast, high happiness, or kept oaths blunt it.
+
+**Rank (sim-crown).** Recompute charter goals daily. When all are met: `charter.ready`, herald, event `charter_ready`; `accept_promotion` raises the rank, upgrades the seat, unlocks, re-rolls candidates, sets new goals, emits `promotion`. 
+
+**Modes (sim-crown).** Tribute due on the 1st of months 0, 3, 6, 9 (`RANKS[rank].tribute`), paid automatically if affordable, else favor falls. Negative gold converts to a loan from the moneylender (up to the rank's cap) with a herald; interest monthly. Peace: debt past the cap for three months → demotion (never below Reeve) with debts cleared. Iron: debt past `cap * BAL.bankruptcyMult`, or favor at 0, ends the reign (`ended`, event `game_over`).
 
 ## Events
 

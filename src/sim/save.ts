@@ -1,6 +1,5 @@
-/** OWNER: sim-rule agent. Serialise / restore GameState (JSON string, versioned, tolerant of older saves). */
+/** OWNER: sim-crown agent. Serialise / restore GameState (JSON string, versioned, tolerant of older saves). PLACEHOLDER. */
 import type { GameState } from './types';
-import { notImplemented } from './core';
-export function serialize(s: GameState): string { return notImplemented('sim-rule', 'serialize'); }
+export function serialize(s: GameState): string { return JSON.stringify({ ...s, _events: [] }); }
 /** Throws on unreadable input. Fills any missing fields with defaults; always returns _events: []. */
-export function deserialize(json: string): GameState { return notImplemented('sim-rule', 'deserialize'); }
+export function deserialize(json: string): GameState { const s = JSON.parse(json) as GameState; s._events = []; return s; }
