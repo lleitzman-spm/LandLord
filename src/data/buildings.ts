@@ -1,0 +1,120 @@
+/**
+ * Building definitions. Footprints and ids are FROZEN (meshes are built to
+ * them). Numbers are first-pass and tuned by the balance bots; blurbs are
+ * player-facing (pattern book).
+ */
+import type { BuildingDef } from './schema';
+import type { BuildingType } from './ids';
+
+const d = (def: BuildingDef): BuildingDef => def;
+
+export const BUILDINGS: Record<BuildingType, BuildingDef> = {
+  // ───────── housing ─────────
+  hovel: d({ id: 'hovel', name: 'Hovel', plural: 'Hovels', category: 'housing', w: 2, h: 2, units: 1, capacity: 4,
+    cost: 40, buildDays: 4, upkeep: 1, baseRent: 8, decay: 3.0, minRank: 'reeve', maxLevel: 1,
+    blurb: 'Four walls, most of a roof. The damp is included at no extra charge.' }),
+  cottage: d({ id: 'cottage', name: 'Cottage', plural: 'Cottages', category: 'housing', w: 2, h: 2, units: 1, capacity: 5,
+    cost: 90, buildDays: 7, upkeep: 2, baseRent: 16, decay: 2.0, minRank: 'reeve', maxLevel: 1,
+    blurb: 'A proper chimney and a door that shuts. Tenants will expect things to work.' }),
+  burrow: d({ id: 'burrow', name: 'Burrow', plural: 'Burrows', category: 'housing', w: 2, h: 2, units: 1, capacity: 7,
+    cost: 80, buildDays: 6, upkeep: 1, baseRent: 15, decay: 1.2, minRank: 'reeve', prefers: ['halfling'], maxLevel: 1,
+    blurb: 'A round door in a small hill. Halflings adore it. Everyone else hits their head.' }),
+  longhouse: d({ id: 'longhouse', name: 'Longhouse', plural: 'Longhouses', category: 'housing', w: 3, h: 2, units: 2, capacity: 6,
+    cost: 150, buildDays: 10, upkeep: 3, baseRent: 13, decay: 2.2, minRank: 'knight', prefers: ['ogre'], maxLevel: 1,
+    blurb: 'Two households, one wall between them. The wall hears everything.' }),
+  stonehall: d({ id: 'stonehall', name: 'Stone Hall', plural: 'Stone Halls', category: 'housing', w: 3, h: 2, units: 2, capacity: 5,
+    cost: 260, buildDays: 14, upkeep: 2, baseRent: 26, decay: 0.8, minRank: 'knight', prefers: ['dwarf'], maxLevel: 1,
+    blurb: 'Built to outlast its landlord. Dwarves approve, then dig a cellar without asking.' }),
+  townhouse: d({ id: 'townhouse', name: 'Townhouse', plural: 'Townhouses', category: 'housing', w: 2, h: 3, units: 3, capacity: 4,
+    cost: 320, buildDays: 16, upkeep: 5, baseRent: 20, decay: 2.0, minRank: 'baron', maxLevel: 1,
+    blurb: 'Three households stacked like firewood. The top floor pays less and complains more.' }),
+  treehouse: d({ id: 'treehouse', name: 'Treehouse', plural: 'Treehouses', category: 'housing', w: 2, h: 2, units: 1, capacity: 3,
+    cost: 220, buildDays: 12, upkeep: 3, baseRent: 34, decay: 1.5, minRank: 'baron', prefers: ['elf'], maxLevel: 1,
+    blurb: 'An elegant dwelling in a living oak. The elves call it rustic. The oak was not consulted.' }),
+  wizard_tower: d({ id: 'wizard_tower', name: 'Wizard Tower', plural: 'Wizard Towers', category: 'housing', w: 2, h: 2, units: 1, capacity: 2,
+    cost: 400, buildDays: 18, upkeep: 6, baseRent: 55, decay: 2.5, minRank: 'baron', maxLevel: 1,
+    blurb: 'Tall, drafty, and zoned for experiments. Take a large surety.' }),
+
+  // ───────── commercial ─────────
+  market_stall: d({ id: 'market_stall', name: 'Market Stall', plural: 'Market Stalls', category: 'commercial', w: 2, h: 1, units: 1, capacity: 3,
+    cost: 60, buildDays: 3, upkeep: 1, baseRent: 14, decay: 2.5, minRank: 'reeve', maxLevel: 1,
+    trades: ['merchant', 'fishmonger', 'cheesemonger', 'candlemaker', 'fortune_teller', 'herbalist'],
+    aura: { radius: 4, amount: 4 },
+    blurb: 'A plank, an awning, and a shouting person. Commerce.' }),
+  bakery: d({ id: 'bakery', name: 'Bakery', plural: 'Bakeries', category: 'commercial', w: 2, h: 2, units: 1, capacity: 4,
+    cost: 140, buildDays: 8, upkeep: 2, baseRent: 24, decay: 1.8, minRank: 'knight', maxLevel: 1,
+    trades: ['baker'], aura: { radius: 5, amount: 7 },
+    blurb: 'The whole street smells of bread by dawn. Rents nearby rise like the dough.' }),
+  smithy: d({ id: 'smithy', name: 'Smithy', plural: 'Smithies', category: 'commercial', w: 2, h: 2, units: 1, capacity: 4,
+    cost: 160, buildDays: 9, upkeep: 3, baseRent: 28, decay: 1.6, minRank: 'knight', maxLevel: 1,
+    trades: ['blacksmith'], aura: { radius: 3, amount: -3 },
+    blurb: 'Useful, profitable, and loud from first light. The neighbours will mention it.' }),
+  mill: d({ id: 'mill', name: 'Windmill', plural: 'Windmills', category: 'commercial', w: 3, h: 3, units: 1, capacity: 5,
+    cost: 240, buildDays: 14, upkeep: 4, baseRent: 36, decay: 1.6, minRank: 'knight', maxLevel: 1,
+    trades: ['miller'], aura: { radius: 5, amount: 3 },
+    blurb: 'Grinds grain, pays well, and gives the skyline something to do.' }),
+  apothecary: d({ id: 'apothecary', name: 'Apothecary', plural: 'Apothecaries', category: 'commercial', w: 2, h: 2, units: 1, capacity: 3,
+    cost: 220, buildDays: 11, upkeep: 3, baseRent: 38, decay: 2.2, minRank: 'baron', maxLevel: 1,
+    trades: ['alchemist', 'hedge_witch', 'herbalist'], aura: { radius: 4, amount: 4 },
+    blurb: 'Cures for most ailments and causes of several new ones.' }),
+  tavern: d({ id: 'tavern', name: 'Tavern', plural: 'Taverns', category: 'commercial', w: 3, h: 3, units: 1, capacity: 6,
+    cost: 300, buildDays: 15, upkeep: 5, baseRent: 46, decay: 2.0, minRank: 'knight', maxLevel: 1,
+    trades: ['innkeeper', 'brewer'], aura: { radius: 6, amount: 8 },
+    blurb: 'Where your tenants spend the rent, and where you will hear what they think of you.' }),
+
+  // ───────── amenities ─────────
+  well: d({ id: 'well', name: 'Well', plural: 'Wells', category: 'amenity', w: 1, h: 1, units: 0, capacity: 0,
+    cost: 50, buildDays: 4, upkeep: 0, baseRent: 0, decay: 0.6, minRank: 'reeve', maxLevel: 1,
+    aura: { radius: 5, amount: 9 },
+    blurb: 'Water, and a place to stand about discussing the landlord.' }),
+  garden: d({ id: 'garden', name: 'Garden', plural: 'Gardens', category: 'amenity', w: 2, h: 2, units: 0, capacity: 0,
+    cost: 40, buildDays: 3, upkeep: 1, baseRent: 0, decay: 1.0, minRank: 'reeve', maxLevel: 1,
+    aura: { radius: 3, amount: 6 },
+    blurb: 'Cabbages and marigolds. Costs little, pleases many, feeds the occasional goat.' }),
+  notice_board: d({ id: 'notice_board', name: 'Notice Board', plural: 'Notice Boards', category: 'amenity', w: 1, h: 1, units: 0, capacity: 0,
+    cost: 30, buildDays: 2, upkeep: 0, baseRent: 0, decay: 0.8, minRank: 'reeve', maxLevel: 1,
+    aura: { radius: 2, amount: 1 },
+    blurb: 'Vacancies, decrees, and one lost cat that has been lost for nine years.' }),
+  shrine: d({ id: 'shrine', name: 'Wayside Shrine', plural: 'Wayside Shrines', category: 'amenity', w: 1, h: 1, units: 0, capacity: 0,
+    cost: 70, buildDays: 4, upkeep: 0, baseRent: 0, decay: 0.4, minRank: 'reeve', maxLevel: 1,
+    aura: { radius: 4, amount: 6 },
+    blurb: 'A small saint in a small house. Pays no rent and is never late.' }),
+  stocks: d({ id: 'stocks', name: 'Stocks', plural: 'Stocks', category: 'amenity', w: 1, h: 1, units: 0, capacity: 0,
+    cost: 45, buildDays: 2, upkeep: 0, baseRent: 0, decay: 0.5, minRank: 'knight', maxLevel: 1,
+    aura: { radius: 4, amount: -4 },
+    blurb: 'Rent arrives more promptly within sight of it. Affection does not.' }),
+  statue: d({ id: 'statue', name: 'Statue of Yourself', plural: 'Statues of Yourself', category: 'amenity', w: 1, h: 1, units: 0, capacity: 0,
+    cost: 120, buildDays: 6, upkeep: 0, baseRent: 0, decay: 0.2, minRank: 'knight', maxLevel: 1,
+    aura: { radius: 3, amount: 3 },
+    blurb: 'A flattering likeness. The pigeons have opinions.' }),
+  watchtower: d({ id: 'watchtower', name: 'Watchtower', plural: 'Watchtowers', category: 'amenity', w: 1, h: 1, units: 0, capacity: 0,
+    cost: 180, buildDays: 9, upkeep: 2, baseRent: 0, decay: 0.8, minRank: 'knight', maxLevel: 1,
+    aura: { radius: 7, amount: 5 },
+    blurb: 'Sees squatters coming. Also sees you coming, which the tenants find useful.' }),
+  chapel: d({ id: 'chapel', name: 'Chapel', plural: 'Chapels', category: 'amenity', w: 2, h: 3, units: 0, capacity: 0,
+    cost: 260, buildDays: 14, upkeep: 2, baseRent: 0, decay: 0.6, minRank: 'baron', maxLevel: 1,
+    aura: { radius: 7, amount: 12 },
+    blurb: 'Weddings, funerals, and sermons about the camel and the needle, delivered while looking at you.' }),
+
+  // ───────── staff ─────────
+  masons_yard: d({ id: 'masons_yard', name: "Mason's Yard", plural: "Mason's Yards", category: 'staff', w: 2, h: 2, units: 0, capacity: 0,
+    cost: 100, buildDays: 6, upkeep: 2, baseRent: 0, decay: 1.0, minRank: 'knight', staffRole: 'mason', maxLevel: 1,
+    blurb: 'Timber, stone, and a person who sucks their teeth before naming a price.' }),
+  bailiffs_post: d({ id: 'bailiffs_post', name: "Bailiff's Post", plural: "Bailiff's Posts", category: 'staff', w: 2, h: 2, units: 0, capacity: 0,
+    cost: 110, buildDays: 6, upkeep: 2, baseRent: 0, decay: 1.0, minRank: 'knight', staffRole: 'bailiff', maxLevel: 1,
+    blurb: 'Keys, ledgers of the late, and a very firm knock.' }),
+  criers_stand: d({ id: 'criers_stand', name: "Crier's Stand", plural: "Crier's Stands", category: 'staff', w: 1, h: 1, units: 0, capacity: 0,
+    cost: 60, buildDays: 3, upkeep: 1, baseRent: 0, decay: 1.0, minRank: 'knight', staffRole: 'crier', maxLevel: 1,
+    blurb: 'A box to stand on and a bell. Vacancies fill themselves, loudly.' }),
+  counting_house: d({ id: 'counting_house', name: 'Counting House', plural: 'Counting Houses', category: 'staff', w: 2, h: 2, units: 0, capacity: 0,
+    cost: 160, buildDays: 9, upkeep: 3, baseRent: 0, decay: 0.8, minRank: 'baron', staffRole: 'steward', maxLevel: 1,
+    blurb: 'Tenants bring the rent to you. The Steward counts it twice and sighs once.' }),
+
+  // ───────── seat ─────────
+  seat: d({ id: 'seat', name: "Reeve's Hut", plural: 'Seats', category: 'seat', w: 3, h: 3, units: 0, capacity: 0,
+    cost: 0, buildDays: 0, upkeep: 0, baseRent: 0, decay: 0.3, minRank: 'reeve', maxLevel: 3,
+    levelNames: ["Reeve's Hut", 'Manor House', 'Keep'], aura: { radius: 4, amount: 3 },
+    blurb: 'Where you sit, and where they come to complain.' }),
+};
+
+export const BUILDING_LIST: BuildingDef[] = Object.values(BUILDINGS);
